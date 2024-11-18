@@ -1,26 +1,19 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "target": "ES2015",
     "module": "ESNext",
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "isolatedModules": false,
+    "baseUrl": "./",
+    "typeRoots": ["./node_modules/@types"],
+    "lib": ["DOM", "ESNext"],
+    "strict": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react", // Emotion과 통합
     "composite": true
   },
   "include": ["src"],
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "exclude": ["node_modules"]
 }
