@@ -23,8 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-<<<<<<< HEAD
 tsconfig.tsbuildinfo
-=======
 *storybook.log
->>>>>>> 8d97fe715c8f23ef0225cb343c16935b1b31deae
