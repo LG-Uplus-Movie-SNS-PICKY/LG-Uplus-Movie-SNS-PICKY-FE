@@ -25,3 +25,12 @@ dist-ssr
 
 tsconfig.tsbuildinfo
 *storybook.log
+
+.env
+.env.development
+
+# Yarn
+.yarn
+
+# asdf version file
+.tool-versions
