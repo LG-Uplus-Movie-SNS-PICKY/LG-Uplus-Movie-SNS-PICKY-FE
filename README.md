@@ -39,7 +39,7 @@ LG-Uplus-Movie-SNS-PICKY-FE/
 │   │   └── ComponentName/
 │   │       ├── index.tsx           // 컴포넌트 코드
 │   │       ├── index.style.tsx     // 스타일 코드
-│   │       └── index.stories.tsx  // Storybook 스토리 파일
+│   │       └── index.stories.tsx  // Storybook 스토리 파일
 │   │
 │   ├── constants/                 // 프로젝트 전역 상수
 │   │   ├── errorCodes.ts          // 에러 코드 정의
