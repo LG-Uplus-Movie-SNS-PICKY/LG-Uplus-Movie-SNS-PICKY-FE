@@ -97,7 +97,7 @@ LG-Uplus-Movie-SNS-PICKY-FE/
 
 ```bash
 // 프로젝트 Clone 방법
-git clone https://github.com/LG-Uplus-Movie-SNS-PICKY/LG-Uplus-Movie-SNS-PICKY-FE.git
+git clone https://github.com/LG-Uplus-Movie-SNS-PICKY/PICKY-FE.git
 cd LG-Uplus-Movie-SNS-PICKY
 
 // 의존성 설치
