@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "svgr" : "npx @svgr/cli -d src/assets/svg --ignore-existing --typescript --no-dimensions public/svg"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
