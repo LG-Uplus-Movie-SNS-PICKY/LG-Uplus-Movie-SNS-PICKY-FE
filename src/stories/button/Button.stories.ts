@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
-import { Button } from "./Button";
+import { Button } from "./";
 
 const meta = {
   title: "GlobalComponent/Button", // title -> Storybook Directory
@@ -20,29 +20,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Button 컴포넌트의 스토리북(Storybook) 종류 선언
-export const Primary: Story = {
+export const Active: Story = {
   args: {
     primary: true,
     label: "Button",
+    btnType: "Active",
   },
 };
 
-export const Secondary: Story = {
+export const Social: Story = {
   args: {
+    primary: true,
     label: "Button",
+    btnType: "Social",
   },
 };
 
-export const Large: Story = {
+export const More: Story = {
   args: {
-    size: "large",
-    label: "Button",
-  },
-};
-
-export const Small: Story = {
-  args: {
-    size: "small",
+    btnType: "More",
     label: "Button",
   },
 };
