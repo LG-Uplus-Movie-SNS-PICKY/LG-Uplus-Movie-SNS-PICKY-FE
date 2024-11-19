@@ -21,6 +21,17 @@
 
 <br />
 
+**기술 스택**
+
+|  |  |  |  |
+|-----------------|----------------|----------------|----------------|
+| <img src="https://i.namu.wiki/i/EY559r31H-um8uTtptPIbCZoBGxsumSlwEH0T_rA6WmxQq1UwqyAf3cJQJXN7Fv5CoEz0kv5CBXzjkkPU_XWig.svg" alt="TypeScript" width="100"> | <img src="https://github.com/user-attachments/assets/e3b49dbb-981b-4804-acf9-012c854a2fd2" alt="React" width="100"> | <img src="https://ko.vite.dev/logo.svg" alt="Vite" width="100"> | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSii2UcY9fK5WXXPfa2z7urgqOcq63L5SObJQ&s" alt="Recoil" width="100"> |
+| TypeScript | React | Vite | Recoil |
+| <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKIe10L8m6JqDfjl_5BFRTz8yHoowQUgW6cA&s" alt="Emotion" width="100"> | <img src="https://blog.kakaocdn.net/dn/997rV/btsIkARkTej/PdtiBI82EnMzFQjgHkbuI1/img.png" alt="Storybook" width="100"> | <img src="https://t1.kakaocdn.net/kakao_tech/image/2022/06/images/01.png" alt="React Query" width="100"> |  |
+| Emotion | Storybook | React Query |  |
+
+<br />
+
 **디렉토리 구조**
 
 ```planeText
@@ -55,7 +66,7 @@ LG-Uplus-Movie-SNS-PICKY-FE/
 │   │       └── components/        // 페이지 전용 하위 컴포넌트
 │   │           └── ComponentName
 │   │              ├── index.tsx
-│		│              └── index.styles.tsx
+│   │              └── index.styles.tsx
 │   │
 │   ├── recoil/                    // 상태 관리 (Recoil)
 │   │   ├── atoms/                 // Recoil Atom 정의
