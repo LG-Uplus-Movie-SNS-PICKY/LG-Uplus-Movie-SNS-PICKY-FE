@@ -11,8 +11,6 @@ export default {
       padding: 0 16px;
       height: 60px;
 
-      border: 1px solid black;
-
       box-sizing: border-box;
 
       .main-logo {
