@@ -23,4 +23,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // 기본 Global Navigater Bar 스토리 정의
-export const BasicNavigaterBar: Story = {};
+export const BasicNavigaterBar: Story = {
+  args: {
+    state: "home",
+    handleTabChange: (event, name) => {},
+  },
+};

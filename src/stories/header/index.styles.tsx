@@ -5,6 +5,8 @@ export default {
   headerContainer(): SerializedStyles {
     return css`
       width: 100%;
+      max-width: 393px;
+
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -13,7 +15,7 @@ export default {
 
       box-sizing: border-box;
 
-      .main-logo {
+      & > .main-logo {
         width: 82px;
       }
     `;
@@ -24,7 +26,7 @@ export default {
       display: flex;
       align-items: center;
 
-      span {
+      & > span {
         font-size: 16px;
         font-weight: 600;
         color: #141414;
@@ -48,13 +50,13 @@ export default {
 
       cursor: ${!isLogin ? "pointer" : ""};
 
-      span {
+      & > span {
         font-size: 12px;
         font-weight: 400;
         padding-top: 2px;
       }
 
-      .active-icon-btn {
+      & > .active-icon-btn {
         cursor: pointer;
       }
     `;
