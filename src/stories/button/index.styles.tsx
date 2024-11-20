@@ -10,7 +10,6 @@ export default {
       border-radius: 4px;
       font-family: "Pretendard", sans-serif;
       font-weight: 600;
-      line-height: 1;
     `;
   },
 
@@ -26,11 +25,11 @@ export default {
   },
 
   // 버튼 Social Btn 스타일
-  storybookButtonSocial(isActive: boolean): SerializedStyles {
+  storybookButtonSocial(isActive: boolean, size: string): SerializedStyles {
     return css`
-      width: 309px;
-      padding: 11px 20px;
-      font-size: 14px;
+      width: ${size === 'small' ? "45px" : "309px"};
+      padding: ${size === 'small' ? "2px 0" : "12px 0px"};
+      font-size: ${size === 'small' ? "8px" : "14px"};
       background-color: ${isActive ? "#0095F6" : "#EFEFEF"};
       color: ${isActive ? "#fff" : "#000"};
     `;
@@ -48,4 +47,5 @@ export default {
       border-radius: 0px;
     `;
   },
+
 };

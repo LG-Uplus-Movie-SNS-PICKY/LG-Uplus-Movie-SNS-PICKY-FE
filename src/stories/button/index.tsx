@@ -5,17 +5,19 @@ export interface ButtonProps {
   backgroundColor?: string;
   btnType?: "Active" | "Social" | "More";
   label: string; // 버튼의 텍스트
+  size?: "Small" | "Large";
   onClick?: () => void;
 }
 
 /** Primary UI component for user interaction */
-export const Button = ({
+function Button({
   primary = false,
   btnType = "Active",
   backgroundColor,
   label,
+  size = "Small",
   ...props
-}: ButtonProps) => {
+}: ButtonProps) {
   const mode: boolean | null =
     (btnType === "Active" || btnType === "Social") && primary;
 
@@ -24,7 +26,7 @@ export const Button = ({
       type="button"
       css={[
         styles.storybookButton(),
-        styles[`storybookButton${btnType}`](mode),
+        btnType === "Social" ? styles.storybookButtonSocial(mode, size) : styles[`storybookButton${btnType}`](mode),
       ]}
       style={{ backgroundColor }}
       {...props}
@@ -32,4 +34,6 @@ export const Button = ({
       {label}
     </button>
   );
-};
+}
+
+export default Button;

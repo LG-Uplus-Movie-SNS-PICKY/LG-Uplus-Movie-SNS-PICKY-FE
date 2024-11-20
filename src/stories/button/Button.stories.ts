@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
 
-import { Button } from "./";
+import Button from "./index";
 
 const meta = {
   title: "GlobalComponent/Button", // title -> Storybook Directory
