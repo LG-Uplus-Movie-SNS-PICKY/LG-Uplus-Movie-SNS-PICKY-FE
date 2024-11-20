@@ -4,24 +4,20 @@ import Logo from "@assets/icons/logo.svg?react";
 import ArrowLeft from "@assets/icons/arrow_left.svg?react";
 import UesrLogo from "@assets/icons/user.svg?react";
 
-import AddCircle from "@assets/icons/add_circle.svg?react";
-import Notification from "@assets/icons/notification.svg?react";
-import Search from "@assets/icons/search.svg?react";
-
-const activeBtn = [
-  { icon: <AddCircle /> },
-  { icon: <Notification /> },
-  { icon: <Search /> },
-];
+// export interface ActiveBtns {
+//   icon: React.ElementType;
+//   onClick: (path: string) => void;
+// }
 
 export interface HeaderProps {
   type: "basic" | "login" | "main" | "title";
   label?: string;
+  activeBtn?: Array<React.ReactNode>;
 }
 
 // Header 스토리 설정
-export function Header({ type, label }: HeaderProps) {
-  const isLogin = type !== "login";
+export function Header({ type, label, activeBtn }: HeaderProps) {
+  const isLogin: boolean = type !== "login";
 
   return (
     <header css={styles.headerContainer()}>
@@ -44,12 +40,8 @@ export function Header({ type, label }: HeaderProps) {
           </>
         )}
 
-        {type === "basic" && (
-          <>
-            <AddCircle className="active-icon-btn" />
-            <Notification className="active-icon-btn" />
-            <Search className="active-icon-btn" />
-          </>
+        {!["basic", "login"].includes(type) && (
+          <>{activeBtn && activeBtn.map((btn) => btn)}</>
         )}
       </div>
     </header>

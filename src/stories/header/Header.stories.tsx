@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Header } from "./";
 
+import AddCircle from "@assets/icons/add_circle.svg?react";
+import Notification from "@assets/icons/notification.svg?react";
+import Search from "@assets/icons/search.svg?react";
+
 // Header meta 설정 정의
 const meta = {
   title: "GlobalComponent/Header", // 스토리 탐색 경로 정의
@@ -44,6 +48,20 @@ export const LoginHeader: Story = {
 export const MainHeader: Story = {
   args: {
     type: "main",
+    activeBtn: [
+      <AddCircle
+        className="active-icon-btn"
+        onClick={() => console.log("Hello")}
+      />,
+      <Notification
+        className="active-icon-btn"
+        onClick={() => console.log("알림 Hello")}
+      />,
+      <Search
+        className="active-icon-btn"
+        onClick={() => console.log("서치 Hello")}
+      />,
+    ],
   },
 };
 
@@ -52,5 +70,19 @@ export const TitleHeader: Story = {
   args: {
     type: "title",
     label: "title",
+    activeBtn: [
+      <AddCircle
+        className="active-icon-btn"
+        onClick={() => console.log("Hello")}
+      />,
+      <Notification
+        className="active-icon-btn"
+        onClick={() => console.log("알림 Hello")}
+      />,
+      <Search
+        className="active-icon-btn"
+        onClick={() => console.log("서치 Hello")}
+      />,
+    ],
   },
 };
