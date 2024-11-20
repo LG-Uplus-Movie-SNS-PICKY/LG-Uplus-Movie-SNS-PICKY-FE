@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import NavigaterBar from "./";
+import { NavigaterBar } from "./";
 
 const meta = {
   title: "GlobalComponent/NavigaterBar", // 스토리 탐색 경로 정의

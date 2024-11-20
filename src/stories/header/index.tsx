@@ -11,7 +11,7 @@ export interface HeaderProps {
 }
 
 // Header 스토리 설정
-export function Header({ type, label, activeBtn }: HeaderProps) {
+export function Header({ type, label, activeBtn }: HeaderProps): JSX.Element {
   const isLogin: boolean = type !== "login";
 
   return (
