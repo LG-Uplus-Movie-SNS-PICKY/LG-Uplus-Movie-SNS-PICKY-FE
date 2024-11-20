@@ -26,9 +26,10 @@ export function Header({ type, label, activeBtn }: HeaderProps) {
         <Logo className="main-logo" />
       )}
 
-      {/* 로그인 상태에 따른 오른쪽 판넬 상태 변환 */}
+      {/* 로그인 상태에 따른 활성화 버튼 컴포넌트 조건부 렌더링 */}
       <div css={styles.headerActivesBtn(isLogin)}>
-        {!isLogin && (
+        {/* 로그인을 하지 않은 사용자인 경우 */}
+        {type === "login" && (
           <>
             <UesrLogo />
             <span>로그인</span>
