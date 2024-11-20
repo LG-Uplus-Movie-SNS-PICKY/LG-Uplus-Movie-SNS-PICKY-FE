@@ -2,7 +2,7 @@ import styles from "./index.styles";
 
 import Logo from "@assets/icons/logo.svg?react";
 import ArrowLeft from "@assets/icons/arrow_left.svg?react";
-import UesrLogo from "@assets/icons/user.svg?react";
+import UesrLogo from "@assets/icons/user_circle.svg?react";
 
 export interface HeaderProps {
   type: "basic" | "login" | "main" | "title";
