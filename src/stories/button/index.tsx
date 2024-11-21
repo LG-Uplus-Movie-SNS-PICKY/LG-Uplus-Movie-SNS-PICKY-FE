@@ -5,6 +5,7 @@ export interface ButtonProps {
   backgroundColor?: string;
   btnType?: "Active" | "Social" | "More";
   label: string; // 버튼의 텍스트
+  size?: "Small" | "Large";
   onClick?: () => void;
 }
 
@@ -14,6 +15,7 @@ export function Button({
   btnType = "Active",
   backgroundColor,
   label,
+  size = "Small",
   ...props
 }: ButtonProps) {
   const mode: boolean | null =
@@ -24,7 +26,7 @@ export function Button({
       type="button"
       css={[
         styles.storybookButton(),
-        styles[`storybookButton${btnType}`](mode),
+        btnType === "Social" ? styles.storybookButtonSocial(mode, size) : styles[`storybookButton${btnType}`](mode),
       ]}
       style={{ backgroundColor }}
       {...props}
