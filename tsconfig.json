@@ -5,9 +5,19 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "isolatedModules": false,
-    "baseUrl": "./", // 프로젝트 루트를 기준으로 절대 경로 설정
+    "baseUrl": "./",
     "paths": {
-      "src/*": ["src/*"] // src 경로를 절대 경로로 매핑
+      "@*": ["src/*"],
+      "@assets/*": ["src/assets/*"],
+      "@stories/*": ["src/stories/*"],
+      "@constants/*": ["src/constants/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@pages/*": ["src/pages/*"],
+      "@provider/*": ["src/provider/*"],
+      "@recoil/*": ["src/recoil/*"],
+      "@styles/*": ["src/styles/*"],
+      "@types/*": ["src/types/*"],
+      "@routers/*": ["src/routers/*"]
     },
     "typeRoots": ["./node_modules/@types"],
     "lib": ["DOM", "ESNext"],
