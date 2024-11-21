@@ -3,14 +3,17 @@ import styles from "./index.styles";
 import Star from "@assets/icons/star.svg?react";
 import Like from "@assets/icons/like.svg?react";
 import Comment from "@assets/icons/comment.svg?react";
+import Checked from "@assets/icons/checked-movie.svg?react";
 
 export interface MovieItemProps {
   type: "basic" | "rate" | "all";
-  src?: string;
-  title?: string;
+  src: string;
+  title: string;
   rate?: number;
   like?: number;
   comment?: number;
+  state?: string;
+  name: string;
 }
 
 interface RateComponentProps {
@@ -54,16 +57,19 @@ function InfoComponent({ like, comment }: InfoComponentProps): JSX.Element {
 
 export function MovieItem({
   type,
-  src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU4rVo4BMQ__M4SWTmqu2o2LeAq0YWwEo8LQ&s",
-  title = "어바웃타임",
+  src,
+  title,
   rate = 0,
   like = 0,
   comment = 0,
+  state = "abouttime",
+  name,
 }: MovieItemProps): JSX.Element {
   return (
     <div css={styles.movieItemContainer()}>
       {/* 영화 썸네일 이미지 */}
-      <div css={styles.movieItemThumbnail()}>
+      <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
+        {type === "basic" && state === name ? <Checked /> : null}
         <img src={src} />
       </div>
 
