@@ -7,6 +7,7 @@ const fontColor = {
   Light: "#F6ECD7",
   White: "#ffffff",
   Warning: "#D4564B",
+  Red:"#FF084A",
   Gray100: "#F3F3F6", // [ Light Gray ]
   Gray200: "#E8E8E8",
   Gray300: "#C9CBD4",

@@ -11,6 +11,19 @@ type StyleText = {
 };
 
 export const Text = {
+  CheckIcon: styled.span<{ color?: keyof DefaultTheme["color"] }>`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: ${({ color, theme }) =>
+      color ? theme.color[color] : theme.color.Red};
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+  `,
   Mini: styled.span<StyleText>`
     display: inline-block;
     font-weight: ${({ weight }) =>
@@ -18,6 +31,12 @@ export const Text = {
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size100)};
     color: ${({ color }) => (color ? theme.color[color] : theme.color.Black)};
     cursor: ${(props) => props.pointer && "pointer"};
+  `,
+  Subtitle: styled.span<StyleText>`
+    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size300)};
+    font-weight: ${({ weight }) =>
+      weight ? theme.weight[weight] : theme.weight.Normal};
+    color: ${({ color }) => (color ? theme.color[color] : theme.color.Gray)};
   `,
   Notice100: styled.span<StyleText>`
     display: inline-block;
@@ -35,19 +54,11 @@ export const Text = {
     color: ${({ color }) => (color ? theme.color[color] : theme.color.Black)};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
-  Menu: styled.span<StyleText>`
+  Notice: styled.span<StyleText>`
     display: inline-block;
     font-weight: ${({ weight }) =>
       weight ? theme.weight[weight] : theme.weight.Normal};
-    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
-    color: ${({ color }) => (color ? theme.color[color] : theme.color.Black)};
-    cursor: ${(props) => props.pointer && "pointer"};
-  `,
-  Menu200: styled.span<StyleText>`
-    display: inline-block;
-    font-weight: ${({ weight }) =>
-      weight ? theme.weight[weight] : theme.weight.Bold};
-    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
+    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size200)};
     color: ${({ color }) => (color ? theme.color[color] : theme.color.Black)};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
@@ -75,6 +86,15 @@ export const Text = {
     color: ${({ color }) => (color ? theme.color[color] : theme.color.Black)};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
+  FocusedMenu: styled.span<StyleText & { isFocused: boolean }>`
+    display: inline-block;
+    font-weight: ${({ weight }) =>
+      weight ? theme.weight[weight] : theme.weight.Normal};
+    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
+    color: ${({ isFocused }) =>
+      isFocused ? theme.color.Red : theme.color.Gray};
+    cursor: ${(props) => props.pointer && "pointer"};
+  `,
   Warning: styled.span<StyleText>`
     display: inline-block;
     font-weight: ${({ weight }) =>
@@ -91,39 +111,13 @@ export const Text = {
     color: ${({ color }) => (color ? theme.color[color] : theme.color.White)};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
-  OriginalPrice: styled.span<StyleText>`
-    display: inline-block;
-    font-weight: ${({ weight }) =>
-      weight ? theme.weight[weight] : theme.weight.Normal};
-    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size200)};
-    color: ${({ color }) => (color ? theme.color[color] : theme.color.Gray)};
-    cursor: ${(props) => props.pointer && "pointer"};
-    text-decoration: line-through;
-  `,
-  Discount: styled.span<StyleText>`
-    display: inline-block;
-    font-weight: ${({ weight }) =>
-      weight ? theme.weight[weight] : theme.weight.Bold};
-    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
-    color: ${({ color }) => (color ? theme.color[color] : theme.color.Warning)};
-    cursor: ${(props) => props.pointer && "pointer"};
-  `,
-  FocusedMenu: styled.span<StyleText & { isFocused: boolean }>`
-    display: inline-block;
-    font-weight: ${({ weight }) =>
-      weight ? theme.weight[weight] : theme.weight.Normal};
-    font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
-    color: ${({ isFocused }) =>
-      isFocused ? theme.color.Yellow : theme.color.Gray};
-    cursor: ${(props) => props.pointer && "pointer"};
-  `,
   FocusedWarning: styled.span<StyleText & { isFocused: boolean }>`
     display: inline-block;
     font-weight: ${({ weight }) =>
       weight ? theme.weight[weight] : theme.weight.Normal};
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size300)};
     color: ${({ isFocused }) =>
-      isFocused ? theme.color.Yellow : theme.color.Gray};
+      isFocused ? theme.color.Red : theme.color.Gray};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
 };
@@ -234,37 +228,41 @@ export const Button = {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 20%;
     height: 53px;
     border-radius: 16px;
     color: #ffffff;
     background-color: ${({ isDisabled }) =>
-      isDisabled ? "#e8e8e8 " : "#f4b647"};
+      isDisabled ? "#e8e8e8 " : "#FF084A"};
     cursor: ${({ isDisabled }) => (isDisabled ? "not-allowed" : "pointer")};
   `,
-  CartConfirm: styled.div<StyleButton>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 53px;
-    border-radius: 16px;
-    color: #ffffff;
-    background-color: #ffffff;
-    border: 1px solid #f6ecd7;
+  Select: styled.button<{ isSelected: boolean }>`
+    padding: 10px 20px;
+    border: 1px solid
+      ${({ isSelected }) => (isSelected ? "#007BFF" : "#D9D9D9")};
+    background-color: ${({ isSelected }) => (isSelected ? "#007BFF" : "#FFF")};
+    color: ${({ isSelected }) => (isSelected ? "#FFF" : "#000")};
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
+
+    &:hover {
+      background-color: ${({ isSelected }) =>
+        isSelected ? "#0056b3" : "#f0f0f0"};
+    }
   `,
-  Select: styled.div<StyleButton>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 273px;
-    height: 53px;
-    border-radius: 19px;
-    color: #f4b647; // disabled이면 "#000000" 로 변경되도록 수정하기
-    background-color: #f6ecd7; // disabled이면 "#F8F8F8" 로 변경되도록 수정하기
-    cursor: pointer;
-  `,
+  // Select: styled.div<StyleButton>`
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: center;
+  //   width: 273px;
+  //   height: 53px;
+  //   border-radius: 19px;
+  //   color: #f4b647; // disabled이면 "#000000" 로 변경되도록 수정하기
+  //   background-color: #f6ecd7; // disabled이면 "#F8F8F8" 로 변경되도록 수정하기
+  //   cursor: pointer;
+  // `,
   AlertModalSelect: styled.div<StyleButton>`
     padding: 8px 16px;
     border-radius: 10px;
@@ -309,56 +307,6 @@ export const Button = {
     color: #f4b647;
     cursor: pointer;
     background-color: transparent;
-  `,
-  CartButton: styled.div<StyleButton & { isSoldOut: boolean }>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 273px;
-    min-width: 180px;
-    height: 53px;
-    border-radius: 19px;
-    color: ${({ isSoldOut }) => (isSoldOut ? "#939292" : "#f4b647")};
-    background-color: ${({ isSoldOut }) => (isSoldOut ? "#F8F8F8" : "#fff")};
-    cursor: ${({ isSoldOut }) => (isSoldOut ? "not-allowed" : "pointer")};
-    border: ${({ isSoldOut }) => (isSoldOut ? "none" : "2px solid #f6ecd7")};
-  `,
-  BuyButton: styled.div<StyleButton & { isSoldOut: boolean }>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 273px;
-    height: 53px;
-    border-radius: 19px;
-    color: ${({ isSoldOut }) => (isSoldOut ? "#939292" : "#fff")};
-    background-color: ${({ isSoldOut }) => (isSoldOut ? "#F8F8F8" : "#f4b647")};
-    cursor: ${({ isSoldOut }) => (isSoldOut ? "not-allowed" : "pointer")};
-    border: ${(props) => props.border};
-  `,
-  EditButton: styled.div<StyleButton>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px; // 너비를 적당하게 설정
-    height: 25px; // 높이 설정
-    border-radius: 12.5px; // 둥근 모서리
-    color: #939292; // 텍스트 색상
-    background-color: #f0f1f5; // 배경색
-    cursor: pointer;
-
-    &:hover {
-      background-color: #e0e0e0; // hover 시 배경색 변경
-    }
-
-    &:active {
-      background-color: #d0d0d0; // active 시 배경색
-    }
-  `,
-  ToggleButton: styled.div<StyleButton>`
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
   `,
 
   OptionButton: styled.div<StyleButton>`
@@ -415,12 +363,6 @@ export const Img = {
     border: ${(props) => props.border};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
-
-  BuyImg: styled.img<StyleImg>`
-    width: 80px;
-    height: 80px;
-    object-fit: cover;
-  `,
 };
 
 // 재사용 될 이미지
@@ -432,19 +374,6 @@ type StyleInput = {
 };
 
 export const Input = {
-  Search: styled.input<StyleInput>`
-    display: block;
-    width: ${(props) => (props.width ? props.width : "100%")};
-    height: ${(props) => (props.width ? props.height : "auto")};
-    border: 0;
-    outline: none;
-    padding-left: 10px;
-    ::placeholder {
-      color: #939292;
-      font-size: 17px;
-    }
-    cursor: ${(props) => props.pointer && "pointer"};
-  `, // 검색 아이콘은 따로 달아주어야 함
   InfoBox: styled.input<StyleInput>`
     display: block;
     width: 100%;
@@ -463,51 +392,15 @@ export const Input = {
     }
     cursor: ${(props) => props.pointer && "pointer"};
   `,
-  WeightBox: styled.input<StyleInput>`
-    display: block;
-    width: 273px;
-    height: 53px;
-    outline: #e3e2e0;
-    padding-left: 15px;
-    background-color: #ffffff;
-    border: 1px solid #c9cbd4;
-    border-radius: 19px;
-    ::placeholder {
-      color: #939292;
-      font-size: 17px;
-    }
-    &:focus {
-      border: 1px solid #000;
-    }
-    cursor: ${(props) => props.pointer && "pointer"};
-  `,
   BirthBox: styled.input<StyleInput>`
     display: block;
-    width: 179px;
+    width: auto;
     min-width: 100px;
     height: 53px;
     outline: #e3e2e0;
     padding-left: 15px;
     background-color: #ffffff;
     border: 1px solid #c9cbd4;
-    border-radius: 19px;
-    ::placeholder {
-      color: #939292;
-      font-size: 17px;
-    }
-    &:focus {
-      border: 1px solid #000;
-    }
-    cursor: ${(props) => props.pointer && "pointer"};
-  `,
-  AddressBox: styled.input<StyleInput>`
-    display: block;
-    width: ${(props) => (props.width ? props.width : "100%")};
-    height: ${(props) => (props.width ? props.height : "auto")};
-    border: 1px solid #c9cbd4;
-    outline: #e3e2e0;
-    padding-left: 15px;
-    background-color: #ffffff;
     border-radius: 19px;
     ::placeholder {
       color: #939292;

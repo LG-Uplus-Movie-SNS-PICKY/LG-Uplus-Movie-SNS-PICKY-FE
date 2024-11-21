@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "svgr" : "npx @svgr/cli -d src/assets/svg --ignore-existing --typescript --no-dimensions public/svg"
+    "svgr": "npx @svgr/cli -d src/assets/svg --ignore-existing --typescript --no-dimensions public/svg"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -22,7 +22,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "recoil": "^0.7.7",
-    "recoil-persist": "^5.1.0"
+    "recoil-persist": "^5.1.0",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.2",
