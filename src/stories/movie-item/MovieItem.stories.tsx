@@ -19,10 +19,12 @@ export const BasicMovieItem: Story = {
 export const RateMovieItem: Story = {
   args: {
     type: "rate",
+    rate: 4.2,
   },
 };
 export const AllInfoMovieItem: Story = {
   args: {
     type: "all",
+    rate: 2.7,
   },
 };
