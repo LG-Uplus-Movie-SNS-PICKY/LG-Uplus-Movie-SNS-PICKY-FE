@@ -9,6 +9,9 @@ const meta = {
     layout: "centered",
   },
   tags: ["autodocs"],
+  args: {
+    size: "Small",
+  },
   argTypes: {
     backgroundColor: { control: "color" },
   },
