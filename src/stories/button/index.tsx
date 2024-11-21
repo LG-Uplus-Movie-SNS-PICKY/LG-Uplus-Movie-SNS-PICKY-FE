@@ -9,13 +9,13 @@ export interface ButtonProps {
 }
 
 /** Primary UI component for user interaction */
-export const Button = ({
+export function Button({
   primary = false,
   btnType = "Active",
   backgroundColor,
   label,
   ...props
-}: ButtonProps) => {
+}: ButtonProps) {
   const mode: boolean | null =
     (btnType === "Active" || btnType === "Social") && primary;
 
@@ -32,4 +32,4 @@ export const Button = ({
       {label}
     </button>
   );
-};
+}

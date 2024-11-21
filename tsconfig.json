@@ -6,6 +6,9 @@
     "esModuleInterop": true,
     "isolatedModules": false,
     "baseUrl": "./",
+    "paths": {
+      "@assets/*": ["/src/assets/*"]
+    },
     "typeRoots": ["./node_modules/@types"],
     "lib": ["DOM", "ESNext"],
     "strict": true,
