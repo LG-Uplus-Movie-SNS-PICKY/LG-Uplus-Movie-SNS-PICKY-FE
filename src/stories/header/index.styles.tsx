@@ -6,7 +6,6 @@ export default {
     return css`
       width: 100%;
       max-width: 393px;
-
       display: flex;
       align-items: center;
       justify-content: space-between;
