@@ -3,20 +3,25 @@ import Camera from "@assets/icons/camera.svg?react";
 
 import styles from "./index.styles";
 
-interface FileInputProps {
+// 컴포넌트 Props 타입 정의
+export interface FileInputProps {
   type: "basic" | "media";
 }
 
+// useState() 객체 상태 정의
 interface SelectImage {
   path: string | null;
   name: string;
 }
 
 export function FileInput({ type }: FileInputProps): JSX.Element {
+  const defaultAcceptFileExtension = "image/png, image/jpg, image/jpeg";
+
   const [selectImage, setSelectImage] = useState<SelectImage>({
     path: null,
     name: "",
   });
+
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const handleChangeImageFile = (
@@ -26,6 +31,7 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
 
     // 타입 가드 -> target.files이 있을 경우
     if (target.files) {
+      console.log(target.files);
       const file = target.files[0];
 
       const reader = new FileReader();
@@ -53,9 +59,16 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
         <input
           type="file"
           id="fileInput"
-          accept="image/*"
+          accept={
+            // 타입이 basic일 경우 이미지 확장자만 업로드 가능 (PNG, JPG, JPEG)
+            // 타입일 media일 경우 이미지 확장자 + 비디오 업로드 가능
+            type === "basic"
+              ? defaultAcceptFileExtension
+              : `${defaultAcceptFileExtension}, video/*`
+          }
           ref={inputFileRef}
           style={{ display: "none" }}
+          multiple={type === "basic" ? false : true}
           onChange={handleChangeImageFile}
         />
         {!selectImage.path && <Camera />}
