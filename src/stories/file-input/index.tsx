@@ -1,5 +1,15 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
+
 import Camera from "@assets/icons/camera.svg?react";
+import CancleCircleBtn from "@assets/icons/cancle_icon.svg?react";
+import AddCircleBtn from "@assets/icons/add_circle.svg?react";
+
+// Swiper Lib Import
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel, Scrollbar } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
 
 import styles from "./index.styles";
 
@@ -8,117 +18,91 @@ export interface FileInputProps {
   type: "basic" | "media";
 }
 
-// useState() 객체 상태 정의
-interface SelectImage {
-  path: string | null;
-  name: string;
+interface BasicImageComponentProps {
+  file: File;
+  inputTag?: HTMLInputElement;
+}
+
+function BasicImageComponent({ file, inputTag }: BasicImageComponentProps) {
+  return <img src={URL.createObjectURL(file)} alt={file.name} />;
 }
 
 export function FileInput({ type }: FileInputProps): JSX.Element {
-  const defaultAcceptFileExtension = "image/png, image/jpg, image/jpeg";
+  const defaultAcceptFileExtension = "image/jpg, image/jpeg";
   const [selectFile, setSelectFile] = useState<File[]>([]);
 
-  const [selectImage, setSelectImage] = useState<SelectImage>({
-    path: null,
-    name: "",
-  });
-
   const inputFileRef = useRef<HTMLInputElement | null>(null);
-
-  // const handleChangeFile = (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const target = event.target as HTMLInputElement; // event.target의 DOM Node를 HTMLInputElement 타입으로 단언
-
-  //   // 타입 가드 -> target.files이 있을 경우
-  //   if (target.files) {
-  //     const file = target.files[0];
-
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => {
-  //       setSelectImage({
-  //         path: typeof reader.result === "string" ? reader.result : null, // string | null
-  //         name: file.name,
-  //       });
-  //     };
-
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   // input type=file 파일 업로드 시 onChange 이벤트 핸들러 발생
   const handleChangeFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.target as HTMLInputElement; // 타입 단언
 
+    function videoLenght(files: File[]) {
+      return files.filter((file) => {
+        return file.type === "video/mp4";
+      }).length;
+    }
+
     // 타입 가드 -> 파일 존재 여부
     if (target.files) {
       const files = Array.from(target.files); // 유사 배열 객체인 FileList를 배열로 전달 -> [File {}, File {}, ...]로 변환
 
-      // 이미지를 한 개만 받을 수 있는 basic 타입일 경우
-      if (type === "basic") {
+      // #1. File Input -> Basic 타입
+      if (type === "basic" && files.length) {
         // input accept 속성값을 통해 이미지의 확장자를 제한시켰기 때문에 따로 예외 상황 처리 불필요
         // 또한, multiple 값을 통해 애초에 이미지 하나만 선택 가능
         setSelectFile([files[0]]);
-      } else {
-        // 이미지와 영상을 여러 개 받을 수 있는 media 타입일 경우
+      }
 
-        // 현재 등록된 파일 중 이미지와 영상을 분류
-        const currentImageFile = selectFile.filter((file) =>
-          file.type.startsWith("image/")
-        );
-
-        const currentVideoFile = selectFile.filter(
-          (file) => file.type === "video/mp4"
-        );
-
-        // 새로 등록된 파일 중 이미지와 영상을 분류
-        const newImageFiles = files.filter((file) =>
-          file.type.startsWith("image/")
-        );
-
-        const newVideoFiles = files.filter((file) => file.type === "video/mp4");
-
-        // 기존 이미지, 비디오 파일과 추가한 파일의 개수의 총합
-        const totalFiles =
-          currentImageFile.length + currentVideoFile.length + files.length;
-
-        // 영상 개수
-        const totalNewVideos = currentVideoFile.length + newVideoFiles.length;
-
-        // 파일 개수 제한 확인
-        if (totalFiles > 5 || totalNewVideos > 2) {
+      // #2. File Input -> Media 타입
+      else {
+        // 2-1. 이미지와 영상의 총합이 5개 이상일 경우 (현재 파일의 개수 + 새로 추가한 파일의 개수)
+        // 2-2. 업로드한 비디오 개수가 2개 이상인 경우
+        const totalFiles = selectFile.length + files.length;
+        const totalVideos = videoLenght(selectFile) + videoLenght(files);
+        if (totalFiles > 5 || totalVideos > 2) {
           alert(
             "이미지와 동영상 총합은 최대 5개, 동영상은 2개까지 가능합니다."
           );
           return;
         }
 
-        // 동영상 용량 제한 확인
-        const largeVideos = newVideoFiles.filter(
-          (video) => video.size > 10 * 1024 * 1024
-        );
-        if (largeVideos.length) {
+        // 2-3. 동영상의 용량 제한(개당 -> 10MB)
+        const largeVideo = files.filter((file) => {
+          return file.size > 10 * 1024 * 1024;
+        }).length;
+
+        if (largeVideo) {
           alert("업로드 가능한 동영상 용량은 10MB 이하입니다.");
           return;
         }
 
-        setSelectFile((prev) => {
-          return [...prev, ...files];
-        });
+        // 이전 파일 + 새로운 파일
+        setSelectFile((prev) => [...prev, ...files]);
       }
     }
   };
 
-  useEffect(() => {
-    console.log(selectFile);
-  }, [selectFile]);
+  // input file 삭제
+  const handleDeleteFile = (deleteIdx: number) => {
+    setSelectFile([...selectFile.filter((_, idx) => idx !== deleteIdx)]);
+  };
 
   return (
     // File Input Container
     <div
-      css={styles.fileInputContainer()}
+      css={styles.fileInputContainer(selectFile.length !== 0, type === "media")}
       onClick={() => {
-        if (inputFileRef.current) inputFileRef.current.click();
+        switch (type) {
+          case "basic":
+            inputFileRef.current?.click();
+            break;
+          case "media":
+            if (!selectFile.length) {
+              inputFileRef.current?.click();
+            }
+            break;
+        }
       }}
     >
       <div>
@@ -127,7 +111,7 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
           type="file"
           id="fileInput"
           accept={
-            // 타입이 basic일 경우 이미지 확장자만 업로드 가능 (PNG, JPG, JPEG)
+            // 타입이 basic일 경우 이미지 확장자만 업로드 가능 (JPG, JPEG)
             // 타입일 media일 경우 이미지 확장자 + 비디오 업로드 가능
             type === "basic"
               ? defaultAcceptFileExtension
@@ -138,14 +122,58 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
           multiple={type === "basic" ? false : true}
           onChange={handleChangeFile}
         />
-        {!selectImage.path && <Camera />}
-        {selectImage.path && (
-          <></>
-          // <img src={selectImage.path} alt={selectImage.name} />
-        )}
+
+        {/* File의 정보가 없을 경우 */}
+        {!selectFile.length && <Camera />}
+
+        {/* Type이 basic일 경우 */}
+        {selectFile.length && type === "basic" ? (
+          <BasicImageComponent file={selectFile[0]} />
+        ) : null}
+
+        {/* Type이 media일 경우 */}
+        {selectFile.length && type === "media" ? (
+          <Swiper
+            slidesPerView={"auto"}
+            spaceBetween={10}
+            direction={"horizontal"}
+            freeMode={true}
+            modules={[FreeMode, Mousewheel]}
+            mousewheel={true}
+            css={styles.swiperContainer()}
+          >
+            {selectFile.map((file, idx) => {
+              const fileURL = URL.createObjectURL(file); // 파일의 URL을 생성한다.
+              const isVideo = file.type.startsWith("video/"); // 파일이 video일 경우
+
+              return (
+                <SwiperSlide key={idx}>
+                  <button onClick={() => handleDeleteFile(idx)}>
+                    <CancleCircleBtn />
+                  </button>
+
+                  {isVideo ? (
+                    <video src={fileURL}>
+                      지원되지 않는 비디오 형식입니다.
+                    </video>
+                  ) : (
+                    <img src={fileURL} alt={`privew-${file.name}`} />
+                  )}
+                </SwiperSlide>
+              );
+            })}
+
+            {/* 선택한 파일이 5개 이하일 경우 더 추가할 수 있도록 해줌 */}
+            {selectFile.length < 5 && (
+              <SwiperSlide className="add-circle">
+                <AddCircleBtn onClick={() => inputFileRef.current?.click()} />
+              </SwiperSlide>
+            )}
+          </Swiper>
+        ) : null}
 
         {/* Image 라벨 영역 */}
-        {!selectImage.path && (
+        {!selectFile.length && (
           <span className="label">
             {type === "basic" ? "사진 추가" : "사진/동영상 추가"}
           </span>
