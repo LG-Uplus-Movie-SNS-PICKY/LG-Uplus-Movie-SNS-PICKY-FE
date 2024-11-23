@@ -10,6 +10,11 @@ export default defineConfig({
     }),
     svgr(),
   ],
+  server: {
+    // proxy: {
+    //   "/api": "http://localhost:3000",
+    // },
+  },
   resolve: {
     alias: {
       "@": "/src",
