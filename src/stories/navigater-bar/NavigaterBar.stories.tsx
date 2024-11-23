@@ -26,6 +26,6 @@ type Story = StoryObj<typeof meta>;
 export const BasicNavigaterBar: Story = {
   args: {
     state: "home",
-    handleTabChange: (event, name) => {},
+    onClick: (event, name) => {},
   },
 };

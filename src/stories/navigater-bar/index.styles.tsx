@@ -5,7 +5,6 @@ export default {
   navbarContainer(): SerializedStyles {
     return css`
       width: 100%;
-      max-width: 393px;
 
       border-top: 1px solid #d4d4d4;
 

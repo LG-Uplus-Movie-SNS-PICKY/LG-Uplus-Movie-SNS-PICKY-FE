@@ -46,14 +46,6 @@ interface SvgTabMenuProps {
   label: string;
 }
 
-interface NavigatorBarProps {
-  state: string;
-  handleTabChange: (
-    event: React.MouseEvent<HTMLDivElement>,
-    name: string
-  ) => void;
-}
-
 function ImageTabMenu({ src, label, active }: ImageTabMenuProps): JSX.Element {
   return (
     <>
@@ -77,6 +69,16 @@ function SvgTabMenu({ icon, label }: SvgTabMenuProps): JSX.Element {
   );
 }
 
+export type HandleChangeTab = (
+  event: React.MouseEvent<HTMLDivElement>,
+  name: string
+) => void;
+
+export interface NavigatorBarProps {
+  state: string;
+  onClick: HandleChangeTab;
+}
+
 /**
  * NavigaterBar 컴포넌트
  * @description 전역에서 재사용 가능한 내비게이션 바 컴포넌트
@@ -86,7 +88,7 @@ function SvgTabMenu({ icon, label }: SvgTabMenuProps): JSX.Element {
  */
 export function NavigaterBar({
   state,
-  handleTabChange,
+  onClick,
 }: NavigatorBarProps): JSX.Element {
   return (
     <nav css={styles.navbarContainer()}>
@@ -97,7 +99,7 @@ export function NavigaterBar({
             <div
               key={idx}
               css={styles.navbarMenuItem(menu.name, state === menu.name)}
-              onClick={(event) => handleTabChange(event, menu.name)}
+              onClick={(event) => onClick(event, menu.name)}
             >
               {typeof menu.icon === "string" ? (
                 // PICKY 탭 클릭할 경우 -> SVG 파일이 아니기 때문에 조건부 처리

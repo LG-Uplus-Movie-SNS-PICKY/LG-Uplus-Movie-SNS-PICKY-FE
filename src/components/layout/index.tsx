@@ -3,6 +3,7 @@ import { Flex as MainLayout } from "./index.styles";
 import { Flex as Wrapper } from "./index.styles";
 import { LayoutProps } from "./type";
 import { useLocation, useNavigate } from "react-router-dom";
+import GlobalNavigatorBar from "@components/navbar";
 
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
         >
           {children}
         </Wrapper>
+        <GlobalNavigatorBar location={location} navigate={navigate} />
       </MainLayout>
     </>
   );
