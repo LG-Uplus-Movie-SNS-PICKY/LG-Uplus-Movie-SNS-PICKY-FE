@@ -1,14 +1,11 @@
-import {
-  HandleChangeTab,
-  NavigaterBar as Navbar,
-} from "@stories/navigater-bar";
+import { NavigaterBar as Navbar } from "@stories/navigater-bar";
 import { NaviationProps } from "@type/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 
 function GlobalNavigatorBar({ location, navigate }: NaviationProps) {
   const [activeTab, setActiveTab] = useState("home");
 
-  const handleChangeTab: HandleChangeTab = (event, name) => {
+  const handleChangeTab = (name: string) => {
     setActiveTab(name);
   };
 

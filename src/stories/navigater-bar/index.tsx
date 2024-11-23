@@ -69,14 +69,9 @@ function SvgTabMenu({ icon, label }: SvgTabMenuProps): JSX.Element {
   );
 }
 
-export type HandleChangeTab = (
-  event: React.MouseEvent<HTMLDivElement>,
-  name: string
-) => void;
-
 export interface NavigatorBarProps {
   state: string;
-  onClick: HandleChangeTab;
+  onClick: (name: string) => void;
 }
 
 /**
@@ -99,7 +94,7 @@ export function NavigaterBar({
             <div
               key={idx}
               css={styles.navbarMenuItem(menu.name, state === menu.name)}
-              onClick={(event) => onClick(event, menu.name)}
+              onClick={() => onClick(menu.name)}
             >
               {typeof menu.icon === "string" ? (
                 // PICKY 탭 클릭할 경우 -> SVG 파일이 아니기 때문에 조건부 처리
