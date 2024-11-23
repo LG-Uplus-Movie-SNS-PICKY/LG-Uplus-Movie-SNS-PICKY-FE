@@ -28,6 +28,7 @@ export default defineConfig({
       "@styles": "/src/styles",
       "@types": "/src/types",
       "@routers": "/src/routers",
+      "@components": "/src/components",
     },
   },
 });
