@@ -3,13 +3,12 @@ import { Header, HeaderProps } from "@stories/header";
 import { NaviationProps } from "@type/navigation";
 import { useEffect, useState } from "react";
 
-const isLoginTestValue = {
-  state: false,
-  role: "",
-};
-
 // 전역에서 사용할 Header 컴포넌트
-function GlobalHeader({ location, navigate }: NaviationProps) {
+function GlobalHeader({
+  location,
+  navigate,
+  isLoginTestValue,
+}: NaviationProps) {
   const [type, setType] = useState<HeaderProps["type"]>(undefined);
   const [label, setLabel] = useState<HeaderProps["label"]>(undefined);
   const [activeBtn, setActiveBtn] =

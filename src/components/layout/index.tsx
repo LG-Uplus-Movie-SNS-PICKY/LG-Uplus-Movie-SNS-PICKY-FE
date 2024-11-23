@@ -5,9 +5,17 @@ import { LayoutProps } from "./type";
 import { useLocation, useNavigate } from "react-router-dom";
 import GlobalNavigatorBar from "@components/navbar";
 
+const isLoginTestValue = {
+  state: true,
+  role: "USER",
+};
+
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 주소 가져오기
+
+  const isDefaultMargin =
+    !isLoginTestValue.state || isLoginTestValue.role === "admin";
 
   return (
     <>
@@ -17,17 +25,25 @@ function Layout({ children }: LayoutProps): JSX.Element {
         align="center"
         height="100vh"
       >
-        <GlobalHeader location={location} navigate={navigate} />
+        <GlobalHeader
+          location={location}
+          navigate={navigate}
+          isLoginTestValue={isLoginTestValue}
+        />
         <Wrapper
-          // width={363}
+          overflowY={"auto"}
           direction="column"
           justify="flex-start"
-          margin="60px 0"
+          margin={isDefaultMargin ? "60px 0 0" : "60px 0"}
           padding="16px"
         >
           {children}
         </Wrapper>
-        <GlobalNavigatorBar location={location} navigate={navigate} />
+        <GlobalNavigatorBar
+          location={location}
+          navigate={navigate}
+          isLoginTestValue={isLoginTestValue}
+        />
       </MainLayout>
     </>
   );

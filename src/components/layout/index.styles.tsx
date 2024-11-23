@@ -18,6 +18,7 @@ interface FlexProps {
   borderRadius?: number; // px 단위
   backgroundColor?: string; // 색상값
   mobileGap?: number; // rem 단위 (주석 처리된 부분에도 대응)
+  overflowY?: string;
 }
 
 export const Flex = styled.div<FlexProps>`
@@ -36,6 +37,9 @@ export const Flex = styled.div<FlexProps>`
 
   background-color: ${({ backgroundColor }) =>
     backgroundColor ? backgroundColor : "#fff"};
+
+  overflow-y: ${({ overflowY }) => (overflowY ? overflowY : "visible")};
+
   flex: 1;
 
   /* 브라우저 크기에 따라 가로 크기 변경 */
