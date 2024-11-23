@@ -11,6 +11,24 @@ function GlobalNavigatorBar({
 
   const handleChangeTab = (name: string) => {
     setActiveTab(name);
+
+    switch (name) {
+      case "home":
+        navigate("/");
+        break;
+      case "picky":
+        navigate("/picky");
+        break;
+      case "movie":
+        navigate("/movie");
+        break;
+      case "recommend":
+        navigate("/recommend");
+        break;
+      case "user":
+        navigate("/my-page");
+        break;
+    }
   };
 
   if (!isLoginTestValue.state || isLoginTestValue.role === "admin") {
