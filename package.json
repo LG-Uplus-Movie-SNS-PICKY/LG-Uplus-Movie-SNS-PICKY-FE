@@ -21,7 +21,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
     "recoil": "^0.7.7",
-    "recoil-persist": "^5.1.0"
+    "recoil-persist": "^5.1.0",
+    "swiper": "^11.1.15"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.2",
