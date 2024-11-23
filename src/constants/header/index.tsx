@@ -58,6 +58,13 @@ const headerConfig: HeaderConfigType = {
   "/recommend": () => ({ type: "main" }),
 };
 
+/*
+
+  To Do
+  1. Title Type일 경우 -> 이전 정보 히스토리
+
+*/
+
 export function useHeaderConfig(
   path: string,
   isLogin: boolean,
@@ -80,7 +87,10 @@ export function useHeaderConfig(
         />,
       ]
     : [
-        <div onClick={() => navigate && navigate("/login")}>
+        <div
+          onClick={() => navigate && navigate("/login")}
+          className="login-action-btn"
+        >
           <UesrLogo />
           <span>로그인</span>
         </div>,
@@ -90,5 +100,5 @@ export function useHeaderConfig(
   const config = headerConfig[path];
 
   // 객체 반환
-  return config ? { ...config(isLogin), buttons } : { type: "basic" };
+  return config ? { ...config(isLogin), buttons } : {};
 }

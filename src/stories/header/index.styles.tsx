@@ -4,7 +4,11 @@ export default {
   // 모든 헤더의 공통 영역
   headerContainer(): SerializedStyles {
     return css`
-      width: 393px;
+      position: absolute;
+      top: 0;
+      z-index: 9999;
+
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -40,7 +44,8 @@ export default {
   // 헤더 버튼 Container
   headerActivesBtn(isLogin: boolean): SerializedStyles {
     return css`
-      & > div {
+      & > div,
+      & .login-action-btn {
         display: flex;
         justify-content: center;
         align-items: center;
