@@ -26,7 +26,7 @@ export default defineConfig({
       "@provider": "/src/provider",
       "@recoil": "/src/recoil",
       "@styles": "/src/styles",
-      "@types": "/src/types",
+      "@type": "/src/types",
       "@routers": "/src/routers",
       "@components": "/src/components",
     },

@@ -2,8 +2,12 @@ import GlobalHeader from "@components/header";
 import { Flex as MainLayout } from "./index.styles";
 import { Flex as Wrapper } from "./index.styles";
 import { LayoutProps } from "./type";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function Layout({ children }: LayoutProps): JSX.Element {
+  const navigate = useNavigate();
+  const location = useLocation(); // 현재 주소 가져오기
+
   return (
     <>
       <MainLayout
@@ -12,7 +16,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
         align="center"
         height="100vh"
       >
-        <GlobalHeader />
+        <GlobalHeader location={location} navigate={navigate} />
         <Wrapper
           // width={363}
           direction="column"
