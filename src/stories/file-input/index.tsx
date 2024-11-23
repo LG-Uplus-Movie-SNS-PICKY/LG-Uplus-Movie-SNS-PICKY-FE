@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Camera from "@assets/icons/camera.svg?react";
 import CancleCircleBtn from "@assets/icons/cancle_icon.svg?react";
@@ -6,7 +6,8 @@ import AddCircleBtn from "@assets/icons/add_circle.svg?react";
 
 // Swiper Lib Import
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel, Scrollbar } from "swiper/modules";
+import { Swiper as SwiperInstance } from "swiper";
+import { FreeMode, Mousewheel } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -29,7 +30,11 @@ function BasicImageComponent({ file, inputTag }: BasicImageComponentProps) {
 
 export function FileInput({ type }: FileInputProps): JSX.Element {
   const defaultAcceptFileExtension = "image/jpg, image/jpeg";
+
   const [selectFile, setSelectFile] = useState<File[]>([]);
+
+  const swiperRef = useRef<SwiperInstance | null>(null);
+  const videoRefs = useRef<HTMLVideoElement[]>([]);
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -88,6 +93,44 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
     setSelectFile([...selectFile.filter((_, idx) => idx !== deleteIdx)]);
   };
 
+  // 슬라이더 변경 시 영상일 경우 자동 재생
+  const handleActiveIndexChange = () => {
+    const swiper = swiperRef.current;
+
+    if (swiper) {
+      // 모든 비디오 일시 정지 (현재 영역의 비디오만 재생하기 위함)
+      videoRefs.current.forEach((video) => {
+        if (video) {
+          video.pause();
+        }
+      });
+
+      // 활성화된 슬라이드에서 비디오 재생
+      const activeSlide = swiper.slides[swiper.activeIndex];
+      const video = activeSlide?.querySelector("video");
+
+      if (video) {
+        video.play();
+      }
+    }
+  };
+
+  // Swiper 렌더링 이후 첫 번째 슬라이드가 비디오 파일인 경우 자동 재생
+  useEffect(() => {
+    // Type이 Media일 경우에만 서브 작업 실행
+    if (type === "media") {
+      if (selectFile.length > 0 && swiperRef.current) {
+        const firstSlide =
+          swiperRef.current.slides[swiperRef.current.activeIndex];
+        const video = firstSlide?.querySelector("video");
+
+        if (video) {
+          video.play();
+        }
+      }
+    }
+  }, [selectFile]);
+
   return (
     // File Input Container
     <div
@@ -141,6 +184,8 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
             modules={[FreeMode, Mousewheel]}
             mousewheel={true}
             css={styles.swiperContainer()}
+            onSwiper={(swiper) => (swiperRef.current = swiper)}
+            onActiveIndexChange={handleActiveIndexChange}
           >
             {selectFile.map((file, idx) => {
               const fileURL = URL.createObjectURL(file); // 파일의 URL을 생성한다.
@@ -153,7 +198,15 @@ export function FileInput({ type }: FileInputProps): JSX.Element {
                   </button>
 
                   {isVideo ? (
-                    <video src={fileURL}>
+                    <video
+                      src={fileURL}
+                      ref={(el) => {
+                        if (el !== null) {
+                          videoRefs.current[idx] = el;
+                        }
+                      }}
+                      muted
+                    >
                       지원되지 않는 비디오 형식입니다.
                     </video>
                   ) : (
