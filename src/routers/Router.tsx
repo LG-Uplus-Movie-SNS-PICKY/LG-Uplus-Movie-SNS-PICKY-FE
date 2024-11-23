@@ -16,7 +16,7 @@ function Router() {
       <Global styles={globalStyle} />
       <Layout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/notification" element={<Home />} />
         </Routes>
       </Layout>
     </BrowserRouter>
