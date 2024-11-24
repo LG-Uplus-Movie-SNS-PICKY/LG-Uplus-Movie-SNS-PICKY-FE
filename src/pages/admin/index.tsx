@@ -5,8 +5,11 @@ import DashboardListItem from "./components/list-container";
 import { data as OverviewItems } from "./components/list-container/constant";
 
 // 대시보드 Info import
+import useDashboardData from "./components/info-container/hook";
 
 function AdminDashboardPage() {
+  useDashboardData();
+
   return (
     <>
       {/* Dashboard Overview Wrapper */}

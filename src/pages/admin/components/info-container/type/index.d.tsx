@@ -24,14 +24,14 @@ export interface DashboardAPIResponse {
   };
 
   // Movie API Resoposne 응답 데이터 타입 저의
-  movie: {
+  movieData: {
     genreCount: number;
     movieCount: number;
     playlsitCount: number;
   };
 
   // Review API Resoposne 응답 데이터 타입 저의
-  review: {
+  reviewData: {
     reviewCount: number;
     reportReview: {
       reportReviewCompleteCount: number;
@@ -40,11 +40,12 @@ export interface DashboardAPIResponse {
   };
 
   // Movie Log API Resoposne 응답 데이터 타입 저의
-  movieLog: {
+  movieLogData: {
     movieLogCount: number;
     reportMovieLog: {
       reportMovieLogCompleteCount: number;
-      reportMovieLogIncompleteCount: number;
+      reportMovieLogReviewCompleteCount: number;
+      reportMovieLogAndReviewIncompleteCount: number;
     };
   };
 }
@@ -59,7 +60,7 @@ export interface DashboardInfoItemTypes {
   itemIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
   itemTitle: string;
   itemTotalCount: number;
-  subItems: Array<DashboardInfoSubItemTypes>;
+  subItems?: Array<DashboardInfoSubItemTypes>;
 }
 
 export interface DashboardInfoListTypes {
