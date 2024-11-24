@@ -6,9 +6,10 @@ import { data as OverviewItems } from "./components/list-container/constant";
 
 // 대시보드 Info import
 import useDashboardData from "./components/info-container/hook";
+import DashboardInfoContainer from "./components/info-container";
 
 function AdminDashboardPage() {
-  useDashboardData();
+  const { listItemData: data } = useDashboardData();
 
   return (
     <>
@@ -36,12 +37,13 @@ function AdminDashboardPage() {
       </div>
 
       {/* User Container */}
-
       {/* Movie Container */}
-
       {/* Review Container */}
-
       {/* Movie Log Container */}
+      {data &&
+        data.map((element, idx) => {
+          return <DashboardInfoContainer key={idx} data={element} />;
+        })}
     </>
   );
 }

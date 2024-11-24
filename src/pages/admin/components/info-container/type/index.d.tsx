@@ -58,12 +58,13 @@ export interface DashboardInfoSubItemTypes {
 
 export interface DashboardInfoItemTypes {
   itemIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
+  itemBgColor: string;
   itemTitle: string;
-  itemTotalCount: number;
+  itemTotalCount?: number;
   subItems?: Array<DashboardInfoSubItemTypes>;
 }
 
 export interface DashboardInfoListTypes {
   listTitle: string;
-  listItem: DashboardInfoItemTypes;
+  listItem: DashboardInfoItemTypes[];
 }
