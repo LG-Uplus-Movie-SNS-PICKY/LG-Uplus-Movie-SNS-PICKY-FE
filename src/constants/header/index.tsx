@@ -56,6 +56,8 @@ const headerConfig: HeaderConfigType = {
 
   // 추천 페이지
   "/recommend": () => ({ type: "main" }),
+
+  "/admin": () => ({ type: "basic" }),
 };
 
 /*
