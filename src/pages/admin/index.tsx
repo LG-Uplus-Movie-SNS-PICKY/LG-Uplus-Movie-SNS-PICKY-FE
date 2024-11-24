@@ -1,5 +1,11 @@
 import styles from "./index.styles";
 
+// 대시보드 Overview import
+import DashboardListItem from "./components/list-container";
+import { data as OverviewItems } from "./components/list-container/constant";
+
+// 대시보드 Info import
+
 function AdminDashboardPage() {
   return (
     <>
@@ -10,6 +16,19 @@ function AdminDashboardPage() {
         {/* Dashboard Overview Container */}
         <div css={styles.dashboardContainer()}>
           {/* Redirect Container Mapping */}
+          {OverviewItems &&
+            OverviewItems.map((item, idx) => {
+              return (
+                <DashboardListItem
+                  key={idx}
+                  element={item.element}
+                  title={item.title}
+                  description={item.description}
+                  bgColor={item.bgColor}
+                  boxShadowColor={item.boxShadowColor}
+                />
+              );
+            })}
         </div>
       </div>
 

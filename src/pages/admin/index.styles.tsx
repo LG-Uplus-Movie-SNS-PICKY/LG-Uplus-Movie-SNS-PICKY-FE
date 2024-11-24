@@ -8,6 +8,8 @@ export default {
       flex-direction: column;
       justify-content: center;
 
+      gap: 8px;
+
       & > .dashboard-title {
         font-size: 14px;
         font-weight: 600;
@@ -18,6 +20,10 @@ export default {
   },
 
   dashboardContainer(): SerializedStyles {
-    return css``;
+    return css`
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    `;
   },
 };
