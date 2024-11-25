@@ -24,7 +24,11 @@ function DashboardInfoContainer({ data }: DashboardInfoContainerProps) {
         {data.listItem &&
           data.listItem.map((item, idx) => {
             return (
-              <div key={idx} css={styles.listItemContainer(item.itemBgColor)}>
+              <div
+                key={idx}
+                css={styles.listItemContainer(item.itemBgColor)}
+                onClick={item.onClick}
+              >
                 {React.createElement(item.itemIcon)}
 
                 {/* Data Item Info */}

@@ -61,6 +61,7 @@ export interface DashboardInfoItemTypes {
   itemBgColor: string;
   itemTitle: string;
   itemTotalCount?: number;
+  onClick: () => void;
   subItems?: Array<DashboardInfoSubItemTypes>;
 }
 
