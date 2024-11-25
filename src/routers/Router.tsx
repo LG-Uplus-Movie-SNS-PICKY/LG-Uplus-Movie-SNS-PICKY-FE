@@ -7,7 +7,7 @@ import { globalStyle } from "@styles/global";
 // Route import
 import Home from "@pages/Home";
 import Layout from "@components/layout";
-import AdminDashboardPage from "@pages/admin";
+import AdminDashboardPage from "@pages/admin/main";
 
 function Router() {
   return (
