@@ -31,12 +31,6 @@ export default {
       font-size: 12px;
       font-weight: 600;
       color: #9e9e9e;
-
-      & > span {
-        font-size: 10px;
-        color: #007aff;
-        cursor: pointer;
-      }
     `;
   },
 
