@@ -1,12 +1,13 @@
 import React from "react";
 
 import styles from "./index.styles";
-import { DashboardInfoListTypes } from "./type/index.d";
+import { DashboardInfoListTypes } from "@hooks/admin/info/types";
 
 interface DashboardInfoContainerProps {
   data: DashboardInfoListTypes;
 }
 
+// 렌더링 되는 컴포넌트
 function DashboardInfoContainer({ data }: DashboardInfoContainerProps) {
   return (
     <div css={styles.container()}>

@@ -1,4 +1,4 @@
-import { DashboardAPIResponse } from "../type/index.d";
+import { DashboardAPIResponse } from "../types/index.d";
 
 // Test 용도 더미데이터 구성
 export const RESPONSE_DATA: DashboardAPIResponse = {

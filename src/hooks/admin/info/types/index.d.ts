@@ -68,3 +68,7 @@ export interface DashboardInfoListTypes {
   listTitle: string;
   listItem: DashboardInfoItemTypes[];
 }
+
+export interface DashboardInfoListProps {
+  data: DashboardInfoListTypes[] | DashboardInfoListTypes;
+}
