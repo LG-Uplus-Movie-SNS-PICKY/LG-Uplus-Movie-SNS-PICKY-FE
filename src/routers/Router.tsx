@@ -24,6 +24,22 @@ function Router() {
 
           {/* 관리자 전용 라우트 */}
           <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route
+            path="/admin/user-management-overview"
+            element={<AdminDashboardPage />}
+          />
+          <Route
+            path="/admin/movie-management-overview"
+            element={<AdminDashboardPage />}
+          />
+          <Route
+            path="/admin/review-management-overview"
+            element={<AdminDashboardPage />}
+          />
+          <Route
+            path="/admin/movie-log-management-overview"
+            element={<AdminDashboardPage />}
+          />
         </Routes>
       </Layout>
     </BrowserRouter>
