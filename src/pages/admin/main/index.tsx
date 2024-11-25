@@ -29,6 +29,7 @@ function AdminDashboardPage({ data }: DashboardInfoListProps) {
                   description={item.description}
                   bgColor={item.bgColor}
                   boxShadowColor={item.boxShadowColor}
+                  path={item.path}
                 />
               );
             })}
@@ -39,7 +40,7 @@ function AdminDashboardPage({ data }: DashboardInfoListProps) {
       {/* Movie Container */}
       {/* Review Container */}
       {/* Movie Log Container */}
-      {data &&
+      {Array.isArray(data) &&
         data.map((element, idx) => {
           return <DashboardInfoContainer key={idx} data={element} />;
         })}

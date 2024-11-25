@@ -23,11 +23,8 @@ function AdminLayout() {
         path={ADMIN_ROUTES.DASHBOARD}
         element={<AdminDashboardPage data={data} />}
       />
-      {/* <Route
-        path={ADMIN_ROUTES.USER_MANAGEMENT}
-        element={<AdminUserSubLayout data={data[0]} />}
-      /> */}
 
+      {/* 사용자 관련 Path 정의 */}
       <Route
         path={ADMIN_ROUTES.USER_MANAGEMENT}
         element={<ManagementSubLayout />}
@@ -38,6 +35,7 @@ function AdminLayout() {
         <Route path="suspended" element={<Home />} />
       </Route>
 
+      {/* 영화 관련 Path 정의 */}
       <Route
         path={ADMIN_ROUTES.MOVIE_MANAGEMENT}
         element={<ManagementSubLayout />}
@@ -48,6 +46,7 @@ function AdminLayout() {
         <Route path="playlists" element={<Home />} />
       </Route>
 
+      {/* 한줄평(영화 리뷰) 관련 Path 정의 */}
       <Route
         path={ADMIN_ROUTES.REVIEW_MANAGEMENT}
         element={<ManagementSubLayout />}
@@ -57,6 +56,7 @@ function AdminLayout() {
         <Route path="reports" element={<Home />} />
       </Route>
 
+      {/* 무비로그(피드) 관련 Path 정의 */}
       <Route
         path={ADMIN_ROUTES.MOVIE_LOG_MANAGEMENT}
         element={<ManagementSubLayout />}

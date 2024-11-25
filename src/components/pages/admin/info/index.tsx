@@ -14,7 +14,6 @@ function DashboardInfoContainer({ data }: DashboardInfoContainerProps) {
       {/* 타이틀 영역 */}
       <div css={styles.containerTitle()}>
         <h3>{data.listTitle}</h3>
-        <span>View All</span>
       </div>
 
       <div className="line" />
