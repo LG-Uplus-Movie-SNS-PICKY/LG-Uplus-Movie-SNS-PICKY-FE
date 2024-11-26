@@ -35,6 +35,31 @@ export default {
   },
 
   search(): SerializedStyles {
-    return css``;
+    return css`
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      overflow: hidden;
+      border-radius: 4px;
+
+      box-sizing: border-box;
+      border: 1px solid #d9d9d9;
+
+      & > input[type="text"] {
+        border: none;
+        background-color: transparent;
+        outline: none;
+      }
+
+      & > button[type="submit"] {
+        box-sizing: border-box;
+        border: none;
+        padding: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: transparent;
+      }
+    `;
   },
 };

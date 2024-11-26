@@ -1,3 +1,5 @@
+import Search from "@assets/icons/search_small.svg?react";
+
 import { useState } from "react";
 import styles from "./index.styles";
 
@@ -29,7 +31,9 @@ function UserPermissionOpertionPage() {
           onSubmit={(event) => event.preventDefault()}
         >
           <input type="text" />
-          <button>Search</button>
+          <button type="submit">
+            <Search />
+          </button>
         </form>
       </div>
 
