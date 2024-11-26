@@ -22,6 +22,7 @@ import UserPermissionOpertionPage from "@pages/admin/operation/user/permission";
 import UserReportOpertionPage from "@pages/admin/operation/user/report";
 import ReviewReportOpertionPage from "@pages/admin/operation/review/report";
 import MovieLogReportOpertionPage from "@pages/admin/operation/movie-log/report";
+import UserSuspendedOpertionPage from "@pages/admin/operation/user/suspended";
 
 function ManagementSubLayout() {
   return <Outlet />;
@@ -48,7 +49,7 @@ function AdminLayout() {
           element={<UserPermissionOpertionPage />}
         />
         <Route path="reports" element={<UserReportOpertionPage />} />
-        <Route path="suspended" element={<Home />} />
+        <Route path="suspended" element={<UserSuspendedOpertionPage />} />
       </Route>
 
       {/* 영화 관련 Path 정의 */}
