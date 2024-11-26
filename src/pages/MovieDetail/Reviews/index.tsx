@@ -1,0 +1,91 @@
+// pages/MovieDetail/Reviews/index.tsx
+import React, { useState } from 'react';
+import MovieHeader from '../components/MovieHeader';
+import MovieReviewsPoster from './components/MoviePoster';
+import ReviewGraph from './components/ReviewGraph';
+import ReviewRegist from './components/ReviewRegist';
+import MovieReview from '../components/MovieReview'
+import {
+  MovieReviewContainer,
+  InfoContainer,
+  Title,
+  DetailContainer,
+  DetailText
+} from './index.styles';
+import AgeAllSvg from '../../../assets/icons/age_all.svg?react';
+import Age12Svg from '../../../assets/icons/age_12.svg?react';
+import Age15Svg from '../../../assets/icons/age_15.svg?react';
+import Age19Svg from '../../../assets/icons/age_19.svg?react';
+
+const ReviewsPage = () => {
+  const dummyData = {
+    imageUrl: "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
+    title: "어벤져스: 엔드게임",
+    year: "2019",
+    age: "12",
+    runtime: 181,
+    reviews: [
+      {
+        spoiler: false,
+        rating: 4.5,
+        text: "정말 재미있게 봤습니다. 특히 마지막 전투씬이 인상적이었어요!",
+        user: "홍길동",
+        gender: "male",
+        date: "2022-07-10T14:48:00",
+        likes: 123,
+        dislikes: 10
+      },
+      {
+        spoiler: true,
+        rating: 3.0,
+        text: "기대했던 것보다는 조금 실망스러웠지만, 나름대로의 재미는 있었습니다.",
+        user: "이순신",
+        gender: "male",
+        date: "2022-07-11T15:20:00",
+        likes: 76,
+        dislikes: 8
+      },
+      {
+        spoiler: true,
+        rating: 5.0,
+        text: "최고의 영화입니다! 두 번 세 번 추천드립니다!",
+        user: "장보고",
+        gender: "male",
+        date: "2022-07-12T16:00:00",
+        likes: 200,
+        dislikes: 3
+      }
+    ]
+  };
+
+  const formatRuntime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours}시간 ${mins}분`;
+  };
+
+  return (
+    <div className='page'>
+      <MovieReviewContainer>
+        <MovieHeader />
+        <MovieReviewsPoster imageUrl={dummyData.imageUrl} />
+        <InfoContainer>
+          <Title>{dummyData.title}</Title>
+          <DetailContainer>
+            <DetailText>{dummyData.year}</DetailText>
+            {dummyData.age === "all" && <AgeAllSvg />}
+            {dummyData.age === "12" && <Age12Svg />}
+            {dummyData.age === "15" && <Age15Svg />}
+            {dummyData.age === "19" && <Age19Svg />}
+            <DetailText>{formatRuntime(dummyData.runtime)}</DetailText>
+          </DetailContainer>
+        </InfoContainer>
+        <ReviewGraph reviews={dummyData.reviews} />
+        <ReviewRegist />
+        <MovieReview reviews={dummyData.reviews} />
+      </MovieReviewContainer>
+    </div>
+  );
+};
+
+export default ReviewsPage;

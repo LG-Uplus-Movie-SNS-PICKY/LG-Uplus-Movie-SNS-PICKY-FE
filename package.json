@@ -20,8 +20,10 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0",
+    "react-slick": "^0.30.2",
     "recoil": "^0.7.7",
-    "recoil-persist": "^5.1.0"
+    "recoil-persist": "^5.1.0",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "3.2.2",

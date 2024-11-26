@@ -39,6 +39,7 @@ export const globalStyle = css`
   }
 
   body {
+    margin: 0 auto;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -46,7 +47,16 @@ export const globalStyle = css`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* background-color: #f8f8f8; */
+    width: 100%;
+    min-height: 100vh;
+    letter-spacing: -0.4px; //자간 -4%
   }
+
+  .page {
+    width: 100%;
+    max-width: 393px;
+    margin: 0 auto;
+}
 
   body::-webkit-scrollbar {
     display: none;
