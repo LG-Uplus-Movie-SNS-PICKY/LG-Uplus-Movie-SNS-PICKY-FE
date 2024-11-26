@@ -1,19 +1,19 @@
 import Search from "@assets/icons/search_small.svg?react";
 
-import Check from "@assets/icons/check.svg?react";
-import Cancle from "@assets/icons/cancle.svg?react";
+import CheckIcon from "@assets/icons/check.svg?react";
+import CancleIcon from "@assets/icons/cancle.svg?react";
 
 import { useState } from "react";
 import styles from "./index.styles";
 
-function UserReportOpertionPage() {
+function ReportComponent() {
   const [filterValue, setFilterValue] = useState("all");
 
   return (
     <>
       {/* Title */}
       <div css={styles.titleHeaderContainer()}>
-        {/* 신고당한 총 인원 */}
+        {/* 총 인원 */}
         <div className="container">
           <h3>Total Reports:</h3>
           <span>294</span>
@@ -26,7 +26,7 @@ function UserReportOpertionPage() {
         </div>
 
         <div className="container">
-          <h3>Incompleted:</h3>
+          <h3>Incompleted Reports:</h3>
           <span>222</span>
         </div>
       </div>
@@ -58,10 +58,10 @@ function UserReportOpertionPage() {
             {/* Actions Button */}
             <div css={styles.actionButton()}>
               <button>
-                <Check />
+                <CheckIcon />
               </button>
               <button>
-                <Cancle />
+                <CancleIcon />
               </button>
             </div>
           </div>
@@ -103,4 +103,4 @@ function UserReportOpertionPage() {
   );
 }
 
-export default UserReportOpertionPage;
+export default ReportComponent;
