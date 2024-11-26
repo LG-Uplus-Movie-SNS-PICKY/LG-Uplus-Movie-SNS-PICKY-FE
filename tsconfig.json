@@ -16,8 +16,9 @@
       "@provider/*": ["src/provider/*"],
       "@recoil/*": ["src/recoil/*"],
       "@styles/*": ["src/styles/*"],
-      "@types/*": ["src/types/*"],
-      "@routers/*": ["src/routers/*"]
+      "@type/*": ["src/types/*"],
+      "@routers/*": ["src/routers/*"],
+      "@@components/*": ["src/components/*"]
     },
     "typeRoots": ["./node_modules/@types"],
     "lib": ["DOM", "ESNext"],
