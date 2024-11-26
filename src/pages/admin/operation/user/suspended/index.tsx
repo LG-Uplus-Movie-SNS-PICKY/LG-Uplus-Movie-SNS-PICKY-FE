@@ -47,7 +47,6 @@ function UserSuspendedOpertionPage() {
                 </div>
               </div>
 
-              {/* Status */}
               {/* <div css={styles.status()}>처리완료</div> */}
             </div>
 
