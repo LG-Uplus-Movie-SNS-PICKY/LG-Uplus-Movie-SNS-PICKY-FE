@@ -1,14 +1,24 @@
 import { Outlet, Route, Routes } from "react-router-dom";
 
+// import { Admin } from "@pages";
+
+// Pages Import
 import AdminDashboardPage from "@pages/admin/main";
+
+// -> Managment Overview Page
 import AdminUserManagementPage from "@pages/admin/management/user";
 import AdminMovieManagementPage from "@pages/admin/management/movie";
 import AdminReviewManagementPage from "@pages/admin/management/review";
 import AdminMovieLogManagementPage from "@pages/admin/management/movie-log";
+
+// User Operation Pages Import
+// import Admin
+
 import useDashboardData from "@hooks/admin/info";
 
-import { ADMIN_ROUTES } from "@constants/routes/routes";
+import { ADMIN_ROUTES, USER_MANAGEMENT_ROUTES } from "@constants/routes/routes";
 import Home from "@pages/Home";
+import UserPermissionOpertionPage from "@pages/admin/operation/user/permission";
 
 function ManagementSubLayout() {
   return <Outlet />;
@@ -30,7 +40,10 @@ function AdminLayout() {
         element={<ManagementSubLayout />}
       >
         <Route index element={<AdminUserManagementPage data={data[0]} />} />
-        <Route path="permissions" element={<Home />} />
+        <Route
+          path={USER_MANAGEMENT_ROUTES.PERMISSION}
+          element={<UserPermissionOpertionPage />}
+        />
         <Route path="reports" element={<Home />} />
         <Route path="suspended" element={<Home />} />
       </Route>
