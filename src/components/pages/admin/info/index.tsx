@@ -1,19 +1,19 @@
 import React from "react";
 
 import styles from "./index.styles";
-import { DashboardInfoListTypes } from "./type/index.d";
+import { DashboardInfoListTypes } from "@hooks/admin/info/types";
 
 interface DashboardInfoContainerProps {
   data: DashboardInfoListTypes;
 }
 
+// 렌더링 되는 컴포넌트
 function DashboardInfoContainer({ data }: DashboardInfoContainerProps) {
   return (
     <div css={styles.container()}>
       {/* 타이틀 영역 */}
       <div css={styles.containerTitle()}>
         <h3>{data.listTitle}</h3>
-        <span>View All</span>
       </div>
 
       <div className="line" />
@@ -23,7 +23,11 @@ function DashboardInfoContainer({ data }: DashboardInfoContainerProps) {
         {data.listItem &&
           data.listItem.map((item, idx) => {
             return (
-              <div key={idx} css={styles.listItemContainer(item.itemBgColor)}>
+              <div
+                key={idx}
+                css={styles.listItemContainer(item.itemBgColor)}
+                onClick={item.onClick}
+              >
                 {React.createElement(item.itemIcon)}
 
                 {/* Data Item Info */}

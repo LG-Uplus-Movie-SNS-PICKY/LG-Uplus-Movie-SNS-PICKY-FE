@@ -61,10 +61,15 @@ export interface DashboardInfoItemTypes {
   itemBgColor: string;
   itemTitle: string;
   itemTotalCount?: number;
+  onClick: () => void;
   subItems?: Array<DashboardInfoSubItemTypes>;
 }
 
 export interface DashboardInfoListTypes {
   listTitle: string;
   listItem: DashboardInfoItemTypes[];
+}
+
+export interface DashboardInfoListProps {
+  data: DashboardInfoListTypes[] | DashboardInfoListTypes;
 }

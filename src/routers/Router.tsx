@@ -9,7 +9,7 @@ import { globalStyle } from "@styles/global";
 // Route import
 import Home from "@pages/Home";
 import Layout from "@components/layout";
-import AdminDashboardPage from "@pages/admin";
+import AdminLayout from "./AdminLayout";
 
 function Router() {
   return (
@@ -25,10 +25,10 @@ function Router() {
           {/* 로그인 사용자 라우트 */}
 
           {/* 관리자 전용 라우트 */}
-          <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/feed" element={<Feed />} />
           <Route path="/add-feed" element={<Post />} />
           <Route path="/comment" element={<Comment />} />
+          <Route path="/admin/*" element={<AdminLayout />} />
         </Routes>
       </Layout>
     </BrowserRouter>
