@@ -38,6 +38,44 @@ function UserPermissionOpertionPage() {
       </div>
 
       {/* Table Container */}
+      <table css={styles.tableContainer()}>
+        {/* Table Header */}
+        <thead>
+          <tr>
+            <th>name</th>
+            <th>email</th>
+            <th>role</th>
+          </tr>
+        </thead>
+
+        {/* Table Body */}
+        <tbody>
+          <tr>
+            {/* 사용자 이름과 프로필 */}
+            <td css={styles.tableBodyItem()}>
+              <div className="profile">
+                <div className="profile-image">
+                  <img src="" alt="" />
+                </div>
+
+                <span>Amanda</span>
+              </div>
+            </td>
+
+            {/* 사용자 이메일 */}
+            <td css={styles.tableBodyItem()}>amanda@gmail.com</td>
+
+            {/* 사용자 권한 수정 Select Box */}
+            <td css={styles.tableBodyItem()}>
+              <select className="roleSelect">
+                <option value="user">User</option>
+                <option value="critic">Criric</option>
+                <option value="admin">Admin</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </>
   );
 }
