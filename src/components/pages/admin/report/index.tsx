@@ -7,8 +7,6 @@ import { useState } from "react";
 import styles from "./index.styles";
 
 function ReportComponent() {
-  const [filterValue, setFilterValue] = useState("all");
-
   return (
     <>
       {/* Title */}

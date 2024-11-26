@@ -1,7 +1,7 @@
 import ReportComponent from "@components/pages/admin/report";
 
-function UserReportOpertionPage() {
+function MovieLogReportOpertionPage() {
   return <ReportComponent />;
 }
 
-export default UserReportOpertionPage;
+export default MovieLogReportOpertionPage;

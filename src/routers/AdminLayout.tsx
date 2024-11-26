@@ -20,6 +20,8 @@ import { ADMIN_ROUTES, USER_MANAGEMENT_ROUTES } from "@constants/routes/routes";
 import Home from "@pages/Home";
 import UserPermissionOpertionPage from "@pages/admin/operation/user/permission";
 import UserReportOpertionPage from "@pages/admin/operation/user/report";
+import ReviewReportOpertionPage from "@pages/admin/operation/review/report";
+import MovieLogReportOpertionPage from "@pages/admin/operation/movie-log/report";
 
 function ManagementSubLayout() {
   return <Outlet />;
@@ -67,7 +69,7 @@ function AdminLayout() {
       >
         <Route index element={<AdminReviewManagementPage data={data[2]} />} />
         <Route path="reviews" element={<Home />} />
-        <Route path="reports" element={<Home />} />
+        <Route path="reports" element={<ReviewReportOpertionPage />} />
       </Route>
 
       {/* 무비로그(피드) 관련 Path 정의 */}
@@ -77,7 +79,7 @@ function AdminLayout() {
       >
         <Route index element={<AdminMovieLogManagementPage data={data[3]} />} />
         <Route path="logs" element={<Home />} />
-        <Route path="reports" element={<Home />} />
+        <Route path="reports" element={<MovieLogReportOpertionPage />} />
       </Route>
     </Routes>
   );
