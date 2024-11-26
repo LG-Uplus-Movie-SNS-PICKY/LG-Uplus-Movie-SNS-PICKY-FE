@@ -23,6 +23,8 @@ import UserReportOpertionPage from "@pages/admin/operation/user/report";
 import ReviewReportOpertionPage from "@pages/admin/operation/review/report";
 import MovieLogReportOpertionPage from "@pages/admin/operation/movie-log/report";
 import UserSuspendedOpertionPage from "@pages/admin/operation/user/suspended";
+import ReviewsOpertionPage from "@pages/admin/operation/review/reviews";
+import MovieLogsOpertionPage from "@pages/admin/operation/movie-log/movie-logs";
 
 function ManagementSubLayout() {
   return <Outlet />;
@@ -69,7 +71,7 @@ function AdminLayout() {
         element={<ManagementSubLayout />}
       >
         <Route index element={<AdminReviewManagementPage data={data[2]} />} />
-        <Route path="reviews" element={<Home />} />
+        <Route path="reviews" element={<ReviewsOpertionPage />} />
         <Route path="reports" element={<ReviewReportOpertionPage />} />
       </Route>
 
@@ -79,7 +81,7 @@ function AdminLayout() {
         element={<ManagementSubLayout />}
       >
         <Route index element={<AdminMovieLogManagementPage data={data[3]} />} />
-        <Route path="logs" element={<Home />} />
+        <Route path="logs" element={<MovieLogsOpertionPage />} />
         <Route path="reports" element={<MovieLogReportOpertionPage />} />
       </Route>
     </Routes>
