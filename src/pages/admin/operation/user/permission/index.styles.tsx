@@ -1,6 +1,7 @@
 import { css, SerializedStyles } from "@emotion/react";
 
 export default {
+  // Filter Container CSS
   filterContainer(): SerializedStyles {
     return css`
       width: 100%;
@@ -11,6 +12,7 @@ export default {
     `;
   },
 
+  // Filter CSS
   filter(): SerializedStyles {
     return css`
       display: flex;
@@ -29,11 +31,11 @@ export default {
         border-radius: 4px;
         padding: 2px 18px 2px 5px;
         outline: none;
-        /* back */
       }
     `;
   },
 
+  // Search CSS
   search(): SerializedStyles {
     return css`
       display: flex;
@@ -49,6 +51,7 @@ export default {
         border: none;
         background-color: transparent;
         outline: none;
+        padding-left: 5px;
       }
 
       & > button[type="submit"] {
@@ -59,6 +62,100 @@ export default {
         justify-content: center;
         align-items: center;
         background-color: transparent;
+      }
+    `;
+  },
+
+  // Table CSS
+  tableContainer(): SerializedStyles {
+    return css`
+      margin-top: 24px;
+      width: 100%;
+      overflow: hidden;
+
+      border-radius: 8px;
+      padding: 16px;
+
+      box-shadow: 0 0 4px rgba(200, 200, 200, 0.3);
+
+      & > thead {
+        background-color: #f9fafb;
+        border-bottom: 1px solid #ebecee;
+
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #9d9d9d;
+
+        & > tr > th:first-of-type {
+          width: 40%;
+        }
+
+        & > tr > th {
+          padding: 8px;
+          text-align: start;
+
+          &:nth-of-type(1) {
+            width: 30%;
+          }
+
+          &:nth-of-type(2) {
+            width: 50%;
+          }
+        }
+      }
+
+      & > tbody {
+        background-color: #fff;
+
+        & > tr {
+          border-bottom: 1px solid #ebecee;
+
+          &:last-of-type {
+            border-bottom: none;
+          }
+        }
+      }
+    `;
+  },
+
+  tableBodyItem(): SerializedStyles {
+    return css`
+      padding: 16px 8px;
+      vertical-align: middle;
+
+      font-size: 14px;
+      font-weight: 400;
+
+      & > div.profile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        font-weight: 600;
+
+        & > .profile-image {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background-color: aliceblue;
+        }
+      }
+
+      & > select.roleSelect {
+        padding: 0 0 0 5px;
+        border: none;
+        outline: none;
+        background-color: transparent;
+        cursor: pointer;
+        color: #9d9d9d;
+        font-weight: 600;
+
+        transition: color 0.3s;
+
+        &:hover {
+          color: #191919;
+        }
       }
     `;
   },
