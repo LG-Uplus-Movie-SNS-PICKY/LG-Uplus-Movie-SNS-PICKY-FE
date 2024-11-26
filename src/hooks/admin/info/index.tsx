@@ -15,12 +15,15 @@ import ReportReview from "@assets/icons/dashboard/list-item/report_review.svg?re
 import MovieLog from "@assets/icons/dashboard/list-item/movie_log.svg?react";
 import ReportMovieLog from "@assets/icons/dashboard/list-item/report-movie_log.svg?react";
 
-import { DashboardAPIResponse, DashboardInfoListTypes } from "../type/index.d";
-import { RESPONSE_DATA } from "../constant";
+import { DashboardAPIResponse, DashboardInfoListTypes } from "./types/index";
+import { RESPONSE_DATA } from "./constant";
+import { useNavigate } from "react-router-dom";
 
 // Dasahboard List Item을 구성할 데이터 API Custom Hook
 // Todo -> React Query로 수정
 function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
+  const navigate = useNavigate();
+
   const [listItemData, setListItemData] = useState<DashboardInfoListTypes[]>(
     []
   );
@@ -53,8 +56,9 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: User,
                 itemBgColor:
                   "linear-gradient(180deg, #87C3E2 0%, #007BFF 100%)",
-                itemTitle: "사용자",
+                itemTitle: "사용자 권환 관리",
                 itemTotalCount: 2170,
+                onClick: () => navigate("/admin/user-management/permissions"),
                 subItems: [
                   { subItemTitle: "일반 사용자", subItemTotalCount: 1938 },
                   { subItemTitle: "평론가", subItemTotalCount: 215 },
@@ -66,8 +70,9 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: ReportUser,
                 itemBgColor:
                   "linear-gradient(180deg, #FFC766 0%, #FFA500 100%)",
-                itemTitle: "신고",
+                itemTitle: "신고 관리",
                 itemTotalCount: 294,
+                onClick: () => navigate("/admin/user-management/reports"),
                 subItems: [
                   { subItemTitle: "처리 완료", subItemTotalCount: 72 },
                   { subItemTitle: "처리 미완료", subItemTotalCount: 224 },
@@ -78,8 +83,9 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: AccountUser,
                 itemBgColor:
                   "linear-gradient(180deg, #FF706C 0%, #E53935 100%)",
-                itemTitle: "정지 사용자",
+                itemTitle: "정지 사용자 관리",
                 itemTotalCount: 78,
+                onClick: () => navigate("/admin/user-management/suspended"),
                 subItems: [
                   { subItemTitle: "이의 신청 정보", subItemTotalCount: 29 },
                   { subItemTitle: "이의 신청 접수", subItemTotalCount: 4 },
@@ -95,24 +101,27 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: Genre,
                 itemBgColor:
                   "linear-gradient(180deg, #D4A5F5 0%, #8E44AD 100%)",
-                itemTitle: "장르",
+                itemTitle: "장르 관리",
                 itemTotalCount: 15,
+                onClick: () => navigate("/admin/movie-management/genres"),
               },
 
               {
                 itemIcon: Movie,
                 itemBgColor:
                   "linear-gradient(180deg, #F5B041 0%, #D35400 100%)",
-                itemTitle: "신고",
+                itemTitle: "신고 관리",
                 itemTotalCount: 305,
+                onClick: () => navigate("/admin/movie-management/movies"),
               },
 
               {
                 itemIcon: PlayList,
                 itemBgColor:
                   "linear-gradient(180deg, #5DADE2 0%, #21618C 100%)",
-                itemTitle: "플레이리스트",
+                itemTitle: "플레이리스트 관리",
                 itemTotalCount: 36,
+                onClick: () => navigate("/admin/movie-management/playlists"),
               },
             ],
           },
@@ -124,16 +133,18 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: Review,
                 itemBgColor:
                   "linear-gradient(180deg, #B8E2C1 0%, #74B78D 100%)",
-                itemTitle: "한줄평",
+                itemTitle: "한줄평 관리",
                 itemTotalCount: 7213,
+                onClick: () => navigate("/admin/review-management/reviews"),
               },
 
               {
                 itemIcon: ReportReview,
                 itemBgColor:
                   "linear-gradient(180deg, #FFC4C4 0%, #E57373 100%)",
-                itemTitle: "신고",
+                itemTitle: "신고 관리",
                 itemTotalCount: 1204,
+                onClick: () => navigate("/admin/review-management/reports"),
                 subItems: [
                   { subItemTitle: "처리 완료", subItemTotalCount: 617 },
                   { subItemTitle: "처리 미완료", subItemTotalCount: 587 },
@@ -149,16 +160,18 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: MovieLog,
                 itemBgColor:
                   "linear-gradient(180deg, #F9E79F 0%, #F1C40F 100%)",
-                itemTitle: "무비로그",
+                itemTitle: "무비로그 관리",
                 itemTotalCount: 4621,
+                onClick: () => navigate("/admin/movie-log-management/logs"),
               },
 
               {
                 itemIcon: ReportMovieLog,
                 itemBgColor:
                   "linear-gradient(180deg, #FFA07A 0%, #D35400 100%)",
-                itemTitle: "신고",
+                itemTitle: "신고 관리",
                 itemTotalCount: 2394,
+                onClick: () => navigate("/admin/movie-log-management/reports"),
                 subItems: [
                   { subItemTitle: "신고 무비로그", subItemTotalCount: 192 },
                   { subItemTitle: "신고 댓글", subItemTotalCount: 2124 },
