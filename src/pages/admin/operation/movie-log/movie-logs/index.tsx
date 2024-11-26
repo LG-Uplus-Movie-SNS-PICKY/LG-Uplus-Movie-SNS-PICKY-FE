@@ -54,7 +54,7 @@ function MovieLogsOpertionPage() {
                 laborum. Impedit aliquid fuga cum.
               </p>
 
-              <div>이미지 / 비디오 슬라이드</div>
+              <div>이미지 / 비디오 슬라이드 화면 출력</div>
             </div>
 
             {/* 댓글 관리 */}
