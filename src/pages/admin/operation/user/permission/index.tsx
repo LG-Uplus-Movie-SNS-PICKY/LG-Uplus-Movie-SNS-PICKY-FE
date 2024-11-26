@@ -8,6 +8,7 @@ function UserPermissionOpertionPage() {
     <>
       {/* Filter Container */}
       <div css={styles.filterContainer()}>
+        {/* Filter Select Tag */}
         <div css={styles.filter()}>
           <label htmlFor="filter">Filter By: </label>
           <select
@@ -22,7 +23,14 @@ function UserPermissionOpertionPage() {
           </select>
         </div>
 
-        <input type="text" />
+        {/* Search Input Tag */}
+        <form
+          css={styles.search()}
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <input type="text" />
+          <button>Search</button>
+        </form>
       </div>
 
       {/* Table Container */}

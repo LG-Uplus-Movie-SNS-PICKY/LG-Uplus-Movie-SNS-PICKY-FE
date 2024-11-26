@@ -23,6 +23,18 @@ export default {
       & > label {
         margin-right: 10px;
       }
+
+      & > select {
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        padding: 2px 18px 2px 5px;
+        outline: none;
+        /* back */
+      }
     `;
+  },
+
+  search(): SerializedStyles {
+    return css``;
   },
 };
