@@ -53,9 +53,12 @@ function MovieLogsOpertionPage() {
                 molestiae magni libero earum reprehenderit explicabo nisi eius
                 laborum. Impedit aliquid fuga cum.
               </p>
+
+              <div>이미지 / 비디오 슬라이드</div>
             </div>
 
-            <div>asd</div>
+            {/* 댓글 관리 */}
+            <div>comment: 21(클릭 시 모달창)</div>
           </div>
         </div>
       </div>
