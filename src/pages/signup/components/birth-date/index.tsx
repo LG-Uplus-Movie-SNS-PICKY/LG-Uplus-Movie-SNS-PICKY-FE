@@ -1,17 +1,26 @@
-import useFocus from "../hooks/useFocus";
-import { Block, Input, Text } from "../../styles/ui";
+import useFocus from "../../../../components/hooks/useFocus";
+import { Block, Input, Text } from "../ui";
 import { useState, useEffect } from "react";
-import { validateMonth, validateDay } from "../../util/validator";
+import { validateMonth, validateDay } from "../../../../util/validator";
 import { useRecoilState } from "recoil";
-import { inputState } from "../../review/atoms";
+import { inputState } from "../../../../review/atoms";
 
 export default function InputBirthDate() {
   const [birthYear, setBirthYear] = useState<string>("");
   const [birthMonth, setBirthMonth] = useState<string>("");
   const [birthDay, setBirthDay] = useState<string>("");
-  const [, setInputData] = useRecoilState(inputState);
+  const [inputData, setInputData] = useRecoilState(inputState);
 
   const { isFocused, handleFocus, handleBlur } = useFocus();
+
+  useEffect(() => {
+    if (inputData.birthDate) {
+      const [year, month, day] = inputData.birthDate.split("-");
+      setBirthYear(year);
+      setBirthMonth(month.startsWith("0") ? month.slice(1) : month);
+      setBirthDay(day.startsWith("0") ? day.slice(1) : day);
+    }
+  }, [inputData.birthDate]);
 
   const handleBirthYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -39,21 +48,20 @@ export default function InputBirthDate() {
 
   useEffect(() => {
     if (birthYear && birthMonth && birthDay) {
-      const birthDate = `${birthYear}-${String(birthMonth).padStart(
-        2,
-        "0"
-      )}-${String(birthDay).padStart(2, "0")}`;
+      const formattedMonth = birthMonth.padStart(2, "0");
+      const formattedDay = birthDay.padStart(2, "0");
+      const birthDate = `${birthYear}-${formattedMonth}-${formattedDay}`;
       setInputData((prev) => ({ ...prev, birthDate }));
     } else {
       setInputData((prev) => ({ ...prev, birthDate: "" }));
     }
-  }, [birthYear, birthMonth, birthDay]);
+  }, [birthYear, birthMonth, birthDay, setInputData]);
 
   return (
     <>
-      <Block.FlexBox width="20%" direction="column" gap="10px">
-        <Text.FocusedMenu isFocused={isFocused}>생년월일</Text.FocusedMenu>
-        <Block.FlexBox justifyContent="space-between" gap="10px">
+      <Block.FlexBox $width="20%" $direction="column" $gap="10px">
+        <Text.FocusedMenu $isFocused={isFocused}>생년월일</Text.FocusedMenu>
+        <Block.FlexBox $justifyContent="space-between" $gap="10px">
           <Input.BirthBox
             type="text"
             value={birthYear}
@@ -79,7 +87,7 @@ export default function InputBirthDate() {
             placeholder="일"
           />
         </Block.FlexBox>
-        <Text.FocusedWarning isFocused={isFocused}>
+        <Text.FocusedWarning $isFocused={isFocused}>
           생년월일을 정확하게 입력해주세요
         </Text.FocusedWarning>
       </Block.FlexBox>

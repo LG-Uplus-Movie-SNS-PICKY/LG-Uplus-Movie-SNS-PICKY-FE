@@ -6,14 +6,16 @@ export const userState = atom({
   default: {
     username: "",
     nickname: "",
-    profile_picture: "",
+    profileImage: "",
+    favoriteGenres: [],
+    favoriteMovie: [],
     email: "",
     gender: "",
     nationality: "",
     kakao_id: "",
     google_id: "",
     naver_id: "",
-  },
+  }
 });
 
 // 입력 데이터 상태
@@ -22,10 +24,13 @@ export interface IInputData {
   email: string;
   nickname: string;
   birthDate: string;
-  gender: string | null;
-  nationality: string | null;
+  gender: string;
+  nationality: string;
   consentAll: boolean;
   consentAge: boolean;
+  profileImage: string; 
+  favoriteGenres: number[];
+  favoriteMovie: number[];
 }
 
 export const inputState = atom<IInputData>({
@@ -35,9 +40,12 @@ export const inputState = atom<IInputData>({
     email: "",
     nickname: "",
     birthDate: "",
-    gender: null,
-    nationality: null,
+    gender: "",
+    nationality: "",
     consentAll: false,
     consentAge: false,
+    profileImage: "",
+    favoriteGenres: [],
+    favoriteMovie: [],
   },
 });

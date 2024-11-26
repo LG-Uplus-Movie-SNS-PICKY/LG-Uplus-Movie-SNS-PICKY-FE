@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
-import Signup from "../pages/signup";
-import Login from "../pages/login/login";
+import Signup from "../pages/Signup/";
+import Login from "../pages/Login/";
 import { Global } from "@emotion/react";
 import { globalStyle } from "../styles/global";
 

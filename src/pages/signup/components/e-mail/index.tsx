@@ -1,8 +1,7 @@
 import { useRecoilState } from "recoil";
-import { inputState } from "../../review/atoms";
-import { Block, Input, Text } from "../../styles/ui";
-// import { Warning, WarningDisabled } from "../../assets/svg";
-import useFocus from "../hooks/useFocus";
+import { inputState } from "../../../../review/atoms";
+import { Block, Text, Input } from "../ui";
+import useFocus from "../../../../components/hooks/useFocus";
 
 export default function InputEmail() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -15,8 +14,8 @@ export default function InputEmail() {
 
   return (
     <>
-      <Block.FlexBox width="20%" direction="column" gap="10px">
-        <Text.FocusedMenu isFocused={isFocused}>이메일</Text.FocusedMenu>
+      <Block.FlexBox $width="20%" $direction="column" $gap="10px">
+        <Text.FocusedMenu $isFocused={isFocused}>이메일</Text.FocusedMenu>
         <Input.InfoBox
           type="email"
           value={inputData.email || ""}
@@ -25,9 +24,8 @@ export default function InputEmail() {
           onBlur={handleBlur}
           onChange={handleEmailChange}
         />
-        <Block.FlexBox alignItems="center" gap="10px">
-          {/* {isFocused ? <Warning width={16} /> : <WarningDisabled width={16} />} */}
-          <Text.FocusedWarning isFocused={isFocused}>
+        <Block.FlexBox $alignItems="center" $gap="10px">
+          <Text.FocusedWarning $isFocused={isFocused}>
             올바른 이메일 주소를 입력해주세요
           </Text.FocusedWarning>
         </Block.FlexBox>
