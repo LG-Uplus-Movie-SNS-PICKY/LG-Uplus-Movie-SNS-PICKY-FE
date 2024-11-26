@@ -26,7 +26,11 @@
     "resolveJsonModule": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react", // Emotion과 통합
-    "composite": true
+    "composite": true,
+    "paths": {
+      "@*": ["src/*"], // src 폴더를 @로 별칭 지정
+      "@pages/*": ["src/pages/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]
