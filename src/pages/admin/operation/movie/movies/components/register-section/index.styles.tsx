@@ -4,11 +4,9 @@ export default {
   registerContainer(): SerializedStyles {
     return css`
       width: 100%;
-      /* padding: 8px 16px; */
-      /* background-color: #fff; */
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
 
       gap: 24px;
     `;
@@ -20,6 +18,7 @@ export default {
 
       display: flex;
       flex-direction: column;
+
       background-color: #fff;
       /* border-radius: 4px; */
 
@@ -57,6 +56,7 @@ export default {
 
   registerButton(): SerializedStyles {
     return css`
+      height: 45.61px;
       padding: 12px 24px;
       background-color: #fff;
       border: none;

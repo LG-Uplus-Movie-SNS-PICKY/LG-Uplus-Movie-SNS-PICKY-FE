@@ -116,11 +116,14 @@ function RegistMovieSection() {
             </button>
           </div>
 
-          <ul css={styles.movieAutoCompleteContainer()}>
-            {isLoading && <li className="list-item loading">Loading</li>}
-            {isError && <li className="list-item error">Error</li>}
-            {filteredMovies.length > 0 && <li className="list-item">as</li>}
-          </ul>
+          {/* 자동완성 */}
+          {isInputFocus && movieSearch !== "" && (
+            <ul css={styles.movieAutoCompleteContainer()}>
+              {isLoading && <li className="list-item loading">Loading</li>}
+              {isError && <li className="list-item error">Error</li>}
+              {filteredMovies.length > 0 && <li className="list-item">as</li>}
+            </ul>
+          )}
         </div>
 
         {/* 영화 등록 Button */}
