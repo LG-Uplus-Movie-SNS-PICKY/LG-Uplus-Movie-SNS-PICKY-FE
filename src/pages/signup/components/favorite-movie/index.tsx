@@ -1,10 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import aboutTime from "../../../../assets/images/Rectangle 2.jpg";
-import { Block } from "../ui";
 import { ArrowLeft, ArrowRight } from "../../../../assets/svg";
 import { inputState } from "../../../../review/atoms";
+import { Text } from "../ui";
+
 import {
+  ConsentWrapper,
   MovieTitle,
   MovieImage,
   MovieCard,
@@ -14,11 +17,13 @@ import {
   MovieGrid,
   MovieGridWrapper,
   TotalPages,
-  Header,
+  Wrapper,
+  TitleWrapper,
   TitleContainer,
   Title,
   RequiredBadge,
   Subtitle,
+  TotalContainer,
   PageIndicator,
   CurrentPage,
 } from "./index.styles";
@@ -42,6 +47,15 @@ const MOVIES = [
   { id: 16, title: "미션임파서블", image: aboutTime },
   { id: 17, title: "미션임파서블", image: aboutTime },
   { id: 18, title: "미션임파서블", image: aboutTime },
+  { id: 19, title: "미션임파서블", image: aboutTime },
+  { id: 20, title: "미션임파서블", image: aboutTime },
+  { id: 21, title: "미션임파서블", image: aboutTime },
+  { id: 22, title: "미션임파서블", image: aboutTime },
+  { id: 23, title: "미션임파서블", image: aboutTime },
+  { id: 24, title: "미션임파서블", image: aboutTime },
+  { id: 25, title: "미션임파서블", image: aboutTime },
+  { id: 26, title: "미션임파서블", image: aboutTime },
+  { id: 27, title: "미션임파서블", image: aboutTime },
 ];
 
 const InputFavoriteMovie: React.FC = () => {
@@ -66,58 +80,60 @@ const InputFavoriteMovie: React.FC = () => {
   );
 
   return (
-    <Block.FlexBox $width="20%" $direction="column" $gap="10px">
-      <Header>
-        <TitleContainer>
-          <Title>어떤 영화를 좋아하나요?</Title>
-          <RequiredBadge>필수</RequiredBadge>
-        </TitleContainer>
-        <Subtitle>평소 좋아하는 영화를 골라주세요.(5개 ~ 10개)</Subtitle>
-        <Subtitle $small>
-          선택된 영화 기반으로 추천해 드리며, 추천 페이지에서 변경 가능
-        </Subtitle>
+    <ConsentWrapper>
+      <Wrapper>
+        <TitleWrapper>
+          <TitleContainer>
+            <Title>어떤 영화를 좋아하나요?</Title>
+            <RequiredBadge>필수</RequiredBadge>
+          </TitleContainer>
+          <Subtitle>평소 좋아하는 영화를 골라주세요.(5개 ~ 10개)</Subtitle>
+        </TitleWrapper>
+      </Wrapper>
+
+      <TotalContainer>
         <PageIndicator>
           <CurrentPage>{currentPage}</CurrentPage> /{" "}
           <TotalPages>{totalPages}</TotalPages>
         </PageIndicator>
-      </Header>
 
-      <MovieGridWrapper>
-        <PreviousButton
-          onClick={() => setCurrentPage((prev) => prev - 1)}
-          disabled={currentPage === 1}
-        >
-          <ArrowLeft />
-        </PreviousButton>
+        <MovieGridWrapper>
+          <PreviousButton
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            disabled={currentPage === 1}
+          >
+            <ArrowLeft />
+          </PreviousButton>
 
-        <MovieGrid>
-          {paginatedMovies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              $isSelected={inputData.favoriteMovie.includes(movie.id)}
-              onClick={() => toggleSelection(movie.id)}
-            >
-              <MovieImage
-                src={movie.image}
-                alt={movie.title}
+          <MovieGrid>
+            {paginatedMovies.map((movie) => (
+              <MovieCard
+                key={movie.id}
                 $isSelected={inputData.favoriteMovie.includes(movie.id)}
-              />
-              <CheckIcon
-                $isVisible={inputData.favoriteMovie.includes(movie.id)}
-              />
-              <MovieTitle>{movie.title}</MovieTitle>
-            </MovieCard>
-          ))}
-        </MovieGrid>
+                onClick={() => toggleSelection(movie.id)}
+              >
+                <MovieImage
+                  src={movie.image}
+                  alt={movie.title}
+                  $isSelected={inputData.favoriteMovie.includes(movie.id)}
+                />
+                <CheckIcon
+                  $isVisible={inputData.favoriteMovie.includes(movie.id)}
+                />
+                <MovieTitle>{movie.title}</MovieTitle>
+              </MovieCard>
+            ))}
+          </MovieGrid>
 
-        <NextButton
-          onClick={() => setCurrentPage((prev) => prev + 1)}
-          disabled={currentPage === totalPages}
-        >
-          <ArrowRight />
-        </NextButton>
-      </MovieGridWrapper>
-    </Block.FlexBox>
+          <NextButton
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <ArrowRight />
+          </NextButton>
+        </MovieGridWrapper>
+      </TotalContainer>
+    </ConsentWrapper>
   );
 };
 

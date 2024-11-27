@@ -2,21 +2,27 @@
 import { useRecoilState } from "recoil";
 import { inputState } from "../../review/atoms";
 import { useState } from "react";
-import InputUserName from "../Signup/components/user-name";
-import InputBirthDate from "../Signup/components/birth-date";
-import InputNickname from "../Signup/components/nick-name";
+import InputUserName from "./components/user-name";
+import InputBirthDate from "./components/birth-date";
+import InputNickname from "./components/nick-name";
 import InputEmail from "./components/e-mail";
-import InputGender from "../Signup/components/gender";
-import InputNationality from "../Signup/components/nationality";
-import InputConsentForm from "../Signup/components/consent-form";
-import InputProfile from "../Signup/components/profile";
-import InputFavoriteGenre from "../Signup/components/favorite-genre";
-import InputFavoriteMovie from "../Signup/components/favorite-movie";
+import InputGender from "./components/gender";
+import InputNationality from "./components/nationality";
+import InputConsentForm from "./components/consent-form";
+import InputProfile from "./components/profile";
+import InputFavoriteGenre from "./components/favorite-genre";
+import InputFavoriteMovie from "./components/favorite-movie";
 import { IInputData } from "../../review/atoms";
 import { PickyLogo } from "../../assets/svg";
-import { Block, Button, Text } from "../../styles/ui";
-import {ProgressBarContainer, Progress, ResponsiveFlexBox, ResponsiveButtonWrapper, BackButton} from "./index.styles"
-
+import { Button, Text } from "../../styles/ui";
+import {
+  ProgressBarContainer,
+  Progress,
+  ResponsiveFlexBox,
+  ResponsiveButtonWrapper,
+  BackButton,
+  LogoContainer,
+} from "./index.styles";
 
 export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -24,52 +30,42 @@ export default function Signup() {
 
   const steps = [
     {
-      title: "약관의 동의해 주세요",
       components: [<InputConsentForm key="consent" />],
       requiredFields: ["consentAll", "consentAge"],
     },
     {
-      title: "당신의 이름을 입력해주세요",
       components: [<InputUserName key="name" />],
       requiredFields: ["name"],
     },
     {
-      title: "닉네임을 입력해주세요",
       components: [<InputNickname key="nickname" />],
       requiredFields: ["nickname"],
     },
     {
-      title: "생년월일을 입력해주세요",
       components: [<InputBirthDate key="birthDate" />],
       requiredFields: ["birthDate"],
     },
     {
-      title: "이메일을 입력해주세요",
       components: [<InputEmail key="email" />],
       requiredFields: ["email"],
     },
     {
-      title: "성별을 선택해주세요",
       components: [<InputGender key="gender" />],
       requiredFields: ["gender"],
     },
     {
-      title: "내국인/외국인을 선택해주세요",
       components: [<InputNationality key="nationality" />],
       requiredFields: ["nationality"],
     },
     {
-      title: "",
       components: [<InputProfile key="profile" />],
       requiredFields: ["profileImage"],
     },
     {
-      title: "",
       components: [<InputFavoriteGenre key="favoriteGenres" />],
       requiredFields: ["favoriteGenres"],
     },
     {
-      title: "",
       components: [<InputFavoriteMovie key="favoriteMovie" />],
       requiredFields: ["favoriteMovie"],
     },
@@ -128,49 +124,35 @@ export default function Signup() {
     }
   };
 
-  const { title, components } = steps[step - 1];
+  const { components } = steps[step - 1];
 
   return (
-    <Block.FlexBox
-      $direction="column"
-      $alignItems="center"
-      $justifyContent="flex-start"
-      $gap="20px"
-    >
+    <>
       <ProgressBarContainer>
         <Progress progress={(step / steps.length) * 100} />
       </ProgressBarContainer>
 
       {step > 1 && <BackButton onClick={handleBackStep}>뒤로</BackButton>}
-            <PickyLogo width={99} height={35} />
-      <Text.TitleMenu100>회원가입 페이지</Text.TitleMenu100>
-
-
-      <ResponsiveFlexBox
-        $width="100%"
-        $height="auto"
-        $justifyContent="center"
-        $alignItems="center"
-        $direction="column"
-        $gap="10px"
-      >
-        <Text.TitleMenu100>{title}</Text.TitleMenu100>
-        {components.map((component) => component)}
-      </ResponsiveFlexBox>
+      <LogoContainer>
+        <PickyLogo width={99} height={35} />
+      </LogoContainer>
+      {components.map((component) => component)}
       <ResponsiveButtonWrapper>
         <Button.Confirm
           onClick={step === steps.length ? handleComplete : handleNextStep}
           $isDisabled={!isStepValid()}
           style={{
-            width: "361px",
-            height: "51px",
+            maxWidth: "768px",
+            width: "100%",
+            padding: " 0",
+            fontSize: "16px",
           }}
         >
-          <Text.TitleMenu300 color="White">
+          <Text.TitleMenu300 color="White" style={{ fontSize: "16px" }}>
             {step === steps.length ? "완료" : "다음"}
           </Text.TitleMenu300>
         </Button.Confirm>
       </ResponsiveButtonWrapper>
-    </Block.FlexBox>
+    </>
   );
 }

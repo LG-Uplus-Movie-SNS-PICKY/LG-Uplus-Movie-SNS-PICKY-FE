@@ -1,8 +1,13 @@
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
 import useFocus from "../../../../components/hooks/useFocus";
-import { Block, Text } from "../ui";
-import { GenderContainer, GenderButton } from "./index.styles";
+import { Text } from "../ui";
+import {
+  GenderContainer,
+  GenderButton,
+  GenderWrapper,
+  TextWrapper,
+} from "./index.styles";
 
 export default function InputGender() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -12,8 +17,11 @@ export default function InputGender() {
   };
 
   return (
-    <Block.FlexBox $width="20%" $direction="column" $gap="10px">
-      <Text.FocusedMenu $isFocused={isFocused}>성별</Text.FocusedMenu>
+    <GenderWrapper>
+      <Text.TitleMenu300>당신의 성별을 선택해주세요</Text.TitleMenu300>
+      <TextWrapper>
+        <Text.FocusedMenu $isFocused={isFocused}>성별</Text.FocusedMenu>
+      </TextWrapper>
       <GenderContainer>
         <GenderButton
           $isSelected={inputData.gender === "male"}
@@ -32,9 +40,11 @@ export default function InputGender() {
           여자
         </GenderButton>
       </GenderContainer>
-      <Text.FocusedWarning $isFocused={isFocused}>
-        성별을 선택해주세요.
-      </Text.FocusedWarning>
-    </Block.FlexBox>
+      <TextWrapper>
+        <Text.FocusedWarning $isFocused={isFocused}>
+          성별을 선택해주세요.
+        </Text.FocusedWarning>
+      </TextWrapper>
+    </GenderWrapper>
   );
 }

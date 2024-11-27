@@ -5,6 +5,8 @@ const SvgArrowRight = (props: SVGProps<SVGSVGElement>) => (
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 25 25"
+    width={24}
+    height={24}
     {...props}
   >
     <g clipPath="url(#arrowRight_svg__a)">

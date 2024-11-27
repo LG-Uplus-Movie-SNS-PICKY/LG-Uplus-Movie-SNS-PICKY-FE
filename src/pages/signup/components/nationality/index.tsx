@@ -1,8 +1,9 @@
 import { useRecoilState } from "recoil";
 import { inputState, IInputData } from "../../../../review/atoms";
-import { Block, Text } from "../ui";
+import { Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import {NationalityContainer, NationalityButton} from "./index.styles"
+import { NationalityContainer, NationalityButton } from "./index.styles";
+import { NationContainer, TextWrapper } from "./index.styles";
 
 export default function InputNationality() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -16,8 +17,11 @@ export default function InputNationality() {
   };
 
   return (
-    <Block.FlexBox $width="20%" $direction="column" $gap="10px">
-      <Text.FocusedMenu $isFocused={isFocused}>국적</Text.FocusedMenu>
+    <NationContainer>
+      <Text.TitleMenu300>당신의 국적을 선택해주세요</Text.TitleMenu300>
+      <TextWrapper>
+        <Text.FocusedMenu $isFocused={isFocused}>국적</Text.FocusedMenu>
+      </TextWrapper>
       <NationalityContainer>
         <NationalityButton
           $isSelected={inputData.nationality === "domestic"}
@@ -37,9 +41,11 @@ export default function InputNationality() {
         </NationalityButton>
       </NationalityContainer>
 
-      <Text.FocusedWarning $isFocused={isFocused}>
-        국적을 선택해주세요.
-      </Text.FocusedWarning>
-    </Block.FlexBox>
+      <TextWrapper>
+        <Text.FocusedWarning $isFocused={isFocused}>
+          국적을 선택해주세요.
+        </Text.FocusedWarning>
+      </TextWrapper>
+    </NationContainer>
   );
 }

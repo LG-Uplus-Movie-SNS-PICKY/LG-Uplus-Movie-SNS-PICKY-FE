@@ -51,3 +51,11 @@ export const StyledImage = styled.img`
   height: 100%;
   object-fit: cover;
 `;
+
+export const ProfileContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+`;

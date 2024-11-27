@@ -1,9 +1,10 @@
 import useFocus from "../../../../components/hooks/useFocus";
-import { Block, Input, Text } from "../ui";
+import { Input, Text } from "../ui";
 import { useState, useEffect } from "react";
 import { validateMonth, validateDay } from "../../../../util/validator";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
+import { BirthDateContainer, BirthDate, TextWrapper } from "./index.styles";
 
 export default function InputBirthDate() {
   const [birthYear, setBirthYear] = useState<string>("");
@@ -59,9 +60,12 @@ export default function InputBirthDate() {
 
   return (
     <>
-      <Block.FlexBox $width="20%" $direction="column" $gap="10px">
-        <Text.FocusedMenu $isFocused={isFocused}>생년월일</Text.FocusedMenu>
-        <Block.FlexBox $justifyContent="space-between" $gap="10px">
+      <BirthDateContainer>
+        <Text.TitleMenu300>당신의 생년월일을 입력해주세요</Text.TitleMenu300>
+        <TextWrapper>
+          <Text.FocusedMenu $isFocused={isFocused}>생년월일</Text.FocusedMenu>
+        </TextWrapper>
+        <BirthDate>
           <Input.BirthBox
             type="text"
             value={birthYear}
@@ -86,11 +90,13 @@ export default function InputBirthDate() {
             onChange={handleBirthDayChange}
             placeholder="일"
           />
-        </Block.FlexBox>
-        <Text.FocusedWarning $isFocused={isFocused}>
-          생년월일을 정확하게 입력해주세요
-        </Text.FocusedWarning>
-      </Block.FlexBox>
+        </BirthDate>
+        <TextWrapper>
+          <Text.FocusedWarning $isFocused={isFocused}>
+            생년월일을 정확하게 입력해주세요
+          </Text.FocusedWarning>
+        </TextWrapper>
+      </BirthDateContainer>
     </>
   );
 }

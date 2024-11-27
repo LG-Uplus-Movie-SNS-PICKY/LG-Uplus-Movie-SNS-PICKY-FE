@@ -85,6 +85,7 @@ export const Text = {
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size550)};
     color: ${({ color }) => (color ? theme.color[color] : theme.color.Black)};
     cursor: ${(props) => props.pointer && "pointer"};
+    margin-bottom: 16px;
   `,
   FocusedMenu: styled.span<StyleText & { $isFocused: boolean }>`
     display: inline-block;
@@ -313,8 +314,8 @@ export const Button = {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100px; /* 버튼의 가로 크기를 이미지와 동일하게 줄여주세요 */
-    height: 36px; /* 버튼의 높이를 이미지와 맞추어 설정 */
+    width: 100px;
+    height: 36px;
     border-radius: 18px; /* 버튼의 둥근 모서리 */
     color: #2d2d2d; /* 텍스트 색상 */
     background-color: #f7f8fa; /* 버튼 배경색 */
@@ -369,10 +370,10 @@ export const Input = {
     width: 100%;
     height: 53px;
     outline: #e3e2e0;
-    padding-left: 15px;
+    padding-left: 16px;
     background-color: #ffffff;
     border: 1px solid #c9cbd4;
-    border-radius: 19px;
+    border-radius: 10px;
 
     ::placeholder {
       color: #939292;
@@ -402,15 +403,17 @@ export const Input = {
     }
   `,
   BirthBox: styled.input<StyleInput>`
-    display: block;
-    width: auto;
-    min-width: 100px;
+    display: flex;
+    flex: 1;
     height: 53px;
     outline: #e3e2e0;
-    padding-left: 15px;
+    padding-left: 16px;
     background-color: #ffffff;
     border: 1px solid #c9cbd4;
-    border-radius: 19px;
+    border-radius: 10px;
+    width: 100%;
+    min-width: 0;
+
     ::placeholder {
       color: #939292;
       font-size: 17px;

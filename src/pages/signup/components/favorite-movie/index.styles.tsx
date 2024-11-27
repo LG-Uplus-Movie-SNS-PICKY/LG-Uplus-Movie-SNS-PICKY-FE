@@ -1,27 +1,50 @@
 import styled from "styled-components";
 import { Checked } from "../../../../assets/svg";
 
-// 공통 스타일
+
+export const ConsentWrapper = styled.div`
+  /* display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 32px; */
+
+`;
+
 export const TextBase = styled.p`
   font-family: Pretendard;
   line-height: normal;
   text-align: left;
 `;
 
-export const Header = styled.div`
-  text-align: center;
-  margin-bottom: 20px;
+export const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 50;
 `;
+
+export const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  /* align-items: flex-start; */
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  padding-bottom: 40px;
+  width: 300px;
+`
 
 export const TitleContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
-  margin-left: 24px;
+  width: 300px;
 `;
 
 export const Title = styled.h2`
-  color: #000;
+  color: #000000;
   font-size: 24px;
   font-weight: 600;
   margin: 0;
@@ -36,21 +59,25 @@ export const RequiredBadge = styled.span`
   font-weight: bold;
 `;
 
-export const Subtitle = styled.p<{ $small?: boolean }>`
-  font-size: ${({ $small }) => ($small ? "12px" : "16px")};
+export const Subtitle = styled.div`
+  font-size: 16px;
   color: #c8c8c8;
-  font-weight: ${({ $small }) => ($small ? "600" : "400")};
-  margin: 4px 0 4px 24px;
-  font-family: Pretendard;
-  line-height: normal;
+  font-weight: "400";
   text-align: left;
 `;
 
 export const PageIndicator = styled.div`
   text-align: right;
-  margin-top: 43px;
-  margin-right: 24px;
+  padding: 0 24px;
 `;
+
+export const TotalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 363px;
+  margin: 0 auto;
+`
 
 export const CurrentPage = styled.span`
   color: #000;
@@ -65,31 +92,40 @@ export const TotalPages = styled.span`
 `;
 
 export const MovieGridWrapper = styled.div`
-  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-bottom: 20px;
-  height: 400px;
+  justify-content: center;
+  /* width: 363px;
+  margin: 0 auto; */
+  /* left: 50; */
+  /* padding: 0 24px; */
 `;
 
 export const MovieGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  flex: 1;
+  /* max-width: 40%; */
+  /* width: 363px;
+  margin: 0 auto; */
+  justify-items: center;
+  align-items: center;
 `;
 
 export const MovieCard = styled.div<{ $isSelected: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 90px;
   height: 140px;
-  border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
+  background-color: ${({ $isSelected }) => ($isSelected ? "transparent" : "transparent")};
+  /* background-color: ${({ $isSelected }) => ($isSelected ? "rgba(0, 0, 0, 0.5)" : "#fff")}; */
+  transition: background-color 0.3s;
 
   &:hover {
     opacity: 0.9;
@@ -97,9 +133,12 @@ export const MovieCard = styled.div<{ $isSelected: boolean }>`
 `;
 
 export const MovieImage = styled.img<{ $isSelected: boolean }>`
+  position: relative;
   height: 120px;
+  border-radius: 10px;
   object-fit: cover;
-  filter: ${({ $isSelected }) => ($isSelected ? "brightness(20%) blur(1.5px)": "none")};
+  filter: ${({ $isSelected }) =>
+    $isSelected ? "brightness(40%) blur(0.6px)" : "none"};
   transition: filter 0.3s ease-in-out;
 `;
 
@@ -107,37 +146,43 @@ export const MovieTitle = styled(TextBase)`
   color: #000;
   font-size: 16px;
   font-weight: 400;
-  letter-spacing: -0.64px;
+  letter-spacing: -0.4px;
+  margin-top: 4px;
 `;
 
 export const CheckIcon = styled(Checked)<{ $isVisible: boolean }>`
   position: absolute;
-  top: 50%;
+  top: 42.9%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 32px;
   height: 32px;
   display: ${({ $isVisible }) => ($isVisible ? "block" : "none")};
+  align-items: center;
+  justify-content: center;
 `;
 
 export const ArrowButton = styled.button`
-  position: absolute;
-  top: 50%;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  /* width: 40px;
+  height: 40px; */
+  border: none;
+  background: none;
+  cursor: pointer;
+  z-index: 1;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
 `;
 
 export const PreviousButton = styled(ArrowButton)`
-  left: -20px;
+  /* margin-right: 16px; */
 `;
 
 export const NextButton = styled(ArrowButton)`
-  right: -20px;
+  /* margin-left: 16px; */
 `;

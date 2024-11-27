@@ -1,9 +1,14 @@
 import { useRecoilState } from "recoil";
 import { inputState, IInputData } from "../../../../review/atoms";
-import { Block, Text } from "../ui";
+import { Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
 import { Unchecked, Checked } from "../../../../assets/svg";
-import {ConsentContainer, CustomCheckbox, ConsentText} from "./index.styles"
+import {
+  ConsentWrapper,
+  ConsentContainer,
+  CustomCheckbox,
+  ConsentText,
+} from "./index.styles";
 
 export default function InputConsentForm() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -24,8 +29,8 @@ export default function InputConsentForm() {
   };
 
   return (
-    <Block.FlexBox $width="20%" $direction="column" $gap="10px">
- <Text.FocusedMenu $isFocused={isFocused}>이용약관</Text.FocusedMenu>
+    <ConsentWrapper>
+      <Text.TitleMenu300>이용 약관에 동의해주세요</Text.TitleMenu300>
       <ConsentContainer
         $isChecked={!!inputData.consentAll}
         onClick={toggleConsentAll}
@@ -52,6 +57,6 @@ export default function InputConsentForm() {
       <Text.FocusedWarning $isFocused={isFocused}>
         필수 약관에 모두 동의 해주세요.
       </Text.FocusedWarning>
-    </Block.FlexBox>
+    </ConsentWrapper>
   );
 }

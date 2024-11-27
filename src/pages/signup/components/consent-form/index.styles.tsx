@@ -1,15 +1,24 @@
 import styled from "styled-components";
 
+export const ConsentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 32px;
+`;
+
 export const ConsentContainer = styled.div<{ $isChecked: boolean }>`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   border: 1px solid ${({ $isChecked }) => ($isChecked ? "#ff084a" : "#d9d9d9")};
   border-radius: 10px;
-  padding: 10px 15px;
+  padding: 12px 16px;
   background-color: #ffffff;
   cursor: pointer;
-  max-width: 400px;
+  width: 100%;
 `;
 
 export const CustomCheckbox = styled.div<{ $isChecked: boolean }>`

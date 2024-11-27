@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const BirthDateContainer = styled.div`
+export const UserNameContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -8,14 +8,6 @@ export const BirthDateContainer = styled.div`
   width: 100%;
   padding: 8px 32px;
   align-items: center;
-`;
-
-export const BirthDate = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 4px;
-  flex-direction: row;
-  justify-content: space-between;
 `;
 
 export const TextWrapper = styled.div`

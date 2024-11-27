@@ -156,7 +156,7 @@ export const Button = {
     align-items: center;
     width: 20%;
     height: 53px;
-    border-radius: 16px;
+    border-radius: 10px;
     color: #ffffff;
     background-color: ${({ $isDisabled }) =>
       $isDisabled ? "#e8e8e8 " : "#FF084A"};

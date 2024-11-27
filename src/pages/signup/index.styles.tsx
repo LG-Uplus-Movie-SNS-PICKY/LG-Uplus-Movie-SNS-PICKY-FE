@@ -38,13 +38,13 @@ export const ResponsiveFlexBox = styled(Block.FlexBox)`
 `;
 
 export  const ResponsiveButtonWrapper = styled.div`
+  max-width: 768px;
   width: 100%;
   display: flex;
-  justify-content: center;
   position: fixed;
   bottom: 20px;
-  left: 0;
-  padding: 10px 0;
+  left: 50;
+  padding: 12px 16px;
 
   @media (max-width: 768px) {
     button {
@@ -66,7 +66,7 @@ export  const ResponsiveButtonWrapper = styled.div`
 export const BackButton = styled.button`
   position: absolute;
   top: 20px;
-  left: 20px;
+  /* left: 20px; */
   background-color: transparent;
   border: none;
   color: #ff084a;
@@ -77,4 +77,12 @@ export const BackButton = styled.button`
   &:hover {
     text-decoration: underline;
   }
+`;
+
+export const LogoContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 24px 32px;
 `;

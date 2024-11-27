@@ -3,9 +3,16 @@ import { useRecoilState } from "recoil";
 import { inputState, userState } from "../../../../review/atoms";
 import { Block, Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import { DefaultImage} from "../../../../assets/svg";
+import { DefaultImage } from "../../../../assets/svg";
 import defaultUserImage from "../../../../assets/images/default_userImage.png";
-import {FileInput, CustomFileLabel, ImageContainer, StyledImage, DefaultImageText} from "./index.styles"
+import {
+  FileInput,
+  CustomFileLabel,
+  ImageContainer,
+  StyledImage,
+  DefaultImageText,
+  ProfileContainer,
+} from "./index.styles";
 
 export default function InputProfile() {
   const { isFocused } = useFocus();
@@ -37,13 +44,11 @@ export default function InputProfile() {
 
   return (
     <>
-      <Block.FlexBox
-        $width="20%"
-        $direction="column"
-        $gap="10px"
-        $alignItems="center"
-      >
-        <Text.FocusedMenu $isFocused={isFocused}>프로필 이미지</Text.FocusedMenu>
+      <ProfileContainer>
+        <Text.TitleMenu300>당신의 프로필을 선택해주세요</Text.TitleMenu300>
+        <Text.FocusedMenu $isFocused={isFocused}>
+          프로필 이미지
+        </Text.FocusedMenu>
         <ImageContainer $hasImage={!!userInfo.profileImage}>
           {userInfo.profileImage ? (
             <StyledImage src={userInfo.profileImage} alt="프로필 미리보기" />
@@ -58,16 +63,15 @@ export default function InputProfile() {
           accept="image/*"
           onChange={handleProfileUpload}
         />
-        <CustomFileLabel htmlFor="profile-upload">이미지 업로드</CustomFileLabel>
-
-        {/* 기본 이미지 설정을 텍스트로 제공 */}
+        <CustomFileLabel htmlFor="profile-upload">
+          이미지 업로드
+        </CustomFileLabel>
         {!userInfo.profileImage && (
-          <DefaultImageText onClick={setDefaultImage
-          }>
+          <DefaultImageText onClick={setDefaultImage}>
             기본 이미지 설정
           </DefaultImageText>
         )}
-      </Block.FlexBox>
+      </ProfileContainer>
     </>
   );
 }

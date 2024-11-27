@@ -1,8 +1,9 @@
 import { useRecoilState } from "recoil";
 import { inputState, userState } from "../../../../review/atoms";
-import { Block, Text , Input} from "../ui";
+import { Text, Input } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
 import { useEffect } from "react";
+import { UserNameContainer, TextWrapper } from "./index.styles";
 
 export default function InputUserName() {
   const [userInfo, setUserInfo] = useRecoilState(userState);
@@ -23,8 +24,11 @@ export default function InputUserName() {
 
   return (
     <>
-      <Block.FlexBox $width="20%" $direction="column" $gap="10px">
-        <Text.FocusedMenu $isFocused={isFocused}>이름</Text.FocusedMenu>
+      <UserNameContainer>
+        <Text.TitleMenu300>당신의 이름을 입력해주세요.</Text.TitleMenu300>
+        <TextWrapper>
+          <Text.FocusedMenu $isFocused={isFocused}>이름</Text.FocusedMenu>
+        </TextWrapper>
         <Input.InfoBox
           value={userInfo.username}
           placeholder="이름을 입력해주세요"
@@ -32,12 +36,12 @@ export default function InputUserName() {
           onBlur={handleBlur}
           onChange={handleUserNameChange}
         />
-        <Block.FlexBox $alignItems="center" $gap="10px">
+        <TextWrapper>
           <Text.FocusedWarning $isFocused={isFocused}>
             이름은 수정이 불가하니 정확하게 입력해주세요
           </Text.FocusedWarning>
-        </Block.FlexBox>
-      </Block.FlexBox>
+        </TextWrapper>
+      </UserNameContainer>
     </>
   );
 }
