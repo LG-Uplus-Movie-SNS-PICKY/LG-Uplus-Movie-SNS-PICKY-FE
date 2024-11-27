@@ -1,5 +1,3 @@
-import React from "react";
-
 function MoviesOpertionPage() {
   return <div>MoviesOpertionPage</div>;
 }
