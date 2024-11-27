@@ -103,7 +103,9 @@ function MovieLogsOpertionPage() {
                 direction={"horizontal"}
                 freeMode={true}
                 modules={[FreeMode, Mousewheel]}
-                mousewheel={true}
+                mousewheel={{
+                  forceToAxis: true,
+                }}
                 css={styles.swiperContainer()}
               >
                 {dummyData.map((data, idx) => {
