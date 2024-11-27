@@ -25,6 +25,7 @@ import MovieLogReportOpertionPage from "@pages/admin/operation/movie-log/report"
 import UserSuspendedOpertionPage from "@pages/admin/operation/user/suspended";
 import ReviewsOpertionPage from "@pages/admin/operation/review/reviews";
 import MovieLogsOpertionPage from "@pages/admin/operation/movie-log/movie-logs";
+import MovieGenreOpertionPage from "@pages/admin/operation/movie/genres";
 
 function ManagementSubLayout() {
   return <Outlet />;
@@ -60,7 +61,7 @@ function AdminLayout() {
         element={<ManagementSubLayout />}
       >
         <Route index element={<AdminMovieManagementPage data={data[1]} />} />
-        <Route path="genres" element={<Home />} />
+        <Route path="genres" element={<MovieGenreOpertionPage />} />
         <Route path="movies" element={<Home />} />
         <Route path="playlists" element={<Home />} />
       </Route>
