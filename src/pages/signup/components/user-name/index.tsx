@@ -24,11 +24,11 @@ export default function InputUserName() {
 
   return (
     <>
-      <UserNameContainer>
+      <div css={UserNameContainer}>
         <Text.TitleMenu300>당신의 이름을 입력해주세요.</Text.TitleMenu300>
-        <TextWrapper>
+        <div css={TextWrapper}>
           <Text.FocusedMenu $isFocused={isFocused}>이름</Text.FocusedMenu>
-        </TextWrapper>
+        </div>
         <Input.InfoBox
           value={userInfo.username}
           placeholder="이름을 입력해주세요"
@@ -36,12 +36,12 @@ export default function InputUserName() {
           onBlur={handleBlur}
           onChange={handleUserNameChange}
         />
-        <TextWrapper>
+        <div css={TextWrapper}>
           <Text.FocusedWarning $isFocused={isFocused}>
             이름은 수정이 불가하니 정확하게 입력해주세요
           </Text.FocusedWarning>
-        </TextWrapper>
-      </UserNameContainer>
+        </div>
+      </div>
     </>
   );
 }

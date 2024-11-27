@@ -1,25 +1,25 @@
+/** @jsxImportSource @emotion/react */
 import React from "react";
-import { inputState } from "../../../../review/atoms";
 import { useRecoilState } from "recoil";
+import { inputState } from "../../../../review/atoms";
 import { Text } from "../ui";
 import {
-  Wrapper,
-  PageContainer,
-  TitleWrapper,
-  TitleContainer,
-  GenreGrid,
-  Title,
-  Subtitle,
-  GenreGroup,
-  RequiredBadge,
-  GenreButton,
+  wrapper,
+  pageContainer,
+  titleWrapper,
+  titleContainer,
+  genreGrid,
+  title,
+  subtitle,
+  genreGroup,
+  requiredBadge,
+  genreButton,
 } from "./index.styles";
 
 const genres = [
   { id: 1, name: "액션", emoji: "🥊" },
   { id: 2, name: "로맨스", emoji: "❤️" },
   { id: 8, name: "뮤지컬", emoji: "🎹" },
-  // { id: 2, name: "로맨스", emoji: "👩‍❤️‍💋‍👨" },
   { id: 3, name: "코미디", emoji: "🤣" },
   { id: 5, name: "범죄", emoji: "🦹" },
   { id: 7, name: "애니메이션", emoji: "💥" },
@@ -55,35 +55,35 @@ const MovieGenreSelector = () => {
   }
 
   return (
-    <Wrapper>
+    <div css={wrapper}>
       <Text.TitleMenu300>
-        당신이 좋아하는 영화 장르를 선택해주세요
+        당신이 좋아하는 영화 장르를 선택 해주세요
       </Text.TitleMenu300>
-      <PageContainer>
-        <TitleWrapper>
-          <TitleContainer>
-            <Title>좋아하는 영화 장르를 선택해주세요. 🧸</Title>
-            <RequiredBadge>필수</RequiredBadge>
-          </TitleContainer>
-          <Subtitle>평소 좋아하는 영화를 골라주세요.(1개~5개)</Subtitle>
-        </TitleWrapper>
+      <div css={pageContainer}>
+        <div css={titleWrapper}>
+          <div css={titleContainer}>
+            <h2 css={title}>좋아하는 영화 장르를 선택해 주세요 🧸</h2>
+            <span css={requiredBadge}>필수</span>
+          </div>
+          <span css={subtitle}>평소 좋아하는 영화 장르를 골라주세요.(1개~5개)</span>
+        </div>
         {chunkedGenres.map((group, index) => (
-          <GenreGroup key={index}>
-            <GenreGrid>
+          <div key={index} css={genreGroup}>
+            <div css={genreGrid}>
               {group.map((genre) => (
-                <GenreButton
+                <button
                   key={genre.id}
-                  $isSelected={inputData.favoriteGenres.includes(genre.id)}
+                  css={genreButton(inputData.favoriteGenres.includes(genre.id))}
                   onClick={() => toggleGenre(genre.id)}
                 >
                   {genre.emoji} {genre.name}
-                </GenreButton>
+                </button>
               ))}
-            </GenreGrid>
-          </GenreGroup>
+            </div>
+          </div>
         ))}
-      </PageContainer>
-    </Wrapper>
+      </div>
+    </div>
   );
 };
 

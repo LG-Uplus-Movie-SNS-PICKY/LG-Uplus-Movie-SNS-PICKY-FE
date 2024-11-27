@@ -38,10 +38,12 @@ export default function Login() {
         <Text.TitleMenu100>영화인 필수!</Text.TitleMenu100>
         <Text.TitleMenu300>영화 리뷰 1등 플랫폼</Text.TitleMenu300>
 
-        <GapContainer $direction="column" $alignItems="center">
+        <div css={GapContainer}>
+        {/* <GapContainer $direction="column" $alignItems="center"> */}
           <PickyLogo width={231} height={83} />
-          <StyledText>⚡️간편로그인으로 3초만에 빠르게 회원가입!</StyledText>
-        </GapContainer>
+          <div css={StyledText}>⚡️간편로그인으로 3초만에 빠르게 회원가입!</div>
+        {/* </GapContainer> */}
+        </div>
         <Block.FlexBox $justifyContent="center" $gap="50px">
           <BtnNaver
             onClick={handleNaverLoginClick}

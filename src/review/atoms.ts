@@ -21,7 +21,7 @@ export const userState = atom({
 // 입력 데이터 상태
 export interface IInputData {
   name: string;
-  email: string;
+  // email: string;
   nickname: string;
   birthDate: string;
   gender: string;
@@ -37,7 +37,7 @@ export const inputState = atom<IInputData>({
   key: "inputState",
   default: {
     name: "",
-    email: "",
+    // email: "",
     nickname: "",
     birthDate: "",
     gender: "",

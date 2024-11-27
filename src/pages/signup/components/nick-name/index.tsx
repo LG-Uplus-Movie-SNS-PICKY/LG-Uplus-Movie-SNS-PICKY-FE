@@ -3,7 +3,7 @@ import { userState, inputState } from "../../../../review/atoms";
 import { Text, Input } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
 import { useEffect } from "react";
-import { NickNameContainer, TextWrapper } from "./index.styles";
+import { nickNameContainer, textWrapper } from "./index.styles";
 
 export default function InputNickname() {
   const [userInfo, setUserInfo] = useRecoilState(userState);
@@ -25,11 +25,11 @@ export default function InputNickname() {
 
   return (
     <>
-      <NickNameContainer>
+      <div css={nickNameContainer}>
         <Text.TitleMenu300>당신의 이름을 입력해주세요.</Text.TitleMenu300>
-        <TextWrapper>
+        <div css={textWrapper}>
           <Text.FocusedMenu $isFocused={isFocused}>닉네임</Text.FocusedMenu>
-        </TextWrapper>
+        </div>
         <Input.InfoBox
           value={userInfo.nickname || ""}
           placeholder="닉네임을 입력해주세요"
@@ -38,14 +38,12 @@ export default function InputNickname() {
           onChange={handleNicknameChange}
         />
         {/* <Block.FlexBox $alignItems="center" $gap="10px"> */}
-        <TextWrapper>
+        <div css={textWrapper}>
           <Text.FocusedWarning $isFocused={isFocused}>
             닉네임은 다른 사용자와 겹치지 않도록 입력해주세요
           </Text.FocusedWarning>
-        </TextWrapper>
-        {/* </Block.FlexBox> */}
-      </NickNameContainer>
-      {/* </Block.FlexBox> */}
+        </div>
+      </div>
     </>
   );
 }

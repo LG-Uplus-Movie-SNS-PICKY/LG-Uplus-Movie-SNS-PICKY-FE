@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import { css } from "@emotion/react";
 
-export const FileInput = styled.input`
+export const fileInput = css`
   display: none;
 `;
 
-export const CustomFileLabel = styled.label`
+export const customFileLabel = css`
   display: inline-block;
   padding: 10px 20px;
   background-color: #ff084a;
@@ -20,21 +20,19 @@ export const CustomFileLabel = styled.label`
   }
 `;
 
-export const ImageContainer = styled.div<{ $hasImage: boolean }>`
+export const imageContainer = ($hasImage: boolean) => css`
   width: 240px;
   height: 240px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ $hasImage }) =>
-    $hasImage ? "transparent" : "#f3f3f3"};
-  border-radius: 10%; /* 원형으로 변경 */
+  background-color: ${$hasImage ? "transparent" : "#f3f3f3"};
+  border-radius: 10%; /* 원형 */
   overflow: hidden;
-  /* border: ${({ $hasImage }) =>
-    $hasImage ? "2px solid #ff084a" : " dashed #ffffff"}; */
+  border: ${$hasImage ? "tansparent" : "2px dashed #ffffff"};
 `;
 
-export const DefaultImageText = styled.div`
+export const defaultImageText = css`
   color: #9d9d9d;
   font-size: 14px;
   text-decoration: underline;
@@ -46,13 +44,13 @@ export const DefaultImageText = styled.div`
   }
 `;
 
-export const StyledImage = styled.img`
+export const styledImage = css`
   width: 100%;
   height: 100%;
   object-fit: cover;
 `;
 
-export const ProfileContainer = styled.div`
+export const profileContainer = css`
   display: flex;
   flex-direction: column;
   gap: 12px;

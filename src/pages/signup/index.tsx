@@ -16,12 +16,12 @@ import { IInputData } from "../../review/atoms";
 import { PickyLogo } from "../../assets/svg";
 import { Button, Text } from "../../styles/ui";
 import {
-  ProgressBarContainer,
-  Progress,
-  ResponsiveFlexBox,
-  ResponsiveButtonWrapper,
-  BackButton,
-  LogoContainer,
+  progressBarContainer,
+  progressStyle,
+  responsiveButtonWrapper,
+  backButton,
+  logoContainer,
+  backButtonWrapper,
 } from "./index.styles";
 
 export default function Signup() {
@@ -45,10 +45,10 @@ export default function Signup() {
       components: [<InputBirthDate key="birthDate" />],
       requiredFields: ["birthDate"],
     },
-    {
-      components: [<InputEmail key="email" />],
-      requiredFields: ["email"],
-    },
+    // {
+    //   components: [<InputEmail key="email" />],
+    //   requiredFields: ["email"],
+    // },
     {
       components: [<InputGender key="gender" />],
       requiredFields: ["gender"],
@@ -128,23 +128,35 @@ export default function Signup() {
 
   return (
     <>
-      <ProgressBarContainer>
-        <Progress progress={(step / steps.length) * 100} />
-      </ProgressBarContainer>
+      <div css={progressBarContainer}>
+        <div css={progressStyle((step / steps.length) * 100)} />
+      </div>
+      <div css={backButtonWrapper}>
+        { (
+          <button
+            css={backButton}
+            onClick={handleBackStep}
+            style={{
+              visibility: step === 1 ? "hidden" : "visible",
+            }}
+          >
+            뒤로
+          </button>
+        )}
+      </div>
 
-      {step > 1 && <BackButton onClick={handleBackStep}>뒤로</BackButton>}
-      <LogoContainer>
+      <div css={logoContainer}>
         <PickyLogo width={99} height={35} />
-      </LogoContainer>
+      </div>
       {components.map((component) => component)}
-      <ResponsiveButtonWrapper>
+      <div css={responsiveButtonWrapper}>
         <Button.Confirm
           onClick={step === steps.length ? handleComplete : handleNextStep}
           $isDisabled={!isStepValid()}
           style={{
             maxWidth: "768px",
             width: "100%",
-            padding: " 0",
+            padding: "0",
             fontSize: "16px",
           }}
         >
@@ -152,7 +164,7 @@ export default function Signup() {
             {step === steps.length ? "완료" : "다음"}
           </Text.TitleMenu300>
         </Button.Confirm>
-      </ResponsiveButtonWrapper>
+      </div>
     </>
   );
 }

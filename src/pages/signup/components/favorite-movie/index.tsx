@@ -1,31 +1,31 @@
+/** @jsxImportSource @emotion/react */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import aboutTime from "../../../../assets/images/Rectangle 2.jpg";
 import { ArrowLeft, ArrowRight } from "../../../../assets/svg";
 import { inputState } from "../../../../review/atoms";
-import { Text } from "../ui";
-
+// import { Text } from "../ui";
 import {
-  ConsentWrapper,
-  MovieTitle,
-  MovieImage,
-  MovieCard,
-  NextButton,
-  PreviousButton,
-  CheckIcon,
-  MovieGrid,
-  MovieGridWrapper,
-  TotalPages,
-  Wrapper,
-  TitleWrapper,
-  TitleContainer,
-  Title,
-  RequiredBadge,
-  Subtitle,
-  TotalContainer,
-  PageIndicator,
-  CurrentPage,
+  consentWrapper,
+  wrapper,
+  titleWrapper,
+  titleContainer,
+  title,
+  requiredBadge,
+  subtitle,
+  totalContainer,
+  pageIndicator,
+  currentPage,
+  totalPages,
+  movieGridWrapper,
+  movieGrid,
+  movieCard,
+  movieImage,
+  checkIcon,
+  previousButton,
+  nextButton,
+  movieTitle,
 } from "./index.styles";
 
 const MOVIES = [
@@ -59,7 +59,7 @@ const MOVIES = [
 ];
 
 const InputFavoriteMovie: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+  const [current, setCurrent] = useState(1);
   const [inputData, setInputData] = useRecoilState(inputState);
 
   const moviesPerPage = 9;
@@ -75,65 +75,68 @@ const InputFavoriteMovie: React.FC = () => {
 
   const totalPages = Math.ceil(MOVIES.length / moviesPerPage);
   const paginatedMovies = MOVIES.slice(
-    (currentPage - 1) * moviesPerPage,
-    currentPage * moviesPerPage
+    (current - 1) * moviesPerPage,
+    current * moviesPerPage
   );
 
   return (
-    <ConsentWrapper>
-      <Wrapper>
-        <TitleWrapper>
-          <TitleContainer>
-            <Title>어떤 영화를 좋아하나요?</Title>
-            <RequiredBadge>필수</RequiredBadge>
-          </TitleContainer>
-          <Subtitle>평소 좋아하는 영화를 골라주세요.(5개 ~ 10개)</Subtitle>
-        </TitleWrapper>
-      </Wrapper>
+    <div css={consentWrapper}>
+      <div css={wrapper}>
+        <div css={titleWrapper}>
+          <div css={titleContainer}>
+            <h2 css={title}>어떤 영화를 좋아하나요?</h2>
+            <span css={requiredBadge}>필수</span>
+          </div>
+          <div css={subtitle}>평소 좋아하는 영화를 골라주세요.(5개 ~ 10개)</div>
+        </div>
+      </div>
 
-      <TotalContainer>
-        <PageIndicator>
-          <CurrentPage>{currentPage}</CurrentPage> /{" "}
-          <TotalPages>{totalPages}</TotalPages>
-        </PageIndicator>
+      <div css={totalContainer}>
+        <div css={pageIndicator}>
+          <span css={currentPage}>{current}</span>
+          {" / "}
+          <span css={totalPages}>{totalPages}</span>
+        </div>
 
-        <MovieGridWrapper>
-          <PreviousButton
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            disabled={currentPage === 1}
+        <div css={movieGridWrapper}>
+          <button
+            css={previousButton}
+            onClick={() => setCurrent((prev) => prev - 1)}
+            disabled={current === 1}
           >
             <ArrowLeft />
-          </PreviousButton>
+          </button>
 
-          <MovieGrid>
+          <div css={movieGrid}>
             {paginatedMovies.map((movie) => (
-              <MovieCard
+              <div
                 key={movie.id}
-                $isSelected={inputData.favoriteMovie.includes(movie.id)}
+                css={movieCard(inputData.favoriteMovie.includes(movie.id))}
                 onClick={() => toggleSelection(movie.id)}
               >
-                <MovieImage
+                <img
                   src={movie.image}
                   alt={movie.title}
-                  $isSelected={inputData.favoriteMovie.includes(movie.id)}
+                  css={movieImage(inputData.favoriteMovie.includes(movie.id))}
                 />
-                <CheckIcon
-                  $isVisible={inputData.favoriteMovie.includes(movie.id)}
+                <div
+                  css={checkIcon(inputData.favoriteMovie.includes(movie.id))}
                 />
-                <MovieTitle>{movie.title}</MovieTitle>
-              </MovieCard>
+                <p css={movieTitle}>{movie.title}</p>
+              </div>
             ))}
-          </MovieGrid>
+          </div>
 
-          <NextButton
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            disabled={currentPage === totalPages}
+          <button
+            css={nextButton}
+            onClick={() => setCurrent((prev) => prev + 1)}
+            disabled={current === totalPages}
           >
             <ArrowRight />
-          </NextButton>
-        </MovieGridWrapper>
-      </TotalContainer>
-    </ConsentWrapper>
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

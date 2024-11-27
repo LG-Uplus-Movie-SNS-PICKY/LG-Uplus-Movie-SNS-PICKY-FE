@@ -2,7 +2,7 @@ import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
 import { Text, Input } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import { EmailContainer, TextWrapper } from "./index.styles";
+import { emailContainer, textWrapper } from "./index.styles";
 
 export default function InputEmail() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -15,11 +15,11 @@ export default function InputEmail() {
 
   return (
     <>
-      <EmailContainer>
+      <div css={emailContainer}>
         <Text.TitleMenu300>당신의 이메일을 적어주세요</Text.TitleMenu300>
-        <TextWrapper>
+        <div css={textWrapper}>
           <Text.FocusedMenu $isFocused={isFocused}>이메일</Text.FocusedMenu>
-        </TextWrapper>
+        </div>
         <Input.InfoBox
           type="email"
           value={inputData.email || ""}
@@ -28,12 +28,12 @@ export default function InputEmail() {
           onBlur={handleBlur}
           onChange={handleEmailChange}
         />
-        <TextWrapper>
+        <div css={textWrapper}>
           <Text.FocusedWarning $isFocused={isFocused}>
             올바른 이메일 주소를 입력해주세요
           </Text.FocusedWarning>
-        </TextWrapper>
-      </EmailContainer>
+        </div>
+      </div>
     </>
   );
 }

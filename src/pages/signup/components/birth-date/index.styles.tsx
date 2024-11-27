@@ -1,6 +1,7 @@
-import styled from "styled-components";
+// import styled from "styled-components";
+import { css } from "@emotion/react";
 
-export const BirthDateContainer = styled.div`
+export const birthDateContainer = css`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -10,7 +11,7 @@ export const BirthDateContainer = styled.div`
   align-items: center;
 `;
 
-export const BirthDate = styled.div`
+export const birthDate = css`
   display: flex;
   width: 100%;
   gap: 4px;
@@ -18,7 +19,7 @@ export const BirthDate = styled.div`
   justify-content: space-between;
 `;
 
-export const TextWrapper = styled.div`
+export const textWrapper = css`
   display: flex;
   width: 100%;
   padding-left: 16px;

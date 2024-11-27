@@ -12,7 +12,7 @@
       "@stories/*": ["src/stories/*"],
       "@constants/*": ["src/constants/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@pages/*": ["src/pages12/*"],
+      "@pages/*": ["src/pages/*"],
       "@provider/*": ["src/provider/*"],
       "@recoil/*": ["src/recoil/*"],
       "@styles/*": ["src/styles/*"],

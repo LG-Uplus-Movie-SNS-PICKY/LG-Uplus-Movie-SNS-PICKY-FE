@@ -1,56 +1,46 @@
-import styled from "styled-components";
-import { Checked } from "../../../../assets/svg";
+import { css } from "@emotion/react";
+// import { Checked } from "../../../../assets/svg";
 
+export const consentWrapper = css``;
 
-export const ConsentWrapper = styled.div`
-  /* display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 32px; */
-
-`;
-
-export const TextBase = styled.p`
+export const textBase = css`
   font-family: Pretendard;
   line-height: normal;
   text-align: left;
 `;
 
-export const Wrapper = styled.div`
+export const wrapper = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  left: 50;
+  left: 50%;
 `;
 
-export const TitleWrapper = styled.div`
+export const titleWrapper = css`
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   align-items: flex-start;
   justify-content: flex-start;
   gap: 8px;
   padding-bottom: 40px;
   width: 300px;
-`
+`;
 
-export const TitleContainer = styled.div`
+export const titleContainer = css`
   display: flex;
   align-items: flex-start;
   gap: 8px;
   width: 300px;
 `;
 
-export const Title = styled.h2`
+export const title = css`
   color: #000000;
   font-size: 24px;
   font-weight: 600;
   margin: 0;
 `;
 
-export const RequiredBadge = styled.span`
+export const requiredBadge = css`
   padding: 4px 8px;
   background-color: #2e2e2e;
   color: #fff;
@@ -59,61 +49,62 @@ export const RequiredBadge = styled.span`
   font-weight: bold;
 `;
 
-export const Subtitle = styled.div`
+export const subtitle = css`
   font-size: 16px;
   color: #c8c8c8;
-  font-weight: "400";
+  font-weight: 400;
   text-align: left;
 `;
 
-export const PageIndicator = styled.div`
+export const pageIndicator = css`
   text-align: right;
   padding: 0 24px;
 `;
 
-export const TotalContainer = styled.div`
+export const totalContainer = css`
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 363px;
   margin: 0 auto;
-`
+`;
 
-export const CurrentPage = styled.span`
+export const currentPage = css`
   color: #000;
+  text-align: center;
+  font-family: Pretendard;
   font-size: 20px;
+  font-style: normal;
   font-weight: 600;
+  line-height: normal;
 `;
 
-export const TotalPages = styled.span`
+export const totalPages = css`
   color: #c8c8c8;
+  text-align: center;
+  font-family: Pretendard;
   font-size: 16px;
+  font-style: normal;
   font-weight: 400;
+  line-height: normal;
 `;
 
-export const MovieGridWrapper = styled.div`
+export const movieGridWrapper = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 363px;
-  margin: 0 auto; */
-  /* left: 50; */
-  /* padding: 0 24px; */
 `;
 
-export const MovieGrid = styled.div`
+export const movieGrid = css`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   flex: 1;
-  /* max-width: 40%; */
-  /* width: 363px;
-  margin: 0 auto; */
   justify-items: center;
   align-items: center;
 `;
 
-export const MovieCard = styled.div<{ $isSelected: boolean }>`
+export const movieCard = ($isSelected: boolean) => css`
   position: relative;
   display: flex;
   flex-direction: column;
@@ -123,8 +114,7 @@ export const MovieCard = styled.div<{ $isSelected: boolean }>`
   height: 140px;
   overflow: hidden;
   cursor: pointer;
-  background-color: ${({ $isSelected }) => ($isSelected ? "transparent" : "transparent")};
-  /* background-color: ${({ $isSelected }) => ($isSelected ? "rgba(0, 0, 0, 0.5)" : "#fff")}; */
+  background-color: ${$isSelected ? "transparent" : "transparent"};
   transition: background-color 0.3s;
 
   &:hover {
@@ -132,17 +122,17 @@ export const MovieCard = styled.div<{ $isSelected: boolean }>`
   }
 `;
 
-export const MovieImage = styled.img<{ $isSelected: boolean }>`
+export const movieImage = ($isSelected: boolean) => css`
   position: relative;
   height: 120px;
   border-radius: 10px;
   object-fit: cover;
-  filter: ${({ $isSelected }) =>
-    $isSelected ? "brightness(40%) blur(0.6px)" : "none"};
+  filter: ${$isSelected ? "brightness(40%) blur(0.6px)" : "none"};
   transition: filter 0.3s ease-in-out;
 `;
 
-export const MovieTitle = styled(TextBase)`
+export const movieTitle = css`
+  ${textBase};
   color: #000;
   font-size: 16px;
   font-weight: 400;
@@ -150,24 +140,22 @@ export const MovieTitle = styled(TextBase)`
   margin-top: 4px;
 `;
 
-export const CheckIcon = styled(Checked)<{ $isVisible: boolean }>`
+export const checkIcon = ($isVisible: boolean) => css`
   position: absolute;
   top: 42.9%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 32px;
   height: 32px;
-  display: ${({ $isVisible }) => ($isVisible ? "block" : "none")};
+  display: ${$isVisible ? "block" : "none"};
   align-items: center;
   justify-content: center;
 `;
 
-export const ArrowButton = styled.button`
+export const arrowButton = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  /* width: 40px;
-  height: 40px; */
   border: none;
   background: none;
   cursor: pointer;
@@ -179,10 +167,10 @@ export const ArrowButton = styled.button`
   }
 `;
 
-export const PreviousButton = styled(ArrowButton)`
-  /* margin-right: 16px; */
+export const previousButton = css`
+  ${arrowButton};
 `;
 
-export const NextButton = styled(ArrowButton)`
-  /* margin-left: 16px; */
+export const nextButton = css`
+  ${arrowButton};
 `;

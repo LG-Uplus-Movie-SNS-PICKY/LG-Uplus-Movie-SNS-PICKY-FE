@@ -1,6 +1,7 @@
-import styled from "styled-components";
+// import styled from "styled-components";
+import { css } from "@emotion/react";
 
-export const EmailContainer = styled.div`
+export const emailContainer = css`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -10,7 +11,7 @@ export const EmailContainer = styled.div`
   align-items: center;
 `;
 
-export const TextWrapper = styled.div`
+export const textWrapper = css`
   display: flex;
   width: 100%;
   padding-left: 16px;

@@ -1,6 +1,7 @@
-import styled from "styled-components";
+// import styled from "styled-components";
+import { css } from "@emotion/react";
 
-export const GenderContainer = styled.div`
+export const genderContainer = css`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -8,21 +9,21 @@ export const GenderContainer = styled.div`
   gap: 4px;
 `;
 
-export const GenderButton = styled.button<{ $isSelected: boolean }>`
+export const genderButton = ($isSelected: boolean) => css`
   flex: 1;
   padding: 12px 0;
   height: 53px;
-  border: 2px solid ${({ $isSelected }) => ($isSelected ? "red" : "#d9d9d9")};
+  border: 2px solid ${($isSelected ? "red" : "#d9d9d9")};
   background-color: #ffffff;
-  color: ${({ $isSelected }) => ($isSelected ? "#FF084A" : "#d9d9d9")};
+  color: ${($isSelected ? "#FF084A" : "#d9d9d9")};
   font-size: 16px;
-  font-weight: ${({ $isSelected }) => ($isSelected ? "bold" : "normal")};
+  font-weight: ${($isSelected ? "bold" : "normal")};
   border-radius: 10px;
   cursor: pointer;
   outline: none;
 `;
 
-export const GenderWrapper = styled.div`
+export const genderWrapper = css`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -32,7 +33,7 @@ export const GenderWrapper = styled.div`
   align-items: center;
 `;
 
-export const TextWrapper = styled.div`
+export const textWrapper = css`
   display: flex;
   width: 100%;
   padding-left: 16px;

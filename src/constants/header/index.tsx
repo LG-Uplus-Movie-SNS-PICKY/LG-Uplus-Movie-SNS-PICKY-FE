@@ -35,9 +35,9 @@ const headerConfig: HeaderConfigType = {
   }),
 
   // 회원가입 페이지
-  "/signup": () => ({
-    type: "basic",
-  }),
+  // "/signup": () => ({
+  //   type: "basic",
+  // }),
 
   // 무비로그 페이지
   "/movie-log": () => ({

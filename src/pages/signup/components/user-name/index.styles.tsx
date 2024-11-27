@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import { css } from "@emotion/react";
 
-export const UserNameContainer = styled.div`
+export const UserNameContainer = css`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -10,7 +10,7 @@ export const UserNameContainer = styled.div`
   align-items: center;
 `;
 
-export const TextWrapper = styled.div`
+export const TextWrapper = css`
   display: flex;
   width: 100%;
   padding-left: 16px;

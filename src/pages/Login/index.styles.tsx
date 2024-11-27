@@ -1,7 +1,6 @@
-import styled from "styled-components";
-import { Block } from "../../styles/ui";
+import { css } from "@emotion/react";
 
-export const StyledText = styled.div`
+export const StyledText = css`
   display: flex;
   padding: 8px 12px;
   justify-content: center;
@@ -20,6 +19,7 @@ export const StyledText = styled.div`
   font-weight: 400;
   line-height: normal;
 `;
-export const GapContainer = styled(Block.FlexBox)`
+export const GapContainer = css`
+  /* display: flex; */
   gap: 106px;
 `;

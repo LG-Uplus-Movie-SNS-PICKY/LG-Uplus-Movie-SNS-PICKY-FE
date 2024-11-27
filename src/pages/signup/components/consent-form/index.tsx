@@ -1,18 +1,19 @@
+/** @jsxImportSource @emotion/react */
 import { useRecoilState } from "recoil";
 import { inputState, IInputData } from "../../../../review/atoms";
 import { Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
 import { Unchecked, Checked } from "../../../../assets/svg";
 import {
-  ConsentWrapper,
-  ConsentContainer,
-  CustomCheckbox,
-  ConsentText,
+  consentWrapper,
+  consentContainer,
+  customCheckbox,
+  consentText,
 } from "./index.styles";
 
 export default function InputConsentForm() {
   const [inputData, setInputData] = useRecoilState(inputState);
-  const { isFocused } = useFocus();
+  const { isFocused, handleFocus, handleBlur } = useFocus();
 
   const toggleConsentAll = () => {
     setInputData((prev: IInputData) => ({
@@ -29,34 +30,41 @@ export default function InputConsentForm() {
   };
 
   return (
-    <ConsentWrapper>
+    <div css={consentWrapper}>
       <Text.TitleMenu300>이용 약관에 동의해주세요</Text.TitleMenu300>
-      <ConsentContainer
-        $isChecked={!!inputData.consentAll}
-        onClick={toggleConsentAll}
-      >
-        <CustomCheckbox $isChecked={!!inputData.consentAll}>
-          {inputData.consentAll ? <Checked /> : <Unchecked />}
-        </CustomCheckbox>
-        <ConsentText>
-          [필수] <span>인증 약관 전체 동의</span>
-        </ConsentText>
-      </ConsentContainer>
 
-      <ConsentContainer
-        $isChecked={!!inputData.consentAge}
-        onClick={toggleConsentAge}
+      <div
+        css={consentContainer(!!inputData.consentAll)}
+        onClick={toggleConsentAll}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       >
-        <CustomCheckbox $isChecked={!!inputData.consentAge}>
+        <div css={customCheckbox(!!inputData.consentAll)}>
+          {inputData.consentAll ? <Checked /> : <Unchecked />}
+        </div>
+        <span css={consentText}>
+          [필수] <span>인증 약관 전체 동의</span>
+        </span>
+      </div>
+
+      <div
+        css={consentContainer(!!inputData.consentAge)}
+        onClick={toggleConsentAge}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      >
+        <div css={customCheckbox(!!inputData.consentAge)}>
           {inputData.consentAge ? <Checked /> : <Unchecked />}
-        </CustomCheckbox>
-        <ConsentText>
+        </div>
+        <span css={consentText}>
           [필수] <span>만 14세 이상입니다.</span>
-        </ConsentText>
-      </ConsentContainer>
+        </span>
+      </div>
+
       <Text.FocusedWarning $isFocused={isFocused}>
         필수 약관에 모두 동의 해주세요.
       </Text.FocusedWarning>
-    </ConsentWrapper>
+
+    </div>
   );
 }
