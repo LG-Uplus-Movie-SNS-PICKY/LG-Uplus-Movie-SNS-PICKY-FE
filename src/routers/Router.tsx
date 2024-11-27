@@ -8,7 +8,7 @@ import { globalStyle } from "@styles/global";
 
 // Route import
 import Home from "@pages/Home";
-import Login from "@pages/login";
+import Login from "@pages/login"
 import Signup from "@pages/signup";
 import Layout from "@components/layout";
 import AdminLayout from "./AdminLayout";
