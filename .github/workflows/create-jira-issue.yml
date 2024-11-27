@@ -76,7 +76,7 @@ jobs:
         with:
           actions: 'update-issue'
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: '[${{ steps.create.outputs.issue }}] [BE] ${{ github.event.issue.title }}'
+          title: '[${{ steps.create.outputs.issue }}] [FE] ${{ github.event.issue.title }}'
 
       - name: Add Comment with Jira Issue Link
         uses: actions-cool/issues-helper@v3
