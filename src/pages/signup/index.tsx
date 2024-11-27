@@ -5,7 +5,7 @@ import { useState } from "react";
 import InputUserName from "./components/user-name";
 import InputBirthDate from "./components/birth-date";
 import InputNickname from "./components/nick-name";
-import InputEmail from "./components/e-mail";
+// import InputEmail from "./components/e-mail";
 import InputGender from "./components/gender";
 import InputNationality from "./components/nationality";
 import InputConsentForm from "./components/consent-form";

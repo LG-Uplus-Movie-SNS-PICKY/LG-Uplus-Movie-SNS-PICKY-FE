@@ -9,7 +9,7 @@ export const userState = atom({
     profileImage: "",
     favoriteGenres: [],
     favoriteMovie: [],
-    email: "",
+    // email: "",
     gender: "",
     nationality: "",
     kakao_id: "",
