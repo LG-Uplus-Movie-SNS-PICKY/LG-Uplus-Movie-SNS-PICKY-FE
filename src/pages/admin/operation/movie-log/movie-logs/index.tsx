@@ -1,6 +1,12 @@
 import { useState } from "react";
 import styles from "./index.styles";
 
+const dummyData = [
+  "/Users/jogyewon/Desktop/Web/Git/LG-Uplus-Movie-SNS-PICKY-FE/src/assets/images/dummy/image1.jpeg",
+  "/Users/jogyewon/Desktop/Web/Git/LG-Uplus-Movie-SNS-PICKY-FE/src/assets/images/dummy/image2.jpeg",
+  "/Users/jogyewon/Desktop/Web/Git/LG-Uplus-Movie-SNS-PICKY-FE/src/assets/images/dummy/image3.jpeg",
+];
+
 function MovieLogsOpertionPage() {
   const [toggled, setToggled] = useState(false);
 
