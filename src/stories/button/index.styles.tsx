@@ -16,8 +16,9 @@ export default {
   // 버튼 Active Btn 스타일
   storybookButtonActive(isActive: boolean): SerializedStyles {
     return css`
-      width: 361px;
-      padding: 12px 24px;
+      width: 100%;
+      padding: 16px 0;
+      border-radius: 10px;
       font-size: 16px;
       background-color: ${isActive ? "#FF084A" : "#D9D9D9"};
       color: #fff;
@@ -27,9 +28,12 @@ export default {
   // 버튼 Social Btn 스타일
   storybookButtonSocial(isActive: boolean, size: string): SerializedStyles {
     return css`
-      width: ${size === 'Small' ? "45px" : "309px"};
-      padding: ${size === 'Small' ? "2px 0" : "12px 0px"};
-      font-size: ${size === 'Small' ? "8px" : "14px"};
+      width: ${size === "Small" ? "45px" : "309px"};
+      padding: ${size === "Small" ? "2px 0" : "12px 0px"};
+      font-size: ${size === "Small" ? "8px" : "14px"};
+
+      border-radius: ${size === "Small" ? "4px" : "8px"};
+
       background-color: ${isActive ? "#0095F6" : "#EFEFEF"};
       color: ${isActive ? "#fff" : "#000"};
     `;
@@ -41,11 +45,12 @@ export default {
       width: 393px;
       padding: 10px 16px;
       font-size: 12px;
+      background-color: #f8f8f8;
       color: #9d9d9d;
       border-top: 0.5px solid #d9d9d9;
       border-bottom: 0.5px solid #d9d9d9;
       border-radius: 0px;
+      font-weight: 400;
     `;
   },
-
 };

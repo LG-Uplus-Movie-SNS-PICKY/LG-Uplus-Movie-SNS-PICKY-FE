@@ -2,9 +2,9 @@ name: CD
 
 on:
   push:
-    branches: [main]
+    branches: [dev]
   pull_request:
-    branches: [main]
+    branches: [dev]
 
 jobs:
   build:
@@ -21,14 +21,17 @@ jobs:
         run: yarn build
 
       - name: S3 Deploy
-        run: aws s3 sync ./dist s3://picky-web-main/ --acl bucket-owner-full-control # 현재 build된 폴더에 접근 후 s3 버킷인 csr-test-1-bucket에 파일 업로드
+        run: aws s3 sync ./dist s3://picky-web/ --acl bucket-owner-full-control # 현재 build된 폴더에 접근 후 s3 버킷인 csr-test-1-bucket에 파일 업로드
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-      - name: Invalidate CloudFront Cache # 새로 리소스를 업데이트할 때 기존 캐시 무효화
+      - name: Invalidate CloudFront Cache # 특정 파일만 무효화
         uses: chetan/invalidate-cloudfront-action@master
         env:
-          AWS_DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_MAIN_ID }}
-          PATHS: "/index.html"
+          AWS_DISTRIBUTION: ${{ secrets.AWS_DISTRIBUTION_ID }}
+          PATHS: |
+            /index.html
+            /main.js
+            /styles.css
         continue-on-error: true
