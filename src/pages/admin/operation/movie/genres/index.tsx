@@ -1,4 +1,5 @@
 import Search from "@assets/icons/search_small.svg?react";
+import AddCriclBtn from "@assets/icons/add_circle_small.svg?react";
 
 import { useState } from "react";
 import styles from "./index.styles";
@@ -9,7 +10,11 @@ function MovieGenreOpertionPage() {
       {/* Filter Container */}
       <div css={styles.filterContainer()}>
         {/* Filter Select Tag */}
-        <div css={styles.filter()}>{/* 장르 추가 버튼으로 수정 */}</div>
+        <div css={styles.filter()}>
+          <div className="add-genre-btn">
+            <AddCriclBtn /> 장르 추가
+          </div>
+        </div>
 
         {/* Search Input Tag */}
         <form

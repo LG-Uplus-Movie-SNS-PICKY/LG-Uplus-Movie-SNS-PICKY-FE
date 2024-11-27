@@ -26,6 +26,27 @@ export default {
         margin-right: 10px;
       }
 
+      & > .add-genre-btn {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        cursor: pointer;
+        color: #aaa;
+        transition: 0.2s;
+
+        & > svg path {
+          fill: #aaa;
+        }
+
+        &:hover {
+          color: #141414;
+
+          & > svg path {
+            fill: #141414;
+          }
+        }
+      }
+
       & > select {
         border: 1px solid #d9d9d9;
         border-radius: 4px;
