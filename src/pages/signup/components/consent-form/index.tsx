@@ -1,9 +1,9 @@
-/** @jsxImportSource @emotion/react */
 import { useRecoilState } from "recoil";
 import { inputState, IInputData } from "../../../../review/atoms";
 import { Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import { Unchecked, Checked } from "../../../../assets/svg";
+import { Checked, Unchecked } from "@assets/svg";
+
 import {
   consentWrapper,
   consentContainer,
@@ -39,7 +39,7 @@ export default function InputConsentForm() {
         onFocus={handleFocus}
         onBlur={handleBlur}
       >
-        <div css={customCheckbox(!!inputData.consentAll)}>
+        <div css={customCheckbox}>
           {inputData.consentAll ? <Checked /> : <Unchecked />}
         </div>
         <span css={consentText}>
@@ -53,7 +53,7 @@ export default function InputConsentForm() {
         onFocus={handleFocus}
         onBlur={handleBlur}
       >
-        <div css={customCheckbox(!!inputData.consentAge)}>
+        <div css={customCheckbox}>
           {inputData.consentAge ? <Checked /> : <Unchecked />}
         </div>
         <span css={consentText}>
@@ -64,7 +64,6 @@ export default function InputConsentForm() {
       <Text.FocusedWarning $isFocused={isFocused}>
         필수 약관에 모두 동의 해주세요.
       </Text.FocusedWarning>
-
     </div>
   );
 }

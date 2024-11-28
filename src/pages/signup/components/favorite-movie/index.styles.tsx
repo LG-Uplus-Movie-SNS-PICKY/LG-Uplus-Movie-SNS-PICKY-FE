@@ -1,5 +1,4 @@
 import { css } from "@emotion/react";
-// import { Checked } from "../../../../assets/svg";
 
 export const consentWrapper = css``;
 
@@ -22,7 +21,7 @@ export const titleWrapper = css`
   align-items: flex-start;
   justify-content: flex-start;
   gap: 8px;
-  padding-bottom: 40px;
+  padding-bottom: 8px;
   width: 300px;
 `;
 
@@ -50,7 +49,7 @@ export const requiredBadge = css`
 `;
 
 export const subtitle = css`
-  font-size: 16px;
+  font-size: 12px;
   color: #c8c8c8;
   font-weight: 400;
   text-align: left;
@@ -98,7 +97,6 @@ export const movieGridWrapper = css`
 export const movieGrid = css`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
   flex: 1;
   justify-items: center;
   align-items: center;
@@ -110,8 +108,8 @@ export const movieCard = ($isSelected: boolean) => css`
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  width: 90px;
-  height: 140px;
+  height: 120px;
+  margin-bottom: 8px;
   overflow: hidden;
   cursor: pointer;
   background-color: ${$isSelected ? "transparent" : "transparent"};
@@ -124,7 +122,7 @@ export const movieCard = ($isSelected: boolean) => css`
 
 export const movieImage = ($isSelected: boolean) => css`
   position: relative;
-  height: 120px;
+  height: 100px;
   border-radius: 10px;
   object-fit: cover;
   filter: ${$isSelected ? "brightness(40%) blur(0.6px)" : "none"};
@@ -134,7 +132,7 @@ export const movieImage = ($isSelected: boolean) => css`
 export const movieTitle = css`
   ${textBase};
   color: #000;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.4px;
   margin-top: 4px;

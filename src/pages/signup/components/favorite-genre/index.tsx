@@ -2,7 +2,6 @@
 import React from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
-import { Text } from "../ui";
 import {
   wrapper,
   pageContainer,
@@ -56,16 +55,13 @@ const MovieGenreSelector = () => {
 
   return (
     <div css={wrapper}>
-      <Text.TitleMenu300>
-        당신이 좋아하는 영화 장르를 선택 해주세요
-      </Text.TitleMenu300>
       <div css={pageContainer}>
         <div css={titleWrapper}>
           <div css={titleContainer}>
             <h2 css={title}>좋아하는 영화 장르를 선택해 주세요 🧸</h2>
             <span css={requiredBadge}>필수</span>
           </div>
-          <span css={subtitle}>평소 좋아하는 영화 장르를 골라주세요.(1개~5개)</span>
+          <span css={subtitle}>평소 좋아하는 영화 장르를 골라주세요.(3개~5개)</span>
         </div>
         {chunkedGenres.map((group, index) => (
           <div key={index} css={genreGroup}>
