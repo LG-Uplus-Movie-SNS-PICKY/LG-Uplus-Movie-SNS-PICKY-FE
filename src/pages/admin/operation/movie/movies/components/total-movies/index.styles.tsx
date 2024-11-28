@@ -219,4 +219,61 @@ export default {
       margin: 12px 0;
     `;
   },
+
+  movieDetailWatchService(): SerializedStyles {
+    return css`
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      & > .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        font-size: 12px;
+        font-weight: 600;
+        color: #aaa;
+
+        & > .update {
+        }
+      }
+
+      & > .service {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        & > .icon-btn {
+          position: relative;
+
+          &.to-updated {
+            cursor: pointer;
+          }
+
+          & > svg {
+            display: block;
+          }
+
+          & > .selected {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+
+            width: 100%;
+            border-radius: 50%;
+
+            background-color: rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            & > svg path {
+              fill: #ff084a;
+            }
+          }
+        }
+      }
+    `;
+  },
 };

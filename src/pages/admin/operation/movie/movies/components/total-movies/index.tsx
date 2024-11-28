@@ -1,6 +1,24 @@
+import React, { useState } from "react";
 import styles from "./index.styles";
 
 import Search from "@assets/icons/search_small.svg?react";
+import Netflix from "@assets/icons/netflix.svg?react";
+import Watcha from "@assets/icons/watcha.svg?react";
+import Tving from "@assets/icons/tving.svg?react";
+import Diesney from "@assets/icons/Disneyplus.svg?react";
+import Coupang from "@assets/icons/coupangplay.svg?react";
+import Wavve from "@assets/icons/wavve.svg?react";
+
+import Check from "@assets/icons/check.svg?react";
+
+const ottDummyData = [
+  { icon: Netflix, name: "netflix" },
+  { icon: Watcha, name: "watcha" },
+  { icon: Tving, name: "tving" },
+  { icon: Diesney, name: "disneyplus" },
+  { icon: Coupang, name: "coupangplay" },
+  { icon: Wavve, name: "wavve" },
+];
 
 const movieInfo = {
   title: "이터널 선샤인",
@@ -17,9 +35,13 @@ const movieInfo = {
     "조엘은 아픈 기억만을 지워준다는 라쿠나사를 찾아가 헤어진 연인 클레멘타인의 기억을 지우기로 결심한다. 기억이 사라져 갈수록 조엘은 사랑이 시작되던 순간, 행복한 기억들, 가슴 속에 각인된 추억들을 지우기 싫어지기만 하는데... 당신을 지우면 이 아픔도 사라질까요? 사랑은 그렇게 다시 기억된다.",
   ost: "lSQKCla2410PSwe",
   behind: "OQPS1245xSCasw",
+  service: ["netflix", "disneyplus", "wavve"],
 };
 
 function TotalMoviesSection() {
+  const [watchServiceUpdateActive, setWatchServiceUpdateActive] =
+    useState(false);
+
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -103,6 +125,7 @@ function TotalMoviesSection() {
                       id="ost"
                       placeholder="영화의 OST를 Youtube 재생목록 List Param 값을 작성해주세요."
                       value={movieInfo.ost}
+                      readOnly
                     />
                     <button>수정</button>
                   </div>
@@ -122,6 +145,7 @@ function TotalMoviesSection() {
                       id="behind"
                       placeholder="영화의 비하인드 Youtube 재생목록 List Param 값을 작성해주세요."
                       value={movieInfo.behind}
+                      readOnly
                     />
                     <button>수정</button>
                   </div>
@@ -130,6 +154,38 @@ function TotalMoviesSection() {
                     * Youtube 재생목록의 List Param 값을 기입해주세요.
                   </span>
                 </div>
+              </div>
+            </div>
+
+            {/* OTT Service */}
+            <div css={styles.movieDetailWatchService()}>
+              <div className="title">
+                <h3>시청할 수 있는 서비스</h3>
+                {/* 수정 버튼 */}
+                <div className="update">
+                  <button onClick={() => setWatchServiceUpdateActive(true)}>
+                    수정
+                  </button>
+                </div>
+              </div>
+              <div className="service">
+                {ottDummyData.map((data, idx) => {
+                  return (
+                    <div
+                      className={`icon-btn ${
+                        watchServiceUpdateActive ? "to-updated" : ""
+                      }`}
+                      key={idx}
+                    >
+                      {movieInfo.service.includes(data.name) && (
+                        <div className="selected">
+                          <Check />
+                        </div>
+                      )}
+                      {React.createElement(data.icon)}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
