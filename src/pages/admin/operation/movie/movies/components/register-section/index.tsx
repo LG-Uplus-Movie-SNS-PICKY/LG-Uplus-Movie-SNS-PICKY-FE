@@ -175,24 +175,36 @@ function RegistMovieSection() {
             <div css={styles.movieDetailInfoContainer()}>
               {/* Movie Detail Info */}
               <div className="movie-detail-info">
-                {/* Title, Genres, Release */}
-                <div className="info">
-                  <h3>제목</h3>
-                  <span>
-                    {movieInfo.title}({movieInfo.original_title})
-                  </span>
-                </div>
+                <div css={styles.movieDetailTop()}>
+                  <div className="detail">
+                    {/* Title, Genres, Release */}
+                    <div className="info">
+                      <h3>제목</h3>
+                      <span>
+                        {movieInfo.title}({movieInfo.original_title})
+                      </span>
+                    </div>
 
-                <div className="info">
-                  <h3>장르</h3>
-                  <span>
-                    {movieInfo.genres.map((genre) => genre.name).join(", ")}
-                  </span>
-                </div>
+                    <div className="info">
+                      <h3>장르</h3>
+                      <span>
+                        {movieInfo.genres.map((genre) => genre.name).join(", ")}
+                      </span>
+                    </div>
 
-                <div className="info">
-                  <h3>출시년도</h3>
-                  <span>{movieInfo.release_date}</span>
+                    <div className="info">
+                      <h3>출시년도</h3>
+                      <span>{movieInfo.release_date}</span>
+                    </div>
+                  </div>
+
+                  {/* Movie Poster */}
+                  <div className="movie-poster">
+                    <img
+                      src={`https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`}
+                      alt={movieInfo.original_title}
+                    />
+                  </div>
                 </div>
 
                 <div className="desciprtion">
@@ -202,7 +214,36 @@ function RegistMovieSection() {
 
                 {/* Actress - Swiper */}
 
-                {/* OST or Behind */}
+                {/* OST or Behind Id Input */}
+                <div css={styles.inputContainer()}>
+                  <div className="input">
+                    <label htmlFor="ost">OST</label>
+                    <div>
+                      <input
+                        type="text"
+                        id="ost"
+                        placeholder="영화의 OST를 Youtube 재생목록 List Param 값을 작성해주세요."
+                      />
+                      <span>
+                        * Youtube 재생목록의 List Param 값을 기입해주세요.
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="input">
+                    <label htmlFor="behind">비하인드</label>
+                    <div>
+                      <input
+                        type="text"
+                        id="behind"
+                        placeholder="영화의 비하인드 Youtube 재생목록 List Param 값을 작성해주세요."
+                      />
+                      <span>
+                        * Youtube 재생목록의 List Param 값을 기입해주세요.
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
                 {/* OTT Select */}
                 <div className="select-box">
@@ -228,14 +269,6 @@ function RegistMovieSection() {
                     );
                   })}
                 </div>
-              </div>
-
-              {/* Movie Poster */}
-              <div className="movie-poster">
-                <img
-                  src={`https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`}
-                  alt={movieInfo.original_title}
-                />
               </div>
             </div>
           )}

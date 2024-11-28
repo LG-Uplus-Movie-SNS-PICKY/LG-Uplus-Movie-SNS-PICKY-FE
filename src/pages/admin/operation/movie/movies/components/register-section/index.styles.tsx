@@ -199,18 +199,6 @@ export default {
       display: flex;
       gap: 32px;
 
-      & > .movie-poster {
-        width: 88px;
-        height: 132px;
-        border-radius: 8px;
-        overflow: hidden;
-
-        & > img {
-          width: 100%;
-          height: 100%;
-        }
-      }
-
       & > .movie-detail-info {
         flex: 1;
         display: flex;
@@ -218,27 +206,6 @@ export default {
         align-items: flex-start;
 
         gap: 16px;
-
-        & > .info {
-          display: flex;
-          align-items: center;
-
-          /* gap: 30px; */
-
-          font-size: 14px;
-          font-weight: 600;
-          color: #aaa;
-
-          & > h3 {
-            width: 100px;
-            font-size: 12px;
-          }
-
-          & > span {
-            margin-right: 4px;
-            color: #191919;
-          }
-        }
 
         & > .select-box {
           width: 100%;
@@ -295,6 +262,103 @@ export default {
           }
         }
       }
+    `;
+  },
+
+  movieDetailTop(): SerializedStyles {
+    return css`
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+
+      gap: 24px;
+
+      & > .movie-poster {
+        width: 88px;
+        height: 132px;
+        border-radius: 8px;
+        overflow: hidden;
+
+        & > img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      & > .detail {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        /* width: 100%; */
+
+        & > .info {
+          display: flex;
+          align-items: center;
+
+          /* gap: 30px; */
+
+          font-size: 14px;
+          font-weight: 600;
+          color: #aaa;
+
+          & > h3 {
+            width: 100px;
+            font-size: 12px;
+          }
+
+          & > span {
+            margin-right: 4px;
+            color: #191919;
+          }
+        }
+      }
+    `;
+  },
+
+  inputContainer(): SerializedStyles {
+    return css`
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+
+      & > .input {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: #aaa;
+
+        & > label {
+          display: block;
+          width: 100px;
+        }
+
+        & > div {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          & > input[type="text"] {
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            outline: none;
+            font-size: 12px;
+            padding: 4px;
+
+            &:focus {
+              border-color: #191919;
+            }
+          }
+
+          & > span {
+            font-size: 10px;
+          }
+        }
+      }
+      margin: 12px 0;
     `;
   },
 };
