@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from "react";
 import MovieSearch from "@assets/icons/movie_search.svg?react";
 import Delete from "@assets/icons/delete.svg?react";
 import { FileInput } from "@stories/file-input";
-// import { Button } from "@stories/button";
+import { Button } from "@stories/button";
 
 import {
   wrapper,
@@ -155,7 +155,7 @@ export default function SocialPost() {
         </div>
       </div>
       <div css={shareButton}>
-        {/* <Button label="공유" /> */}
+        <Button label="공유" />
       </div>
     </div>
   );

@@ -97,7 +97,7 @@ export default function Signup() {
         return typeof value === "string" && value.trim() !== "";
       }
       if (field === "favoriteGenres") {
-        return Array.isArray(value) && value.length > 0;
+        return Array.isArray(value) && value.length > 2;
       }
       if (field === "favoriteMovie") {
         return Array.isArray(value) && value.length >= 5 && value.length <= 15;

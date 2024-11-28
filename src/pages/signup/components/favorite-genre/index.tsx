@@ -61,7 +61,7 @@ const MovieGenreSelector = () => {
             <h2 css={title}>좋아하는 영화 장르를 선택해 주세요 🧸</h2>
             <span css={requiredBadge}>필수</span>
           </div>
-          <span css={subtitle}>평소 좋아하는 영화 장르를 골라주세요.(1개~5개)</span>
+          <span css={subtitle}>평소 좋아하는 영화 장르를 골라주세요.(3개~5개)</span>
         </div>
         {chunkedGenres.map((group, index) => (
           <div key={index} css={genreGroup}>
