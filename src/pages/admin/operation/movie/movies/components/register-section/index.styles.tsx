@@ -203,7 +203,7 @@ export default {
         flex: 1;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        /* align-items: flex-start; */
 
         gap: 16px;
 
@@ -271,7 +271,7 @@ export default {
       display: flex;
       justify-content: space-between;
 
-      gap: 24px;
+      /* gap: 24px; */
 
       & > .movie-poster {
         width: 88px;

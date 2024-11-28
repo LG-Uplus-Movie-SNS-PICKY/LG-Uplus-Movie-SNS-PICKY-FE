@@ -2,6 +2,19 @@ import styles from "./index.styles";
 
 import Search from "@assets/icons/search_small.svg?react";
 
+const movieInfo = {
+  title: "이터널 선샤인",
+  original_title: "(Eternal Sunshine of the Spotless Mind)",
+  genres: [
+    { id: 1, name: "SF" },
+    { id: 2, name: "드라마" },
+    { id: 3, name: "로맨스" },
+  ],
+  release_date: "2004-03-19",
+  poster_path:
+    "https://image.tmdb.org/t/p/original//6HNRo7VYpvM5x5O921bEF2BG7f4.jpg",
+};
+
 function TotalMoviesSection() {
   return (
     <>
@@ -31,7 +44,43 @@ function TotalMoviesSection() {
         </div>
 
         {/* Movies Container */}
-        <div css={styles.movieContainer()}></div>
+        <div css={styles.movieContainer()}>
+          {/* Movies Card */}
+          <div css={styles.movieCard()}>
+            {/* Movies Top -> Info, Poster */}
+            <div css={styles.movieDetailTop()}>
+              {/* Title, Genres, Release */}
+              <div className="detail">
+                <div className="info">
+                  <h3>제목</h3>
+                  <span>
+                    {movieInfo.title}({movieInfo.original_title})
+                  </span>
+                </div>
+
+                <div className="info">
+                  <h3>장르</h3>
+                  <span>
+                    {movieInfo.genres.map((genre) => genre.name).join(", ")}
+                  </span>
+                </div>
+
+                <div className="info">
+                  <h3>출시년도</h3>
+                  <span>{movieInfo.release_date}</span>
+                </div>
+              </div>
+
+              {/* Poster */}
+              <div className="movie-poster">
+                <img
+                  src={movieInfo.poster_path}
+                  alt={movieInfo.original_title}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
