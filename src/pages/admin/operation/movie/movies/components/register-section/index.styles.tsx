@@ -8,7 +8,7 @@ export default {
       justify-content: space-between;
       align-items: flex-start;
 
-      gap: 24px;
+      gap: 8px;
     `;
   },
 
@@ -67,28 +67,91 @@ export default {
     `;
   },
 
-  movieAutoCompleteContainer(): SerializedStyles {
+  movieAutoCompleteContainer(data: boolean): SerializedStyles {
     return css`
-      padding: 12px;
+      max-height: 320px;
+
+      padding: ${data ? "12px" : ""};
       display: flex;
       flex-direction: column;
 
+      justify-content: flex-start;
+      align-items: center;
+      overflow-y: scroll;
+
       & > .list-item {
+        width: 100%;
+
         display: flex;
-        gap: 8px;
+        justify-content: space-between;
+
         border-top: 1px solid #ddd;
         border-bottom: 1px solid #ddd;
         padding: 12px 0;
         cursor: pointer;
 
-        transition: background-color 0.2s;
+        transition: 0.2s;
 
         &:hover {
           background-color: #f0f0f0;
+
+          & > svg path {
+            stroke: #191919;
+          }
         }
 
         &:last-of-type {
           border-bottom: none;
+        }
+
+        & > div {
+          display: flex;
+          gap: 8px;
+
+          & > .poster {
+            width: 100%;
+            max-width: 120px;
+
+            & > img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+
+          & > .title {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+
+            min-width: 52px;
+
+            font-size: 10px;
+            font-weight: 600;
+            color: #aaa;
+
+            padding-top: 4px;
+
+            & > h3 {
+              font-size: 14px;
+              color: #191919;
+            }
+
+            & > div {
+              display: flex;
+              flex-direction: column;
+            }
+          }
+        }
+
+        & > svg {
+          margin: auto 0;
+          width: fit-content;
+          padding-right: 8px;
+
+          & > path {
+            stroke: #9d9d9d;
+          }
         }
       }
     `;
