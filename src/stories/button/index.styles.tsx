@@ -42,7 +42,7 @@ export default {
   // 버튼 More Btn 스타일
   storybookButtonMore(): SerializedStyles {
     return css`
-      width: 393px;
+      width: 100%;
       padding: 10px 16px;
       font-size: 12px;
       background-color: #f8f8f8;

@@ -1,5 +1,6 @@
 // pages/MovieDetail/components/MovieInfo/index.styles.tsx
 import styled from '@emotion/styled';
+import { css, SerializedStyles } from '@emotion/react';
 import AdBanner from '../../../../assets/images/movie_detail_ad_banner.png';
 
 export const MovieInfoContainer = styled.div`
@@ -51,23 +52,66 @@ export const ContentText = styled.span`
     font-weight: 400;
 `;
 
+{/*  Slides -> 최상위 부모 컴포넌트 */}
 export const CastInfoContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    padding: 16px 0 0 16px;
-    gap: 12px;
+    flex-direction: column; // Title + CastContainer Column 배치
     align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
     width: 100%;
 `;
 
-export const CastContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  overflow-x: auto;
-  width: 100%;
-`;
+export const styles = {
+  CastContainer(): SerializedStyles {
+    return css`
+      width: 100%;
 
-export const CastSlide = styled.div`
+      & > .swiper-wrapper > .swiper-slide {
+        /* width: fit-content; */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: fit-content ;
+      }
+    `;
+  },
+
+  CastSlide(): SerializedStyles {
+    return css`
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      height: 100px;
+      background-color: green;
+    `;
+  }
+
+  // CastSlide(): SerializedStyles {
+  //   return css`
+  //     width: fit-content;
+  //     display: flex;
+  //     flex-direction: column;
+  //     align-items: start;
+  //     margin-right: 16px;
+  //   `
+  // }
+}
+
+
+{/* 슬라이더 부모 컨테이너 */}
+// export const CastContainer = styled.div`
+//   display: flex;
+//   flex-direction: row;
+//   /* max-width: 768px; */
+//   width: 100%;
+//   overflow-x: auto;
+//   /* height: 100px; */
+//   /* background-color: red; */
+// `;
+
+// 슬라이더 아이템 컨테이너
+export const CastContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -80,6 +124,7 @@ export const CastCard = styled.div`
   align-items: start;
   gap: 4px;
   margin-bottom: 16px;
+  width: 100%;
 `;
 
 export const CastImage = styled.img`
@@ -95,8 +140,9 @@ export const CastDetails = styled.div`
   align-items: start;
   padding: 4px;
   gap: 4px;
+  /* width: 100%; */
+  flex: 1;
   height: 48px;
-  width: 188px;
   border-bottom: 1px solid #C8C8C8;
 `;
 

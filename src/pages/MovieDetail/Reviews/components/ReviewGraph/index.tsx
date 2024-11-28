@@ -1,17 +1,34 @@
 // pages/MovieDetail/Reviews/components/ReviewGraph/index.tsx
 import React from 'react';
 import {
-  Container,
+  GraphWrapper,
+  GraphContainer,
+  TitleWrapper,
   Title,
+  StarTextContainer,
+  StarText,
+  TotalStarText,
   RatingContainer,
   StarContainer,
   Star,
-  ScoreBarContainer,
+  PeopleCountText,
+  ScoreWrapper,
+  GenderContainer,
+  ScoreContainer,
+  GenderScoreText,
+  ScoreBarWrapper,
+  ScoreItemContainer,
+  ScoreText,
   ScoreBar,
-  ScorePercentage,
+  PercentageText,
   GenderStats,
   GenderStat,
+  TitleBorder,
+  PercentageWrapper,
+  PercentageContainer
 } from './index.styles';
+import MaleSvg from '../../../../../assets/icons/male.svg?react';
+import FemaleSvg from '../../../../../assets/icons/female.svg?react';
 
 interface Review {
   rating: number;
@@ -37,14 +54,16 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
 
   // 점수대별 분포 계산
   const ratingsDistribution = new Array(5).fill(0).map((_, index) => {
+    const score = 5 - index; // 점수를 5부터 1까지 역순으로 계산
     const count = reviews.filter(
-      (review) => review.rating > index && review.rating <= index + 1
+      (review) => Math.ceil(review.rating) === score // 점수가 해당 범위에 포함되는지 확인
     ).length;
     return {
-      range: `${5 - index}-${4 - index}`,
-      percentage: (count / reviews.length) * 100, // 문자열 대신 숫자로 반환
+      score: score, // 역순으로 점수를 표시
+      percentage: (count / reviews.length) * 100,
     };
   });
+
 
   // 별 렌더링 함수
   const renderStars = (rating: number) => {
@@ -63,14 +82,14 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
     const femalePercentage = (genderStats.female / total) * 100;
 
     return (
-      <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-        <svg viewBox="0 0 36 36" style={{ transform: 'rotate(-90deg)' }}>
+      <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+        <svg viewBox="0 0 36 36" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
           <circle
             cx="18"
             cy="18"
             r="15.915"
             fill="none"
-            stroke="#4CAF50"
+            stroke="#72B8FF"
             strokeWidth="3"
             strokeDasharray={`${malePercentage} ${100 - malePercentage}`}
             strokeDashoffset="0"
@@ -80,50 +99,80 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
             cy="18"
             r="15.915"
             fill="none"
-            stroke="#F06292"
+            stroke="#F383B0"
             strokeWidth="3"
             strokeDasharray={`${femalePercentage} ${100 - femalePercentage}`}
             strokeDashoffset={-malePercentage}
           />
         </svg>
-        <div style={{ position: 'absolute', top: '40%', left: '30%', fontSize: '10px' }}>
-          남자 {malePercentage.toFixed(0)}% <br />
-          여자 {femalePercentage.toFixed(0)}%
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)"}}>
+          <PercentageWrapper>
+            <PercentageContainer>
+              <ScoreText>남자</ScoreText>
+              <GenderScoreText>{malePercentage.toFixed(0)}%</GenderScoreText>
+            </PercentageContainer>
+            <PercentageContainer>
+              <ScoreText>여자</ScoreText>
+              <GenderScoreText>{femalePercentage.toFixed(0)}%</GenderScoreText>
+            </PercentageContainer>
+          </PercentageWrapper>
         </div>
       </div>
     );
   };
 
   return (
-    <Container>
-      <Title>실관람객 평점</Title>
-      <RatingContainer>
-        <StarContainer>
-          {renderStars(totalAverage)}
-          <span>{totalAverage.toFixed(1)} / 5</span>
-        </StarContainer>
-        <GenderStats>
-          <GenderStat>
-            <span>남자</span>
-            <span>{maleAverage.toFixed(2)}</span>
-          </GenderStat>
-          <GenderStat>
-            <span>여자</span>
-            <span>{femaleAverage.toFixed(2)}</span>
-          </GenderStat>
-        </GenderStats>
+    <GraphWrapper>
+      <GraphContainer>
+        <TitleWrapper>
+          <Title>실관람객 평점</Title>
+          <RatingContainer>
+            <StarTextContainer>
+              <StarText>{totalAverage.toFixed(1)}</StarText>
+              <TotalStarText>/</TotalStarText>
+              <TotalStarText>5.0</TotalStarText>
+            </StarTextContainer>
+            <StarContainer>
+              {renderStars(totalAverage)}
+            </StarContainer>
+            <PeopleCountText>{reviews.length}명 참여</PeopleCountText>
+          </RatingContainer>
+        </TitleWrapper>
+        <ScoreWrapper>
+          <GenderContainer>
+            <GenderScoreText>남자</GenderScoreText>
+            <ScoreContainer>
+              <MaleSvg />
+              <GenderScoreText>{maleAverage.toFixed(1)}</GenderScoreText>
+            </ScoreContainer>
+          </GenderContainer>
+          <GenderContainer>
+            <GenderScoreText>여자</GenderScoreText>
+            <ScoreContainer>
+              <FemaleSvg />
+              <GenderScoreText>{femaleAverage.toFixed(1)}</GenderScoreText>
+            </ScoreContainer>
+          </GenderContainer>
+        </ScoreWrapper>
+      </GraphContainer>
+      <GraphContainer>
+        <TitleBorder>점수별 비율</TitleBorder>
+        <ScoreBarWrapper>
+          {ratingsDistribution.map((dist, index) => (
+            <ScoreItemContainer key={index}>
+              <ScoreText>★</ScoreText>
+              <ScoreText>{dist.score}</ScoreText>
+              <ScoreBar percentage={dist.percentage} />
+              <PercentageText>{dist.percentage.toFixed(1)}%</PercentageText>
+            </ScoreItemContainer>
+          ))}
+        </ScoreBarWrapper>
+      </GraphContainer>
+      <GraphContainer>
+        <TitleBorder>성별 비율</TitleBorder>
         <CircleChart genderStats={{ male: maleReviews.length, female: femaleReviews.length }} />
-      </RatingContainer>
-      <ScoreBarContainer>
-        {ratingsDistribution.map((dist, index) => (
-          <div key={index}>
-            <Star>{dist.range}</Star>
-            <ScoreBar percentage={dist.percentage} />
-            <ScorePercentage>{dist.percentage.toFixed(2)}%</ScorePercentage>
-          </div>
-        ))}
-      </ScoreBarContainer>
-    </Container>
+      </GraphContainer>
+    </GraphWrapper>
   );
 };
 

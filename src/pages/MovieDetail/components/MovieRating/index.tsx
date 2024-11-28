@@ -11,6 +11,8 @@ import {
     IconContainer,
     LikeText
 } from './index.styles';
+import BehindModal from '../BehindModal';
+
 import StarMiniSvg from '../../../../assets/icons/star_mini.svg?react';
 import ThumbsUp from '../../../../assets/icons/thumbs_up.svg?react';
 import ThumbsUpActive from '../../../../assets/icons/thumbs_up_active.svg?react';
@@ -28,6 +30,7 @@ const MovieRating: React.FC<MovieRatingProps> = ({ rating }) => {
     const emptyStars = totalStars - fullStars - halfStar;
 
     const [likeActive, setLikeActive] = useState(false);
+    const [ showBehindModal, setShowBehindModal ] = useState(false);
 
     const toggleLike = () => setLikeActive(!likeActive);
 
@@ -57,11 +60,12 @@ const MovieRating: React.FC<MovieRatingProps> = ({ rating }) => {
                     <MovieLogSvg />
                     무비로그
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => setShowBehindModal(true)}>
                     <BehindSvg />
                     비하인드
                 </IconContainer>
             </TabBarContainer>
+            {showBehindModal && <BehindModal onClose={() => setShowBehindModal(false)} />}
         </RatingContainer>
     );
 };

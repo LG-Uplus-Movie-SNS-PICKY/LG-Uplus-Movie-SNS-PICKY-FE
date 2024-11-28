@@ -14,23 +14,28 @@ import styles from "./index.styles";
 
 export interface NavigateTabMene {
   icon: React.ReactNode | string; // 탭 아이콘의 이미지 경로(Picky Tab) 또는 SVG 컴포넌트
+  activeSrc?: string; // 탭 아이콘의 이미지 경로(Picky Tab) 또는 SVG 컴포넌트
   activeIcon?: React.ReactNode; // 탭 아이콘의 이미지 경로(Picky Tab) 또는 SVG 컴포넌트
   name: string; // 판별을 위한 탭 이름
   label: string;
 }
 
 const tabMenus: Array<NavigateTabMene> = [
-  { icon: <Home />, 
-    activeIcon: <ActiveHome />, 
-    name: "home", 
-    label: "홈" },
-  { icon: <Picky />,
-    activeIcon: <ActivePicky />, 
-    name: "picky", 
-    label: "picky" },
   {
-    icon: <MovieSocial />,
-    activeIcon: <ActiveMovieSocial />,
+    icon: <Home />,
+    activeIcon: <ActiveHome />,
+    name: "home",
+    label: "홈"
+  },
+  {
+    icon: <Picky />,
+    activeIcon: <ActivePicky />,
+    name: "picky",
+    label: "picky"
+  },
+  {
+    icon: "/src/assets/images/movie-social.png",
+    activeSrc: "/src/assets/images/movie-social-active.png",
     name: "movie",
     label: "무비로그",
   },
@@ -40,14 +45,17 @@ const tabMenus: Array<NavigateTabMene> = [
     name: "recommend",
     label: "추천",
   },
-  { icon: <User />, 
-    activeIcon: <ActiveUser />, 
-    name: "user", 
-    label: "my" },
+  {
+    icon: <User />,
+    activeIcon: <ActiveUser />,
+    name: "user",
+    label: "my"
+  },
 ];
 
 interface ImageTabMenuProps {
   src: string;
+  activeSrc: string;
   label: string;
   active: boolean;
 }
@@ -57,21 +65,18 @@ interface SvgTabMenuProps {
   label: string;
 }
 
-interface NavigatorBarProps {
-  state: string;
-  handleTabChange: (
-    event: React.MouseEvent<HTMLDivElement>,
-    name: string
-  ) => void;
-}
-
-function ImageTabMenu({ src, label, active }: ImageTabMenuProps): JSX.Element {
+function ImageTabMenu({
+  src,
+  activeSrc,
+  label,
+  active,
+}: ImageTabMenuProps): JSX.Element {
   return (
     <>
-      <div style={{ width: "32px", height: "32px" }}>
+      <div>
         <img
-          src={active ? "/src/assets/images/picky-active.png" : src}
-          alt="picky-icon-image"
+          src={active ? activeSrc : src}
+          alt={`${label.toUpperCase()}-icon-image`}
         />
       </div>
       <span>{label}</span>
@@ -88,6 +93,11 @@ function SvgTabMenu({ icon, label }: SvgTabMenuProps): JSX.Element {
   );
 }
 
+export interface NavigatorBarProps {
+  state: string;
+  onClick: (name: string) => void;
+}
+
 /**
  * NavigaterBar 컴포넌트
  * @description 전역에서 재사용 가능한 내비게이션 바 컴포넌트
@@ -97,7 +107,7 @@ function SvgTabMenu({ icon, label }: SvgTabMenuProps): JSX.Element {
  */
 export function NavigaterBar({
   state,
-  handleTabChange,
+  onClick,
 }: NavigatorBarProps): JSX.Element {
   return (
     <nav css={styles.navbarContainer()}>
@@ -108,12 +118,13 @@ export function NavigaterBar({
             <div
               key={idx}
               css={styles.navbarMenuItem(menu.name, state === menu.name)}
-              onClick={(event) => handleTabChange(event, menu.name)}
+              onClick={() => onClick(menu.name)}
             >
               {typeof menu.icon === "string" ? (
                 // PICKY 탭 클릭할 경우 -> SVG 파일이 아니기 때문에 조건부 처리
                 <ImageTabMenu
                   src={menu.icon}
+                  activeSrc={menu.activeSrc as string}
                   label={menu.label}
                   active={state === menu.name}
                 />

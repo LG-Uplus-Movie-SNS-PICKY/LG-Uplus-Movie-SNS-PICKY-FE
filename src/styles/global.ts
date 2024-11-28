@@ -26,11 +26,11 @@ export const globalStyle = css`
   }
 
   * {
-    font-family: "Pretendard", sans-serif;
+    font-family: "Pretendard", "Roboto", sans-serif;
   }
 
   html {
-    font-family: "Pretendard Variable", Pretendard, -apple-system,
+    font-family: "Pretendard Variable", "Roboto", Pretendard, -apple-system,
       BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
       "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
       "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
@@ -40,10 +40,12 @@ export const globalStyle = css`
 
   body {
     margin: 0 auto;
-    margin: 0;
+    display: flex;
+    width: 100%;
     padding: 0;
     overflow-x: hidden;
-    font-family: "Pretendard", sans-serif;
+    justify-content: center;
+    font-family: "Pretendard", "Roboto", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* background-color: #f8f8f8; */
@@ -52,14 +54,14 @@ export const globalStyle = css`
     letter-spacing: -0.4px; //자간 -4%
   }
 
-  .page {
-    width: 100%;
-    max-width: 393px;
-    margin: 0 auto;
-}
-
   body::-webkit-scrollbar {
     display: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    background-color: #f8f8f8;
   }
 
   *,

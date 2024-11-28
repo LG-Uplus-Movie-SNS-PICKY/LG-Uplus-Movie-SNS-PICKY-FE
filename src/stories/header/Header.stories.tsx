@@ -2,9 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react";
 
 import { Header } from "./";
 
-import AddCircle from "@assets/icons/add_circle.svg?react";
+import AddCircle from "@assets/icons/add_circle_small.svg?react";
 import Notification from "@assets/icons/notification.svg?react";
 import Search from "@assets/icons/search.svg?react";
+import UesrLogo from "@assets/icons/user_circle.svg?react";
 
 // Header meta 설정 정의
 const meta = {
@@ -41,6 +42,12 @@ export const BasicHeader: Story = {
 export const LoginHeader: Story = {
   args: {
     type: "login",
+    activeBtn: [
+      <div onClick={() => console.log("login")}>
+        <UesrLogo />
+        <span>로그인</span>
+      </div>,
+    ],
   },
 };
 

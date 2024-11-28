@@ -18,6 +18,8 @@ import Age15Svg from '../../../assets/icons/age_15.svg?react';
 import Age19Svg from '../../../assets/icons/age_19.svg?react';
 
 const ReviewsPage = () => {
+  const [includeSpoilers, setIncludeSpoilers] = useState(false);
+
   const dummyData = {
     imageUrl: "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
     title: "어벤져스: 엔드게임",
@@ -27,7 +29,7 @@ const ReviewsPage = () => {
     reviews: [
       {
         spoiler: false,
-        rating: 4.5,
+        rating: 4.0,
         text: "정말 재미있게 봤습니다. 특히 마지막 전투씬이 인상적이었어요!",
         user: "홍길동",
         gender: "male",
@@ -54,7 +56,37 @@ const ReviewsPage = () => {
         date: "2022-07-12T16:00:00",
         likes: 200,
         dislikes: 3
-      }
+      },
+      {
+        spoiler: false,
+        rating: 4.0,
+        text: "정말 재미있게 봤습니다. 특히 마지막 전투씬이 인상적이었어요!",
+        user: "길동이",
+        gender: "female",
+        date: "2022-07-10T14:48:00",
+        likes: 123,
+        dislikes: 10
+      },
+      {
+        spoiler: false,
+        rating: 5.0,
+        text: "정말 재미있게 봤습니다. 특히 마지막 전투씬이 인상적이었어요!",
+        user: "홍홍홍",
+        gender: "female",
+        date: "2022-07-10T14:48:00",
+        likes: 123,
+        dislikes: 10
+      },
+      {
+        spoiler: false,
+        rating: 5.0,
+        text: "정말 재미있게 봤습니다. 특히 마지막 전투씬이 인상적이었어요!",
+        user: "홍홍홍",
+        gender: "female",
+        date: "2022-07-10T14:48:00",
+        likes: 123,
+        dislikes: 10
+      },
     ]
   };
 
@@ -64,8 +96,12 @@ const ReviewsPage = () => {
     return `${hours}시간 ${mins}분`;
   };
 
+  const filteredReviews = includeSpoilers
+    ? dummyData.reviews.filter(review => review.spoiler)
+    : dummyData.reviews;
+
   return (
-    <div className='page'>
+    <div style={{ width: "100%" }}>
       <MovieReviewContainer>
         <MovieHeader />
         <MovieReviewsPoster imageUrl={dummyData.imageUrl} />
@@ -81,8 +117,8 @@ const ReviewsPage = () => {
           </DetailContainer>
         </InfoContainer>
         <ReviewGraph reviews={dummyData.reviews} />
-        <ReviewRegist />
-        <MovieReview reviews={dummyData.reviews} />
+        <ReviewRegist includeSpoilers={includeSpoilers} setIncludeSpoilers={setIncludeSpoilers}/>
+        <MovieReview reviews={filteredReviews} />
       </MovieReviewContainer>
     </div>
   );

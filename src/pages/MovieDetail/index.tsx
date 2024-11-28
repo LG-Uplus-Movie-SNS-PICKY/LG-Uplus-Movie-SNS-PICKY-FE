@@ -6,14 +6,12 @@ import MovieRating from './components/MovieRating';
 import MovieInfo from './components/MovieInfo';
 import MovieReview from './components/MovieReview';
 import MovieFooter from './components/MovieFooter';
-import { NavigaterBar } from '../../../src/stories/navigater-bar';
 import {
     MovieDetailContainer,
     ReviewHeader,
     Title,
     ReviewCountContainer,
-    ReviewCount,
-    FixedNavBarContainer
+    ReviewCount
 } from './index.styles';
 import { Button } from '../../stories/button';
 import { useNavigate } from 'react-router-dom';
@@ -102,39 +100,35 @@ function MovieDetail(props: MovieDetailProps) {
     };
 
     return (
-        <div className='page'>
+        <MovieDetailContainer>
             <MovieHeader />
-            <MovieDetailContainer>
-                <MoviePoster
-                    imageUrl={dummyData.imageUrl}
-                    title={dummyData.title}
-                    year={dummyData.year}
-                    nation={dummyData.nation}
-                    genre={dummyData.genre}
-                    ott={dummyData.ott}
-                />
-                <MovieRating rating={dummyData.rating} />
-                <MovieInfo content={dummyData.content} castData={dummyData.castData} />
-                <ReviewHeader>
-                    <Title>관람평</Title>
-                    <ReviewCountContainer>
-                        <ReviewCount>{dummyData.reviews.length}</ReviewCount>
-                        <PlusSvg />
-                    </ReviewCountContainer>
-                </ReviewHeader>
-                <MovieReview reviews={dummyData.reviews} />
-                <Button btnType="More" label="모두 보기" onClick={handleReviewClick} />
-                <MovieFooter
-                    year={dummyData.year}
-                    production={dummyData.nation}
-                    age={dummyData.age}
-                    genre={dummyData.genre}
-                />
-            </MovieDetailContainer>
-            <FixedNavBarContainer>
-                <NavigaterBar state={activeTab} handleTabChange={handleTabChange} />
-            </FixedNavBarContainer>
-        </div>
+            <MoviePoster
+                imageUrl={dummyData.imageUrl}
+                title={dummyData.title}
+                year={dummyData.year}
+                nation={dummyData.nation}
+                genre={dummyData.genre}
+                ott={dummyData.ott}
+            />
+
+            <MovieRating rating={dummyData.rating} />
+            <MovieInfo content={dummyData.content} castData={dummyData.castData} />
+            <ReviewHeader>
+                <Title>관람평</Title>
+                <ReviewCountContainer>
+                    <ReviewCount>{dummyData.reviews.length}</ReviewCount>
+                    <PlusSvg />
+                </ReviewCountContainer>
+            </ReviewHeader>
+            <MovieReview reviews={dummyData.reviews} />
+            <Button btnType="More" label="모두 보기" onClick={handleReviewClick} />
+            <MovieFooter
+                year={dummyData.year}
+                production={dummyData.nation}
+                age={dummyData.age}
+                genre={dummyData.genre}
+            />
+        </MovieDetailContainer>
     );
 }
 

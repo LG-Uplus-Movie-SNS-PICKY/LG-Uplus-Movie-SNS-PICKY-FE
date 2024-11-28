@@ -23,12 +23,16 @@ import {
 import SpoilerToggleSvg from '../../../../../assets/icons/spoiler_toggle.svg?react';
 import SpoilerToggleActiveSvg from '../../../../../assets/icons/spoiler_toggle_active.svg?react';
 
-const ReviewRegist = () => {
+interface ReviewRegistProps {
+    includeSpoilers: boolean;
+    setIncludeSpoilers: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ReviewRegist: React.FC<ReviewRegistProps> = ({ includeSpoilers, setIncludeSpoilers }) => {
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
     const [spoiler, setSpoiler] = useState<boolean | null>(null);
     const [sortBy, setSortBy] = useState('');
-    const [includeSpoilers, setIncludeSpoilers] = useState(false);
 
     const handleToggleSpoilers = () => {
         setIncludeSpoilers(!includeSpoilers);

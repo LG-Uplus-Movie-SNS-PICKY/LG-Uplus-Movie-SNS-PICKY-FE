@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 export const PosterContainer = styled.div`
   position: relative;
-  width: 393px;
+  width: 100%;
   height: 340px;
   overflow: hidden;
 `;

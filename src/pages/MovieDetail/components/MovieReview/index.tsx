@@ -90,7 +90,7 @@ const MovieReview: React.FC<ReviewProps> = ({ reviews }) => {
     return (
         <TotalReviewsContainer>
             {reviews.map((review, index) => (
-                <ReviewBody key={index} noBorder={index === 2}>
+                <ReviewBody key={index} noBorder={index === reviews.length - 1}>
                     {renderStars(review.rating)}
                     <ReviewContainer>
                         <ReviewBadge>관람평</ReviewBadge>

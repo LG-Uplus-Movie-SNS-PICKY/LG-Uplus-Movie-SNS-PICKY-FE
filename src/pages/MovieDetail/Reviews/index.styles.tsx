@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 
 export const MovieReviewContainer = styled.div`
   background-color: #F5F5F5;
-  max-width: 393px;
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;

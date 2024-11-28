@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 
 export const MovieDetailContainer = styled.div`
   background-color: #F5F5F5;
-  max-width: 393px;
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
@@ -16,7 +15,7 @@ export const MovieDetailContainer = styled.div`
 
 export const ReviewHeader = styled.div`
   display: flex;
-  padding: 16px;
+  padding: 16px 16px 12px 16px;
   gap: 8px;
   background-color: #FFFFFF;
 `;
@@ -39,12 +38,4 @@ export const ReviewCountContainer = styled.div`
 export const ReviewCount = styled.div`
     font-size: 24px;
     color: #9D9D9D;
-`;
-
-export const FixedNavBarContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  z-index: 1000;
-  background-color: #FFFFFF;
 `;
