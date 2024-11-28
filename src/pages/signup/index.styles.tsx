@@ -44,10 +44,10 @@ export const responsiveButtonWrapper = css`
   width: 100%;
   display: flex;
   position: fixed;
-  bottom: 20px;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 12px 16px;
+  padding: 0 16px;
 
   @media (max-width: 768px) {
     button {
@@ -92,7 +92,7 @@ export const logoContainer = css`
   width: 100%;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 16px 32px;
+  padding: 1px 32px;
 `;
 
 export const block = {

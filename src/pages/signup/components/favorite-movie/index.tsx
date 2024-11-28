@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
 import aboutTime from "../../../../assets/images/Rectangle 2.jpg";
-import { ArrowLeft, ArrowRight } from "../../../../assets/svg";
+import { ArrowLeft, ArrowRight, Checked } from "../../../../assets/svg";
 import { inputState } from "../../../../review/atoms";
 // import { Text } from "../ui";
 import {
@@ -73,7 +73,7 @@ const InputFavoriteMovie: React.FC = () => {
     });
   };
 
-  const totalPages = Math.ceil(MOVIES.length / moviesPerPage);
+  const total = Math.ceil(MOVIES.length / moviesPerPage);
   const paginatedMovies = MOVIES.slice(
     (current - 1) * moviesPerPage,
     current * moviesPerPage
@@ -93,9 +93,27 @@ const InputFavoriteMovie: React.FC = () => {
 
       <div css={totalContainer}>
         <div css={pageIndicator}>
-          <span css={currentPage}>{current}</span>
-          {" / "}
-          <span css={totalPages}>{totalPages}</span>
+          <div
+            css={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            <div>
+              선택된 영화:{" "}
+              <span css={{ color: "#FF084A" }}>
+                {inputData.favoriteMovie.length}
+              </span>
+              개
+            </div>
+            <div>
+              <span css={currentPage}>{current}</span>
+              {" / "}
+              <span css={totalPages}>{total}</span>
+            </div>
+          </div>
         </div>
 
         <div css={movieGridWrapper}>
@@ -119,10 +137,19 @@ const InputFavoriteMovie: React.FC = () => {
                   alt={movie.title}
                   css={movieImage(inputData.favoriteMovie.includes(movie.id))}
                 />
+                {inputData.favoriteMovie.includes(movie.id) && (
+                  <div css={checkIcon(true)}>
+                    <Checked />
+                  </div>
+                )}
                 <div
                   css={checkIcon(inputData.favoriteMovie.includes(movie.id))}
                 />
-                <p css={movieTitle}>{movie.title}</p>
+                <p css={movieTitle}>
+                  {movie.title.length > 8
+                    ? `${movie.title.slice(0, 6)}...`
+                    : movie.title}
+                </p>
               </div>
             ))}
           </div>
@@ -130,7 +157,7 @@ const InputFavoriteMovie: React.FC = () => {
           <button
             css={nextButton}
             onClick={() => setCurrent((prev) => prev + 1)}
-            disabled={current === totalPages}
+            disabled={current === total}
           >
             <ArrowRight />
           </button>

@@ -36,7 +36,8 @@ function Layout({ children }: LayoutProps): JSX.Element {
           justify="flex-start"
           margin={isDefaultMargin ? "" : "60px 0"}
           backgroundColor={isLoginTestValue.role === "admin" ? "#ffffff" : ""}
-          padding="16px"
+          // padding="16px"
+          height="100lvh"
         >
           {children}
         </Wrapper>

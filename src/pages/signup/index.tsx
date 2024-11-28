@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../review/atoms";
-import { useState } from "react";
 import InputUserName from "./components/user-name";
 import InputBirthDate from "./components/birth-date";
 import InputNickname from "./components/nick-name";
@@ -28,6 +28,28 @@ export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
   const [step, setStep] = useState(1);
 
+  // 줌 비활성화 및 스크롤 비활성화 처리
+  useEffect(() => {
+    // 줌 비활성화
+    const metaTag = document.createElement("meta");
+    metaTag.name = "viewport";
+    metaTag.content =
+      "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
+    document.head.appendChild(metaTag);
+
+    // 스크롤 비활성화
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      // 줌 설정 복원
+      document.head.removeChild(metaTag);
+
+      // 스크롤 활성화 복원
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
+
   const steps = [
     {
       components: [<InputConsentForm key="consent" />],
@@ -45,10 +67,6 @@ export default function Signup() {
       components: [<InputBirthDate key="birthDate" />],
       requiredFields: ["birthDate"],
     },
-    // {
-    //   components: [<InputEmail key="email" />],
-    //   requiredFields: ["email"],
-    // },
     {
       components: [<InputGender key="gender" />],
       requiredFields: ["gender"],

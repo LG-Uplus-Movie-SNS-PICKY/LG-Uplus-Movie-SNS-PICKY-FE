@@ -2,7 +2,6 @@
 import React from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
-import { Text } from "../ui";
 import {
   wrapper,
   pageContainer,
@@ -56,9 +55,6 @@ const MovieGenreSelector = () => {
 
   return (
     <div css={wrapper}>
-      <Text.TitleMenu300>
-        당신이 좋아하는 영화 장르를 선택 해주세요
-      </Text.TitleMenu300>
       <div css={pageContainer}>
         <div css={titleWrapper}>
           <div css={titleContainer}>

@@ -6,7 +6,7 @@ export const wrapper = css`
   gap: 12px;
   max-width: 768px;
   width: 100%;
-  padding: 8px 16px;
+  padding: 8px 0;
   align-items: center;
 `;
 

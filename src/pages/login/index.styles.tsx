@@ -20,6 +20,5 @@ export const StyledText = css`
   line-height: normal;
 `;
 export const GapContainer = css`
-  /* display: flex; */
-  gap: 106px;
+  gap: 12px;
 `;
