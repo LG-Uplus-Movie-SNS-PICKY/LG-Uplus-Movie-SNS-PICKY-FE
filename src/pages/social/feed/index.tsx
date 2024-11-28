@@ -21,15 +21,20 @@ import {
   spoilerText,
   blank,
   blurredContent,
+  likeButton,
+  likeCount,
 } from "./index.styles";
 import Profile from "@assets/icons/profile.svg?react";
 import LikeFeed from "@assets/icons/like_feed.svg?react";
+import LikeFeedActive from "@assets/icons/like_feed_active.svg?react";
 import CommentFeed from "@assets/icons/comment_feed.svg?react";
 import ReportButton from "@assets/icons/report_button.svg?react";
 
 export default function SocialFeed() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSpoiler, setShowSpoiler] = useState(false);
+  const [isLiked, setIsLiked] = useState(false); // 좋아요 상태 추가
+  const [likeCountValue, setLikeCountValue] = useState(100);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -37,6 +42,11 @@ export default function SocialFeed() {
 
   const revealSpoiler = () => {
     setShowSpoiler(true);
+  };
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+    setLikeCountValue(isLiked ? likeCountValue - 1 : likeCountValue + 1);
   };
 
   return (
@@ -76,9 +86,10 @@ export default function SocialFeed() {
 
         <div css={reactionsContainer}>
           <div css={reactionsSection}>
-            <span>
-              <LikeFeed />
-              100
+            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
+              {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
+              {/* 좋아요 상태에 따라 아이콘 전환 */}
+              {isLiked ? "101" : "100"}
             </span>
             <span>
               <CommentFeed />
@@ -90,6 +101,7 @@ export default function SocialFeed() {
           </div>
         </div>
       </div>
+
       <div css={feedContainer}>
         <div css={feedItem}>
           <div css={infoSection}>
@@ -123,14 +135,10 @@ export default function SocialFeed() {
 
         <div css={reactionsContainer}>
           <div css={reactionsSection}>
-            <span>
-              <LikeFeed />
-              100
+            <span onClick={toggleLike} css={likeButton}>
+              {isLiked ? <LikeFeedActive /> : <LikeFeed />}
             </span>
-            <span>
-              <CommentFeed />
-              20
-            </span>
+            <span css={likeCount}>{likeCountValue}</span>
           </div>
           <div css={moreOptions} onClick={toggleModal}>
             <ReportButton />
