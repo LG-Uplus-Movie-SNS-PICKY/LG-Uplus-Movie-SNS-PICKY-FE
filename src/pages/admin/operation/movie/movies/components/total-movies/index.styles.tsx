@@ -66,4 +66,14 @@ export default {
       }
     `;
   },
+
+  movieContainer(): SerializedStyles {
+    return css`
+      width: 100%;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    `;
+  },
 };
