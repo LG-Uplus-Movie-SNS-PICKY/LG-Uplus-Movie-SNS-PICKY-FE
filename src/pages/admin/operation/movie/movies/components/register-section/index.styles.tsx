@@ -1,6 +1,15 @@
 import { css, SerializedStyles } from "@emotion/react";
 
 export default {
+  registerForm(): SerializedStyles {
+    return css`
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    `;
+  },
+
   registerContainer(): SerializedStyles {
     return css`
       width: 100%;
@@ -109,12 +118,10 @@ export default {
           gap: 8px;
 
           & > .poster {
-            width: 100%;
             max-width: 120px;
 
             & > img {
               width: 100%;
-              height: 100%;
               object-fit: cover;
             }
           }
@@ -124,7 +131,7 @@ export default {
             flex-direction: column;
             gap: 2px;
 
-            min-width: 52px;
+            flex: 1;
 
             font-size: 10px;
             font-weight: 600;
@@ -151,6 +158,140 @@ export default {
 
           & > path {
             stroke: #9d9d9d;
+          }
+        }
+      }
+    `;
+  },
+
+  movieDetailContainer(): SerializedStyles {
+    return css`
+      width: 100%;
+      min-height: 180px;
+
+      padding: 12px;
+      background-color: #fff;
+      box-shadow: 0 1px 4px rgba(170, 170, 170, 0.4);
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      & > .no-detail-movie-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+
+        & > h3 {
+          font-size: 14px;
+          font-weight: 600;
+          color: #191919;
+        }
+      }
+    `;
+  },
+
+  movieDetailInfoContainer(): SerializedStyles {
+    return css`
+      width: 100%;
+      display: flex;
+      gap: 32px;
+
+      & > .movie-poster {
+        width: 88px;
+        height: 132px;
+        border-radius: 8px;
+        overflow: hidden;
+
+        & > img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      & > .movie-detail-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 16px;
+
+        & > .info {
+          display: flex;
+          align-items: center;
+
+          /* gap: 30px; */
+
+          font-size: 14px;
+          font-weight: 600;
+          color: #aaa;
+
+          & > h3 {
+            width: 100px;
+            font-size: 12px;
+          }
+
+          & > span {
+            margin-right: 4px;
+            color: #191919;
+          }
+        }
+
+        & > .select-box {
+          width: 100%;
+
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          height: fit-content;
+
+          & > .icon-btn {
+            position: relative;
+            cursor: pointer;
+
+            & > svg {
+              display: block;
+            }
+
+            & > .selected {
+              position: absolute;
+              top: 0;
+              bottom: 0;
+
+              width: 100%;
+              border-radius: 50%;
+
+              background-color: rgba(0, 0, 0, 0.3);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              & > svg path {
+                fill: #ff084a;
+              }
+            }
+          }
+        }
+
+        & > .desciprtion {
+          font-size: 14px;
+          font-weight: 600;
+          color: #aaa;
+
+          & > h3 {
+            font-size: 12px;
+            margin-bottom: 8px;
+          }
+
+          & > p {
+            font-weight: 400;
+            color: #191919;
+            text-align: justify;
+            word-break: keep-all;
           }
         }
       }
