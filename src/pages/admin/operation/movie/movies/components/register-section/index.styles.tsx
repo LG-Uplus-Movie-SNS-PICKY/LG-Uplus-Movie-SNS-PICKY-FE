@@ -302,7 +302,7 @@ export default {
           color: #aaa;
 
           & > h3 {
-            width: 100px;
+            width: 60px;
             font-size: 12px;
           }
 
@@ -332,7 +332,7 @@ export default {
 
         & > label {
           display: block;
-          width: 100px;
+          width: 60px;
         }
 
         & > div {

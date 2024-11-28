@@ -18,6 +18,13 @@ import Wavve from "@assets/icons/wavve.svg?react";
 
 import Check from "@assets/icons/check.svg?react";
 
+// Swiper Lib Import
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
 const ottDummyData = [
   { icon: Netflix, name: "netflix" },
   { icon: Watcha, name: "watcha" },
