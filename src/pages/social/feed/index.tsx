@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // useNavigate import
 import {
   banner,
   feedContainer,
@@ -33,8 +34,9 @@ import ReportButton from "@assets/icons/report_button.svg?react";
 export default function SocialFeed() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showSpoiler, setShowSpoiler] = useState(false);
-  const [isLiked, setIsLiked] = useState(false); // 좋아요 상태 추가
+  const [isLiked, setIsLiked] = useState(false);
   const [likeCountValue, setLikeCountValue] = useState(100);
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -47,6 +49,10 @@ export default function SocialFeed() {
   const toggleLike = () => {
     setIsLiked(!isLiked);
     setLikeCountValue(isLiked ? likeCountValue - 1 : likeCountValue + 1);
+  };
+
+  const goToCommentPage = () => {
+    navigate("/comment"); // /comment 페이지로 이동
   };
 
   return (
@@ -88,10 +94,9 @@ export default function SocialFeed() {
           <div css={reactionsSection}>
             <span onClick={toggleLike} style={{ cursor: "pointer" }}>
               {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
-              {/* 좋아요 상태에 따라 아이콘 전환 */}
               {isLiked ? "101" : "100"}
             </span>
-            <span>
+            <span onClick={goToCommentPage} style={{ cursor: "pointer" }}>
               <CommentFeed />
               20
             </span>
@@ -101,7 +106,6 @@ export default function SocialFeed() {
           </div>
         </div>
       </div>
-
       <div css={feedContainer}>
         <div css={feedItem}>
           <div css={infoSection}>
@@ -115,8 +119,9 @@ export default function SocialFeed() {
           </div>
           <div css={timeSection}>4시간 전</div>
         </div>
-
-        <div css={contentSection}>이 영화 정말 재미있었어요! 꼭 보세요! 👍</div>
+        <div css={[contentSection, !showSpoiler && blurredContent]}>
+          이 영화 정말 재미있었어요! 꼭 보세요! 👍
+        </div>
 
         <div css={carouselSection}>
           <div css={spoilerImageWrapper} onClick={revealSpoiler}>
@@ -135,10 +140,14 @@ export default function SocialFeed() {
 
         <div css={reactionsContainer}>
           <div css={reactionsSection}>
-            <span onClick={toggleLike} css={likeButton}>
-              {isLiked ? <LikeFeedActive /> : <LikeFeed />}
+            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
+              {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
+              {isLiked ? "101" : "100"}
             </span>
-            <span css={likeCount}>{likeCountValue}</span>
+            <span onClick={goToCommentPage} style={{ cursor: "pointer" }}>
+              <CommentFeed />
+              20
+            </span>
           </div>
           <div css={moreOptions} onClick={toggleModal}>
             <ReportButton />
