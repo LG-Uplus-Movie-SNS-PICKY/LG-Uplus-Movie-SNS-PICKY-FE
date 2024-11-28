@@ -9,10 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "svgr": "npx @svgr/cli -d src/assets/svg --ignore-existing --typescript --no-dimensions public/svg"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.3",
+    "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.0",
     "@tanstack/react-query": "^5.60.5",
     "@tanstack/react-query-devtools": "^5.60.5",
@@ -25,6 +26,7 @@
     "react-router-dom": "^6.28.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
+    "styled-components": "^6.1.13",
     "swiper": "^11.1.15"
   },
   "devDependencies": {
