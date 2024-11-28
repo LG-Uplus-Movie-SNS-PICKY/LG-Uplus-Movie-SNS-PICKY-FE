@@ -7,7 +7,7 @@ import GlobalNavigatorBar from "@components/navbar";
 
 const isLoginTestValue = {
   state: true,
-  role: "admin",
+  role: "user",
 };
 
 function Layout({ children }: LayoutProps): JSX.Element {
@@ -35,11 +35,13 @@ function Layout({ children }: LayoutProps): JSX.Element {
           direction="column"
           justify="flex-start"
           margin={isDefaultMargin ? "" : "60px 0"}
-          backgroundColor={isLoginTestValue.role === "admin" ? "#F3F2F7" : ""}
+          backgroundColor={isLoginTestValue.role === "admin" ? "#ffffff" : ""}
           // padding="16px"
+          height="100lvh"
         >
           {children}
         </Wrapper>
+
         <GlobalNavigatorBar
           location={location}
           navigate={navigate}

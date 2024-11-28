@@ -35,9 +35,9 @@ const headerConfig: HeaderConfigType = {
   }),
 
   // 회원가입 페이지
-  "/signup": () => ({
-    type: "basic",
-  }),
+  // "/signup": () => ({
+  //   type: "basic",
+  // }),
 
   // 무비로그 페이지
   "/movie-log": () => ({
@@ -47,6 +47,18 @@ const headerConfig: HeaderConfigType = {
   // 마이 페이지
   "/my-page": () => ({
     type: "main",
+  }),
+
+  "/add-feed": () => ({
+    type: "main",
+  }),
+
+  "/feed-list": () => ({
+    type: "main",
+  }),
+
+  "/comment": () => ({
+    type: "title",
   }),
 
   // 알림 페이지
