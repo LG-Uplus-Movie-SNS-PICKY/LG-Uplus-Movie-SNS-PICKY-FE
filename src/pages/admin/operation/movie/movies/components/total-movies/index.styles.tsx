@@ -135,4 +135,24 @@ export default {
       }
     `;
   },
+
+  movieDetailDescription(): SerializedStyles {
+    return css`
+      font-size: 14px;
+      font-weight: 600;
+      color: #aaa;
+
+      & > h3 {
+        font-size: 12px;
+        margin-bottom: 8px;
+      }
+
+      & > p {
+        font-weight: 400;
+        color: #191919;
+        text-align: justify;
+        word-break: keep-all;
+      }
+    `;
+  },
 };
