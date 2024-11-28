@@ -6,6 +6,7 @@ export const wrapper = css`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  padding: 16px;
 `;
 
 export const banner = css`
@@ -142,6 +143,7 @@ export const modalContent = css`
 
   button:first-of-type {
     border-radius: 10px 10px 0 0;
+    border-bottom: 0.5px solid rgba(217, 217, 217, 0.85);
   }
 
   button:last-of-type {
@@ -220,4 +222,13 @@ export const blurredContent = css`
   pointer-events: none;
   color: transparent;
   user-select: none;
+`;
+
+export const likeButton = css`
+  cursor: pointer;
+`;
+
+export const likeCount = css`
+  min-width: 30px;
+  text-align: center;
 `;
