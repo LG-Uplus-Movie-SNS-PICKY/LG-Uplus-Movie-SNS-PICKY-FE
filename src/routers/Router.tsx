@@ -8,7 +8,7 @@ import { globalStyle } from "@styles/global";
 
 // Route import
 import Home from "@pages/Home";
-import Login from "@pages/login"
+import Login from "@pages/login";
 import Signup from "@pages/signup";
 import Layout from "@components/layout";
 import AdminLayout from "./AdminLayout";
@@ -27,9 +27,9 @@ function Router() {
           {/* 로그인 사용자 라우트 */}
 
           {/* 관리자 전용 라우트 */}
-          <Route path="/feed" element={<Feed />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/feed-list" element={<Feed />} />
           <Route path="/add-feed" element={<Post />} />
           <Route path="/comment" element={<Comment />} />
           <Route path="/admin/*" element={<AdminLayout />} />

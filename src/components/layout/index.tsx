@@ -7,7 +7,7 @@ import GlobalNavigatorBar from "@components/navbar";
 
 const isLoginTestValue = {
   state: true,
-  role: "admin",
+  role: "user",
 };
 
 function Layout({ children }: LayoutProps): JSX.Element {
@@ -41,6 +41,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
         >
           {children}
         </Wrapper>
+
         <GlobalNavigatorBar
           location={location}
           navigate={navigate}
