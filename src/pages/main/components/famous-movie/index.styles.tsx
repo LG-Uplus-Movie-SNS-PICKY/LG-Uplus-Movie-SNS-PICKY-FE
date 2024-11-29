@@ -32,9 +32,28 @@ export default {
     `;
   },
 
-  movies(): SerializedStyles {
+  swiperContainer(): SerializedStyles {
     return css`
       width: 100%;
+      height: 100%;
+
+      & > .swiper-wrapper > .swiper-slide {
+        position: relative;
+
+        width: fit-content;
+        overflow: hidden;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      & > .swiper-wrapper > .swiper-slide > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     `;
   },
 };

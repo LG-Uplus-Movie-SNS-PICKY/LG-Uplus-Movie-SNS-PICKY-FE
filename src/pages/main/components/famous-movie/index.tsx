@@ -1,8 +1,14 @@
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
 import Top10 from "@assets/icons/top10.svg?react";
 import Info from "@assets/icons/Info.svg?react";
 
 import styles from "./index.styles";
-import { MovieItemProps } from "@stories/movie-item";
+import { MovieItem, MovieItemProps } from "@stories/movie-item";
 
 const bestMovies: MovieItemProps[] = [
   {
@@ -115,7 +121,34 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
       </div>
 
       {/* Content - Slider */}
-      <div css={styles.movies()}></div>
+      <Swiper
+        slidesPerView={"auto"}
+        spaceBetween={10}
+        direction={"horizontal"}
+        freeMode={true}
+        modules={[FreeMode, Mousewheel]}
+        mousewheel={{
+          forceToAxis: true,
+        }}
+        css={styles.swiperContainer()}
+      >
+        {bestMovies.length > 0 &&
+          bestMovies.map((movie, idx) => {
+            return (
+              <SwiperSlide key={idx}>
+                <MovieItem
+                  type={isLogin ? "all" : "rate"}
+                  src={movie.src}
+                  title={movie.title}
+                  name={movie.name}
+                  rate={movie.rate}
+                  like={movie.like}
+                  comment={movie.comment}
+                />
+              </SwiperSlide>
+            );
+          })}
+      </Swiper>
     </div>
   );
 }
