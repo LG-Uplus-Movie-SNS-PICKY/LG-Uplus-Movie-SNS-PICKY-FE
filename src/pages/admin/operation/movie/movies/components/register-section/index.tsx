@@ -25,6 +25,30 @@ import { FreeMode, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
+interface Movie {
+  [key: string]: unknown;
+  id: string;
+  backdrop_path: string;
+  title: string;
+  original_title: string;
+  release_date: string;
+}
+
+interface Genres {
+  id: number;
+  name: string;
+}
+
+interface DetailMovie {
+  [key: string]: unknown;
+  title: string;
+  original_title: string;
+  genres: Genres[];
+  release_date: string;
+  overview: string;
+  poster_path: string;
+}
+
 const ottDummyData = [
   { icon: Netflix, name: "netflix" },
   { icon: Watcha, name: "watcha" },
@@ -38,8 +62,8 @@ function RegistMovieSection() {
   const [movieSearch, setMovieSearch] = useState<string>("");
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false); // 입력창 포커스(활성화 도중에만 자동완성 검색 결과 보이기)
 
-  const [movieInfo, setMovieInfo] = useState(null);
-  const [activeOttBtn, setActiveOttBtn] = useState({
+  const [movieInfo, setMovieInfo] = useState<DetailMovie | null>(null);
+  const [activeOttBtn, setActiveOttBtn] = useState<Record<string, boolean>>({
     netflix: false,
     watcha: false,
     tving: false,
@@ -136,7 +160,7 @@ function RegistMovieSection() {
                 {isLoading && <li className="loading">Loading</li>}
                 {isError && <li className="error">Error</li>}
                 {result.length > 0 &&
-                  result.slice(0, 5).map((element) => (
+                  result.slice(0, 5).map((element: Movie) => (
                     <li
                       key={element.id}
                       className="list-item"
