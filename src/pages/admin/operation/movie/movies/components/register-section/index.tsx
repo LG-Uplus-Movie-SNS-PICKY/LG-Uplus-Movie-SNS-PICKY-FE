@@ -67,8 +67,7 @@ function RegistMovieSection() {
         },
         headers: {
           accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ODVjNDVjNDhlY2UwNjRjN2E1N2IwY2Y2MDIxODJlMyIsIm5iZiI6MTczMjcyNzc0NS44ODc2NTg0LCJzdWIiOiI2MjkwODI1MWVkMmFjMjE2YmEwZjgzYmUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.1Um7O-fb4El7iw5furGtKxyR2hMSY0AdPdEb2ke8Cyg",
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
         },
       }
     );
@@ -86,8 +85,7 @@ function RegistMovieSection() {
         },
         headers: {
           accept: "application/json",
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ODVjNDVjNDhlY2UwNjRjN2E1N2IwY2Y2MDIxODJlMyIsIm5iZiI6MTczMjcyNzc0NS44ODc2NTg0LCJzdWIiOiI2MjkwODI1MWVkMmFjMjE2YmEwZjgzYmUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.1Um7O-fb4El7iw5furGtKxyR2hMSY0AdPdEb2ke8Cyg",
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
         },
       }
     );
