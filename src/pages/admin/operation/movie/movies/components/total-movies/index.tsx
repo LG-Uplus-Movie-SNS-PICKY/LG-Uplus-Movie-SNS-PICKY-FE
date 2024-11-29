@@ -5,7 +5,7 @@ import Search from "@assets/icons/search_small.svg?react";
 import Netflix from "@assets/icons/netflix.svg?react";
 import Watcha from "@assets/icons/watcha.svg?react";
 import Tving from "@assets/icons/tving.svg?react";
-import Diesney from "@assets/icons/Disneyplus.svg?react";
+import Diesney from "@assets/icons/disneyplus.svg?react";
 import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
