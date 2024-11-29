@@ -1,6 +1,6 @@
 // pages/MovieDetail/components/BehindModal/index.tsx
 import React, { useEffect, useRef, useState } from 'react';
-import YouTubePlayer from '@components/YouTubePlayer';
+import YouTubePlayer from '@components/YouTubePlayer/YouTubePlayer';
 import {
     ModalContainer,
     CloseButton,
@@ -16,7 +16,6 @@ import {
     OstArtist,
     YoutubeContainer,
     BehindContainer,
-    Thumbnail,
     OstPlayist
 } from './index.styles';
 import ModalCloseSvg from '../../../../assets/icons/modal_close.svg?react';

@@ -60,7 +60,7 @@ export const OstSection = styled.div`
     gap: 12px;
     padding: 20px;
     width: 100%;
-    height: 300px;
+    height: 270px;
     overflow: hidden;
 `;
 
@@ -94,12 +94,6 @@ export const BehindContainer = styled.div`
     justify-content: center;
 `;
 
-export const Thumbnail = styled.img`
-  width: 280px;
-  height: 220px;
-  border-radius: 2px;
-`;
-
 export const OstPlayist = styled.div`
     display: flex;
     width: 100%;
@@ -129,13 +123,13 @@ export const OstInfoContainer = styled.div`
     border-bottom: 0.5px solid #D9D9D9;
     flex: 1;
     width: 100%;
-    height: 58px;
+    height: 56px;
 `;
 
 // OST 앨범 커버
 export const OstImage = styled.img`
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
     border-radius: 2px;
 `;
 

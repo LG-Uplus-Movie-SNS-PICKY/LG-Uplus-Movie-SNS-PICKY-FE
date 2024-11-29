@@ -10,7 +10,7 @@ export const MovieDetailContainer = styled.div`
   overflow: hidden;
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 68px;
+  padding-bottom: 8px;
 `;
 
 export const ReviewHeader = styled.div`
