@@ -1,7 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./index.styles";
 
-function LoginBanner() {
+/**
+ *
+ * @returns
+ */
+function LoginBanner(): JSX.Element {
   const navigate = useNavigate();
 
   return (
