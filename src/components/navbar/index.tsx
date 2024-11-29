@@ -31,9 +31,9 @@ function GlobalNavigatorBar({
     }
   };
 
-  if (!isLoginTestValue.state || isLoginTestValue.role === "admin") {
-    return null;
-  }
+  // if (!isLoginTestValue.state || isLoginTestValue.role === "admin") {
+  //   return null;
+  // }
 
   return <Navbar state={activeTab} onClick={handleChangeTab} />;
 }

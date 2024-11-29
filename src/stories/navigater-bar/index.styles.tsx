@@ -6,19 +6,16 @@ export default {
     return css`
       position: absolute;
       bottom: 0;
-
       width: 100%;
-
       background-color: #fff;
       border-top: 1px solid #d4d4d4;
-
       display: flex;
       padding: 0 16px;
       justify-content: space-between;
       align-items: center;
       height: 60px;
-
       box-sizing: border-box;
+      z-index: 9999;
     `;
   },
 

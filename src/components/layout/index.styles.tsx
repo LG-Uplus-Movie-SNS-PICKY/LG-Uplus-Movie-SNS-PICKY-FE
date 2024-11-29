@@ -36,7 +36,7 @@ export const Flex = styled.div<FlexProps>`
     borderRadius ? `${borderRadius}px` : "0px"};
 
   background-color: ${({ backgroundColor }) =>
-    backgroundColor ? backgroundColor : "#fff"};
+    backgroundColor ? backgroundColor : "#FFFFFF"};
 
   overflow-y: ${({ overflowY }) => (overflowY ? overflowY : "visible")};
 
