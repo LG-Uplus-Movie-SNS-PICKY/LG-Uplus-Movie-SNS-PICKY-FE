@@ -12,18 +12,18 @@ import Logo from "@assets/icons/logo.svg?react";
 import Netflix from "@assets/icons/netflix.svg?react";
 import Watcha from "@assets/icons/watcha.svg?react";
 import Tving from "@assets/icons/tving.svg?react";
-import Diesney from "@assets/icons/Disneyplus.svg?react";
+import Diesney from "@assets/icons/disneyplus.svg?react";
 import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
 import Check from "@assets/icons/check.svg?react";
 
-// Swiper Lib Import
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel } from "swiper/modules";
+// // Swiper Lib Import
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { FreeMode, Mousewheel } from "swiper/modules";
 
-import "swiper/css";
-import "swiper/css/pagination";
+// import "swiper/css";
+// import "swiper/css/pagination";
 
 interface Movie {
   [key: string]: unknown;
