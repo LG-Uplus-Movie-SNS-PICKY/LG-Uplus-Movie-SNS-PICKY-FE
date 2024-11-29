@@ -12,7 +12,7 @@ function Main() {
       {isLogin ? <Slider /> : <LoginBanner />}
 
       {/* Famous Movies Section */}
-      <FamousMovie />
+      <FamousMovie isLogin={isLogin} />
 
       {/* Genre Movie Section */}
       <GenresMovie />

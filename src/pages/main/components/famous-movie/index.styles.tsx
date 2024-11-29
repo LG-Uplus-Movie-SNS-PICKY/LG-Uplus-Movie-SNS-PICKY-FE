@@ -31,4 +31,10 @@ export default {
       }
     `;
   },
+
+  movies(): SerializedStyles {
+    return css`
+      width: 100%;
+    `;
+  },
 };
