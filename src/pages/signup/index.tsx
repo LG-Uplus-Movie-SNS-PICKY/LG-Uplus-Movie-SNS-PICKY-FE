@@ -5,7 +5,6 @@ import { inputState } from "../../review/atoms";
 import InputUserName from "./components/user-name";
 import InputBirthDate from "./components/birth-date";
 import InputNickname from "./components/nick-name";
-// import InputEmail from "./components/e-mail";
 import InputGender from "./components/gender";
 import InputNationality from "./components/nationality";
 import InputConsentForm from "./components/consent-form";
@@ -13,14 +12,14 @@ import InputProfile from "./components/profile";
 import InputFavoriteGenre from "./components/favorite-genre";
 import InputFavoriteMovie from "./components/favorite-movie";
 import { IInputData } from "../../review/atoms";
-import { PickyLogo } from "../../assets/svg";
 import { Button, Text } from "../../styles/ui";
 import {
   progressBarContainer,
   progressStyle,
   responsiveButtonWrapper,
+  wrapper,
+  backWrapper,
   backButton,
-  logoContainer,
   backButtonWrapper,
 } from "./index.styles";
 
@@ -52,10 +51,6 @@ export default function Signup() {
 
   const steps = [
     {
-      components: [<InputConsentForm key="consent" />],
-      requiredFields: ["consentAll", "consentAge"],
-    },
-    {
       components: [<InputUserName key="name" />],
       requiredFields: ["name"],
     },
@@ -86,6 +81,10 @@ export default function Signup() {
     {
       components: [<InputFavoriteMovie key="favoriteMovie" />],
       requiredFields: ["favoriteMovie"],
+    },
+    {
+      components: [<InputConsentForm key="consent" />],
+      requiredFields: ["consentAll", "consentAge"],
     },
   ];
 
@@ -145,12 +144,13 @@ export default function Signup() {
   const { components } = steps[step - 1];
 
   return (
-    <>
+    <div css={wrapper}>
+      <div css={backWrapper}>
       <div css={progressBarContainer}>
         <div css={progressStyle((step / steps.length) * 100)} />
       </div>
       <div css={backButtonWrapper}>
-        { (
+        {
           <button
             css={backButton}
             onClick={handleBackStep}
@@ -160,12 +160,10 @@ export default function Signup() {
           >
             뒤로
           </button>
-        )}
+        }
+      </div>
       </div>
 
-      <div css={logoContainer}>
-        <PickyLogo width={99} height={35} />
-      </div>
       {components.map((component) => component)}
       <div css={responsiveButtonWrapper}>
         <Button.Confirm
@@ -174,7 +172,6 @@ export default function Signup() {
           style={{
             maxWidth: "768px",
             width: "100%",
-            padding: "0",
             fontSize: "16px",
           }}
         >
@@ -183,6 +180,6 @@ export default function Signup() {
           </Text.TitleMenu300>
         </Button.Confirm>
       </div>
-    </>
+    </div>
   );
 }

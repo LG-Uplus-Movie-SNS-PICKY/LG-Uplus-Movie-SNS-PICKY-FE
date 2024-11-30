@@ -26,7 +26,7 @@ export default function InputNickname() {
   return (
     <>
       <div css={nickNameContainer}>
-        <Text.TitleMenu300>당신의 이름을 입력해주세요.</Text.TitleMenu300>
+        <Text.TitleMenu300>당신의 닉네임을 입력해주세요.</Text.TitleMenu300>
         <div css={textWrapper}>
           <Text.FocusedMenu $isFocused={isFocused}>닉네임</Text.FocusedMenu>
         </div>
