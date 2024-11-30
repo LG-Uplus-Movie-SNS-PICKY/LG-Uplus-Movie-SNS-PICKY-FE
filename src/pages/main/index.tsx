@@ -3,7 +3,7 @@ import GenresMovie from "./components/genres-movie";
 import LoginBanner from "./components/login-banner";
 import RecommendMovieSlider from "./components/recommend-slider";
 
-const isLogin = false;
+const isLogin = true;
 
 function Main() {
   return (

@@ -32,6 +32,8 @@ function Router() {
           <Route path="/movie/:id" element={<MovieDetail />} />
           <Route path="/movie/:id/reviews" element={<MovieReviews />} />
 
+          <Route path="/search" element={<Search />} />
+
           {/* 관리자 전용 라우트 */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

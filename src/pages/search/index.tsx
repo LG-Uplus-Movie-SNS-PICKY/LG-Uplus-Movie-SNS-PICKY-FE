@@ -39,7 +39,7 @@ export default function SearchPage() {
       </div>
       <div css={emptyStateContainerStyle}>
         <div css={emptyIconStyle}>
-          <img src={ClawMachine} alt="Claw Machine" width="50" height="50" />
+          <img src={ClawMachine} alt="Claw Machine" width="100" height="100" />
         </div>
         <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
       </div>
