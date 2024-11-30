@@ -110,7 +110,7 @@ function useDashboardData(): { listItemData: DashboardInfoListTypes[] } {
                 itemIcon: Movie,
                 itemBgColor:
                   "linear-gradient(180deg, #F5B041 0%, #D35400 100%)",
-                itemTitle: "신고 관리",
+                itemTitle: "영화 관리",
                 itemTotalCount: 305,
                 onClick: () => navigate("/admin/movie-management/movies"),
               },

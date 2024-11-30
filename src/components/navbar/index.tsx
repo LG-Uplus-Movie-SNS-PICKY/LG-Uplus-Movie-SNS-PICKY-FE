@@ -20,7 +20,7 @@ function GlobalNavigatorBar({
         navigate("/picky");
         break;
       case "movie":
-        navigate("/movie");
+        navigate("/feed-list");
         break;
       case "recommend":
         navigate("/recommend");
@@ -31,9 +31,9 @@ function GlobalNavigatorBar({
     }
   };
 
-  if (!isLoginTestValue.state || isLoginTestValue.role === "admin") {
-    return null;
-  }
+  // if (!isLoginTestValue.state || isLoginTestValue.role === "admin") {
+  //   return null;
+  // }
 
   return <Navbar state={activeTab} onClick={handleChangeTab} />;
 }

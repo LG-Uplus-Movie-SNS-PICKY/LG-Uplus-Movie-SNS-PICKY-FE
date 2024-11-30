@@ -25,9 +25,8 @@ import {
   pText,
   buttonContainer,
   buttonStyle,
-  shareButton,
   activeButtonStyle,
-  // shareButton,
+  shareButton,
 } from "./index.styles";
 
 const mockMovies = [
@@ -49,7 +48,7 @@ export default function SocialPost() {
   const [filteredMovies, setFilteredMovies] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedMovie, setSelectedMovie] = useState<string>("");
-  const [selectedSpoiler, setSelectedSpoiler] = useState<string>("없음"); // "있음" or "없음"
+  const [selectedSpoiler, setSelectedSpoiler] = useState<string>("없음");
 
   const handleSpoilerClick = (type: string) => {
     setSelectedSpoiler(type);

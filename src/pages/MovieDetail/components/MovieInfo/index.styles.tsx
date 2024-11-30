@@ -1,7 +1,7 @@
 // pages/MovieDetail/components/MovieInfo/index.styles.tsx
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
-// import AdBanner from '../../../../assets/images/movie_detail_ad_banner.png';
+import AdBanner from '../../../../assets/images/movie_detail_ad_banner.png';
 
 export const MovieInfoContainer = styled.div`
     display: flex;
@@ -20,6 +20,7 @@ export const AdBannerContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url(${AdBanner});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

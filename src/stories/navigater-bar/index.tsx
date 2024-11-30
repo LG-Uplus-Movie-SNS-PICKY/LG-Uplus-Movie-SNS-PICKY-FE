@@ -1,10 +1,12 @@
 import Home from "@assets/icons/home.svg?react";
-import MovieSocial from "@assets/icons/movie_social.svg?react";
+import Picky from "@assets/icons/picky.svg?react";
+import MovieSocial from "@assets/images/movie-social.png";
 import Recommend from "@assets/icons/recommend.svg?react";
 import User from "@assets/icons/user.svg?react";
 
 import ActiveHome from "@assets/icons/active_home.svg?react";
-import ActiveMovieSocial from "@assets/icons/active_movie_social.svg?react";
+import ActivePicky from "@assets/icons/active_picky.svg?react";
+import ActiveMovieSocial from "@assets/images/movie-social-active.png";
 import ActiveRecommend from "@assets/icons/active_recommend.svg?react";
 import ActiveUser from "@assets/icons/active_user.svg?react";
 
@@ -19,16 +21,21 @@ export interface NavigateTabMene {
 }
 
 const tabMenus: Array<NavigateTabMene> = [
-  { icon: <Home />, activeIcon: <ActiveHome />, name: "home", label: "홈" },
   {
-    icon: "/src/assets/images/picky.png",
-    activeSrc: "/src/assets/images/picky-active.png",
+    icon: <Home />,
+    activeIcon: <ActiveHome />,
+    name: "home",
+    label: "홈",
+  },
+  {
+    icon: <Picky />,
+    activeIcon: <ActivePicky />,
     name: "picky",
     label: "picky",
   },
   {
-    icon: "/src/assets/images/movie-social.png",
-    activeSrc: "/src/assets/images/movie-social-active.png",
+    icon: MovieSocial,
+    activeSrc: ActiveMovieSocial,
     name: "movie",
     label: "무비로그",
   },
@@ -38,7 +45,12 @@ const tabMenus: Array<NavigateTabMene> = [
     name: "recommend",
     label: "추천",
   },
-  { icon: <User />, activeIcon: <ActiveUser />, name: "user", label: "my" },
+  {
+    icon: <User />,
+    activeIcon: <ActiveUser />,
+    name: "user",
+    label: "my",
+  },
 ];
 
 interface ImageTabMenuProps {

@@ -53,6 +53,14 @@ const headerConfig: HeaderConfigType = {
     type: "main",
   }),
 
+  "/feed-list": () => ({
+    type: "main",
+  }),
+
+  "/comment": () => ({
+    type: "title",
+  }),
+
   // 알림 페이지
   "/notification": () => ({ type: "title", label: "알림" }),
 
