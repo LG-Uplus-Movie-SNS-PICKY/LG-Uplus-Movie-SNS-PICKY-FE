@@ -17,7 +17,7 @@ import AdminMovieLogManagementPage from "@pages/admin/management/movie-log";
 import useDashboardData from "@hooks/admin/info";
 
 import { ADMIN_ROUTES, USER_MANAGEMENT_ROUTES } from "@constants/routes/routes";
-import Home from "@pages/Home";
+
 import UserPermissionOpertionPage from "@pages/admin/operation/user/permission";
 import UserReportOpertionPage from "@pages/admin/operation/user/report";
 import ReviewReportOpertionPage from "@pages/admin/operation/review/report";

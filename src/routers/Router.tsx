@@ -7,7 +7,7 @@ import { Global } from "@emotion/react";
 import { globalStyle } from "@styles/global";
 
 // Route import
-import Home from "@pages/Home";
+import Home from "@pages/main";
 import Login from "@pages/login";
 import Signup from "@pages/signup";
 import Layout from "@components/layout";
