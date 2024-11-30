@@ -1,6 +1,6 @@
 // pages/MovieDetail/components/BehindModal/index.tsx
 import React, { useEffect, useRef, useState } from 'react';
-import YouTubePlayer from '@components/YouTubePlayer/YouTubePlayer';
+import YouTubePlayer from '@components/youtube-player';
 import {
     ModalContainer,
     CloseButton,
@@ -18,8 +18,8 @@ import {
     BehindContainer,
     OstPlayist
 } from './index.styles';
-import ModalCloseSvg from '../../../../assets/icons/modal_close.svg?react';
-import YouTubeLogoSvg from '../../../../assets/icons/youtube.svg?react';
+import ModalCloseSvg from '@assets/icons/modal_close.svg?react';
+import YouTubeLogoSvg from '@assets/icons/youtube.svg?react';
 
 interface YouTubePlaylist {
     title: string;
@@ -103,8 +103,8 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
 
 
     return (
-        <ModalContainer>
-            <ContentContainer>
+        <ModalContainer onClick={onClose}>
+            <ContentContainer onClick={e => e.stopPropagation()}>
                 <CloseButton onClick={onClose}>
                     <ModalCloseSvg />
                 </CloseButton>

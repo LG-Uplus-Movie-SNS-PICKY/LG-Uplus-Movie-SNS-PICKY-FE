@@ -21,7 +21,7 @@ export const ReviewHeader = styled.div`
 `;
 
 export const Title = styled.span`
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 600;
     text-align: center;
     align-items: center;
@@ -36,6 +36,6 @@ export const ReviewCountContainer = styled.div`
 `;
 
 export const ReviewCount = styled.div`
-    font-size: 24px;
+    font-size: 22px;
     color: #9D9D9D;
 `;

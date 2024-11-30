@@ -1,12 +1,12 @@
 // src/components/YouTubePlayer.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface YouTubePlayerProps {
     isYTReady: boolean;
     videoId: string;
 }
 
-const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ isYTReady, videoId }) => {
+const YouTubePlayer = ({ isYTReady, videoId }: YouTubePlayerProps) => {
     const playerRef = useRef<YT.Player | null>(null);
     
     useEffect(() => {
@@ -17,7 +17,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({ isYTReady, videoId }) => 
                 width: '280px',
                 height: '220px',
                 playerVars: {
-                    autoplay: 1,
+                    autoplay: 0,
                     origin: window.location.origin,
                 },
             });

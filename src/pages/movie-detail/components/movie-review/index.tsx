@@ -6,6 +6,7 @@ import {
     ReviewContainer,
     ReviewBadge,
     ReviewText,
+    UserText,
     ReviewDetailsContainer,
     ReviewDetailsText,
     ThumbsButtonWrapper,
@@ -14,11 +15,11 @@ import {
     Star,
     StarRating
 } from './index.styles';
-import PointSvg from '../../../../assets/icons/point.svg?react';
-import ThumbsUpSvg from '../../../../assets/icons/thumbs_up_mini.svg?react';
-import ThumbsDownSvg from '../../../../assets/icons/thumbs_down_mini.svg?react';
-import ThumbsUpActiveSvg from '../../../../assets/icons/thumbs_up_mini_active.svg?react';
-import ThumbsDownActiveSvg from '../../../../assets/icons/thumbs_down_mini_active.svg?react';
+import PointSvg from '@assets/icons/point.svg?react';
+import ThumbsUpSvg from '@assets/icons/thumbs_up_mini.svg?react';
+import ThumbsDownSvg from '@assets/icons/thumbs_down_mini.svg?react';
+import ThumbsUpActiveSvg from '@assets/icons/thumbs_up_mini_active.svg?react';
+import ThumbsDownActiveSvg from '@assets/icons/thumbs_down_mini_active.svg?react';
 
 interface ReviewProps {
     reviews: {
@@ -31,7 +32,7 @@ interface ReviewProps {
     }[];
 }
 
-const MovieReview: React.FC<ReviewProps> = ({ reviews }) => {
+const MovieReview = ({ reviews }: ReviewProps) => {
     const [reviewInteractions, setReviewInteractions] = useState(reviews.map(review => ({
         likes: review.likes,
         dislikes: review.dislikes,
@@ -40,27 +41,55 @@ const MovieReview: React.FC<ReviewProps> = ({ reviews }) => {
     })));
 
     const handleLike = (index: number) => {
-        const newInteractions = [...reviewInteractions];
-        const current = newInteractions[index];
-        if (current.liked) {
-            current.likes -= 1;
-        } else {
-            current.likes += 1;
-        }
-        current.liked = !current.liked;
-        setReviewInteractions(newInteractions);
+        setReviewInteractions(currentInteractions =>
+            currentInteractions.map((interaction, idx) => {
+                if (index === idx) {
+                    if (interaction.disliked) {
+                        return {
+                            ...interaction,
+                            liked: true,
+                            disliked: false,
+                            likes: interaction.likes + 1,
+                            dislikes: interaction.dislikes - 1
+                        };
+                    } else {
+                        return {
+                            ...interaction,
+                            liked: !interaction.liked,
+                            dislikes: interaction.liked ? interaction.dislikes : interaction.dislikes,
+                            likes: interaction.liked ? interaction.likes - 1 : interaction.likes + 1
+                        };
+                    }
+                }
+                return interaction;
+            })
+        );
     };
-
+    
     const handleDislike = (index: number) => {
-        const newInteractions = [...reviewInteractions];
-        const current = newInteractions[index];
-        if (current.disliked) {
-            current.dislikes -= 1;
-        } else {
-            current.dislikes += 1;
-        }
-        current.disliked = !current.disliked;
-        setReviewInteractions(newInteractions);
+        setReviewInteractions(currentInteractions =>
+            currentInteractions.map((interaction, idx) => {
+                if (index === idx) {
+                    if (interaction.liked) {
+                        return {
+                            ...interaction,
+                            liked: false,
+                            disliked: true,
+                            likes: interaction.likes - 1,
+                            dislikes: interaction.dislikes + 1
+                        };
+                    } else {
+                        return {
+                            ...interaction,
+                            disliked: !interaction.disliked,
+                            likes: interaction.disliked ? interaction.likes : interaction.likes,
+                            dislikes: interaction.disliked ? interaction.dislikes - 1 : interaction.dislikes + 1
+                        };
+                    }
+                }
+                return interaction;
+            })
+        );
     };
 
     const renderStars = (rating: number) => {
@@ -97,7 +126,7 @@ const MovieReview: React.FC<ReviewProps> = ({ reviews }) => {
                         <ReviewText>{review.text}</ReviewText>
                     </ReviewContainer>
                     <ReviewDetailsContainer>
-                        <ReviewText>{review.user}</ReviewText>
+                        <UserText>{review.user}</UserText>
                         <PointSvg />
                         <ReviewDetailsText>{formatDate(review.date)}</ReviewDetailsText>
                         <PointSvg />

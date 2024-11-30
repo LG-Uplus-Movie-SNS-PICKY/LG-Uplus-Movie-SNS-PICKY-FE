@@ -83,7 +83,7 @@ export const Wrapper = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 4px;
     width: 100%;
 `;
 
@@ -127,64 +127,36 @@ export const SubmitButton = styled.div`
   cursor: pointer;
 `;
 
-export const FilterContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-`;
-
-export const SortContainer = styled.div`
+export const WithinText = styled.div`
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
+  justify-content: flex-end;
+  width: 100%;
+  font-size: 10px;
+  color: #D9D9D9;
 `;
 
-export const SortOption = styled.div<{ active: boolean }>`
+export const TextCountWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+export const TextCountContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
-  font-size: 8px;
-  color: ${props => props.active ? '#000000' : '#9D9D9D'};
-  font-weight: ${props => props.active ? '600' : '400'};
-  padding-left: 6px;
-  cursor: pointer;
-
-  &::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    top: 40%;
-    transform: translateY(-50%);
-    font-size: 10px;
-    color: ${props => props.active ? '#000000' : '#9D9D9D'};
-  }
+  gap: 4px;
 `;
 
-export const SpoilerToggleContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 4px;
+export const CountText = styled.span`
+  font-size: 10px;
+  color: #000000;
+  font-weight: 600;
+  text-align: center;
 `;
 
-export const SpoilerToggleText = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 8px;
-    font-weight: 400;
-`;
-
-export const SpoilerToggleButton = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+export const MaxText = styled.span`
+  font-size: 10px;
+  color: #9D9D9D;
+  text-align: center;
 `;

@@ -67,7 +67,14 @@ export const ReviewBadge = styled.div`
 `;
 
 export const ReviewText = styled.div`
-  font-size: 8px;
+  font-size: 12px;
+  display: flex; 
+  align-items: center;
+  justify-content: center; 
+`;
+
+export const UserText = styled.div`
+  font-size: 12px;
   display: flex; 
   align-items: center;
   justify-content: center; 
@@ -82,7 +89,7 @@ export const ReviewDetailsContainer = styled.div`
 
 export const ReviewDetailsText = styled.div`
   display: flex;
-  font-size: 8px;
+  font-size: 10px;
   color: #756262;
   align-items: center;
   justify-content: center; 
@@ -99,14 +106,13 @@ export const ThumbsButton = styled.div<{ active?: boolean }>`
   display: flex;
   flex-direction: row;
   gap: 4px;
-  width: 32px;
-  height: 16px;
+  padding: 2px 6px;
   text-align: center;
   align-items: center;
   justify-content: center;
   border-radius: 80px;
   color: #756262;
-  font-size: 8px;
+  font-size: 10px;
   font-weight: ${props => props.active ? '600' : '400'};
-  border: ${props => props.active ? '1px solid #D9D9D9' : '0.5px solid #D9D9D9'};
+  border: ${props => props.active ? '1px solid #FF084A' : '1px solid #D9D9D9'};
 `;

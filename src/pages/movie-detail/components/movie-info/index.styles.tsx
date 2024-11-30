@@ -1,7 +1,7 @@
 // pages/MovieDetail/components/MovieInfo/index.styles.tsx
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
-import AdBanner from '../../../../assets/images/movie_detail_ad_banner.png';
+import AdBanner from '@assets/images/movie_detail_ad_banner.png';
 
 export const MovieInfoContainer = styled.div`
     display: flex;
@@ -42,7 +42,7 @@ export const InfoContainer = styled.div`
 `;
 
 export const Title = styled.span`
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   text-align: left;
 `;

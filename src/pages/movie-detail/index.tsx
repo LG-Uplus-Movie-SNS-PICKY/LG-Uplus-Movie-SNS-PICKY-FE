@@ -1,11 +1,11 @@
 // pages/MovieDetail/index.tsx
 import React, { useState } from 'react';
-import MovieHeader from './components/MovieHeader';
-import MoviePoster from './components/MoviePoster';
-import MovieRating from './components/MovieRating';
-import MovieInfo from './components/MovieInfo';
-import MovieReview from './components/MovieReview';
-import MovieFooter from './components/MovieFooter';
+import MovieHeader from './components/movie-header';
+import MoviePoster from './components/movie-poster';
+import MovieRating from './components/movie-rating';
+import MovieInfo from './components/movie-info';
+import MovieReview from './components/movie-review';
+import MovieFooter from './components/movie-footer';
 import {
     MovieDetailContainer,
     ReviewHeader,
@@ -13,9 +13,9 @@ import {
     ReviewCountContainer,
     ReviewCount
 } from './index.styles';
-import { Button } from '../../stories/button';
+import { Button } from '@stories/button';
 import { useNavigate } from 'react-router-dom';
-import PlusSvg from '../../assets/icons/plus.svg?react';
+import PlusSvg from '@assets/icons/plus.svg?react';
 
 interface MovieDetailProps {
     imageUrl?: string;
@@ -25,7 +25,7 @@ interface MovieDetailProps {
     production?: string;
     age?: string;
     genre?: string;
-    ott?: Array<{ name: string; url: string }>;
+    ott?: string[];
     rating?: number;
     content?: string;
     castData?: Array<{ name: string; role: string; image: string }>;
@@ -44,6 +44,13 @@ function MovieDetail(props: MovieDetailProps) {
         navigate('/movie/:id/reviews');
     }
 
+    // const { ott } = props;
+    // const ottData = ott?.map(name => ({
+    //     name,
+    //     url: ottUrls[name] || "URL not found" // 매핑 객체를 사용하여 URL 동적 할당
+    // }));
+    
+
     // 더미 데이터
     const dummyData = {
         imageUrl: "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
@@ -53,14 +60,7 @@ function MovieDetail(props: MovieDetailProps) {
         production: "MARVEL",
         age: "12",
         genre: "액션/모험/SF",
-        ott: [
-            { name: "Netflix", url: "https://yt3.googleusercontent.com/SXKyE4XgHJtX4qLS-9FKDuZt9EpBfeFPlGmNQdqsfxW2FDaKOjE53Mb20E43QuQfNDritLK1aw=s900-c-k-c0x00ffffff-no-rj" },
-            { name: "DisneyPlus", url: "https://yt3.googleusercontent.com/y8xDKfp1aHjwej33BIhVNcaJnHgKke2jB6bHkrrpckJO7SxyFvvDpPRbIwO0kxGcZOnAOHkCfQ=s900-c-k-c0x00ffffff-no-rj" },
-            { name: "Watcha", url: "https://yt3.googleusercontent.com/pCcTLy8Zj7gIuo3yfYkB6cT2f0jz2beWJC5E4-B4ju9VBLdfrVDi6yc0B0313N8EVLY1UBaxxA=s900-c-k-c0x00ffffff-no-rj" },
-            // { name: "Wavve", url: "https://yt3.googleusercontent.com/AwhuiDrnSIKzxLyp48jc5dyxj7YVdpwrj42s11o0slC0_sAOVQDDASFU9q3fDwan8UKEJP0Wew=s900-c-k-c0x00ffffff-no-rj" },
-            // { name: "Tving", url: "https://www.tving.com/img/tving-favicon-160@3x.png" },
-            // { name: "CoupangPlay", url: "https://play-lh.googleusercontent.com/IPu4haF4Jl9sMQ8TUEYJ4zUtN9pHJuxLOZzGHQcRPeT5ud07Y4sgUlB6ITaaxtbsPVA" }
-        ],
+        ott: [ "Netflix", "DisneyPlus", "Watcha"],
         rating: 4.0,
         content: "인피니티 워 이후 절반만 살아남은 지구, 마지막 희망이 된 어벤져스, 먼저 떠난 그들을 위해 모든 것을 걸었다. 위대한 어벤져스, 운명을 바꿀 최후의 전쟁이 펼쳐진다.",
         castData: [

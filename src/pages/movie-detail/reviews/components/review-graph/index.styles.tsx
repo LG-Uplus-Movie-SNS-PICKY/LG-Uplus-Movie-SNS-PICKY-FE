@@ -1,6 +1,6 @@
 // pages/MovieDetail/Reviews/components/ReviewGraph/index.styles.tsx
 import styled from '@emotion/styled';
-import { TitleContainer } from '../ReviewRegist/index.styles';
+import { TitleContainer } from '../review-regist/index.styles';
 import { colors } from '@styles/colors';
 
 export const GraphWrapper = styled.div`
@@ -160,7 +160,7 @@ export const ScoreBar = styled.div<{ percentage: number }>`
     display: block;
     height: 100%;
     width: ${props => `${props.percentage}%`};
-    background-color: #FC4C4E;  // 채워질 색
+    background-color: ${props => props.percentage < 50 ? '#F6A6A8' : '#FC4C4E'};  // 채워질 색을 조건에 따라 변경
     border-radius: 8px;  // 채워진 바의 라운드 적용
   }
 `;
