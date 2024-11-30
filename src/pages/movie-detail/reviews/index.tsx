@@ -1,24 +1,43 @@
 // pages/MovieDetail/Reviews/index.tsx
 import React, { useState } from 'react';
-import MovieHeader from '../components/MovieHeader';
-import MovieReviewsPoster from './components/MoviePoster';
-import ReviewGraph from './components/ReviewGraph';
-import ReviewRegist from './components/ReviewRegist';
-import MovieReview from '../components/MovieReview'
+import MovieHeader from '../components/movie-header';
+import MovieReviewsPoster from './components/movie-poster';
+import ReviewGraph from './components/review-graph';
+import ReviewRegist from './components/review-regist';
+import MovieReview from '../components/movie-review'
 import {
   MovieReviewContainer,
   InfoContainer,
   Title,
   DetailContainer,
-  DetailText
+  DetailText,
+  ReviewsWrapper,
+  FilterContainer,
+  SortContainer,
+  SortOption,
+  SpoilerToggleContainer,
+  SpoilerToggleText,
+  SpoilerToggleButton
 } from './index.styles';
 import AgeAllSvg from '../../../assets/icons/age_all.svg?react';
 import Age12Svg from '../../../assets/icons/age_12.svg?react';
 import Age15Svg from '../../../assets/icons/age_15.svg?react';
 import Age19Svg from '../../../assets/icons/age_19.svg?react';
+import SpoilerToggleSvg from '@assets/icons/spoiler_toggle.svg?react';
+import SpoilerToggleActiveSvg from '@assets/icons/spoiler_toggle_active.svg?react';
+
+interface ReviewRegistProps {
+  includeSpoilers: boolean;
+  setIncludeSpoilers: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
 const ReviewsPage = () => {
   const [includeSpoilers, setIncludeSpoilers] = useState(false);
+  const [sortBy, setSortBy] = useState('');
+
+  const handleToggleSpoilers = () => {
+    setIncludeSpoilers(!includeSpoilers);
+  };
 
   const dummyData = {
     imageUrl: "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
@@ -100,6 +119,7 @@ const ReviewsPage = () => {
     ? dummyData.reviews.filter(review => review.spoiler)
     : dummyData.reviews;
 
+
   return (
     <div style={{ width: "100%" }}>
       <MovieReviewContainer>
@@ -117,8 +137,26 @@ const ReviewsPage = () => {
           </DetailContainer>
         </InfoContainer>
         <ReviewGraph reviews={dummyData.reviews} />
-        <ReviewRegist includeSpoilers={includeSpoilers} setIncludeSpoilers={setIncludeSpoilers}/>
+        <ReviewRegist />
+        <ReviewsWrapper>
+        <FilterContainer>
+          <SortContainer>
+            <SortOption onClick={() => setSortBy('popular')} active={sortBy === 'popular'}>
+              공감순
+            </SortOption>
+            <SortOption onClick={() => setSortBy('recent')} active={sortBy === 'recent'}>
+              최신순
+            </SortOption>
+          </SortContainer>
+          <SpoilerToggleContainer>
+            <SpoilerToggleText>스포일러 포함</SpoilerToggleText>
+            <SpoilerToggleButton onClick={handleToggleSpoilers}>
+              {includeSpoilers ? <SpoilerToggleActiveSvg /> : <SpoilerToggleSvg />}
+            </SpoilerToggleButton>
+          </SpoilerToggleContainer>
+        </FilterContainer>
         <MovieReview reviews={filteredReviews} />
+        </ReviewsWrapper>
       </MovieReviewContainer>
     </div>
   );

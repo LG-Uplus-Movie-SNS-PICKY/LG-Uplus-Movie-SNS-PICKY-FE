@@ -11,19 +11,19 @@ import {
     IconContainer,
     LikeText
 } from './index.styles';
-import BehindModal from '../BehindModal';
+import BehindModal from '../behind-modal';
 
-import StarMiniSvg from '../../../../assets/icons/star_mini.svg?react';
-import ThumbsUp from '../../../../assets/icons/thumbs_up.svg?react';
-import ThumbsUpActive from '../../../../assets/icons/thumbs_up_active.svg?react';
-import MovieLogSvg from '../../../../assets/icons/movie_log.svg?react';
-import BehindSvg from '../../../../assets/icons/behind.svg?react';
+import StarMiniSvg from '@assets/icons/star_mini.svg?react';
+import ThumbsUp from '@assets/icons/thumbs_up.svg?react';
+import ThumbsUpActive from '@assets/icons/thumbs_up_active.svg?react';
+import MovieLogSvg from '@assets/icons/movie_log.svg?react';
+import BehindSvg from '@assets/icons/behind.svg?react';
 
 interface MovieRatingProps {
     rating: number; // 이 값에 따라 별의 색이 채워집니다.
 }
 
-const MovieRating: React.FC<MovieRatingProps> = ({ rating }) => {
+const MovieRating = ({ rating }: MovieRatingProps) => {
     const totalStars = 5;
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5 ? 1 : 0;

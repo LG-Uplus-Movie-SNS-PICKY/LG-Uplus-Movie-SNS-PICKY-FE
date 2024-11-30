@@ -27,8 +27,8 @@ import {
   PercentageWrapper,
   PercentageContainer
 } from './index.styles';
-import MaleSvg from '../../../../../assets/icons/male.svg?react';
-import FemaleSvg from '../../../../../assets/icons/female.svg?react';
+import MaleSvg from '@assets/icons/male.svg?react';
+import FemaleSvg from '@assets/icons/female.svg?react';
 
 interface Review {
   rating: number;

@@ -43,7 +43,7 @@ export const InfoContainer = styled.div`
 `;
 
 export const Title = styled.span`
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   text-align: left;
 `;
