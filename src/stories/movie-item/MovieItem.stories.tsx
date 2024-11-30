@@ -27,6 +27,7 @@ export const BasicMovieItem: Story = {
     name: "abouttime",
   },
 };
+
 export const RateMovieItem: Story = {
   args: {
     type: "rate",
@@ -38,6 +39,7 @@ export const RateMovieItem: Story = {
     name: "titanic",
   },
 };
+
 export const AllInfoMovieItem: Story = {
   args: {
     type: "all",

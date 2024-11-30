@@ -1,10 +1,28 @@
 import { css } from "@emotion/react";
 
+export const wrapper = css`
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 16px;
+  width: 100%;
+  height: 100vh;
+  justify-content: space-between;
+`;
+
+export const backWrapper = css`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  width: 100%;
+`;
+
 export const progressBarContainer = css`
   width: 100%;
-  height: 10px;
+  height: 8px;
   background-color: #f3f3f3;
-  margin-bottom: 20px;
 
   @media (max-width: 76px) {
     height: 8px;
@@ -43,10 +61,11 @@ export const responsiveButtonWrapper = css`
   max-width: 768px;
   width: 100%;
   display: flex;
-  position: fixed;
+  /* position: fixed; */
+  align-items: center;
   bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* left: 50%; */
+  /* transform: translateX(-50%); */
   padding: 0 16px;
 
   @media (max-width: 768px) {

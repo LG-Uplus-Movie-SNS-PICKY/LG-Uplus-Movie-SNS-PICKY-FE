@@ -22,7 +22,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/scrollbar';
-import { FreeMode, Mousewheel, Scrollbar } from 'swiper/modules';
+import { FreeMode, Mousewheel } from 'swiper/modules';
 
 interface CastMember {
   name: string;

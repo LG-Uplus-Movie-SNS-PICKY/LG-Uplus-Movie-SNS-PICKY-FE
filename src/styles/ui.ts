@@ -151,17 +151,21 @@ type StyleButton = {
 
 export const Button = {
   Confirm: styled.div<StyleButton & { $isDisabled: boolean }>`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 20%;
-    height: 53px;
-    border-radius: 10px;
-    color: #ffffff;
-    background-color: ${({ $isDisabled }) =>
-      $isDisabled ? "#e8e8e8 " : "#FF084A"};
-    cursor: ${({ $isDisabled }) => ($isDisabled ? "not-allowed" : "pointer")};
-  `,
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* 부모 컨테이너에 따라 유동적으로 */
+  max-width: 768px; /* 최대 너비 설정 */
+  height: 53px;
+  /* padding-bottom: 12px; */
+  border-radius: 10px;
+  color: #ffffff;
+  background-color: ${({ $isDisabled }) =>
+    $isDisabled ? "#e8e8e8" : "#FF084A"};
+  cursor: ${({ $isDisabled }) => ($isDisabled ? "not-allowed" : "pointer")};
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 0; /* 여백 제거 */
+`,
   Select: styled.button<{ isSelected: boolean }>`
     padding: 10px 20px;
     border: 1px solid
