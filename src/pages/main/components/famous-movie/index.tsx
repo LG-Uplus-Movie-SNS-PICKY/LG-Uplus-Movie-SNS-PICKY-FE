@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import Top10 from "@assets/icons/top10.svg?react";
-import Info from "@assets/icons/Info.svg?react";
+import Info from "@assets/icons/info.svg?react";
 
 import styles from "./index.styles";
 import { MovieItem } from "@stories/movie-item";
