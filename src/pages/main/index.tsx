@@ -1,15 +1,15 @@
 import FamousMovie from "./components/famous-movie";
 import GenresMovie from "./components/genres-movie";
 import LoginBanner from "./components/login-banner";
-import Slider from "./components/slider";
+import RecommendMovieSlider from "./components/recommend-slider";
 
-const isLogin = false;
+const isLogin = true;
 
 function Main() {
   return (
     <>
       {/* Slider or Banner Section */}
-      {isLogin ? <Slider /> : <LoginBanner />}
+      {isLogin ? <RecommendMovieSlider /> : <LoginBanner />}
 
       {/* Famous Movies Section */}
       <FamousMovie isLogin={isLogin} />
