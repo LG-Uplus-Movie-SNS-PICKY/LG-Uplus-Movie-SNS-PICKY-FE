@@ -4,9 +4,10 @@ import Watcha from "@assets/icons/watcha.svg?react";
 import styles from "./index.styles";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel } from "swiper/modules";
+import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
 
 import "swiper/css";
+import "swiper/css/autoplay";
 import "swiper/css/pagination";
 
 const dummyData = [
@@ -31,7 +32,8 @@ const dummyData = [
       "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
     title: "티파니에서 아침을",
     rate: 4.2,
-    genres: ["netflix", "watcha", "tving", "disneyplus", "coupangplay"],
+    genres: ["드라마", "로맨스", "코미디"],
+    service: ["netflix", "watcha", "tving", "disneyplus", "coupangplay"],
   },
 
   {
@@ -39,7 +41,8 @@ const dummyData = [
       "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
     title: "티파니에서 아침을",
     rate: 4.2,
-    genres: ["netflix", "watcha", "tving", "disneyplus"],
+    genres: ["드라마", "로맨스", "코미디"],
+    service: ["netflix", "watcha", "tving", "disneyplus"],
   },
 
   {
@@ -47,7 +50,8 @@ const dummyData = [
       "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
     title: "티파니에서 아침을",
     rate: 4.2,
-    genres: ["netflix", "watcha", "tving"],
+    genres: ["드라마", "로맨스", "코미디"],
+    service: ["netflix", "watcha", "tving"],
   },
 
   {
@@ -55,7 +59,8 @@ const dummyData = [
       "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
     title: "티파니에서 아침을",
     rate: 4.2,
-    genres: ["netflix", "watcha"],
+    genres: ["드라마", "로맨스", "코미디"],
+    service: ["netflix", "watcha"],
   },
 ];
 const posterDummySrc =
@@ -67,48 +72,64 @@ const posterDummySrc =
  */
 function RecommendMovieSlider() {
   return (
-    <div css={styles.sliderItem(posterDummySrc)}>
-      {/* Background Image */}
-      <div className="background" />
+    <Swiper
+      slidesPerView={"auto"}
+      spaceBetween={30}
+      centeredSlides={true}
+      modules={[Autoplay]}
+      loop={true}
+      autoplay={{
+        delay: 5000,
+        disableOnInteraction: false,
+      }}
+      css={styles.swiperContainer()}
+    >
+      {dummyData.length > 0 &&
+        dummyData.map((data, idx) => (
+          <SwiperSlide key={idx}>
+            <div css={styles.sliderItem(data.poster)}>
+              {/* Background Image */}
+              <div className="background" />
 
-      {/* Content */}
-      <div css={styles.content()}>
-        {/* Badge Section */}
-        <div css={styles.badgeContainer()}>
-          <div className="badge">PICKY 추천 영화</div>
-        </div>
+              {/* Content */}
+              <div css={styles.content()}>
+                {/* Badge Section */}
+                <div css={styles.badgeContainer()}>
+                  <div className="badge">PICKY 추천 영화</div>
+                </div>
 
-        {/* Movie Poster Section */}
-        <div css={styles.moviePosterContainer()}>
-          <img src={posterDummySrc} alt="image" />
-        </div>
+                {/* Movie Poster Section */}
+                <div css={styles.moviePosterContainer()}>
+                  <img src={data.poster} alt="image" />
+                </div>
 
-        {/* Movie Info Section */}
-        <div css={styles.movieInfoContainer()}>
-          {/* Info */}
-          <div className="movie-info">
-            <h3>티파니에서 아침을</h3>
-            <div className="movie-sub-info">
-              <span className="rate">별점: ★ 4.0</span>
-              <span className="genres">
-                {["드라마", "로맨스", "코미디"].join(", ")}
-              </span>
+                {/* Movie Info Section */}
+                <div css={styles.movieInfoContainer()}>
+                  {/* Info */}
+                  <div className="movie-info">
+                    <h3>티파니에서 아침을</h3>
+                    <div className="movie-sub-info">
+                      <span className="rate">별점: ★ {data.rate}</span>
+                      <span className="genres">{data.genres.join(", ")}</span>
+                    </div>
+                  </div>
+
+                  {/* OTT Servie */}
+                  <div className="ott-service">
+                    <div className="badge">
+                      <Netflix width={32} height={32} />
+                    </div>
+                    <div className="badge">
+                      <Watcha width={32} height={32} />
+                    </div>
+                    <div className="badge more-service">2+</div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* OTT Servie */}
-          <div className="ott-service">
-            <div className="badge">
-              <Netflix width={32} height={32} />
-            </div>
-            <div className="badge">
-              <Watcha width={32} height={32} />
-            </div>
-            <div className="badge more-service">2+</div>
-          </div>
-        </div>
-      </div>
-    </div>
+          </SwiperSlide>
+        ))}
+    </Swiper>
   );
 }
 

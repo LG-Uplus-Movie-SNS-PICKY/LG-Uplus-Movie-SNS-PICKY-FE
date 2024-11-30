@@ -1,12 +1,49 @@
 import { css, SerializedStyles } from "@emotion/react";
 
 export default {
+  swiperContainer(): SerializedStyles {
+    return css`
+      width: 100%;
+      min-height: fit-content;
+      overflow: hidden;
+      padding: 0 15px;
+
+      & > .swiper-wrapper {
+        display: flex;
+        /* justify-content: center; */
+      }
+
+      & > .swiper-wrapper > .swiper-slide {
+        position: relative;
+
+        overflow: hidden;
+
+        width: 320px; // 슬라이드 너비 고정
+        flex-shrink: 0; /* 슬라이드가 줄어들지 않도록 고정 */
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        transform: scale(0.94);
+        opacity: 0.7;
+
+        transition: transform, opacity 0.3s ease;
+
+        &.swiper-slide-active {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+    `;
+  },
+
   sliderItem(posterDummySrc: string): SerializedStyles {
     return css`
       position: relative;
 
       width: 320px;
-      min-height: fit-content;
+      /* min-height: fit-content; */
 
       display: flex;
       flex-direction: column;
@@ -122,7 +159,6 @@ export default {
 
         display: flex;
         align-items: center;
-        overflow: hidden;
         gap: 10px;
 
         & > .badge {
