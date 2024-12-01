@@ -1,41 +1,14 @@
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import { useRecoilValueLoadable } from "recoil";
 
-import Emoji from "@pages/signup/components/emoji";
+import styles from "./index.styles";
+import { GENRE_EMOJI } from "@constants/genre";
 
-import action from "@assets/images/action.png";
-import romance from "@assets/images/romance.png";
-import musical from "@assets/images/musical.png";
-import comedy from "@assets/images/comedy.png";
-import crime from "@assets/images/crime.png";
-import animation from "@assets/images/animation.png";
-import documentary from "@assets/images/documentary.png";
-import horror from "@assets/images/horror.png";
-import darama from "@assets/images/drama.png";
-import thriller from "@assets/images/thriller.png";
-import sf from "@assets/images/sf.png";
-import fantasy from "@assets/images/fantasy.png";
-
+// API로 호출된 장르 데이터 타입 정의
 interface GenreDataType {
-  [key: string]: unknown;
   genre_id: number;
   genre_name: string;
 }
-
-const genreEmoji = {
-  액션: <Emoji src={action} alt="액션" />,
-  로맨스: <Emoji src={romance} alt="로맨스" />,
-  뮤지컬: <Emoji src={musical} alt="뮤지컬" />,
-  코미디: <Emoji src={comedy} alt="코미디" />,
-  범죄: <Emoji src={crime} alt="범죄" />,
-  애니메이션: <Emoji src={animation} alt="애니메이션" />,
-  다큐: <Emoji src={documentary} alt="다큐" />,
-  호러: <Emoji src={horror} alt="호러" />,
-  드라마: <Emoji src={darama} alt="드라마" />,
-  스릴러: <Emoji src={thriller} alt="스릴러" />,
-  SF: <Emoji src={sf} alt="SF" />,
-  판타지: <Emoji src={fantasy} alt="판타지" />,
-};
 
 // 장르 전역 컴포넌트
 function GenreButtons(): JSX.Element {
@@ -50,8 +23,9 @@ function GenreButtons(): JSX.Element {
   return genres?.length > 0 ? (
     genres.map((genre: GenreDataType) => (
       // 전역 장르 버튼 컴포넌트 정의
-      <button key={genre.genre_id} className="genre-btn">
-        {genreEmoji[genre.genre_name as keyof typeof genreEmoji]}
+      <button key={genre.genre_id} css={styles.genreButton()}>
+        {/* genre_name 키는 GENRE_EMOJI 키에 존재한다는 타입 단언  */}
+        {GENRE_EMOJI[genre.genre_name as keyof typeof GENRE_EMOJI]}
         <span>{genre.genre_name}</span>
       </button>
     ))
