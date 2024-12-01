@@ -6,7 +6,7 @@ export default {
       border: none;
       background-color: #fff;
       box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
-      padding: 8px 12px;
+      padding: 4px 8px;
       border-radius: 4px;
       cursor: pointer;
 
