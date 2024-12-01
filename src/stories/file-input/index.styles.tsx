@@ -1,12 +1,12 @@
 import { css, SerializedStyles } from "@emotion/react";
 
 export default {
-  fileInputContainer(isFile: boolean, isType: boolean): SerializedStyles {
+  fileInputContainer(isFile: boolean): SerializedStyles {
     return css`
       width: 240px;
       height: 240px;
       background-color: ${isFile ? "#fff" : "#d9d9d9"};
-      border-radius: ${isFile ? (isType ? "0px" : "10px") : "10px"};
+      border-radius: ${isFile ? "0px" : "10px"};
 
       cursor: ${isFile ? "" : "pointer"};
       overflow: hidden;
