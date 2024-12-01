@@ -13,8 +13,8 @@ import Signup from "@pages/signup";
 import Search from "@pages/search";
 import Layout from "@components/layout";
 import AdminLayout from "./AdminLayout";
-import MovieDetail from "../pages/MovieDetail";
-import MovieReviews from "../pages/MovieDetail/Reviews";
+import MovieDetail from "@pages/movie-detail";
+import MovieReviews from "@pages/movie-detail/reviews";
 
 function Router() {
   return (
