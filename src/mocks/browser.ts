@@ -1,4 +1,5 @@
 import { setupWorker } from "msw/browser";
-import handlers from "./handlers";
 
-export const worker = setupWorker(...handlers);
+import movieHandelrs from "./handlers/movie/genre";
+
+export const worker = setupWorker(...movieHandelrs);
