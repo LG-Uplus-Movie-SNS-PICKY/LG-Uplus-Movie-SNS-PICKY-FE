@@ -8,7 +8,7 @@ interface SEOProps {
   url?: string;
 }
 
-function SEO({ title, description, image, url }: SEOProps) {
+function SEO({ title = "PICKY", description, image, url }: SEOProps) {
   const defaultImage = "/src/assets/images/logo.png";
   const defaultURL = "http://localhost:5173";
 
