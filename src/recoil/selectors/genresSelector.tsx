@@ -6,9 +6,6 @@ export const genresSelector = selector({
   key: "genresSelector",
   get: async () => {
     // 장르 API 호출
-    return await axios
-      .get("/api/movie/genre")
-      .then((res) => res)
-      .then((data) => data);
+    return await axios.get("/api/movie/genre").then((res) => res);
   },
 });
