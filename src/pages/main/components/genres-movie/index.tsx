@@ -18,25 +18,26 @@ import fantasy from "@assets/images/fantasy.png";
 import teddy from "@assets/images/teddy.png";
 import bestMovies from "@pages/main/constants";
 import { MovieItem } from "@stories/movie-item";
+import GenreButtons from "@components/genre";
 
-const genres = [
-  { id: 1, name: "액션", emoji: <Emoji src={action} alt="액션" /> },
-  { id: 2, name: "로맨스", emoji: <Emoji src={romance} alt="로맨스" /> },
-  { id: 3, name: "뮤지컬", emoji: <Emoji src={musical} alt="뮤지컬" /> },
-  { id: 4, name: "코미디", emoji: <Emoji src={comedy} alt="코미디" /> },
-  { id: 5, name: "범죄", emoji: <Emoji src={crime} alt="범죄" /> },
-  {
-    id: 6,
-    name: "애니메이션",
-    emoji: <Emoji src={animation} alt="애니메이션" />,
-  },
-  { id: 7, name: "다큐", emoji: <Emoji src={documentary} alt="다큐" /> },
-  { id: 8, name: "호러", emoji: <Emoji src={horror} alt="호러" /> },
-  { id: 9, name: "드라마", emoji: <Emoji src={darama} alt="드라마" /> },
-  { id: 10, name: "스릴러", emoji: <Emoji src={thriller} alt="스릴러" /> },
-  { id: 11, name: "SF", emoji: <Emoji src={sf} alt="SF" /> },
-  { id: 12, name: "판타지", emoji: <Emoji src={fantasy} alt="판타지" /> },
-];
+// const genres = [
+//   { id: 1, name: "액션", emoji: <Emoji src={action} alt="액션" /> },
+//   { id: 2, name: "로맨스", emoji: <Emoji src={romance} alt="로맨스" /> },
+//   { id: 3, name: "뮤지컬", emoji: <Emoji src={musical} alt="뮤지컬" /> },
+//   { id: 4, name: "코미디", emoji: <Emoji src={comedy} alt="코미디" /> },
+//   { id: 5, name: "범죄", emoji: <Emoji src={crime} alt="범죄" /> },
+//   {
+//     id: 6,
+//     name: "애니메이션",
+//     emoji: <Emoji src={animation} alt="애니메이션" />,
+//   },
+//   { id: 7, name: "다큐", emoji: <Emoji src={documentary} alt="다큐" /> },
+//   { id: 8, name: "호러", emoji: <Emoji src={horror} alt="호러" /> },
+//   { id: 9, name: "드라마", emoji: <Emoji src={darama} alt="드라마" /> },
+//   { id: 10, name: "스릴러", emoji: <Emoji src={thriller} alt="스릴러" /> },
+//   { id: 11, name: "SF", emoji: <Emoji src={sf} alt="SF" /> },
+//   { id: 12, name: "판타지", emoji: <Emoji src={fantasy} alt="판타지" /> },
+// ];
 
 function GenresMovie() {
   return (
@@ -49,17 +50,10 @@ function GenresMovie() {
         </div>
 
         {/* Genres Button */}
-        <div className="genres">
-          {genres.length > 0 &&
-            genres.map((genre) => {
-              return (
-                <button key={genre.id} className="genre-btn">
-                  {genre.emoji}
-                  <span>{genre.name}</span>
-                </button>
-              );
-            })}
-        </div>
+        <GenreButtons />
+        {/* <div className="genres">
+          
+        </div> */}
 
         {/* Select Genre Movies */}
         <div className="select-genre">
