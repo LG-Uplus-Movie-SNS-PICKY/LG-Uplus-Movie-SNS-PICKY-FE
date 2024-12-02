@@ -20,6 +20,11 @@ jobs:
       - name: Build
         run: yarn build
 
+      # .env에 있던 환경변수들을 등록해주는 단계
+      - name: .env setting
+        run: |
+          echo "REACT_APP_SERVER_IP=${{ secrets.REACT_APP_SERVER_IP }}"
+
       - name: S3 Deploy
         run: aws s3 sync ./dist s3://picky-web/ --acl bucket-owner-full-control # 현재 build된 폴더에 접근 후 s3 버킷인 csr-test-1-bucket에 파일 업로드
         env:
