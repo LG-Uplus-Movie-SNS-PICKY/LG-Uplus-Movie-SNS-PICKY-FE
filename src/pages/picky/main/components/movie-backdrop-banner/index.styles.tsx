@@ -14,8 +14,6 @@ export default {
       background-repeat: no-repeat;
       background-size: cover;
 
-      margin-bottom: 24px;
-
       & > .shadow-box {
         position: absolute;
         top: 0;

@@ -1,6 +1,7 @@
 import BsetMovieSection from "./components/best-movies";
 import GenreTab from "./components/genres-tab";
 import MovieBackdropBanner from "./components/movie-backdrop-banner";
+import PlayListSection from "./components/playlist";
 import styles from "./index.styles";
 
 export interface BestMovieTypes {
@@ -129,7 +130,7 @@ const bestMovie: BestMovieTypes[] = [
 function PickyPage() {
   // Top 10 영화 -> 리액트 쿼리
   return (
-    <>
+    <div css={styles.pickyPageContainer()}>
       {/* Movie Backdrop Banner (Best Movie 평점 1등) */}
       <MovieBackdropBanner movie={bestMovie[0]} />
 
@@ -140,7 +141,8 @@ function PickyPage() {
       <BsetMovieSection bestMovie={bestMovie} />
 
       {/* Playlists */}
-    </>
+      <PlayListSection />
+    </div>
   );
 }
 

@@ -51,34 +51,3 @@ function GenreTab() {
 }
 
 export default GenreTab;
-
-{
-  /* <Swiper
-  slidesPerView={"auto"}
-  spaceBetween={10}
-  direction={"horizontal"}
-  freeMode={true}
-  modules={[FreeMode, Mousewheel]}
-  mousewheel={{
-    forceToAxis: true,
-  }}
-  css={styles.swiperContainer()}
->
-  {bestMovies.length > 0 &&
-    bestMovies.map((movie, idx) => {
-      return (
-        <SwiperSlide key={idx}>
-          <MovieItem
-            type={isLogin ? "all" : "rate"}
-            src={movie.src}
-            title={movie.title}
-            name={movie.name}
-            rate={movie.rate}
-            like={movie.like}
-            comment={movie.comment}
-          />
-        </SwiperSlide>
-      );
-    })}
-</Swiper> */
-}
