@@ -34,11 +34,11 @@ async function fetchMovies(pageParam: number) {
 }
 
 function PlayListSection() {
+  // 리액트 쿼리를 이용한 스크롤 데이터 업데이트
   const {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
     isLoading,
     isError,
@@ -52,10 +52,12 @@ function PlayListSection() {
     },
   });
 
+  // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
     threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
   });
 
+  // 뷰포트 마지막을 감지할 경우 더 가져올 데이터가 있을 경우에 플레이리스트 데이터 업데이트
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();

@@ -5,6 +5,9 @@ import Like from "@assets/icons/like.svg?react";
 import Comment from "@assets/icons/comment.svg?react";
 import Checked from "@assets/icons/checked-movie.svg?react";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 export interface MovieItemProps {
   type: "basic" | "rate" | "all";
   src: string;
@@ -70,7 +73,7 @@ export function MovieItem({
       {/* 영화 썸네일 이미지 */}
       <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
         {type === "basic" && state === name ? <Checked /> : null}
-        <img src={src} />
+        <LazyLoadImage src={src} alt={name} effect="blur" />
       </div>
 
       {/* 영화 제목 */}
