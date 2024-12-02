@@ -71,12 +71,12 @@ export const filterOptionStyle = css`
   }
 `;
 
-export const filterButtonStyle = (isActive: boolean) => css`
+export const filterButtonStyle = css`
   display: flex;
   height: 38px;
   align-items: center;
   justify-content: center;
-  background-color: #F1F1F1;
+  background-color: #f1f1f1;
   padding: 8px 0 8px 16px;
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
