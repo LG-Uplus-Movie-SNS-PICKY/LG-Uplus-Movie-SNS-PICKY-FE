@@ -109,8 +109,8 @@ const MOCK_PLAYLIST_DATA = [
         movie_genres: ["드라마", "로맨스", "코미디"],
       },
       {
-        movie_id: 1,
-        movie_title: "대부 1",
+        movie_id: 4,
+        movie_title: "미나리",
         movie_poster_url: "/ltS2iKKvvBi7ZXWPRZSZBGmC9Gr.jpg",
         movie_total_rating: 4.5,
         movie_total_like: 291,

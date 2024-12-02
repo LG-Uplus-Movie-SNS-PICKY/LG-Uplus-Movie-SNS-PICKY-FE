@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Mousewheel } from "swiper/modules";
 
@@ -5,10 +7,23 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import styles from "./index.styles";
-import { PLAYLIST } from "./constants";
 import { MovieItem } from "@stories/movie-item";
-import { useEffect } from "react";
 import axios from "axios";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+
+interface PlaylistItemTypes {
+  [key: string]: unknown;
+  movie_id: number;
+  movie_poster_url: string;
+  movie_title: string;
+}
+
+interface PlaylistDataTypes {
+  movie_playlist_id: number;
+  movie_playlist_title: string;
+  movie_playlist_item: PlaylistItemTypes[];
+}
 
 // 리액트 쿼리 queryFn
 async function fetchMovies(pageParam: number) {
@@ -19,39 +34,81 @@ async function fetchMovies(pageParam: number) {
 }
 
 function PlayListSection() {
-  const handleClick = async () => {
-    const response = await axios.get("/api/movie/playlist");
-    console.log(response.data);
-  };
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+    isFetchingNextPage,
+    isLoading,
+    isError,
+    error,
+  } = useInfiniteQuery({
+    queryKey: ["playlist"],
+    queryFn: ({ pageParam = 1 }) => fetchMovies(pageParam),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.nextPage ?? undefined;
+    },
+  });
+
+  const { ref, inView } = useInView({
+    threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  if (isLoading) return <div>로딩 중...</div>;
+
+  if (isError) return <div>에러가 발생했습니다. {error.message}</div>;
 
   return (
-    <div css={styles.container()} onClick={handleClick}>
-      {/* Playlist Data JSX Element Mapping */}
-      <div css={styles.playlistCard()}>
-        <h3>Playlist Title</h3>
-        {/* Playlist Items Slider Mapping */}
-        <Swiper
-          slidesPerView={"auto"}
-          spaceBetween={10}
-          direction={"horizontal"}
-          freeMode={true}
-          modules={[FreeMode, Mousewheel]}
-          mousewheel={{
-            forceToAxis: true,
-          }}
-          css={styles.swiperContainer()}
-        >
-          {PLAYLIST[0].movie_playlist_item.map((item) => (
-            <SwiperSlide key={item.movie_id}>
-              <MovieItem
-                type="basic"
-                src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
-                title={item.movie_title}
-                name={item.movie_title}
-              />
-            </SwiperSlide>
+    <div css={styles.container()}>
+      {/* 페이지 순회 -> 무한 스크롤링 */}
+      {data?.pages.map((page, index) => (
+        <React.Fragment key={index}>
+          {/* Playlist Data JSX Element Mapping  */}
+          {page?.data.map((list: PlaylistDataTypes) => (
+            <div css={styles.playlistCard()} key={list.movie_playlist_id}>
+              <h3>{list.movie_playlist_title}</h3>
+              {/* Playlist Items Slider Mapping */}
+              <Swiper
+                slidesPerView={"auto"}
+                spaceBetween={10}
+                direction={"horizontal"}
+                freeMode={true}
+                modules={[FreeMode, Mousewheel]}
+                mousewheel={{
+                  forceToAxis: true,
+                }}
+                css={styles.swiperContainer()}
+              >
+                {list.movie_playlist_item.map((item) => (
+                  <SwiperSlide key={item.movie_id}>
+                    <MovieItem
+                      type="basic"
+                      src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
+                      title={item.movie_title}
+                      name={item.movie_title}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
           ))}
-        </Swiper>
+        </React.Fragment>
+      ))}
+
+      <div ref={ref}>
+        {isFetchingNextPage
+          ? "불러오는 중..."
+          : hasNextPage
+          ? "더 이상 데이터가 없습니다"
+          : ""}
       </div>
     </div>
   );
