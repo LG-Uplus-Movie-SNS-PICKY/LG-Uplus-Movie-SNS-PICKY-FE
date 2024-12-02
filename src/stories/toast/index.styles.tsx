@@ -4,10 +4,10 @@ export default {
     // 토스트 메시지 기본 스타일
     toastMessage(direction: 'none' | 'up' | 'down'): SerializedStyles {
         return css`
-        /* position: fixed;
+        position: fixed;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%); */
+        transform: translate(-50%, -50%);
         padding: 16px;
         background-color: rgba(0, 0, 0, 0.25);
         backdrop-filter: blur(8px);
@@ -22,10 +22,10 @@ export default {
         opacity: 1;
         transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 
-        &.animate {
+        /* &.animate {
             opacity: 0;
             transform: translate(-50%, ${direction === 'up' ? '-100%' : '100%'});
-        }
+        } */
         /* ${direction === 'up' ? 'transform: translateY(-150%);' : 'transform: translateY(150%);'}; */
         `;
     },
