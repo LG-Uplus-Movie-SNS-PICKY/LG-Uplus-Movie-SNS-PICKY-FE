@@ -8,11 +8,12 @@ export default {
       /* max-width: 361px; */
       height: 361px;
       background-color: #fff;
-      border: 1px solid #d9d9d9;
-      border-radius: 16px;
+
+      border: ${isFile ? "" : "1px solid #d9d9d9"};
+      border-radius: ${isFile ? "" : "16px"};
 
       cursor: ${isFile ? "" : "pointer"};
-      overflow: hidden;
+      overflow: ${isFile ? "" : "hidden"};
 
       /* Container 자식 div 태그 */
       & > div {
