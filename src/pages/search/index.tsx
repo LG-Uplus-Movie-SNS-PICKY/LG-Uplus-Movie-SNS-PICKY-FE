@@ -43,23 +43,40 @@ const suggestions = [
 
 // 검색어 하이라이트 함수
 const highlightSearchTerm = (text: string, searchTerm: string) => {
+  // 1. 검색어가 비어 있는 경우
   if (!searchTerm.trim()) {
+    // 사용자가 검색어를 입력하지 않았거나 공백만 입력했을 경우,
+    // 텍스트 전체를 기본 스타일(#9D9D9D, 회색)로 반환
     return <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{text}</span>;
   }
 
+  // 2. 검색어의 첫 번째 등장 위치를 찾음
   const index = text.toLowerCase().indexOf(searchTerm.toLowerCase());
+  // 검색어와 텍스트를 소문자로 변환한 후 비교하여 대소문자를 구분하지 않음
+  // 예: 검색어가 "벤"이고 텍스트가 "벤 어셈블"인 경우, index는 0
+  // 예: 검색어가 "벤"이고 텍스트가 "어벤져스"인 경우, index는 1
+
+  // 3. 검색어가 텍스트에 없을 경우
   if (index === -1) {
+    // 검색어가 텍스트에 포함되지 않으면 텍스트 전체를 기본 스타일(#9D9D9D, 회색)로 반환
     return <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{text}</span>;
   }
 
-  const before = text.slice(0, index);
-  const match = text.slice(index, index + searchTerm.length);
-  const after = text.slice(index + searchTerm.length);
+  // 4. 텍스트를 세 부분으로 분리
+  const before = text.slice(0, index); // 검색어 이전의 텍스트 부분
+  const match = text.slice(index, index + searchTerm.length); // 검색어와 일치하는 부분
+  const after = text.slice(index + searchTerm.length); // 검색어 이후의 텍스트 부분
 
+  // 5. JSX로 각 부분에 스타일 적용
   return (
     <>
+      {/* 검색어 이전의 텍스트에 기본 스타일(#9D9D9D, 회색) 적용 */}
       <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{before}</span>
+
+      {/* 검색어와 일치하는 부분에 강조 스타일(#FF084A, 빨간색) 적용 */}
       <span style={{ color: "#FF084A", fontSize: "16px", fontWeight: "600" }}>{match}</span>
+
+      {/* 검색어 이후의 텍스트에 기본 스타일(#9D9D9D, 회색) 적용 */}
       <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{after}</span>
     </>
   );
