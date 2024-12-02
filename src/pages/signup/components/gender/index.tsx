@@ -43,11 +43,9 @@ export default function InputGender() {
         </button>
       </div>
       <div css={textWrapper}>
-        {isFocused && (
-          <Text.FocusedWarning $isFocused={isFocused}>
-            성별을 선택해주세요.
-          </Text.FocusedWarning>
-        )}
+      <Text.FocusedWarning $isFocused={isFocused}>
+          성별을 선택해주세요.
+        </Text.FocusedWarning>
       </div>
     </div>
   );

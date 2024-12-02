@@ -9,7 +9,7 @@ export const customFileLabel = css`
   padding: 10px 20px;
   background-color: #ff084a;
   color: white;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
@@ -26,10 +26,13 @@ export const imageContainer = ($hasImage: boolean) => css`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${$hasImage ? "transparent" : "#f3f3f3"};
-  border-radius: 10%; /* 원형 */
+  /* background-color: ${$hasImage ? "transparent" : "#fff"}; */
+
   overflow: hidden;
-  border: ${$hasImage ? "tansparent" : "2px dashed #ffffff"};
+  /* border: ${$hasImage ? "tansparent" : "2px dashed #d9d9d9"}; */
+  margin-bottom: 12px;
+  border-radius: 200px;
+  border: 2px solid #d9d9d9;
 `;
 
 export const defaultImageText = css`

@@ -3,8 +3,8 @@ import { useRecoilState } from "recoil";
 import { inputState, userState } from "../../../../review/atoms";
 import { Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import { DefaultImage } from "../../../../assets/svg";
-import defaultUserImage from "../../../../assets/images/default_userImage.png";
+import DefaultImage from "@assets/icons/defaultImage.svg?react";
+import defaultUserImage from "@assets/images/default_userImage.png";
 import {
   fileInput,
   customFileLabel,
@@ -13,6 +13,7 @@ import {
   defaultImageText,
   profileContainer,
 } from "./index.styles";
+// import { Margin } from "@styles/ui";
 
 export default function InputProfile() {
   const { isFocused } = useFocus();
@@ -52,6 +53,8 @@ export default function InputProfile() {
             src={userInfo.profileImage}
             alt="프로필 미리보기"
             css={styledImage}
+            width={240}
+            height={240}
           />
         ) : (
           <DefaultImage width="100%" height="100%" />
