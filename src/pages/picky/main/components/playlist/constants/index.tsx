@@ -51,11 +51,11 @@ export const PLAYLIST = [
       {
         movie_id: 5,
         movie_title: "여인의 향기",
-        movie_poster_url: "/8In8hKo1w2zO4hPjcmglh4SPNcO.jp",
+        movie_poster_url: "/7bIo8s6Qqn8OrZEyS8dqKR6fHot.jpg",
         movie_total_rating: 4.1,
         movie_total_like: 82,
         movie_total_line_review: 21,
-        movie_backdrop_url: "/oLaLKKzlgPUtp9CCjF3wQgI98TL.jpg",
+        movie_backdrop_url: "/wwaVAZmQU2CBAJzBtahOSvqvpbc.jpg",
         movie_genres: ["드라마", "로맨스", "코미디"],
       },
 

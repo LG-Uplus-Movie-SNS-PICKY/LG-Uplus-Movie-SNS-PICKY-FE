@@ -5,6 +5,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 
 import styles from "./index.styles";
+import { PLAYLIST } from "./constants";
+import { MovieItem } from "@stories/movie-item";
 
 function PlayListSection() {
   return (
@@ -23,7 +25,18 @@ function PlayListSection() {
             forceToAxis: true,
           }}
           css={styles.swiperContainer()}
-        ></Swiper>
+        >
+          {PLAYLIST[0].movie_playlist_item.map((item) => (
+            <SwiperSlide key={item.movie_id}>
+              <MovieItem
+                type="basic"
+                src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
+                title={item.movie_title}
+                name={item.movie_title}
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
     </div>
   );
