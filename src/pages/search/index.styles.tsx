@@ -4,7 +4,6 @@ export const containerStyle = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
   justify-content: space-between;
   max-width: 768px;
   width: 100%;
@@ -52,6 +51,7 @@ export const recentSearchHeaderStyle = css`
   align-items: center;
   width: 100%;
   padding: 16px;
+  margin: none;
 `;
 
 export const titleStyle = css`
@@ -81,6 +81,7 @@ export const emptyStateContainerStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 140px;
   flex: 1;
   color: #c8c8c8;
   text-align: center;
@@ -124,4 +125,74 @@ export const searchInputContainerStyle = css`
   align-items: center;
   position: relative;
   width: 100%;
+`;
+
+export const suggestionListStyle = css`
+  display: flex;
+  padding-left: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+
+  li {
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: 8px;
+      width: 12px;
+      height: 12px;
+    }
+
+    span {
+      font-family: Pretendard;
+      font-size: 14px;
+      font-weight: 400;
+      color: #000;
+    }
+  }
+`;
+
+export const recentSearchListStyle = css`
+  padding-left: 24px;
+  padding-right: 24px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    div:first-of-type {
+      display: flex;
+      align-items: center;
+
+      img {
+        margin-right: 8px;
+        width: 16px;
+        height: 17.45px;
+      }
+
+      span {
+        font-family: Pretendard;
+        font-size: 14px;
+        font-weight: 400;
+        color: #9d9d9d;
+      }
+    }
+
+    /* 닫기 버튼 스타일 */
+    div:last-of-type img {
+      cursor: pointer;
+      width: 14px;
+      height: 14px;
+    }
+  }
 `;
