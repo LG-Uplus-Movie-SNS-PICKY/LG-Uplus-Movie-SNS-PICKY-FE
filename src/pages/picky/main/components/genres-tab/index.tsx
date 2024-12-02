@@ -37,7 +37,7 @@ function GenreTab() {
         css={styles.swiperContainer()}
       >
         {genres.map((genre: GenreDataType) => (
-          <SwiperSlide>
+          <SwiperSlide key={genre.genre_id}>
             <button key={genre.genre_id} css={styles.genreButton()}>
               {/* genre_name 키는 GENRE_EMOJI 키에 존재한다는 타입 단언  */}
               {GENRE_EMOJI[genre.genre_name as keyof typeof GENRE_EMOJI]}

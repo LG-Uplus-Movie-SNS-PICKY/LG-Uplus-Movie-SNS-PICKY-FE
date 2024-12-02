@@ -1,3 +1,4 @@
+import BsetMovieSection from "./components/best-movies";
 import GenreTab from "./components/genres-tab";
 import MovieBackdropBanner from "./components/movie-backdrop-banner";
 import styles from "./index.styles";
@@ -136,6 +137,7 @@ function PickyPage() {
       <GenreTab />
 
       {/* Best Movies Section */}
+      <BsetMovieSection bestMovie={bestMovie} />
 
       {/* Playlists */}
     </>
