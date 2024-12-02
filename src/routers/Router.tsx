@@ -16,6 +16,7 @@ import AdminLayout from "./AdminLayout";
 import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import { HelmetProvider } from "react-helmet-async";
+import PickyPage from "@pages/picky/main";
 
 function Router() {
   return (
@@ -33,15 +34,15 @@ function Router() {
             {/* 로그인 사용자 라우트 */}
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/movie/:id/reviews" element={<MovieReviews />} />
-
-            <Route path="/search" element={<Search />} />
-
-            {/* 관리자 전용 라우트 */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/feed-list" element={<Feed />} />
             <Route path="/add-feed" element={<Post />} />
             <Route path="/comment" element={<Comment />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/picky" element={<PickyPage />} />
+
+            {/* 관리자 전용 라우트 */}
             <Route path="/admin/*" element={<AdminLayout />} />
           </Routes>
         </Layout>
