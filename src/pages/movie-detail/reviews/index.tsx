@@ -1,10 +1,10 @@
 // pages/MovieDetail/Reviews/index.tsx
-import React, { useState } from 'react';
-import MovieHeader from '../components/movie-header';
-import MovieReviewsPoster from './components/movie-poster';
-import ReviewGraph from './components/review-graph';
-import ReviewRegist from './components/review-regist';
-import MovieReview from '../components/movie-review'
+import React, { useState } from "react";
+import MovieHeader from "../components/movie-header";
+import MovieReviewsPoster from "./components/movie-poster";
+import ReviewGraph from "./components/review-graph";
+import ReviewRegist from "./components/review-regist";
+import MovieReview from "../components/movie-review";
 import {
   MovieReviewContainer,
   InfoContainer,
@@ -17,14 +17,15 @@ import {
   SortOption,
   SpoilerToggleContainer,
   SpoilerToggleText,
-  SpoilerToggleButton
-} from './index.styles';
-import AgeAllSvg from '../../../assets/icons/age_all.svg?react';
-import Age12Svg from '../../../assets/icons/age_12.svg?react';
-import Age15Svg from '../../../assets/icons/age_15.svg?react';
-import Age19Svg from '../../../assets/icons/age_19.svg?react';
-import SpoilerToggleSvg from '@assets/icons/spoiler_toggle.svg?react';
-import SpoilerToggleActiveSvg from '@assets/icons/spoiler_toggle_active.svg?react';
+  SpoilerToggleButton,
+} from "./index.styles";
+import AgeAllSvg from "../../../assets/icons/age_all.svg?react";
+import Age12Svg from "../../../assets/icons/age_12.svg?react";
+import Age15Svg from "../../../assets/icons/age_15.svg?react";
+import Age19Svg from "../../../assets/icons/age_19.svg?react";
+import SpoilerToggleSvg from "@assets/icons/spoiler_toggle.svg?react";
+import SpoilerToggleActiveSvg from "@assets/icons/spoiler_toggle_active.svg?react";
+import SEO from "@components/seo";
 
 interface ReviewRegistProps {
   includeSpoilers: boolean;
@@ -33,14 +34,15 @@ interface ReviewRegistProps {
 
 const ReviewsPage = () => {
   const [includeSpoilers, setIncludeSpoilers] = useState(false);
-  const [sortBy, setSortBy] = useState('');
+  const [sortBy, setSortBy] = useState("");
 
   const handleToggleSpoilers = () => {
     setIncludeSpoilers(!includeSpoilers);
   };
 
   const dummyData = {
-    imageUrl: "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
+    imageUrl:
+      "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
     title: "어벤져스: 엔드게임",
     year: "2019",
     age: "12",
@@ -54,7 +56,7 @@ const ReviewsPage = () => {
         gender: "male",
         date: "2022-07-10T14:48:00",
         likes: 123,
-        dislikes: 10
+        dislikes: 10,
       },
       {
         spoiler: true,
@@ -64,7 +66,7 @@ const ReviewsPage = () => {
         gender: "male",
         date: "2022-07-11T15:20:00",
         likes: 76,
-        dislikes: 8
+        dislikes: 8,
       },
       {
         spoiler: true,
@@ -74,7 +76,7 @@ const ReviewsPage = () => {
         gender: "male",
         date: "2022-07-12T16:00:00",
         likes: 200,
-        dislikes: 3
+        dislikes: 3,
       },
       {
         spoiler: false,
@@ -84,7 +86,7 @@ const ReviewsPage = () => {
         gender: "female",
         date: "2022-07-10T14:48:00",
         likes: 123,
-        dislikes: 10
+        dislikes: 10,
       },
       {
         spoiler: false,
@@ -94,7 +96,7 @@ const ReviewsPage = () => {
         gender: "female",
         date: "2022-07-10T14:48:00",
         likes: 123,
-        dislikes: 10
+        dislikes: 10,
       },
       {
         spoiler: false,
@@ -104,9 +106,9 @@ const ReviewsPage = () => {
         gender: "female",
         date: "2022-07-10T14:48:00",
         likes: 123,
-        dislikes: 10
+        dislikes: 10,
       },
-    ]
+    ],
   };
 
   const formatRuntime = (minutes: number) => {
@@ -116,49 +118,67 @@ const ReviewsPage = () => {
   };
 
   const filteredReviews = includeSpoilers
-    ? dummyData.reviews.filter(review => review.spoiler)
+    ? dummyData.reviews.filter((review) => review.spoiler)
     : dummyData.reviews;
 
-
   return (
-    <div style={{ width: "100%" }}>
-      <MovieReviewContainer>
-        <MovieHeader />
-        <MovieReviewsPoster imageUrl={dummyData.imageUrl} />
-        <InfoContainer>
-          <Title>{dummyData.title}</Title>
-          <DetailContainer>
-            <DetailText>{dummyData.year}</DetailText>
-            {dummyData.age === "all" && <AgeAllSvg />}
-            {dummyData.age === "12" && <Age12Svg />}
-            {dummyData.age === "15" && <Age15Svg />}
-            {dummyData.age === "19" && <Age19Svg />}
-            <DetailText>{formatRuntime(dummyData.runtime)}</DetailText>
-          </DetailContainer>
-        </InfoContainer>
-        <ReviewGraph reviews={dummyData.reviews} />
-        <ReviewRegist />
-        <ReviewsWrapper>
-        <FilterContainer>
-          <SortContainer>
-            <SortOption onClick={() => setSortBy('popular')} active={sortBy === 'popular'}>
-              공감순
-            </SortOption>
-            <SortOption onClick={() => setSortBy('recent')} active={sortBy === 'recent'}>
-              최신순
-            </SortOption>
-          </SortContainer>
-          <SpoilerToggleContainer>
-            <SpoilerToggleText>스포일러 포함</SpoilerToggleText>
-            <SpoilerToggleButton onClick={handleToggleSpoilers}>
-              {includeSpoilers ? <SpoilerToggleActiveSvg /> : <SpoilerToggleSvg />}
-            </SpoilerToggleButton>
-          </SpoilerToggleContainer>
-        </FilterContainer>
-        <MovieReview reviews={filteredReviews} />
-        </ReviewsWrapper>
-      </MovieReviewContainer>
-    </div>
+    <>
+      <SEO
+        title={dummyData.title}
+        description="영화 리뷰"
+        image={dummyData.imageUrl}
+        url={`http://localhost:5173/${location.pathname}`}
+      />
+
+      <div style={{ width: "100%" }}>
+        <MovieReviewContainer>
+          <MovieHeader />
+          <MovieReviewsPoster imageUrl={dummyData.imageUrl} />
+          <InfoContainer>
+            <Title>{dummyData.title}</Title>
+            <DetailContainer>
+              <DetailText>{dummyData.year}</DetailText>
+              {dummyData.age === "all" && <AgeAllSvg />}
+              {dummyData.age === "12" && <Age12Svg />}
+              {dummyData.age === "15" && <Age15Svg />}
+              {dummyData.age === "19" && <Age19Svg />}
+              <DetailText>{formatRuntime(dummyData.runtime)}</DetailText>
+            </DetailContainer>
+          </InfoContainer>
+          <ReviewGraph reviews={dummyData.reviews} />
+          <ReviewRegist />
+          <ReviewsWrapper>
+            <FilterContainer>
+              <SortContainer>
+                <SortOption
+                  onClick={() => setSortBy("popular")}
+                  active={sortBy === "popular"}
+                >
+                  공감순
+                </SortOption>
+                <SortOption
+                  onClick={() => setSortBy("recent")}
+                  active={sortBy === "recent"}
+                >
+                  최신순
+                </SortOption>
+              </SortContainer>
+              <SpoilerToggleContainer>
+                <SpoilerToggleText>스포일러 포함</SpoilerToggleText>
+                <SpoilerToggleButton onClick={handleToggleSpoilers}>
+                  {includeSpoilers ? (
+                    <SpoilerToggleActiveSvg />
+                  ) : (
+                    <SpoilerToggleSvg />
+                  )}
+                </SpoilerToggleButton>
+              </SpoilerToggleContainer>
+            </FilterContainer>
+            <MovieReview reviews={filteredReviews} />
+          </ReviewsWrapper>
+        </MovieReviewContainer>
+      </div>
+    </>
   );
 };
 

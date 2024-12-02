@@ -25,11 +25,12 @@ function Layout({ children }: LayoutProps): JSX.Element {
         align="center"
         height="100vh"
       >
-        <GlobalHeader
+        {/* <GlobalHeader
           location={location}
           navigate={navigate}
           isLoginTestValue={isLoginTestValue}
-        />
+        /> */}
+
         <Wrapper
           overflowY={"auto"}
           direction="column"
@@ -42,11 +43,11 @@ function Layout({ children }: LayoutProps): JSX.Element {
           {children}
         </Wrapper>
 
-        <GlobalNavigatorBar
+        {/* <GlobalNavigatorBar
           location={location}
           navigate={navigate}
           isLoginTestValue={isLoginTestValue}
-        />
+        /> */}
       </MainLayout>
     </>
   );
