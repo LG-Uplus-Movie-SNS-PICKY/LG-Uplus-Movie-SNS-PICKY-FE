@@ -15,6 +15,7 @@ import {
   requiredBadge,
   genreButton,
 } from "./index.styles";
+
 import action from "@assets/images/action.png";
 import romance from "@assets/images/romance.png";
 import musical from "@assets/images/musical.png";
@@ -34,7 +35,11 @@ const genres = [
   { id: 3, name: "뮤지컬", emoji: <Emoji src={musical} alt="뮤지컬" /> },
   { id: 4, name: "코미디", emoji: <Emoji src={comedy} alt="코미디" /> },
   { id: 5, name: "범죄", emoji: <Emoji src={crime} alt="범죄" /> },
-  { id: 6, name: "애니메이션", emoji: <Emoji src={animation} alt="애니메이션" /> },
+  {
+    id: 6,
+    name: "애니메이션",
+    emoji: <Emoji src={animation} alt="애니메이션" />,
+  },
   { id: 7, name: "다큐", emoji: <Emoji src={documentary} alt="다큐" /> },
   { id: 8, name: "호러", emoji: <Emoji src={horror} alt="호러" /> },
   { id: 9, name: "드라마", emoji: <Emoji src={darama} alt="드라마" /> },

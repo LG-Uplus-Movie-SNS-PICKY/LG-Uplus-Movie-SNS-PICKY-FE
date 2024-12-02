@@ -35,11 +35,13 @@ export default {
       }
 
       /* Genres Button */
-      & > .genres-btn {
+      & > .genres {
         width: 100%;
 
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
       }
 
       & > .select-genre {

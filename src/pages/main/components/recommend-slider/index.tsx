@@ -78,8 +78,9 @@ function RecommendMovieSlider() {
       centeredSlides={true}
       modules={[Autoplay]}
       loop={true}
+      touchRatio={0}
       autoplay={{
-        delay: 5000,
+        delay: 3000,
         disableOnInteraction: false,
       }}
       css={styles.swiperContainer()}
