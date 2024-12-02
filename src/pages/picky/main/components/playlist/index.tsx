@@ -7,10 +7,25 @@ import "swiper/css/pagination";
 import styles from "./index.styles";
 import { PLAYLIST } from "./constants";
 import { MovieItem } from "@stories/movie-item";
+import { useEffect } from "react";
+import axios from "axios";
+
+// 리액트 쿼리 queryFn
+async function fetchMovies(pageParam: number) {
+  const { data } = await axios.get(
+    `/api/movie/playlist?page=${pageParam}&limit=3`
+  );
+  return data;
+}
 
 function PlayListSection() {
+  const handleClick = async () => {
+    const response = await axios.get("/api/movie/playlist");
+    console.log(response.data);
+  };
+
   return (
-    <div css={styles.container()}>
+    <div css={styles.container()} onClick={handleClick}>
       {/* Playlist Data JSX Element Mapping */}
       <div css={styles.playlistCard()}>
         <h3>Playlist Title</h3>
