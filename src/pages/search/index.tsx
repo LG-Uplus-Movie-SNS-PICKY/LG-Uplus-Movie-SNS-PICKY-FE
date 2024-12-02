@@ -4,12 +4,20 @@ import backButton from "@assets/icons/backButton.svg";
 import searchButton from "@assets/icons/searchButton.svg";
 import timeIcon from "@assets/icons/time_icon.svg";
 import closeButton from "@assets/icons/closeButton.svg";
+import filterIcon from "@assets/icons/filter.svg";
+import filterActiveIcon from "@assets/icons/filter_active.svg";
+import filterMiniActiveIcon from "@assets/icons/filter_mini_active.svg";
 import {
   containerStyle,
   headerStyle,
   backButtonStyle,
   searchButtonStyle,
   searchInputContainerStyle,
+  filterContainerStyle,
+  filterLabelStyle,
+  filterModalStyle,
+  filterOptionStyle,
+  filterButtonStyle,
   searchInputStyle,
   recentSearchHeaderStyle,
   titleStyle,
@@ -30,11 +38,39 @@ const suggestions = [
   "어벤져스 오브 저스티스",
   "어벤져스1",
   "어벤져스2",
+  "벤자민 버튼의 시간은 거꾸로 간다"
 ];
+
+// 검색어 하이라이트 함수
+const highlightSearchTerm = (text: string, searchTerm: string) => {
+  if (!searchTerm.trim()) {
+    return <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{text}</span>;
+  }
+
+  const index = text.toLowerCase().indexOf(searchTerm.toLowerCase());
+  if (index === -1) {
+    return <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{text}</span>;
+  }
+
+  const before = text.slice(0, index);
+  const match = text.slice(index, index + searchTerm.length);
+  const after = text.slice(index + searchTerm.length);
+
+  return (
+    <>
+      <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{before}</span>
+      <span style={{ color: "#FF084A", fontSize: "16px", fontWeight: "600" }}>{match}</span>
+      <span style={{ color: "#9D9D9D", fontSize: "16px", fontWeight: "400" }}>{after}</span>
+    </>
+  );
+};
 
 export default function SearchPage() {
   const [searchText, setSearchText] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [isFilterActive, setIsFilterActive] = useState(false); // 필터 활성 상태
+  const [selectedFilter, setSelectedFilter] = useState<string | null>(null); // 선택된 필터 상태
+  const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
 
   useEffect(() => {
     const storedSearches = localStorage.getItem("recentSearches");
@@ -47,8 +83,12 @@ export default function SearchPage() {
     localStorage.setItem("recentSearches", JSON.stringify(searches));
   };
 
+  // const matchingSuggestions = suggestions.filter((item) =>
+  //   item.toLowerCase().includes(searchText.toLowerCase())
+  // );
+
   const matchingSuggestions = suggestions.filter((item) =>
-    item.toLowerCase().includes(searchText.toLowerCase())
+    item.toLowerCase().startsWith(searchText.toLowerCase()) // 검색어로 시작하는 항목만 필터링
   );
 
   const handleSearch = () => {
@@ -74,18 +114,46 @@ export default function SearchPage() {
     saveToLocalStorage(updatedSearches);
   };
 
+  const handleFilterSelect = (filter: string) => {
+    setSelectedFilter(filter); // 선택된 필터 업데이트
+    setIsFilterActive(false); // 모달 닫기
+  };
+
   return (
     <div css={containerStyle}>
       <div css={headerStyle}>
         <button css={backButtonStyle}>
           <img src={backButton} alt="backButton" width="12" height="25" />
         </button>
-        <div css={searchInputContainerStyle}>
+        <div css={searchInputContainerStyle(isSearchInputFocused)}>
+          {/* 필터 버튼 활성화 */}
+          <div
+            css={filterButtonStyle(isFilterActive)} // 조건부 스타일 적용
+            onClick={() => setIsFilterActive((prev) => !prev)} // 활성 상태 토글
+          >
+            <div css={filterContainerStyle}>
+              {/* 조건에 따라 필터 아이콘 변경 */}
+              <img
+                src={
+                  selectedFilter
+                    ? filterMiniActiveIcon // 필터 선택 시 활성화 아이콘
+                    : isFilterActive
+                      ? filterActiveIcon // 모달 활성화 시 작은 아이콘
+                      : filterIcon // 기본 아이콘
+                }
+                alt="filterIcon"
+              />
+              {/* 선택된 필터 표시 */}
+              <span css={filterLabelStyle}>{selectedFilter}</span>
+            </div>
+          </div>
           <input
             css={searchInputStyle}
-            placeholder="콘텐츠, 인물, 유저를 검색해보세요."
+            placeholder="영화, 인물, 유저를 검색해보세요."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
+            onFocus={() => setIsSearchInputFocused(true)} // 포커스 상태로 변경
+            onBlur={() => setIsSearchInputFocused(false)} // 포커스 해제 상태로 변경
             onKeyPress={(e) => {
               if (e.key === "Enter") handleSearch();
             }}
@@ -95,6 +163,22 @@ export default function SearchPage() {
           </button>
         </div>
       </div>
+
+      {/* 모달창 렌더링 */}
+      {isFilterActive && (
+        <div css={filterModalStyle}>
+          {["영화", "인물", "유저"].map((filter) => (
+            <div
+              key={filter}
+              css={filterOptionStyle}
+              onClick={() => handleFilterSelect(filter)} // 필터 선택
+            >
+              {filter}
+            </div>
+          ))}
+        </div>
+      )}
+
 
       <div css={recentSearchHeaderStyle}>
         <div css={titleStyle}>
@@ -124,7 +208,8 @@ export default function SearchPage() {
           {matchingSuggestions.map((suggestion, index) => (
             <li key={index} onClick={() => handleSuggestionClick(suggestion)}>
               <img src={searchButton} alt="searchButton" />
-              <span>{suggestion}</span>
+              {/* 검색어 하이라이트 */}
+              <span>{highlightSearchTerm(suggestion, searchText)}</span>
             </li>
           ))}
         </ul>
@@ -136,7 +221,7 @@ export default function SearchPage() {
             <li key={index} onClick={() => handleSuggestionClick(search)}>
               <div>
                 <img src={timeIcon} alt="timeIcon" />
-                <span>{search}</span>
+                <span style={{ fontSize: "16px", fontWeight: "600", color: "#9D9D9D" }}>{search}</span>
               </div>
               <div>
                 <img
@@ -152,6 +237,7 @@ export default function SearchPage() {
           ))}
         </ul>
       )}
+
     </div>
   );
 }

@@ -26,23 +26,96 @@ export const backButtonStyle = css`
   font-size: 16px;
 `;
 
+export const filterContainerStyle = css`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px 0 0;
+  border-right: 1px solid #D9D9D9;
+  font-family: 12px;
+  font-weight: 600;
+  color: #FF084A;
+`;
+
+export const filterLabelStyle = css`
+font-family: Pretendard;
+font-size: 12px;
+font-weight: 600;
+color: #FF084A;
+`;
+
+export const filterModalStyle = css`
+  position: absolute;
+  top: 12.5%;
+  left: 10%;
+  background: #FFFFFF;
+  border-radius: 10px;
+  border: 1px solid #D9D9D9;
+  padding: 4px;
+  z-index: 1000; /* 항상 위에 렌더링 */
+`;
+
+export const filterOptionStyle = css`
+  padding: 4px 16px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  color: #000000;
+  letter-spacing: -0.5px;
+  border-bottom: 0.5px solid #F1F1F1;
+  cursor: pointer;
+
+  &:last-of-type {
+    border-bottom: none; /* 마지막 옵션 아래쪽 보더 제거 */
+  }
+`;
+
+export const filterButtonStyle = (isActive: boolean) => css`
+  display: flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  background-color: #F1F1F1;
+  padding: 8px 0 8px 16px;
+  border-top-left-radius: 50px;
+  border-bottom-left-radius: 50px;
+`;
+
+export const filterIconStyle = css`
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+`;  
+
 export const searchInputStyle = css`
   display: flex;
-  padding: 8px 16px;
+  padding: 8px 12px 8px 8px;
   justify-content: space-between;
   align-items: center;
   flex-shrink: 0;
-  border-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
   background: #f1f1f1;
   flex: 1;
-  border: none;
-  color: #9d9d9d;
+  border: 1.5px solid transparent;
+  color: #000000;
   font-family: Pretendard;
-  font-size: 12px;
+  font-size: 16px;
   font-style: normal;
-  font-weight: 400;
-  line-height: 16px;
+  font-weight: 600;
   letter-spacing: 0.5px;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #9D9D9D;
+    font-size: 12px;
+    font-weight: 400;
+  }
 `;
 
 export const recentSearchHeaderStyle = css`
@@ -120,11 +193,14 @@ export const searchButtonStyle = css`
   cursor: pointer;
 `;
 
-export const searchInputContainerStyle = css`
+export const searchInputContainerStyle = (isFocused: boolean) => css`
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
+  border-radius: 50px;
+  border: 1.5px solid ${isFocused ? "#FF084A" : "transparent"};
+  transition: border-color 0.3s ease;
 `;
 
 export const suggestionListStyle = css`
