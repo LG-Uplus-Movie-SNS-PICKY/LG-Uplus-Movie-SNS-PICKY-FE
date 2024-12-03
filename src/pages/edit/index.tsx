@@ -14,6 +14,7 @@ import {
   readonlyInputStyle,
   profileWrapper,
   saveButtonStyle,
+  buttonWrapper
 } from "./index.styles";
 
 export default function ProfileEditPage() {
@@ -131,9 +132,11 @@ export default function ProfileEditPage() {
           <input type="text" value="내국인" readOnly css={readonlyInputStyle} />
         </div>
       </div>
-      <button onClick={handleSave} css={saveButtonStyle}>
-        수정하기
-      </button>
+      <div css={buttonWrapper}>
+        <button onClick={handleSave} css={saveButtonStyle}>
+          수정하기
+        </button>
+      </div>
     </div>
   );
 }

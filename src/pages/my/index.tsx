@@ -17,8 +17,10 @@ import SettingsSvg from '@assets/icons/settings.svg?react'
 import defaultProfileImage from '@assets/images/default_profile.png';
 import LogoutModal from './components/logout-modal';
 import { Button } from '@stories/button';
+import { useNavigate } from 'react-router-dom';
 
 function My() {
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isFollowing, setIsFollowing] = useState(false);
     
@@ -41,7 +43,7 @@ function My() {
 
     const [followersCount, setFollowersCount] = useState(dummyData.followers.length);
 
-    const currentUserId = 2; // 현재 로그인한 사용자 ID (예시)
+    const currentUserId = 1; // 현재 로그인한 사용자 ID (예시)
     const isCurrentUser = dummyData.id === currentUserId;
 
     const toggleModal = () => {
@@ -61,6 +63,10 @@ function My() {
             setFollowersCount((prev) => prev + 1);
         }
         setIsFollowing((prev) => !prev);
+    };
+    
+    const handleEditClick = () => {
+        navigate('/user-profile/edit');
     };
 
     return (
@@ -97,7 +103,7 @@ function My() {
             { /* 프로필 편집 or 팔로우/팔로잉 버튼 */ }
             <ButtonContainer>
                 {isCurrentUser ? (
-                    <EditButton>프로필 편집</EditButton>
+                    <EditButton onClick={handleEditClick}>프로필 편집</EditButton>
                 ) : (
                     <Button
                         btnType="Social"
