@@ -19,6 +19,8 @@ import Edit from "@pages/edit";
 import Callback from "@pages/login/oauth";
 import Post from "@pages/social/post";
 import { HelmetProvider } from "react-helmet-async";
+import PickyPage from "@pages/picky/main";
+import PickyGenreDetailPage from "@pages/picky/genre-detail";
 
 function Router() {
   return (
@@ -46,6 +48,14 @@ function Router() {
             <Route path="/movie-log" element={<Feed />} />
             <Route path="/add-feed" element={<Post />} />
             <Route path="/comment" element={<Comment />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/picky" element={<PickyPage />} />
+            <Route
+              path="/picky/genre/:genreId"
+              element={<PickyGenreDetailPage />}
+            />
+
+            {/* 관리자 전용 라우트 */}
             <Route path="/admin/*" element={<AdminLayout />} />
           </Routes>
         </Layout>

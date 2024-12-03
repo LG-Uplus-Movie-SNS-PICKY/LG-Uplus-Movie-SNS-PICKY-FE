@@ -7,8 +7,15 @@ interface EmojiProps {
   height?: string;
 }
 
-const Emoji: React.FC<EmojiProps> = ({ src, alt, width = "12px", height = "12px" }) => {
-  return <img src={src} alt={alt} style={{ width, height }} />;
+const Emoji: React.FC<EmojiProps> = ({
+  src,
+  alt,
+  width = "12px",
+  height = "12px",
+}) => {
+  return (
+    <img src={src} alt={alt} style={{ width, height, marginRight: "4px" }} />
+  );
 };
 
 export default Emoji;
