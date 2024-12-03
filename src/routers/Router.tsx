@@ -15,6 +15,8 @@ import Layout from "@components/layout";
 import AdminLayout from "./AdminLayout";
 import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
+import Edit from "@pages/edit";
+import Callback from "@pages/login/oauth";
 import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
@@ -35,8 +37,13 @@ function Router() {
             {/* 로그인 사용자 라우트 */}
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/movie/:id/reviews" element={<MovieReviews />} />
+            <Route path="/login/oauth2/callback" element={<Callback/>} />
+            <Route path="/search" element={<Search />} />
+
+            {/* 관리자 전용 라우트 */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/user-profile/edit" element={<Edit />} />
             <Route path="/feed-list" element={<Feed />} />
             <Route path="/add-feed" element={<Post />} />
             <Route path="/comment" element={<Comment />} />
