@@ -124,3 +124,10 @@ export const saveButtonStyle = css`
   font-weight: 600;
   letter-spacing: -0.64px;
 `;
+
+export const buttonWrapper = css`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+`;

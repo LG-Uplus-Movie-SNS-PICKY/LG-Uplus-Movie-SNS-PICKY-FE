@@ -28,14 +28,14 @@ export default {
   // 버튼 Social Btn 스타일
   storybookButtonSocial(isActive: boolean, size: string): SerializedStyles {
     return css`
-      width: ${size === "Small" ? "45px" : "309px"};
+      width: ${size === "Small" ? "45px" : "100%"};
       padding: ${size === "Small" ? "2px 0" : "12px 0px"};
       font-size: ${size === "Small" ? "8px" : "14px"};
 
       border-radius: ${size === "Small" ? "4px" : "8px"};
 
-      background-color: ${isActive ? "#0095F6" : "#EFEFEF"};
-      color: ${isActive ? "#fff" : "#000"};
+      background-color: ${isActive ? "#EFEFEF" : "#0095F6"};
+      color: ${isActive ? "#000000" : "#FFFFFF"};
     `;
   },
 
