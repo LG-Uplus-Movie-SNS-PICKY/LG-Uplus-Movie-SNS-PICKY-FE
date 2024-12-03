@@ -27,9 +27,9 @@ export default {
   },
 
   // 버튼 Genre Round Tab 스타일
-  storybookGenreRound(isActive: boolean): SerializedStyles {
+  storybookGenreRound(isActive: boolean, padding?: string): SerializedStyles {
     return css`
-      padding: 8px 12px;
+      padding: ${padding ? padding : "8px 18px"};
       border-radius: 24px;
       border: ${isActive ? "2px solid #000000" : "2px solid #F1F1F1"};
       font-size: 12px;
@@ -37,5 +37,4 @@ export default {
       color: ${isActive ? "#ffffff" : "#7E7E7E"};
     `;
   },
-
 };

@@ -8,6 +8,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
+import { GenreTabButton } from "@stories/genre-tab";
+import { useNavigate } from "react-router-dom";
 
 // API로 호출된 장르 데이터 타입 정의
 interface GenreDataType {
@@ -16,6 +18,7 @@ interface GenreDataType {
 }
 
 function GenreTab() {
+  const navigate = useNavigate();
   const loadable = useRecoilValueLoadable(genresSelector);
 
   if (loadable.state === "loading") return <></>;
@@ -38,11 +41,13 @@ function GenreTab() {
       >
         {genres.map((genre: GenreDataType) => (
           <SwiperSlide key={genre.genre_id}>
-            <button key={genre.genre_id} css={styles.genreButton()}>
-              {/* genre_name 키는 GENRE_EMOJI 키에 존재한다는 타입 단언  */}
-              {GENRE_EMOJI[genre.genre_name as keyof typeof GENRE_EMOJI]}
-              <span>{genre.genre_name}</span>
-            </button>
+            <GenreTabButton
+              label={genre.genre_name}
+              emoji={genre.genre_name}
+              btnType="Round"
+              padding="8px 16px"
+              onClick={() => navigate(`/picky/genre/${genre.genre_id}`)}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import { GenreTab } from "./";
+import { GenreTabButton } from "./";
 
 const meta = {
-  title: "GlobalComponent/GenreTab", // title -> Storybook Directory
-  component: GenreTab, // Storybook props -> 컴포넌트 Props
+  title: "GlobalComponent/GenreTabButton", // title -> Storybook Directory
+  component: GenreTabButton, // Storybook props -> 컴포넌트 Props
   parameters: {
     layout: "centered",
   },
@@ -12,12 +12,12 @@ const meta = {
   argTypes: {
     backgroundColor: { control: "color" },
   },
-} satisfies Meta<typeof GenreTab>;
+} satisfies Meta<typeof GenreTabButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// GenreTab 컴포넌트의 스토리북(Storybook) 종류 선언
+// GenreTabButton 컴포넌트의 스토리북(Storybook) 종류 선언
 export const Rectangle: Story = {
   args: {
     primary: true,
