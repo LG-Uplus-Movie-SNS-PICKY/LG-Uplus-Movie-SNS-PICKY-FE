@@ -4,6 +4,7 @@ import { Flex as Wrapper } from "./index.styles";
 import { LayoutProps } from "./type";
 import { useLocation, useNavigate } from "react-router-dom";
 import GlobalNavigatorBar from "@components/navbar";
+import { useEffect } from "react";
 
 const isLoginTestValue = {
   state: true,
