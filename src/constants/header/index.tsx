@@ -49,10 +49,6 @@ const headerConfig: HeaderConfigType = {
     type: "main",
   }),
 
-  "/add-feed": () => ({
-    type: "main",
-  }),
-
   "/feed-list": () => ({
     type: "main",
   }),

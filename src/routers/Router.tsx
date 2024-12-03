@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Feed, Post, Comment } from "@pages";
+import { Feed, Comment } from "@pages";
 
 // 스타일 초기화를 위한 컴포넌트 및 스타일 import
 import { Global } from "@emotion/react";
@@ -17,6 +17,7 @@ import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import Edit from "@pages/edit";
 import Callback from "@pages/login/oauth";
+import Post from "@pages/social/post";
 import { HelmetProvider } from "react-helmet-async";
 
 function Router() {
@@ -35,14 +36,14 @@ function Router() {
             {/* 로그인 사용자 라우트 */}
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/movie/:id/reviews" element={<MovieReviews />} />
-            <Route path="/login/oauth2/callback" element={<Callback/>} />
+            <Route path="/login/oauth2/callback" element={<Callback />} />
             <Route path="/search" element={<Search />} />
 
             {/* 관리자 전용 라우트 */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/user-profile/edit" element={<Edit />} />
-            <Route path="/feed-list" element={<Feed />} />
+            <Route path="/movie-log" element={<Feed />} />
             <Route path="/add-feed" element={<Post />} />
             <Route path="/comment" element={<Comment />} />
             <Route path="/admin/*" element={<AdminLayout />} />

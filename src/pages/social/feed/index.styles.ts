@@ -100,12 +100,14 @@ export const reactionsSection = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    min-width: 60px;
     gap: 8px;
     color: #000;
     font-size: 16px;
     font-weight: 600;
     line-height: normal;
     letter-spacing: -0.64px;
+    cursor: pointer;
   }
 `;
 
@@ -126,12 +128,23 @@ export const modalOverlay = css`
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 1;
+  animation: fadeIn 0.3s ease-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 export const modalContent = css`
   position: absolute;
   bottom: 55px;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 0 0;
   background: #fff;
   width: 100%;
   padding: 16px;
@@ -140,6 +153,7 @@ export const modalContent = css`
   justify-content: center;
   gap: 0;
   max-width: 768px;
+  animation: slideUp 0.3s ease-out;
 
   button:first-of-type {
     border-radius: 10px 10px 0 0;
@@ -186,7 +200,8 @@ export const spoilerImageWrapper = css`
 export const blurredImage = css`
   filter: blur(5px);
   pointer-events: none;
-  width: 100%;
+  width: 360px;
+  height: auto;
 `;
 
 export const spoilerText = css`
@@ -207,11 +222,6 @@ export const spoilerText = css`
   border-radius: 12px;
 `;
 
-export const blank = css`
-  height: 50px;
-  color: #fff;
-`;
-
 export const blurredContent = css`
   filter: blur(10px);
   cursor: pointer;
@@ -220,15 +230,18 @@ export const blurredContent = css`
   padding: 16px;
   background: rgba(255, 255, 255, 0.8);
   pointer-events: none;
-  color: transparent;
   user-select: none;
 `;
 
-export const likeButton = css`
-  cursor: pointer;
-`;
-
-export const likeCount = css`
-  min-width: 30px;
-  text-align: center;
+export const slideUp = css`
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 `;

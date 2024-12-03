@@ -6,22 +6,15 @@ export const wrapper = css`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  padding: 0 16px;
-`;
-
-export const banner = css`
-  width: 100%;
-  height: 80px;
-  margin: 16px 0;
-  background: #000000;
 `;
 
 export const feedContainer = css`
   width: 100%;
-  padding: 16px 0;
+  padding: 16px 16px;
   border: none;
   border-top: 0.5px solid #d9d9d9;
   border-bottom: 0.5px solid #d9d9d9;
+  margin-bottom: 16px;
 `;
 
 export const feedItem = css`
@@ -62,11 +55,24 @@ export const movieTitle = css`
   letter-spacing: -0.48px;
 `;
 
-export const timeSection = css`
+export const CommentInfoSection = css`
+  display: flex;
   color: #c8c8c8;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 400;
   letter-spacing: -0.48px;
+  gap: 4px;
+  flex-direction: column;
+`;
+
+export const timeSection = css`
+  display: flex;
+  color: #c8c8c8;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: -0.48px;
+  gap: 4px;
+  flex-direction: column;
 `;
 
 export const contentSection = css`
@@ -103,6 +109,7 @@ export const reactionsSection = css`
     align-items: center;
     gap: 8px;
     color: #000;
+    min-width: 60px;
     font-size: 16px;
     font-weight: 600;
     line-height: normal;
@@ -127,12 +134,23 @@ export const modalOverlay = css`
   display: flex;
   justify-content: center;
   align-items: center;
+  opacity: 1;
+  animation: fadeIn 0.3s ease-out;
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 export const modalContent = css`
   position: absolute;
   bottom: 55px;
-  border-radius: 10px 10px 0px 0px;
+  border-radius: 10px 10px 0 0;
   background: #fff;
   width: 100%;
   padding: 16px;
@@ -141,6 +159,7 @@ export const modalContent = css`
   justify-content: center;
   gap: 0;
   max-width: 768px;
+  animation: slideUp 0.3s ease-out;
 
   button:first-of-type {
     border-radius: 10px 10px 0 0;
@@ -184,14 +203,9 @@ export const spoilerImageWrapper = css`
   }
 `;
 
-export const blank = css`
-  height: 50px;
-  color: #fff;
-`;
-
 export const commentSection = css`
   width: 100%;
-  padding: 16px 0;
+  padding: 0 16px 16px 32px;
 `;
 
 export const commentItem = css`
@@ -201,16 +215,13 @@ export const commentItem = css`
 
 export const commentProfileSection = css`
   display: flex;
-  align-items: center;
-  margin-bottom: 11px;
-  width: 100%; /* 가로폭을 100%로 설정 */
-  justify-content: space-between; /* 양쪽 끝에 배치 */
+  width: 100%;
+  justify-content: space-between;
 `;
 
 export const commentProfileDetails = css`
   display: flex;
-  align-items: center;
-  gap: 8px; /* 요소 간 간격 */
+  gap: 8px;
 `;
 
 export const commentTextSection = css`
@@ -223,16 +234,69 @@ export const commentTextSection = css`
   }
   p {
     color: #000;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 400;
-    letter-spacing: -0.64px;
-    margin-left: 48px;
+    letter-spacing: -0.48px;
   }
 `;
 
 export const commentTimeSection = css`
   color: #000;
-  font-size: 16px;
+  font-size: 10px;
   font-weight: 600;
-  letter-spacing: -0.64px;
+  letter-spacing: -0.4px;
+`;
+
+export const slideUp = css`
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+`;
+
+export const commentInputSection = css`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 768px;
+  border-radius: 8px 8px 0px 0px;
+  border-top: 1px solid #c8c8c8;
+  background: #fff;
+  padding: 20px 16px 12px 16px;
+`;
+
+export const inputWrapper = css`
+  position: relative;
+  flex: 1 0 0;
+
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    padding-right: 40px;
+    font-size: 14px;
+    outline: none;
+    border-radius: 50px;
+    border: 1px solid #d9d9d9;
+    background: #fff;
+  }
+`;
+
+export const registerImage = css`
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+`;
+
+export const commentBox = css`
+  display: flex;
+  gap: 4px;
 `;
