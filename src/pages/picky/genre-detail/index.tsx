@@ -30,38 +30,15 @@ function PickyGenreDetailPage() {
 
       <section css={styles.movies()}>
         <div>
-          {/* Movie Data Mapping */}
-          <div css={styles.movieCard()}>
-            <img src="https://image.tving.com/ntgs/contents/CTC/caim/CAIM1160/ko/20240920/0520/M000289333.jpg/dims/resize/F_webp,400" />
-            <span className="alt-text">asdsda</span>
-          </div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
-          <div css={styles.movieCard()}></div>
+          {Array.from({ length: 10 }, () => (
+            <>
+              {/* Movie Data Mapping */}
+              <div css={styles.movieCard()}>
+                <img src="https://image.tving.com/ntgs/contents/CTC/caim/CAIM1160/ko/20240920/0520/M000289333.jpg/dims/resize/F_webp,400" />
+                <span className="alt-text">asdsda</span>
+              </div>
+            </>
+          ))}
         </div>
       </section>
     </>
