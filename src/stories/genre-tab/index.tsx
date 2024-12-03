@@ -1,3 +1,5 @@
+import { GENRE_EMOJI } from "@constants/genre";
+
 import styles from "./index.styles";
 
 export interface GenreTabProps {
@@ -5,15 +7,19 @@ export interface GenreTabProps {
   backgroundColor?: string;
   btnType?: "Rectangle" | "Round";
   label: string; // 버튼의 텍스트
+  emoji?: string; // 버튼의 아이콘
+  padding?: string;
   onClick?: () => void;
 }
 
 /** Primary UI component for user interaction */
-export function GenreTab({
+export function GenreTabButton({
   primary = false,
   btnType = "Rectangle",
   backgroundColor,
   label,
+  emoji,
+  padding,
   ...props
 }: GenreTabProps) {
   const mode: boolean | null =
@@ -24,11 +30,14 @@ export function GenreTab({
       type="button"
       css={[
         styles.storybookButton(),
-        btnType === "Rectangle" ? styles.storybookGenreRectangle(mode) : styles.storybookGenreRound(mode),
+        btnType === "Rectangle"
+          ? styles.storybookGenreRectangle(mode)
+          : styles.storybookGenreRound(mode, padding),
       ]}
       style={{ backgroundColor }}
       {...props}
     >
+      {emoji && GENRE_EMOJI[emoji as keyof typeof GENRE_EMOJI]}
       {label}
     </button>
   );

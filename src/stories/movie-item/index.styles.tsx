@@ -8,10 +8,10 @@ export default {
       display: flex;
       flex-direction: column;
 
-      gap: 2px;
+      gap: 4px;
 
       .movie-title {
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 400;
       }
     `;
@@ -20,41 +20,47 @@ export default {
   movieItemThumbnail(isActive: boolean): SerializedStyles {
     return css`
       max-width: 90px;
+      max-height: 128px;
+      display: flex;
+
       overflow: hidden;
       border-radius: 4px;
       object-fit: cover;
       isolation: isolate;
 
       position: relative;
-      background-color: black;
+      /* background-color: black; */
 
       ${isActive &&
       `
-        &::before {
-        content: "";
+          &::before {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background-color: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(1.5px);
+          border-radius: 4px;
+          }
+
+          & > svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        `}
+
+      & > span {
         display: block;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(1.5px);
-        border-radius: 4px;
-      }
 
-      & > svg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      `}
-
-      img {
-        width: 100%;
-        display: block;
+        & img {
+          width: 100%;
+          display: block;
+        }
       }
     `;
   },

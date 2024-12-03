@@ -20,10 +20,7 @@ import {
   spoilerImageWrapper,
   blurredImage,
   spoilerText,
-  blank,
   blurredContent,
-  likeButton,
-  likeCount,
 } from "./index.styles";
 import Profile from "@assets/icons/profile.svg?react";
 import LikeFeed from "@assets/icons/like_feed.svg?react";
@@ -81,6 +78,7 @@ export default function SocialFeed() {
               css={showSpoiler ? undefined : blurredImage}
               src="https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
               alt="사진 1"
+              style={{ width: "360px" }}
             />
             {!showSpoiler && (
               <div css={spoilerText}>
@@ -92,11 +90,11 @@ export default function SocialFeed() {
 
         <div css={reactionsContainer}>
           <div css={reactionsSection}>
-            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
+            <span onClick={toggleLike}>
               {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
               {isLiked ? "101" : "100"}
             </span>
-            <span onClick={goToCommentPage} style={{ cursor: "pointer" }}>
+            <span onClick={goToCommentPage}>
               <CommentFeed />
               20
             </span>
@@ -119,32 +117,25 @@ export default function SocialFeed() {
           </div>
           <div css={timeSection}>4시간 전</div>
         </div>
-        <div css={[contentSection, !showSpoiler && blurredContent]}>
-          이 영화 정말 재미있었어요! 꼭 보세요! 👍
-        </div>
+        <div css={contentSection}>이 영화 정말 재미있었어요! 꼭 보세요! 👍</div>
 
         <div css={carouselSection}>
           <div css={spoilerImageWrapper} onClick={revealSpoiler}>
             <img
-              css={showSpoiler ? undefined : blurredImage}
               src="https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
               alt="사진 1"
+              style={{ width: "360px" }}
             />
-            {!showSpoiler && (
-              <div css={spoilerText}>
-                🚨스포주의🚨 <br /> <p>탭해서 보기</p>
-              </div>
-            )}
           </div>
         </div>
 
         <div css={reactionsContainer}>
           <div css={reactionsSection}>
-            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
+            <span onClick={toggleLike}>
               {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
               {isLiked ? "101" : "100"}
             </span>
-            <span onClick={goToCommentPage} style={{ cursor: "pointer" }}>
+            <span onClick={goToCommentPage}>
               <CommentFeed />
               20
             </span>
@@ -158,7 +149,6 @@ export default function SocialFeed() {
       {isModalOpen && (
         <div css={modalOverlay} onClick={toggleModal}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            <div css={blank}></div>
             <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
               욕설 신고
             </button>
