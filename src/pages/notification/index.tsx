@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./index.styles";
 import { Notification, notificationDummyData } from "./constants";
+import NotificationRander from "./components/notification-rander";
 
 interface GroupNotifications {
   today: Array<Notification>;
@@ -9,6 +10,7 @@ interface GroupNotifications {
   older: Array<Notification>;
 }
 
+// DB에서 가져온 알림의 날짜를 '오늘', '7일', '30일', '이후' 별로 나누는 함수
 function groupNotificationsByDate(
   notifications: Notification[]
 ): GroupNotifications {
@@ -35,86 +37,33 @@ function groupNotificationsByDate(
   );
 }
 
-const formatRelativeTime = (createdAt: string) => {
-  const now = new Date();
-  const createdDate = new Date(createdAt);
-  const diffInSeconds = Math.floor(
-    (now.getTime() - createdDate.getTime()) / 1000
-  ); // 초 단위 차이 계산
-  const diffInMinutes = Math.floor(diffInSeconds / 60);
-  const diffInHours = Math.floor(diffInMinutes / 60);
-  const diffInDays = Math.floor(diffInHours / 24);
-  const diffInWeeks = Math.floor(diffInDays / 7);
-
-  if (diffInSeconds < 60) {
-    return `${diffInSeconds}초`;
-  } else if (diffInMinutes < 60) {
-    return `${diffInMinutes}분`;
-  } else if (diffInHours < 24) {
-    return `${diffInHours}시간`;
-  } else if (diffInDays < 7) {
-    return `${diffInDays}일`;
-  } else if (diffInDays < 30) {
-    return `${diffInWeeks}주`;
-  } else {
-    return `${diffInWeeks}주`;
-  }
-};
-
 function NotificationPage() {
+  // 더미데이터로 알림 데이터를 가져왔지만 이후 API로 수정
   const groupedNotifications = groupNotificationsByDate(notificationDummyData);
-
-  // 날짜별 섹션 컴포넌트 구성
-  const renderNotifications = (title: string, section: Notification[]) => {
-    return (
-      <div css={styles.notificationContainer()}>
-        <h2 className="title">{title}</h2>
-        <ul>
-          {section.map((notif, index) => (
-            <li key={notif.id} css={styles.notificationCard()}>
-              <div className="req-user">
-                <div className="profile">
-                  <img
-                    src={notif.req_user_profile}
-                    alt={`${notif.req_user_nickname}-profile`}
-                  />
-                </div>
-
-                <p className="content">
-                  <span className="bold">{notif.req_user_nickname}</span>님이{" "}
-                  <span className="bold">
-                    {notif.req_user_movie.movie_tile}
-                  </span>
-                  에 새로운 게시물을 등록했습니다.
-                  <span className="date">
-                    {formatRelativeTime(notif.created_at)}
-                  </span>
-                </p>
-              </div>
-
-              <div className="movie-log-thumbnail">
-                <img
-                  src={notif.req_user_movie_log.movie_image}
-                  alt={`${notif.req_user_movie.movie_tile}-movie-log-${notif.req_user_movie_log.movie_log_id}`}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
 
   return (
     <>
-      {groupedNotifications.today.length > 0 &&
-        renderNotifications("오늘", groupedNotifications.today)}
-      {groupedNotifications.last7days.length > 0 &&
-        renderNotifications("최근 7일", groupedNotifications.last7days)}
-      {groupedNotifications.last30days.length > 0 &&
-        renderNotifications("최근 30일", groupedNotifications.last30days)}
-      {groupedNotifications.older.length > 0 &&
-        renderNotifications("이전활동", groupedNotifications.older)}
+      {groupedNotifications.today.length > 0 && (
+        <NotificationRander title="오늘" section={groupedNotifications.today} />
+      )}
+      {groupedNotifications.last7days.length > 0 && (
+        <NotificationRander
+          title="최근 7일"
+          section={groupedNotifications.last7days}
+        />
+      )}
+      {groupedNotifications.last30days.length > 0 && (
+        <NotificationRander
+          title="최근 30일"
+          section={groupedNotifications.last30days}
+        />
+      )}
+      {groupedNotifications.older.length > 0 && (
+        <NotificationRander
+          title="이전활동"
+          section={groupedNotifications.older}
+        />
+      )}
     </>
   );
 }
