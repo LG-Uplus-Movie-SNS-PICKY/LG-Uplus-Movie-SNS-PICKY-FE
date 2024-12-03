@@ -17,6 +17,7 @@ import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
+import PickyGenreDetailPage from "@pages/picky/genre-detail";
 
 function Router() {
   return (
@@ -41,6 +42,10 @@ function Router() {
             <Route path="/comment" element={<Comment />} />
             <Route path="/search" element={<Search />} />
             <Route path="/picky" element={<PickyPage />} />
+            <Route
+              path="/picky/genre/:genreId"
+              element={<PickyGenreDetailPage />}
+            />
 
             {/* 관리자 전용 라우트 */}
             <Route path="/admin/*" element={<AdminLayout />} />

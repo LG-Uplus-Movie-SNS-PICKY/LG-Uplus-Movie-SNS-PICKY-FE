@@ -5,7 +5,7 @@ import styles from "./index.styles";
 import { GENRE_EMOJI } from "@constants/genre";
 
 // API로 호출된 장르 데이터 타입 정의
-interface GenreDataType {
+export interface GenreDataType {
   genre_id: number;
   genre_name: string;
 }
