@@ -15,6 +15,7 @@ import Layout from "@components/layout";
 import AdminLayout from "./AdminLayout";
 import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
+import My from "@pages/my";
 import Recommendations from "@pages/recommendations";
 import Edit from "@pages/edit";
 import Callback from "@pages/login/oauth";
@@ -39,6 +40,8 @@ function Router() {
             {/* 로그인 사용자 라우트 */}
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/movie/:id/reviews" element={<MovieReviews />} />
+            <Route path="/my" element={<My />} />
+
             <Route path="/login/oauth2/callback" element={<Callback />} />
             <Route path="/search" element={<Search />} />
             <Route path="/recommendations" element={<Recommendations/>} />
