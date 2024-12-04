@@ -5,34 +5,50 @@ export default {
     return css`
       width: 100%;
       flex: 1;
+
+      /* display: flex;
+      flex-direction: column; */
     `;
   },
 
   tabMenu(): SerializedStyles {
     return css`
-      width: auto;
+      width: 100%;
       height: 60px;
-      background-color: red;
 
-      display: flex;
-      justify-content: space-around;
-      align-items: flex-end;
+      background-color: #fff;
+      z-index: 10;
 
+      border-bottom: 1px solid #eee;
+
+      // 특정 위치에 고정
       &.sticky {
-        position: fixed;
+        position: sticky;
 
-        top: 60px;
-        left: 16px;
-        right: 16px;
+        top: 0;
+        max-width: 722.37px;
 
         z-index: 10;
+      }
+
+      & > .swiper-wrapper > .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+        padding-bottom: 8px;
+
+        & > div {
+          cursor: pointer;
+        }
       }
     `;
   },
 
   tabMenuContent(): SerializedStyles {
     return css`
-      height: 1000px;
+      /* flex: 1; */
+      height: 2000px;
+      /* background-color: azure; */
     `;
   },
 };

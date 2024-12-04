@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { throttle } from "lodash";
+
+import FeedIcon from "@assets/icons/my-page/feed.svg?react";
+import ReviewIcon from "@assets/icons/my-page/review.svg?react";
+import LikeIcon from "@assets/icons/my-page/like.svg?react";
+
 import styles from "./index.styles";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,7 +18,9 @@ interface TabMenuProps {
 }
 
 function TabMenu({ wrapperRef }: TabMenuProps) {
+  const [activeTab, setActiveTab] = useState(0); // 활성화 된 Tab Menu
   const [isSticky, setIsSticky] = useState(false); // 고정 여부를 나타내는 상태 변수
+  const contentSwiperRef = useRef(null);
 
   useEffect(() => {
     const parentElement = wrapperRef.current;
@@ -49,11 +56,37 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
   return (
     <div css={styles.tabMenuContainer()}>
       {/* Tab Menus */}
-      <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
+      <Swiper
+        slidesPerView={3}
+        spaceBetween={0}
+        allowTouchMove={false}
+        css={styles.tabMenu()}
+        className={isSticky ? "sticky" : ""}
+        onSlideChange={(swiper) => console.log(swiper.activeIndex)}
+        onSwiper={(swiper) => swiper.slideTo(activeTab)}
+      >
+        <SwiperSlide>
+          <div>
+            <FeedIcon />
+          </div>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div>
+            <ReviewIcon />
+          </div>
+        </SwiperSlide>
+        <SwiperSlide>
+          <div>
+            <LikeIcon />
+          </div>
+        </SwiperSlide>
+      </Swiper>
+
+      {/* <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
         <span>Movie Log</span>
         <span>Line Review</span>
         <span>Like</span>
-      </div>
+      </div> */}
 
       {/* Content */}
       <div css={styles.tabMenuContent()}></div>
