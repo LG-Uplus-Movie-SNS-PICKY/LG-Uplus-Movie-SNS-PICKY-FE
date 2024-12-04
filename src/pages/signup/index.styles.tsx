@@ -201,20 +201,19 @@ export const slideContent = (step: number) => css`
 
 export const slideNext = css`
   transform: translateY(100%); /* 다음 단계가 아래에서 들어옴 */
-  /* transition: transform 0.3s ease-in-out; */
+  transition: transform 0.3s ease-in-out;
 `;
 
 export const slidePrev = css`
   transform: translateY(-100%); /* 이전 단계가 위에서 들어옴 */
-  /* transition: transform 0.3s ease-in-out; */
 `;
 
 export const slideIn = css`
   transform: translateY(0); /* 현재 단계가 중앙에 위치 */
-  /* transition: transform 0.3s ease-in-out; */
+  transition: transform 0.3s ease-in-out;
 `;
 
 export const slideOut = css`
   transform: translateY(100%); /* 현재 단계가 아래로 사라짐 */
-  /* transition: transform 0.3s ease-in-out; */
-`;
+  transition: transform 0.3s ease-in-out;
+// `;

@@ -6,12 +6,13 @@ export const wrapper = css`
   gap: 12px;
   max-width: 768px;
   width: 100%;
-  padding: 8px 0;
+  padding: 16px 16px;
   align-items: center;
 `;
 
 export const pageContainer = css`
   display: flex;
+  width: 100%;
   flex-direction: column;
   padding: 20px 20px;
   gap: 16px;
@@ -28,7 +29,7 @@ export const titleWrapper = css`
 export const titleContainer = css`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
 `;
 
@@ -74,7 +75,7 @@ export const requiredBadge = css`
 export const genreGrid = css`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 16px;
   justify-content: center;
 `;
 

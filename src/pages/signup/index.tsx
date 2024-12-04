@@ -31,14 +31,35 @@ export default function Signup() {
 
   const steps = [
     { components: [<InputUserName key="name" />], requiredFields: ["name"] },
-    { components: [<InputNickname key="nickname" />], requiredFields: ["nickname"] },
-    { components: [<InputBirthDate key="birthDate" />], requiredFields: ["birthDate"] },
+    {
+      components: [<InputNickname key="nickname" />],
+      requiredFields: ["nickname"],
+    },
+    {
+      components: [<InputBirthDate key="birthDate" />],
+      requiredFields: ["birthDate"],
+    },
     { components: [<InputGender key="gender" />], requiredFields: ["gender"] },
-    { components: [<InputNationality key="nationality" />], requiredFields: ["nationality"] },
-    { components: [<InputProfile key="profile" />], requiredFields: ["profileImage"] },
-    { components: [<InputFavoriteGenre key="favoriteGenres" />], requiredFields: ["favoriteGenres"] },
-    { components: [<InputFavoriteMovie key="favoriteMovie" />], requiredFields: ["favoriteMovie"] },
-    { components: [<InputConsentForm key="consent" />], requiredFields: ["consentAll", "consentAge"] },
+    {
+      components: [<InputNationality key="nationality" />],
+      requiredFields: ["nationality"],
+    },
+    {
+      components: [<InputProfile key="profile" />],
+      requiredFields: ["profileImage"],
+    },
+    {
+      components: [<InputFavoriteGenre key="favoriteGenres" />],
+      requiredFields: ["favoriteGenres"],
+    },
+    {
+      components: [<InputFavoriteMovie key="favoriteMovie" />],
+      requiredFields: ["favoriteMovie"],
+    },
+    {
+      components: [<InputConsentForm key="consent" />],
+      requiredFields: ["consentAll", "consentAge"],
+    },
   ];
 
   const isStepValid = () => {
@@ -138,7 +159,10 @@ export default function Signup() {
       <div css={slideWrapper}>
         <div css={slideContent(step)}>
           {steps.map((stepData, index) => (
-            <div key={index} style={{ width: "100%", height: "100%", alignContent: "center" }}>
+            <div
+              key={index}
+              style={{ width: "100%", height: "100%", alignContent: "center" }}
+            >
               {stepData.components}
             </div>
           ))}
