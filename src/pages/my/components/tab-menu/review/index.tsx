@@ -1,8 +1,28 @@
 import styles from "./index.styles";
 import EmptyReview from "@assets/icons/my-page/empty-review.svg?react";
 
+interface MovieTypes {
+  [key: string]: unknown;
+  movie_id: number;
+  movie_title: string;
+  movie_poster_src: string;
+}
+
+interface WriterTypes {
+  [key: string]: unknown;
+  writer_id: number;
+  writer_nickname: string;
+}
+
 export interface LineReviewData {
-  id: number;
+  [key: string]: unknown;
+  line_review_id: number;
+  line_review_rating: number;
+  line_review_content: string;
+  movie: MovieTypes;
+  line_review_like: number;
+  line_review_hate: number;
+  writer: WriterTypes;
 }
 
 interface LineReviewContentProps {
@@ -25,14 +45,17 @@ function LineReviewContent({ data }: LineReviewContentProps) {
       {data.length === 0 && <EmptyLineReview />}
       {data.length > 0 &&
         data.map((data, idx) => (
-          <div css={styles.reviewCard()}>
+          <div key={data.line_review_id} css={styles.reviewCard()}>
             {/* 영화 포스터 이미지 */}
-            <div>
-              <img src="" alt="" />
+            <div className="poster">
+              <img
+                src={data.movie.movie_poster_src}
+                alt={data.movie.movie_title}
+              />
             </div>
 
             {/* 리뷰 정보 */}
-            <div></div>
+            <div css={styles.reviewInfo()}></div>
 
             {/* 삭제 버튼 */}
           </div>
