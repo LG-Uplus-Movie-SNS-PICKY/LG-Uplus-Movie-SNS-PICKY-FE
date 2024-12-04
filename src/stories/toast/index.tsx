@@ -13,7 +13,12 @@ export function Toast({
 }: ToastProps) {
   const [style, setStyle] = useState({
     opacity: 1, 
-    transform: 'translate(-50%, -50%)'
+    transform:
+      direction === "up"
+        ? "translate(-50%, 0)"
+        : direction === "down"
+        ? "translate(-50%, 0)"
+        : "translate(-50%, -50%)",
   });
 
   useEffect(() => {

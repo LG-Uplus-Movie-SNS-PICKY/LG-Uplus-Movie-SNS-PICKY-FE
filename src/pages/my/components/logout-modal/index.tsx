@@ -7,6 +7,7 @@ import {
     ModalItem,
     ModalBackground
 } from './index.styles';
+import { Toast } from '@stories/toast'
 
 interface LogoutModalProps {
     onClose: () => void;
@@ -15,17 +16,26 @@ interface LogoutModalProps {
 function LogoutModal({ onClose }: LogoutModalProps) {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState<string>('');
+    const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
+
+    const showToast = (message: string, direction: 'none' | 'up' | 'down'): Promise<void> => {
+        return new Promise((resolve) => {
+            setToast({ message, direction });
+            setTimeout(() => {
+                setToast(null);
+                resolve();
+            }, 1500);
+        });
+    };
 
     const handleLogoutClick = () => {
         setModalMessage('로그아웃하시겠습니까?');
         setIsConfirmModalOpen(true);
     };
 
-    const handleConfirmLogout = () => {
-        console.log('로그아웃 완료');
-        alert('로그아웃이 완료되었습니다.');
-        setIsConfirmModalOpen(false);
-        onClose();
+    const handleConfirmLogout = async () => {
+        await showToast('로그아웃이 완료되었습니다.', 'up');
+        window.location.reload();
     };
 
     const handleCancelMembershipClick = () => {
@@ -33,12 +43,11 @@ function LogoutModal({ onClose }: LogoutModalProps) {
         setIsConfirmModalOpen(true);
     };
 
-    const handleConfirmCancelMembership = () => {
-        console.log('회원탈퇴 완료');
-        alert('회원탈퇴가 완료되었습니다.');
-        setIsConfirmModalOpen(false);
-        onClose();
+    const handleConfirmCancelMembership = async () => {
+        await showToast('회원탈퇴가 완료되었습니다.', 'up');
+        window.location.reload();
     };
+
 
     const handleCancel = () => {
         setIsConfirmModalOpen(false);
@@ -56,7 +65,7 @@ function LogoutModal({ onClose }: LogoutModalProps) {
 
             {/* 확인 모달 */}
             {isConfirmModalOpen && (
-                <ModalBackground onClick={onClose}>
+                <ModalBackground onClick={() => setIsConfirmModalOpen(false)}>
                     <Modal
                         message={modalMessage}
                         confirmText={modalMessage === '로그아웃하시겠습니까?' ? '로그아웃' : '회원탈퇴'}
@@ -66,6 +75,9 @@ function LogoutModal({ onClose }: LogoutModalProps) {
                     />
                 </ModalBackground>
             )}
+
+            {/* Toast 메시지 */}
+            {toast && <Toast message={toast.message} direction={toast.direction} />}
         </>
     );
 }

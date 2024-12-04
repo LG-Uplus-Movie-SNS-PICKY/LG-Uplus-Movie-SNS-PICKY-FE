@@ -21,6 +21,7 @@ import LogoutModal from './components/logout-modal';
 import FollowersModal from './components/followers-modal';
 import { Button } from '@stories/button';
 import { useNavigate } from 'react-router-dom';
+import { Toast } from '@stories/toast';
 
 function My() {
     const navigate = useNavigate();
@@ -61,10 +62,8 @@ function My() {
 
     const handleFollowClick = () => {
         if (isFollowing) {
-            alert('팔로우 취소');
             setFollowersCount((prev) => prev - 1);
         } else {
-            alert('팔로우 완료');
             setFollowersCount((prev) => prev + 1);
         }
         setIsFollowing((prev) => !prev);
