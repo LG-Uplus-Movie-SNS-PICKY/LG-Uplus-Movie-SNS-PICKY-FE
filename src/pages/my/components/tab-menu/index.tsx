@@ -7,8 +7,8 @@ import LikeIcon from "@assets/icons/my-page/like.svg?react";
 
 import styles from "./index.styles";
 
-import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel } from "swiper/modules";
+import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel, Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -18,9 +18,11 @@ interface TabMenuProps {
 }
 
 function TabMenu({ wrapperRef }: TabMenuProps) {
-  const [activeTab, setActiveTab] = useState(0); // 활성화 된 Tab Menu
+  const [activeBtn, setActiveBtn] = useState(0);
   const [isSticky, setIsSticky] = useState(false); // 고정 여부를 나타내는 상태 변수
-  const contentSwiperRef = useRef(null);
+
+  const tabFirstBtnRef = useRef<HTMLDivElement | null>(null);
+  const lineRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const parentElement = wrapperRef.current;
@@ -51,45 +53,90 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
     return () => {
       parentElement.removeEventListener("scroll", handleScroll);
     };
-  }, [wrapperRef]);
+  }, []);
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    idx: number
+  ) => {
+    setActiveBtn(idx);
+
+    if (lineRef.current) {
+      lineRef.current.style.width = event.currentTarget.offsetWidth + "px";
+      lineRef.current.style.left = event.currentTarget.offsetLeft + "px";
+    }
+  };
+
+  useEffect(() => {
+    if (tabFirstBtnRef.current && lineRef.current) {
+      lineRef.current.style.width = tabFirstBtnRef.current.offsetWidth + "px";
+      lineRef.current.style.left = tabFirstBtnRef.current.offsetLeft + "px";
+    }
+  }, []);
 
   return (
     <div css={styles.tabMenuContainer()}>
       {/* Tab Menus */}
-      <Swiper
+      <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
+        {Array.from({ length: 3 }, (_, idx) => (
+          <div
+            ref={idx === 0 ? tabFirstBtnRef : null}
+            key={idx}
+            className={`tab-btn ${activeBtn === idx ? "active" : ""}`}
+            onClick={(event) => handleClick(event, idx)}
+          >
+            {idx === 0 && <FeedIcon />}
+            {idx === 1 && <ReviewIcon />}
+            {idx === 2 && <LikeIcon />}
+          </div>
+        ))}
+
+        <div ref={lineRef} className="line" />
+      </div>
+
+      {/* <Swiper
+        ref={tabMenuRef}
         slidesPerView={3}
         spaceBetween={0}
         allowTouchMove={false}
         css={styles.tabMenu()}
         className={isSticky ? "sticky" : ""}
-        onSlideChange={(swiper) => console.log(swiper.activeIndex)}
+        onSlideChange={(swiper) => setActiveTab(swiper.activeIndex)}
         onSwiper={(swiper) => swiper.slideTo(activeTab)}
       >
-        <SwiperSlide>
-          <div>
-            <FeedIcon />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div>
-            <ReviewIcon />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div>
-            <LikeIcon />
-          </div>
-        </SwiperSlide>
-      </Swiper>
+        {Array.from({ length: 3 }, (_, idx) => (
+          <SwiperSlide key={idx}>
+            <div onClick={() => handleTabClick(idx)}>
+              {idx === 0 && <FeedIcon />}
+              {idx === 1 && <ReviewIcon />}
+              {idx === 2 && <LikeIcon />}
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper> */}
 
-      {/* <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
-        <span>Movie Log</span>
-        <span>Line Review</span>
-        <span>Like</span>
-      </div> */}
+      {/* Swiper - Content Section */}
+      {/* <Swiper
+        ref={contentSwiperRef}
+        onSlideChange={(swiper) => setActiveTab(swiper.activeIndex)}
+        slidesPerView={1}
+        modules={[Navigation]}
+        css={styles.tabMenuContent()}
+      >
+        <div css={styles.moveBoard()} />
 
-      {/* Content */}
-      <div css={styles.tabMenuContent()}></div>
+        <SwiperSlide>
+          <div>Movie Log Content</div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div>Line Review Content</div>
+        </SwiperSlide>
+
+        <SwiperSlide>
+          <div>Like Content</div>
+        </SwiperSlide>
+      </Swiper> */}
     </div>
   );
 }

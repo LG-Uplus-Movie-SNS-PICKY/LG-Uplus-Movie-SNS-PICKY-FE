@@ -6,15 +6,22 @@ export default {
       width: 100%;
       flex: 1;
 
-      /* display: flex;
-      flex-direction: column; */
+      display: flex;
+      flex-direction: column;
     `;
   },
 
   tabMenu(): SerializedStyles {
     return css`
+      position: relative;
+
       width: 100%;
       height: 60px;
+
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      padding-bottom: 8px;
 
       background-color: #fff;
       z-index: 10;
@@ -31,24 +38,55 @@ export default {
         z-index: 10;
       }
 
-      & > .swiper-wrapper > .swiper-slide {
+      /* Tab Button Styles */
+      & > .tab-btn {
+        cursor: pointer;
+
+        display: flex;
+
+        width: 48px;
+        height: 48px;
+
         display: flex;
         justify-content: center;
         align-items: flex-end;
-        padding-bottom: 8px;
 
-        & > div {
-          cursor: pointer;
+        &.active svg path {
+          fill: #191919;
         }
+      }
+
+      /* Tab Active Button Line Position */
+      & > .line {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 48px;
+        height: 2px;
+        background-color: #191919;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
       }
     `;
   },
 
   tabMenuContent(): SerializedStyles {
     return css`
-      /* flex: 1; */
-      height: 2000px;
-      /* background-color: azure; */
+      width: 100%;
+      flex: 1;
+      /* height: 2000px; */
+      background-color: azure;
+    `;
+  },
+
+  moveBoard(): SerializedStyles {
+    return css`
+      position: absolute;
+      top: 0;
+      width: 48px;
+      height: 2px;
+      background-color: black;
+      transition: "left 0.3s ease"; // 부드러운 이동 애니메이션
     `;
   },
 };
