@@ -21,7 +21,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
   const [activeBtn, setActiveBtn] = useState(0);
   const [isSticky, setIsSticky] = useState(false); // 고정 여부를 나타내는 상태 변수
 
-  const tabFirstBtnRef = useRef<HTMLDivElement | null>(null);
+  const tabBtnRefs = useRef<HTMLDivElement[]>([]);
   const lineRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -68,9 +68,11 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
   };
 
   useEffect(() => {
-    if (tabFirstBtnRef.current && lineRef.current) {
-      lineRef.current.style.width = tabFirstBtnRef.current.offsetWidth + "px";
-      lineRef.current.style.left = tabFirstBtnRef.current.offsetLeft + "px";
+    if (tabBtnRefs.current && lineRef.current) {
+      lineRef.current.style.width =
+        tabBtnRefs.current[activeBtn].offsetWidth + "px";
+      lineRef.current.style.left =
+        tabBtnRefs.current[activeBtn].offsetLeft + "px";
     }
   }, []);
 
@@ -80,7 +82,9 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
       <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
         {Array.from({ length: 3 }, (_, idx) => (
           <div
-            ref={idx === 0 ? tabFirstBtnRef : null}
+            ref={(element) => {
+              if (element) tabBtnRefs.current[idx] = element; // 각 버튼을 배열로 저장
+            }}
             key={idx}
             className={`tab-btn ${activeBtn === idx ? "active" : ""}`}
             onClick={(event) => handleClick(event, idx)}
@@ -93,27 +97,6 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
 
         <div ref={lineRef} className="line" />
       </div>
-
-      {/* <Swiper
-        ref={tabMenuRef}
-        slidesPerView={3}
-        spaceBetween={0}
-        allowTouchMove={false}
-        css={styles.tabMenu()}
-        className={isSticky ? "sticky" : ""}
-        onSlideChange={(swiper) => setActiveTab(swiper.activeIndex)}
-        onSwiper={(swiper) => swiper.slideTo(activeTab)}
-      >
-        {Array.from({ length: 3 }, (_, idx) => (
-          <SwiperSlide key={idx}>
-            <div onClick={() => handleTabClick(idx)}>
-              {idx === 0 && <FeedIcon />}
-              {idx === 1 && <ReviewIcon />}
-              {idx === 2 && <LikeIcon />}
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper> */}
 
       {/* Swiper - Content Section */}
       {/* <Swiper

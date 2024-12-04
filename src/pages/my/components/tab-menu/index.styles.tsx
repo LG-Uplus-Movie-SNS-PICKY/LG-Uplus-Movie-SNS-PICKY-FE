@@ -21,7 +21,6 @@ export default {
       display: flex;
       justify-content: space-around;
       align-items: flex-end;
-      padding-bottom: 8px;
 
       background-color: #fff;
       z-index: 10;
@@ -49,7 +48,7 @@ export default {
 
         display: flex;
         justify-content: center;
-        align-items: flex-end;
+        align-items: center;
 
         &.active svg path {
           fill: #191919;
