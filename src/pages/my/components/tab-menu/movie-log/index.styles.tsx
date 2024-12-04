@@ -13,6 +13,18 @@ export default {
       gap: 3px;
       height: 100%;
 
+      &.centered {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        gap: 12px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #191919;
+      }
+
       & > .movie-log {
         width: 100%;
         height: 100%;
