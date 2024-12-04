@@ -36,20 +36,19 @@ function My() {
         nickname: 'Nick Name',
         role: 'critic',
         followers: [
-            { id: 1, name: 'User1', profileImage: 'https://via.placeholder.com/50' },
-            { id: 2, name: 'User2', profileImage: 'https://via.placeholder.com/50' },
-            // ... 추가
+            { id: 1, name: 'Follower1', profileImage: 'https://via.placeholder.com/50' },
+            { id: 2, name: 'Follower2', profileImage: 'https://via.placeholder.com/50' },
         ],
         followings: [
-            { id: 1, name: 'User3', profileImage: 'https://via.placeholder.com/50' },
-            { id: 2, name: 'User4', profileImage: 'https://via.placeholder.com/50' },
-            // ... 추가
+            { id: 1, name: 'Following1', profileImage: 'https://via.placeholder.com/50' },
+            { id: 2, name: 'Following2', profileImage: 'https://via.placeholder.com/50' },
+            { id: 3, name: 'Following3', profileImage: 'https://via.placeholder.com/50' },
         ]
     };
 
     const [followersCount, setFollowersCount] = useState(dummyData.followers.length);
 
-    const currentUserId = 1; // 현재 로그인한 사용자 ID (예시)
+    const currentUserId = 2; // 현재 로그인한 사용자 ID (예시)
     const isCurrentUser = dummyData.id === currentUserId;
 
     const toggleModal = () => {
