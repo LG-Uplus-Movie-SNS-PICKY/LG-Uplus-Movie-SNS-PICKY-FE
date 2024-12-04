@@ -68,14 +68,18 @@ export const GrayText = styled.span`
     color: #9D9D9D;
 `;
 
-export const NickName = styled.div`
+export const NickNameContainer = styled.div`
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+`;
+
+export const NickName = styled.span`
     font-size: 16px;
     font-weight: 600;
     color: #000000;
-    width: 100%;
-    text-align: left;
-    justify-content: flex-start;
-    align-items: center;
 `;
 
 export const ButtonContainer = styled.div`
