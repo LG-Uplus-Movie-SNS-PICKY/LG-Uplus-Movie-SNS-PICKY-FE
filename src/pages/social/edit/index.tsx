@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState } from "react";
 import profileIcon from "@assets/icons/profile.svg";
 import {
@@ -14,7 +13,7 @@ import {
   readonlyInputStyle,
   profileWrapper,
   saveButtonStyle,
-  buttonWrapper
+  buttonWrapper,
 } from "./index.styles";
 
 export default function ProfileEditPage() {
