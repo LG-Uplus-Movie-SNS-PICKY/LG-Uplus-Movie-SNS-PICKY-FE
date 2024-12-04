@@ -6,8 +6,9 @@ export const wrapper = css`
   gap: 12px;
   max-width: 768px;
   width: 100%;
-  padding: 16px 16px;
+  padding: 16px 24px;
   align-items: center;
+  box-sizing: border-box;
 `;
 
 export const pageContainer = css`
@@ -72,28 +73,45 @@ export const requiredBadge = css`
   line-height: normal;
 `;
 
+// export const genreGrid = css`
+//   display: flex;
+//   flex-wrap: wrap;
+//   gap: 16px;
+//   justify-content: center;
+// `;
+
+// export const genreGrid = css`
+//   display: grid;
+//   gap: 8px; /* 버튼 간격 및 줄 사이 간격 */
+//   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* 반응형 설정 */
+//   justify-items: center;
+//   width: 100%;
+//   box-sizing: border-box;
+// `;
+
 export const genreGrid = css`
   display: flex;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: 16px;
   justify-content: center;
+  width: 100%;
 `;
 
 export const genreButton = ($isSelected: boolean) => css`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 8px;
-  border: ${$isSelected ? "1px solid #000000" : "0.5px solid #f1f1f1"};
+  padding: 8px 12px;
+  border: ${$isSelected ? "0.5px solid #000000" : "0.5px solid #f1f1f1"};
   border-radius: 4px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
   background-color: ${$isSelected ? "#000000" : "#ffffff"};
   color: ${$isSelected ? "#ffffff" : "#5e5e5e"};
-  font-style: normal;
   font-weight: 400;
-  line-height: normal;
-  letter-spacing: -0.48px;
-  font-size: ${$isSelected ? "13px" : "12px"};
+  font-size: ${$isSelected ? "12px" : "12px"};
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  white-space: nowrap;
+  box-sizing: border-box;
+  margin: 0;
 `;
