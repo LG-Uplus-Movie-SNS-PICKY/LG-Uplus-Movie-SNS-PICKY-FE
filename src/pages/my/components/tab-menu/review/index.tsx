@@ -34,7 +34,7 @@ interface LineReviewContentProps {
   data: LineReviewData[];
 }
 
-// 사용자가 게시글을 하나도 등록하지 않았을 경우
+// 사용자가 한줄평을 하나도 등록하지 않았을 경우
 function EmptyLineReview() {
   return (
     <>
