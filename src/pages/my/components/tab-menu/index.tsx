@@ -106,6 +106,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         writer_id: 1,
         writer_nickname: "PICKY",
       },
+      created_at: "2024-12-04 00:43:38",
     },
     {
       line_review_id: 2,
@@ -123,6 +124,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         writer_id: 1,
         writer_nickname: "PICKY",
       },
+      created_at: "2024-12-04 00:43:38",
     },
     {
       line_review_id: 3,
@@ -140,6 +142,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         writer_id: 1,
         writer_nickname: "PICKY",
       },
+      created_at: "2024-12-04 00:43:38",
     },
     {
       line_review_id: 4,
@@ -157,6 +160,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         writer_id: 1,
         writer_nickname: "PICKY",
       },
+      created_at: "2024-12-04 00:43:38",
     },
   ];
 
