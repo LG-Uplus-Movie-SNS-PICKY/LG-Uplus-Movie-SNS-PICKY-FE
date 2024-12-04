@@ -18,11 +18,12 @@ interface TabMenuProps {
 }
 
 function TabMenu({ wrapperRef }: TabMenuProps) {
-  const [activeBtn, setActiveBtn] = useState(0);
+  const [activeTab, setActiveTab] = useState(0);
   const [isSticky, setIsSticky] = useState(false); // 고정 여부를 나타내는 상태 변수
 
   const tabBtnRefs = useRef<HTMLDivElement[]>([]);
   const lineRef = useRef<HTMLDivElement | null>(null);
+  const swiperRef = useRef<SwiperClass | null>(null);
 
   useEffect(() => {
     const parentElement = wrapperRef.current;
@@ -59,20 +60,30 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     idx: number
   ) => {
-    setActiveBtn(idx);
+    setActiveTab(idx);
 
-    if (lineRef.current) {
+    if (lineRef.current && swiperRef.current) {
       lineRef.current.style.width = event.currentTarget.offsetWidth + "px";
       lineRef.current.style.left = event.currentTarget.offsetLeft + "px";
+      swiperRef.current.slideTo(idx);
+    }
+  };
+
+  const handleSlide = (idx: number) => {
+    setActiveTab(idx);
+
+    if (lineRef.current) {
+      lineRef.current.style.width = tabBtnRefs.current[idx].offsetWidth + "px";
+      lineRef.current.style.left = tabBtnRefs.current[idx].offsetLeft + "px";
     }
   };
 
   useEffect(() => {
     if (tabBtnRefs.current && lineRef.current) {
       lineRef.current.style.width =
-        tabBtnRefs.current[activeBtn].offsetWidth + "px";
+        tabBtnRefs.current[activeTab].offsetWidth + "px";
       lineRef.current.style.left =
-        tabBtnRefs.current[activeBtn].offsetLeft + "px";
+        tabBtnRefs.current[activeTab].offsetLeft + "px";
     }
   }, []);
 
@@ -86,7 +97,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
               if (element) tabBtnRefs.current[idx] = element; // 각 버튼을 배열로 저장
             }}
             key={idx}
-            className={`tab-btn ${activeBtn === idx ? "active" : ""}`}
+            className={`tab-btn ${activeTab === idx ? "active" : ""}`}
             onClick={(event) => handleClick(event, idx)}
           >
             {idx === 0 && <FeedIcon />}
@@ -99,27 +110,34 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
       </div>
 
       {/* Swiper - Content Section */}
-      {/* <Swiper
-        ref={contentSwiperRef}
-        onSlideChange={(swiper) => setActiveTab(swiper.activeIndex)}
+      <Swiper
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        onSlideChange={(swiper) => handleSlide(swiper.activeIndex)}
         slidesPerView={1}
         modules={[Navigation]}
         css={styles.tabMenuContent()}
       >
-        <div css={styles.moveBoard()} />
+        {Array.from({ length: 3 }, (_, idx) => (
+          <SwiperSlide key={idx}>
+            {idx === 0 && <div>Movie Log Content</div>}
+            {idx === 1 && <div>Line Review Content</div>}
+            {idx === 2 && <div>Like Content</div>}
+          </SwiperSlide>
 
-        <SwiperSlide>
-          <div>Movie Log Content</div>
-        </SwiperSlide>
+          // <div
+          //   // ref={(element) => {
+          //   //   if (element) tabBtnRefs.current[idx] = element; // 각 버튼을 배열로 저장
+          //   // }}
+          //   key={idx}
+          //   // className={`tab-btn ${activeTab === idx ? "active" : ""}`}
+          //   // onClick={(event) => handleClick(event, idx)}
+          // >
 
-        <SwiperSlide>
-          <div>Line Review Content</div>
-        </SwiperSlide>
-
-        <SwiperSlide>
-          <div>Like Content</div>
-        </SwiperSlide>
-      </Swiper> */}
+          //   {idx === 1 && <ReviewIcon />}
+          //   {idx === 2 && <LikeIcon />}
+          // </div>
+        ))}
+      </Swiper>
     </div>
   );
 }
