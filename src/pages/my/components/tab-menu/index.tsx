@@ -14,7 +14,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import MovieLogContnent from "./movie-log";
 import LineReviewContent, { LineReviewData } from "./review";
-import LikeMovieContent from "./like-movie";
+import LikeMovieContent, { LikeMovieData } from "./like-movie";
 
 interface TabMenuProps {
   wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -89,6 +89,45 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         tabBtnRefs.current[activeTab].offsetLeft + "px";
     }
   }, []);
+
+  const likeMovies: LikeMovieData[] = [
+    {
+      movie_id: 1,
+      movie_poster_url:
+        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
+      movie_title: "타이타닉",
+    },
+    {
+      movie_id: 2,
+      movie_poster_url:
+        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
+      movie_title: "타이타닉",
+    },
+    {
+      movie_id: 3,
+      movie_poster_url:
+        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
+      movie_title: "타이타닉",
+    },
+    {
+      movie_id: 4,
+      movie_poster_url:
+        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
+      movie_title: "타이타닉",
+    },
+    {
+      movie_id: 5,
+      movie_poster_url:
+        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
+      movie_title: "타이타닉",
+    },
+    {
+      movie_id: 6,
+      movie_poster_url:
+        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
+      movie_title: "타이타닉",
+    },
+  ];
 
   const reviews: LineReviewData[] = [
     {
@@ -197,9 +236,9 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
       >
         {Array.from({ length: 3 }, (_, idx) => (
           <SwiperSlide key={idx}>
-            {idx === 0 && <MovieLogContnent data={[]} />}
+            {idx === 0 && <MovieLogContnent data={Array.from({ length: 4 })} />}
             {idx === 1 && <LineReviewContent data={reviews} />}
-            {idx === 2 && <LikeMovieContent data={[]} />}
+            {idx === 2 && <LikeMovieContent data={likeMovies} />}
           </SwiperSlide>
 
           // <div
