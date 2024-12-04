@@ -17,7 +17,7 @@ function LogoutModal({ onClose }: LogoutModalProps) {
     const [modalMessage, setModalMessage] = useState<string>('');
 
     const handleLogoutClick = () => {
-        setModalMessage('로그아웃하시겠어요?');
+        setModalMessage('로그아웃하시겠습니까?');
         setIsConfirmModalOpen(true);
     };
 
@@ -29,7 +29,7 @@ function LogoutModal({ onClose }: LogoutModalProps) {
     };
 
     const handleCancelMembershipClick = () => {
-        setModalMessage('회원탈퇴하시겠어요?');
+        setModalMessage('회원탈퇴하시겠습니까?');
         setIsConfirmModalOpen(true);
     };
 
@@ -59,9 +59,9 @@ function LogoutModal({ onClose }: LogoutModalProps) {
                 <ModalBackground onClick={onClose}>
                     <Modal
                         message={modalMessage}
-                        confirmText={modalMessage === '로그아웃하시겠어요?' ? '로그아웃' : '회원탈퇴'}
+                        confirmText={modalMessage === '로그아웃하시겠습니까?' ? '로그아웃' : '회원탈퇴'}
                         cancelText="취소"
-                        onConfirm={modalMessage === '로그아웃하시겠어요?' ? handleConfirmLogout : handleConfirmCancelMembership}
+                        onConfirm={modalMessage === '로그아웃하시겠습니까?' ? handleConfirmLogout : handleConfirmCancelMembership}
                         onCancel={handleCancel}
                     />
                 </ModalBackground>
