@@ -21,7 +21,7 @@ function EmptyMovieLog() {
 
 function MovieLogContnent({ data }: MovieLogContentProps) {
   return (
-    <div css={styles.container()} className={data?.length ? "" : "centered"}>
+    <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyMovieLog />}
       {data.length > 0 &&
         data.map((element) => <div className="movie-log"></div>)}

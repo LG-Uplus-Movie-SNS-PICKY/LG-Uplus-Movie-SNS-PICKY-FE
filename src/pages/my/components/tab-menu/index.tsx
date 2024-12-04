@@ -13,6 +13,7 @@ import { FreeMode, Mousewheel, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import MovieLogContnent from "./movie-log";
+import LineReviewContent from "./review";
 
 interface TabMenuProps {
   wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -120,8 +121,8 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
       >
         {Array.from({ length: 3 }, (_, idx) => (
           <SwiperSlide key={idx}>
-            {idx === 0 && <MovieLogContnent data={Array.from({ length: 4 })} />}
-            {idx === 1 && <div>Line Review Content</div>}
+            {idx === 0 && <MovieLogContnent data={[]} />}
+            {idx === 1 && <LineReviewContent data={[]} />}
             {idx === 2 && <div>Like Content</div>}
           </SwiperSlide>
 
