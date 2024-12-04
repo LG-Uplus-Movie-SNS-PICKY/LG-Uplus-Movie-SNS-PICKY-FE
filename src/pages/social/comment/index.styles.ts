@@ -180,6 +180,7 @@ export const modalContent = css`
     font-size: 16px;
     font-weight: 400;
     letter-spacing: -0.64px;
+    gap: 12px;
   }
 `;
 
@@ -205,7 +206,7 @@ export const spoilerImageWrapper = css`
 
 export const commentSection = css`
   width: 100%;
-  padding: 0 16px 16px 32px;
+  padding: 0 16px 0 32px;
 `;
 
 export const commentItem = css`
@@ -217,6 +218,7 @@ export const commentProfileSection = css`
   display: flex;
   width: 100%;
   justify-content: space-between;
+  padding: 0 0 16px 0;
 `;
 
 export const commentProfileDetails = css`

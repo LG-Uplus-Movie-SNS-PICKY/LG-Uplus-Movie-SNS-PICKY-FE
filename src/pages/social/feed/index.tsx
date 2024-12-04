@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // useNavigate import
+import { useNavigate } from "react-router-dom";
 import {
   banner,
   feedContainer,
@@ -27,13 +27,19 @@ import LikeFeed from "@assets/icons/like_feed.svg?react";
 import LikeFeedActive from "@assets/icons/like_feed_active.svg?react";
 import CommentFeed from "@assets/icons/comment_feed.svg?react";
 import ReportButton from "@assets/icons/report_button.svg?react";
+import EditPost from "@assets/icons/edit_post.svg?react";
+import DeletePost from "@assets/icons/delete_post.svg?react";
+import { Modal } from "@stories/modal";
 
 export default function SocialFeed() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 삭제 확인 모달 상태
   const [showSpoiler, setShowSpoiler] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCountValue, setLikeCountValue] = useState(100);
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const [postUserId] = useState("12345"); // 게시글 작성자의 userId
+  const [myUserId] = useState("1231"); // 나의 userId
+  const navigate = useNavigate();
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -49,7 +55,22 @@ export default function SocialFeed() {
   };
 
   const goToCommentPage = () => {
-    navigate("/comment"); // /comment 페이지로 이동
+    navigate("/comment");
+  };
+
+  const handleEditPost = () => {
+    navigate("/edit-post");
+  };
+
+  const handleDeletePost = () => {
+    setIsModalOpen(false); // 기존 모달 닫기
+    setIsDeleteModalOpen(true); // 삭제 확인 모달 열기
+  };
+
+  const confirmDelete = () => {
+    setIsDeleteModalOpen(false);
+    alert("게시글이 삭제되었습니다.");
+    // 게시글 삭제 로직 추가
   };
 
   return (
@@ -104,6 +125,7 @@ export default function SocialFeed() {
           </div>
         </div>
       </div>
+
       <div css={feedContainer}>
         <div css={feedItem}>
           <div css={infoSection}>
@@ -146,16 +168,45 @@ export default function SocialFeed() {
         </div>
       </div>
 
-      {isModalOpen && (
+      {/* 기존 모달 */}
+      {isModalOpen && !isDeleteModalOpen && (
         <div css={modalOverlay} onClick={toggleModal}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
-              욕설 신고
-            </button>
-            <button onClick={() => alert("스포일러 신고가 접수되었습니다!")}>
-              스포일러 신고
-            </button>
+            {postUserId === myUserId ? (
+              <>
+                <button onClick={handleEditPost} style={{ color: "#000" }}>
+                  <EditPost /> 게시글 수정
+                </button>
+                <button onClick={handleDeletePost}>
+                  <DeletePost /> 삭제하기
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
+                  욕설 신고
+                </button>
+                <button
+                  onClick={() => alert("스포일러 신고가 접수되었습니다!")}
+                >
+                  스포일러 신고
+                </button>
+              </>
+            )}
           </div>
+        </div>
+      )}
+
+      {/* 삭제 확인 모달 */}
+      {isDeleteModalOpen && (
+        <div css={modalOverlay}>
+          <Modal
+            message="게시글을 삭제하시겠습니까?"
+            confirmText="삭제"
+            cancelText="취소"
+            onConfirm={confirmDelete}
+            onCancel={() => setIsDeleteModalOpen(false)}
+          />
         </div>
       )}
     </div>

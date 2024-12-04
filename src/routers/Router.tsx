@@ -20,6 +20,7 @@ import Recommendations from "@pages/recommendations";
 import Edit from "@pages/social/edit";
 import Callback from "@pages/login/oauth";
 import Post from "@pages/social/post";
+import EditFeed from "@pages/social/edit";
 import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
@@ -56,6 +57,7 @@ function Router() {
             <Route path="/user-profile/edit" element={<Edit />} />
             <Route path="/movie-log" element={<Feed />} />
             <Route path="/add-feed" element={<Post />} />
+            <Route path="/edit-post" element={<EditFeed />} />
             <Route path="/comment" element={<Comment />} />
             <Route path="/search" element={<Search />} />
             <Route path="/picky" element={<PickyPage />} />
