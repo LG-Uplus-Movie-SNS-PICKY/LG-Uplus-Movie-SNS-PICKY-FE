@@ -8,6 +8,7 @@ export const wrapper = css`
   width: 100%;
   height: 100vh;
   justify-content: space-between;
+  /* overflow: hidden;  */
 `;
 
 export const backWrapper = css`
@@ -93,8 +94,9 @@ export const backButtonWrapper = css`
   cursor: pointer;
   width: 100%;
   display: flex;
-  p{color: #ff084a;}
-
+  p {
+    color: #ff084a;
+  }
 `;
 
 export const backButton = css`
@@ -120,7 +122,7 @@ export const backButtonStyle = css`
   border: none; /* 테두리 제거 */
   display: flex; /* 아이콘과 텍스트 정렬 */
   align-items: center;
-  cursor: pointer; 
+  cursor: pointer;
 
   p {
     margin: 0;
@@ -181,3 +183,38 @@ type StyleBlock = {
   $gap?: string;
   $pointer?: boolean;
 };
+
+export const slideWrapper = css`
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* 애니메이션 경계 설정 */
+`;
+
+export const slideContent = (step: number) => css`
+  transform: translateY(-${step * 100}%); /* 현재 step 기반으로 이동 */
+  transition: transform 0.3s ease-in-out;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+`;
+
+export const slideNext = css`
+  transform: translateY(100%); /* 다음 단계가 아래에서 들어옴 */
+  /* transition: transform 0.3s ease-in-out; */
+`;
+
+export const slidePrev = css`
+  transform: translateY(-100%); /* 이전 단계가 위에서 들어옴 */
+  /* transition: transform 0.3s ease-in-out; */
+`;
+
+export const slideIn = css`
+  transform: translateY(0); /* 현재 단계가 중앙에 위치 */
+  /* transition: transform 0.3s ease-in-out; */
+`;
+
+export const slideOut = css`
+  transform: translateY(100%); /* 현재 단계가 아래로 사라짐 */
+  /* transition: transform 0.3s ease-in-out; */
+`;
