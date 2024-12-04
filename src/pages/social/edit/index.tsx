@@ -1,222 +1,140 @@
-import { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom"; // navigate를 위해 추가
-import MovieSearch from "@assets/icons/movie_search.svg?react";
-import DelButton from "@assets/icons/delete.svg?react";
-import BackPost from "@assets/icons/back_post.svg?react";
-import { Button } from "@stories/button";
-import { Modal } from "@stories/modal";
+import React, { useState } from "react";
+import profileIcon from "@assets/icons/profile.svg";
 import {
-  wrapper,
-  postContainer,
-  searchBox,
-  searchSection,
-  searchInputWithPadding,
-  movieSearchIcon,
-  autocompleteBox,
-  autocompleteItem,
-  modalOverlay,
-  reviewSection,
-  reviewContainer,
-  reviewInput,
-  charCount,
-  spoilerSection,
-  spoilerContainer,
-  pText,
-  buttonContainer,
-  buttonStyle,
-  activeButtonStyle,
-  shareButton,
-  searchContainer,
-  searchBoxExpanded,
-  deleteIcon,
-  backButton,
-  movieInfo,
-  movieTitle,
-  movieDetails,
-  movieGenres,
-  highlightedText,
-  modalContainer,
+  containerStyle,
+  headerStyle,
+  headerTitleStyle,
+  profileImageContainerStyle,
+  profileImageStyle,
+  photoEditStyle,
+  inputRowStyle,
+  inputLabelStyle,
+  inputStyle,
+  readonlyInputStyle,
+  profileWrapper,
+  saveButtonStyle,
+  buttonWrapper,
 } from "./index.styles";
-import { FileInput } from "@stories/file-input";
 
-const mockMovies = [
-  {
-    title: "아이언맨1",
-    releaseDate: "2008.04.30",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "아이언맨2",
-    releaseDate: "2008.04.30",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "아이언맨3",
-    releaseDate: "2008.04.30",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "어벤져스: 엔드게임",
-    releaseDate: "2019.04.24",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "부산행",
-    releaseDate: "2016.07.20",
-    country: "한국",
-    genres: ["스릴러", "드라마", "좀비"],
-  },
-];
+export default function ProfileEditPage() {
+  const [nickname, setNickname] = useState("먹식이");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
 
-export default function EditPost() {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredMovies, setFilteredMovies] = useState<typeof mockMovies>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false);
-  const [selectedMovieData, setSelectedMovieData] = useState<
-    null | (typeof mockMovies)[0]
-  >(null);
-  const [reviewText, setReviewText] = useState<string>("");
-  const [selectedSpoiler, setSelectedSpoiler] = useState<string>("");
-
-  const navigate = useNavigate();
-
-  const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
-    setSelectedMovieData(movie);
-    setSearchTerm("");
-    setFilteredMovies([]);
-    setIsModalOpen(false);
-  };
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setSearchTerm(value);
-    if (value) {
-      const results = mockMovies.filter((movie) =>
-        movie.title.toLowerCase().startsWith(value.toLowerCase())
-      );
-      setFilteredMovies(results);
+    setNickname(value);
+
+    // 유효성 검사: 최소 2자 이상, 최대 10자, 공백 포함 금지
+    if (value.length < 2 || value.length > 10) {
+      setNicknameError("닉네임은 2자 이상, 10자 이하로 입력해주세요.");
+    } else if (/\s/.test(value)) {
+      setNicknameError("닉네임에 공백은 포함될 수 없습니다.");
     } else {
-      setFilteredMovies([]);
+      setNicknameError(null);
     }
   };
 
-  const handleOverlayClick = () => {
-    setIsModalOpen(false);
-    setFilteredMovies([]);
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        setProfileImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setReviewText(e.target.value);
-  };
+  const handleSave = () => {
+    if (nicknameError) {
+      alert("닉네임을 올바르게 입력해주세요.");
+      return;
+    }
 
-  const handleSpoilerClick = (type: string) => {
-    setSelectedSpoiler(type);
-  };
-
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    setFilteredMovies([]);
-  };
-
-  const handleBackClick = () => {
-    setIsBackModalOpen(true);
-  };
-
-  const highlightMatch = (text: string, query: string) => {
-    const regex = new RegExp(`(${query})`, "gi");
-    const parts = text.split(regex);
-    return parts.map((part, index) =>
-      part.toLowerCase() === query.toLowerCase() ? (
-        <span key={index} css={highlightedText}>
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
+    alert("프로필이 수정되었습니다.");
   };
 
   return (
-    <div css={wrapper}>
-      {isModalOpen && <div css={modalOverlay} onClick={handleOverlayClick} />}
-      <div css={backButton} onClick={handleBackClick}>
-        <BackPost />
-      </div>
-      {isBackModalOpen && (
-        <>
-          {/* 화면 어두워지는 오버레이 */}
-          <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
-          {/* 모달 컨테이너 */}
-          <div css={modalContainer}>
-            <Modal
-              message="공유하지 않고 화면을 나가면 작성 중인 리뷰가 삭제될 수 있습니다. 나가시겠습니까?"
-              confirmText="나가기"
-              cancelText="취소"
-              onConfirm={() => navigate(-1)}
-              onCancel={() => setIsBackModalOpen(false)}
+    <div css={containerStyle}>
+      <header css={headerStyle}>
+        <h1 css={headerTitleStyle}>프로필 편집</h1>
+      </header>
+
+      <div css={profileImageContainerStyle}>
+        <label htmlFor="profileImageInput" style={{ cursor: "pointer" }}>
+          <div css={profileWrapper}>
+            <img
+              src={profileImage || profileIcon}
+              alt="프로필 이미지"
+              css={profileImageStyle}
             />
+            <p css={photoEditStyle}>사진수정</p>
           </div>
-        </>
-      )}
+        </label>
+        <input
+          id="profileImageInput"
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleImageUpload}
+        />
+      </div>
 
-      <div css={movieInfo}>
-        <h2 css={movieTitle}>아이언맨2</h2>
-        <div css={movieDetails}>
-          <p>🕑 1998.08.09</p>
-          <p>대한민국</p>
+      <div css={profileWrapper}>
+        <div css={inputRowStyle}>
+          <label css={inputLabelStyle}>닉네임</label>
+          <div style={{ width: "65%" }}>
+            <input
+              type="text"
+              value={nickname}
+              onChange={handleNicknameChange}
+              css={inputStyle}
+            />
+            {nicknameError && (
+              <p
+                style={{
+                  color: "#FF084A",
+                  fontSize: "12px",
+                  marginTop: "4px",
+                  marginLeft: "4px",
+                }}
+              >
+                {nicknameError}
+              </p>
+            )}
+          </div>
         </div>
-        <div css={movieGenres}>판타지</div>
-      </div>
 
-      <div css={postContainer}>
-        <FileInput type="media" />
-      </div>
+        <div css={inputRowStyle}>
+          <label css={inputLabelStyle}>이름</label>
+          <input type="text" value="최우진" readOnly css={readonlyInputStyle} />
+        </div>
 
-      <div css={reviewSection}>
-        <div css={reviewContainer}>
-          <textarea
-            placeholder="✏️ 리뷰를 작성해주세요...&#13;&#10;&#13;&#10;욕설, 비방, 명예훼손성 표현은 누군가에게 상처가 될 수 있습니다."
-            css={reviewInput}
-            value={reviewText}
-            onChange={handleInputChange}
+        <div css={inputRowStyle}>
+          <label css={inputLabelStyle}>생년월일</label>
+          <input
+            type="text"
+            value="2002-09-18"
+            readOnly
+            css={readonlyInputStyle}
           />
-          <div css={charCount}>{reviewText.length} / 500</div>
+        </div>
+
+        <div css={inputRowStyle}>
+          <label css={inputLabelStyle}>성별</label>
+          <input type="text" value="여자" readOnly css={readonlyInputStyle} />
+        </div>
+
+        <div css={inputRowStyle}>
+          <label css={inputLabelStyle}>국적</label>
+          <input type="text" value="내국인" readOnly css={readonlyInputStyle} />
         </div>
       </div>
-
-      <div css={spoilerSection}>
-        <div css={spoilerContainer}>
-          <p css={pText}>게시글에 스포일러가 포함되어있나요?</p>
-          <div css={buttonContainer}>
-            <button
-              css={[
-                buttonStyle,
-                selectedSpoiler === "없음" && activeButtonStyle,
-              ]}
-              onClick={() => handleSpoilerClick("없음")}
-            >
-              없음
-            </button>
-            <button
-              css={[
-                buttonStyle,
-                selectedSpoiler === "있음" && activeButtonStyle,
-              ]}
-              onClick={() => handleSpoilerClick("있음")}
-            >
-              있음
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div css={shareButton}>
-        <Button btnType="Active" label="공유" />
+      <div css={buttonWrapper}>
+        <button onClick={handleSave} css={saveButtonStyle}>
+          수정하기
+        </button>
       </div>
     </div>
   );

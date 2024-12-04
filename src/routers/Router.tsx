@@ -17,7 +17,7 @@ import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import My from "@pages/my";
 import Recommendations from "@pages/recommendations";
-import Edit from "@pages/edit";
+import Edit from "@pages/social/edit";
 import Callback from "@pages/login/oauth";
 import Post from "@pages/social/post";
 import EditFeed from "@pages/social/edit";
@@ -25,6 +25,7 @@ import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
+import ErrorPage from "@pages/error";
 
 function Router() {
   return (
@@ -38,6 +39,7 @@ function Router() {
           <Routes>
             {/* 공개 라우트 */}
             <Route path="/" element={<Home />} />
+            <Route path="/error" element={<ErrorPage />} />
 
             {/* 로그인 사용자 라우트 */}
             <Route path="/movie/:id" element={<MovieDetail />} />
@@ -47,7 +49,7 @@ function Router() {
             <Route path="/login/oauth2/callback" element={<Callback />} />
             <Route path="/search" element={<Search />} />
             <Route path="/notification" element={<NotificationPage />} />
-            <Route path="/recommendations" element={<Recommendations/>} />
+            <Route path="/recommendations" element={<Recommendations />} />
 
             {/* 관리자 전용 라우트 */}
             <Route path="/login" element={<Login />} />
