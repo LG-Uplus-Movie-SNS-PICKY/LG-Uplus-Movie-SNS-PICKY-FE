@@ -14,6 +14,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import MovieLogContnent from "./movie-log";
 import LineReviewContent, { LineReviewData } from "./review";
+import LikeMovieContent from "./like-movie";
 
 interface TabMenuProps {
   wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
@@ -198,7 +199,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
           <SwiperSlide key={idx}>
             {idx === 0 && <MovieLogContnent data={[]} />}
             {idx === 1 && <LineReviewContent data={reviews} />}
-            {idx === 2 && <div>Like Content</div>}
+            {idx === 2 && <LikeMovieContent data={[]} />}
           </SwiperSlide>
 
           // <div
