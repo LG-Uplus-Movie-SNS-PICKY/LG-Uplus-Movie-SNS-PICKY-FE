@@ -73,19 +73,6 @@ export default {
     return css`
       width: 100%;
       flex: 1;
-      /* height: 2000px; */
-      background-color: azure;
-    `;
-  },
-
-  moveBoard(): SerializedStyles {
-    return css`
-      position: absolute;
-      top: 0;
-      width: 48px;
-      height: 2px;
-      background-color: black;
-      transition: "left 0.3s ease"; // 부드러운 이동 애니메이션
     `;
   },
 };
