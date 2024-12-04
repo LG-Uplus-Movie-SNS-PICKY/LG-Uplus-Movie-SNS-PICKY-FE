@@ -11,8 +11,6 @@ export default {
       justify-content: flex-start;
       align-items: center;
 
-      padding: 16px 0;
-
       &.centered {
         justify-content: center;
         gap: 12px;
@@ -21,16 +19,6 @@ export default {
         font-weight: 600;
         color: #191919;
       }
-    `;
-  },
-
-  reviewCard(): SerializedStyles {
-    return css`
-      position: relative;
-
-      width: 100%;
-      display: flex;
-      gap: 8px;
     `;
   },
 };

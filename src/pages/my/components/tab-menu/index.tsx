@@ -122,7 +122,9 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         {Array.from({ length: 3 }, (_, idx) => (
           <SwiperSlide key={idx}>
             {idx === 0 && <MovieLogContnent data={[]} />}
-            {idx === 1 && <LineReviewContent data={[]} />}
+            {idx === 1 && (
+              <LineReviewContent data={Array.from({ length: 4 })} />
+            )}
             {idx === 2 && <div>Like Content</div>}
           </SwiperSlide>
 

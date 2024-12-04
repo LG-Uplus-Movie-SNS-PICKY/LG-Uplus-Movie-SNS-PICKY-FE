@@ -23,7 +23,20 @@ function LineReviewContent({ data }: LineReviewContentProps) {
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyLineReview />}
-      {/* {data.length > 0 && } */}
+      {data.length > 0 &&
+        data.map((data, idx) => (
+          <div css={styles.reviewCard()}>
+            {/* 영화 포스터 이미지 */}
+            <div>
+              <img src="" alt="" />
+            </div>
+
+            {/* 리뷰 정보 */}
+            <div></div>
+
+            {/* 삭제 버튼 */}
+          </div>
+        ))}
     </div>
   );
 }
