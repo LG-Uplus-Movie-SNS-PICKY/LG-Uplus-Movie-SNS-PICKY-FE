@@ -53,7 +53,7 @@ function MovieDetail(props: MovieDetailProps) {
   };
 
   const handleReviewClick = () => {
-    navigate("/movie/:id/reviews");
+    navigate("/movie/:id/review");
   };
 
   // const { ott } = props;

@@ -6,6 +6,8 @@ export const genresSelector = selector({
   key: "genresSelector",
   get: async () => {
     // 장르 API 호출
-    return await axios.get("/api/movie/genre").then((res) => res);
+    return await axios
+      .get("http://api.picky-movie.com/api/v1/user/genres")
+      .then((res) => res);
   },
 });
