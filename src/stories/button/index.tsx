@@ -10,7 +10,7 @@ export interface ButtonProps {
 }
 
 /** Primary UI component for user interaction */
-function Button({
+export function Button({
   primary = false,
   btnType = "Active",
   backgroundColor,
@@ -35,5 +35,3 @@ function Button({
     </button>
   );
 }
-
-export default Button;

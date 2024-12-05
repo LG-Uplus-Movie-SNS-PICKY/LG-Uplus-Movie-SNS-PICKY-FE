@@ -6,12 +6,26 @@
     "esModuleInterop": true,
     "isolatedModules": false,
     "baseUrl": "./",
+    "paths": {
+      "@*": ["src/*"],
+      "@assets/*": ["src/assets/*"],
+      "@stories/*": ["src/stories/*"],
+      "@constants/*": ["src/constants/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@pages/*": ["src/pages/*"],
+      "@provider/*": ["src/provider/*"],
+      "@recoil/*": ["src/recoil/*"],
+      "@styles/*": ["src/styles/*"],
+      "@type/*": ["src/types/*"],
+      "@routers/*": ["src/routers/*"],
+      "@@components/*": ["src/components/*"]
+    },
     "typeRoots": ["./node_modules/@types"],
     "lib": ["DOM", "ESNext"],
     "strict": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "@emotion/react", // Emotion과 통합
+    "jsxImportSource": "@emotion/react",
     "composite": true
   },
   "include": ["src"],
