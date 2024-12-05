@@ -1,5 +1,5 @@
 // pages/my/components/logout-modal/index.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal } from '@stories/modal'
 import {
     ModalContainer,
@@ -11,9 +11,24 @@ import { Toast } from '@stories/toast'
 
 interface LogoutModalProps {
     onClose: () => void;
+    targetRef: React.RefObject<HTMLButtonElement>; // SettingsButton의 ref 전달
 }
 
-function LogoutModal({ onClose }: LogoutModalProps) {
+function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
+    const [modalPosition, setModalPosition] = useState({ top: 0, right: 0 });
+
+    useEffect(() => {
+        if (targetRef?.current) {
+          const rect = targetRef.current.getBoundingClientRect();
+          const rightOffset = window.innerWidth - rect.right;
+          setModalPosition({
+            top: rect.bottom + window.scrollY + 4,
+            right: rightOffset,
+          });
+        }
+      }, [targetRef]);
+    
+
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState<string>('');
     const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
@@ -57,7 +72,14 @@ function LogoutModal({ onClose }: LogoutModalProps) {
         <>
             {/* 기존 모달 */}
             <ModalContainer onClick={onClose}>
-                <ModalWrapper onClick={(e) => e.stopPropagation()}>
+                <ModalWrapper
+                    onClick={(e) => e.stopPropagation()}
+                    style={{
+                        position: 'absolute',
+                        top: modalPosition.top,
+                        right: modalPosition.right,
+                      }}
+                >
                     <ModalItem onClick={handleLogoutClick}>로그아웃</ModalItem>
                     <ModalItem onClick={handleCancelMembershipClick}>탈퇴하기</ModalItem>
                 </ModalWrapper>

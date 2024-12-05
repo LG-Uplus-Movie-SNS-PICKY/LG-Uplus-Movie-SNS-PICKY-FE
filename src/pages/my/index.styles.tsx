@@ -109,7 +109,10 @@ export const EditButton = styled.div`
   cursor: pointer;
 `;
 
-export const SettingsButton = styled.div`
+export const SettingsButton = styled.button`
+
+  position: relative;
+
   padding: 6px 8px;
   border-radius: 8px;
   background-color: #f4f5f7;

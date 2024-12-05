@@ -3,10 +3,6 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
     modalContainer(): SerializedStyles {
         return css`
-        /* position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); */
         display: flex;
         flex-direction: column;
         justify-content: center;
