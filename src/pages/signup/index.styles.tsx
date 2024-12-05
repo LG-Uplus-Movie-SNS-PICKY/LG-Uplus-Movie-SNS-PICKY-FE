@@ -192,11 +192,23 @@ export const slideWrapper = css`
 `;
 
 export const slideContent = (step: number) => css`
-  transform: translateY(-${step * 100}%); /* 현재 step 기반으로 이동 */
-  transition: transform 0.3s ease-in-out;
   position: absolute;
   width: 100%;
   height: 100%;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(-${step * 100}%);
+
+  & > div {
+    width: 100%;
+    height: 100%;
+    visibility: hidden; /* 기본적으로 숨김 */
+    pointer-events: none; /* 숨겨진 스텝과의 상호작용 차단 */
+  }
+
+  & > div:nth-of-type(${step + 1}) {
+    visibility: visible; /* 현재 스텝만 표시 */
+    pointer-events: auto; /* 현재 스텝과 상호작용 가능 */
+  }
 `;
 
 export const slideNext = css`
