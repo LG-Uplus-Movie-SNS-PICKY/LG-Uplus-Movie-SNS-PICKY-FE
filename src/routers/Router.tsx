@@ -39,7 +39,6 @@ function Router() {
           <Routes>
             {/* 공개 라우트 */}
             <Route path="/" element={<Home />} />
-            <Route path="/error" element={<ErrorPage />} />
 
             {/* 비로그인 사용자 라우트 */}
             <Route path="/auth/sign-in" element={<Login />} />
@@ -72,6 +71,9 @@ function Router() {
 
             {/* 관리자 전용 라우트 */}
             <Route path="/admin/*" element={<AdminLayout />} />
+
+            {/* 에러 페이지 */}
+            <Route path="/*" element={<ErrorPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>
