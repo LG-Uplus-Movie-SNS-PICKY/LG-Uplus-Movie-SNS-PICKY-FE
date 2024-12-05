@@ -1,3 +1,4 @@
+import SEO from "@components/seo";
 import BsetMovieSection from "./components/best-movies";
 import GenreTab from "./components/genres-tab";
 import MovieBackdropBanner from "./components/movie-backdrop-banner";
@@ -130,19 +131,27 @@ const bestMovie: BestMovieTypes[] = [
 function PickyPage() {
   // Top 10 영화 -> 리액트 쿼리
   return (
-    <div css={styles.pickyPageContainer()}>
-      {/* Movie Backdrop Banner (Best Movie 평점 1등) */}
-      <MovieBackdropBanner movie={bestMovie[0]} />
+    <>
+      <SEO
+        title="PICKY: MOVIE PICKY"
+        description="PICKY에 등록된 영화 플레이리스트를 통해 원하는 영화를 찾아보세요"
+        url="http://localhost:5173/picky"
+      />
 
-      {/* Genres Tab - Slider(가로) */}
-      <GenreTab />
+      <div css={styles.pickyPageContainer()}>
+        {/* Movie Backdrop Banner (Best Movie 평점 1등) */}
+        <MovieBackdropBanner movie={bestMovie[0]} />
 
-      {/* Best Movies Section */}
-      <BsetMovieSection bestMovie={bestMovie} />
+        {/* Genres Tab - Slider(가로) */}
+        <GenreTab />
 
-      {/* Playlists */}
-      <PlayListSection />
-    </div>
+        {/* Best Movies Section */}
+        <BsetMovieSection bestMovie={bestMovie} />
+
+        {/* Playlists */}
+        <PlayListSection />
+      </div>
+    </>
   );
 }
 
