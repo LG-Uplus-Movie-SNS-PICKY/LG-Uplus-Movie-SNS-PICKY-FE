@@ -93,7 +93,7 @@ function My() {
   };
 
   const handleEditClick = () => {
-    navigate("/user/:nickname/edit", { state: dummyData.nickname });
+    navigate(`/user/${dummyData.nickname}/edit`);
   };
 
   const handleFollowClick = () => {

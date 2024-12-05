@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import profileIcon from "@assets/icons/profile.svg";
 import {
   containerStyle,
@@ -58,9 +58,7 @@ export default function ProfileEditPage() {
 
   return (
     <>
-      {/* <SEO
-        title={`PICKY: ${dummyData.nickname}`}
-      /> */}
+      <SEO title={`PICKY: ${nickname}`} />
 
       <div css={containerStyle}>
         <header css={headerStyle}>
