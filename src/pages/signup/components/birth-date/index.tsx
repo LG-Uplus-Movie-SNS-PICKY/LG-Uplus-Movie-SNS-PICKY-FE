@@ -1,102 +1,97 @@
-import useFocus from "../../../../components/hooks/useFocus";
-import { Input, Text } from "../ui";
-import { useState, useEffect } from "react";
-import { validateMonth, validateDay } from "../../../../util/validator";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
-import { birthDateContainer, birthDate, textWrapper } from "./index.styles";
+import {
+  birthDateContainer,
+  pickerContainer,
+  pickerColumn,
+  strokeOverlay,
+  monthPickerColumn,
+  pickerItem,
+} from "./index.styles";
+import { Text } from "../ui";
 
 export default function InputBirthDate() {
-  const [birthYear, setBirthYear] = useState<string>("");
-  const [birthMonth, setBirthMonth] = useState<string>("");
-  const [birthDay, setBirthDay] = useState<string>("");
   const [inputData, setInputData] = useRecoilState(inputState);
+  const [selectedYear, setSelectedYear] = useState<number>(
+    new Date().getFullYear()
+  );
+  const [selectedMonth, setSelectedMonth] = useState<number>(
+    new Date().getMonth() + 1
+  );
+  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
 
-  const { isFocused, handleFocus, handleBlur } = useFocus();
-
-  useEffect(() => {
-    if (inputData.birthDate) {
-      const [year, month, day] = inputData.birthDate.split("-");
-      setBirthYear(year);
-      setBirthMonth(month.startsWith("0") ? month.slice(1) : month);
-      setBirthDay(day.startsWith("0") ? day.slice(1) : day);
-    }
-  }, [inputData.birthDate]);
-
-  const handleBirthYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value) && value.length <= 4) {
-      setBirthYear(value);
-    }
-  };
-
-  const handleBirthMonthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === "" || (value.length <= 2 && validateMonth(value))) {
-      setBirthMonth(value);
-    }
-  };
-
-  const handleBirthDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (
-      value === "" ||
-      (value.length <= 2 && validateDay(value, birthMonth, birthYear))
-    ) {
-      setBirthDay(value);
-    }
-  };
+  const years = Array.from(
+    { length: 100 },
+    (_, i) => new Date().getFullYear() - i
+  );
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const days = Array.from(
+    { length: new Date(selectedYear, selectedMonth, 0).getDate() },
+    (_, i) => i + 1
+  );
 
   useEffect(() => {
-    if (birthYear && birthMonth && birthDay) {
-      const formattedMonth = birthMonth.padStart(2, "0");
-      const formattedDay = birthDay.padStart(2, "0");
-      const birthDate = `${birthYear}-${formattedMonth}-${formattedDay}`;
-      setInputData((prev) => ({ ...prev, birthDate }));
-    } else {
-      setInputData((prev) => ({ ...prev, birthDate: "" }));
-    }
-  }, [birthYear, birthMonth, birthDay, setInputData]);
+    const formattedMonth = String(selectedMonth).padStart(2, "0");
+    const formattedDay = String(selectedDay).padStart(2, "0");
+    const birthDate = `${selectedYear}-${formattedMonth}-${formattedDay}`;
+    setInputData((prev) => ({ ...prev, birthDate }));
+  }, [selectedYear, selectedMonth, selectedDay, setInputData]);
 
   return (
-    <>
-      <div css={birthDateContainer}>
-        <Text.TitleMenu300>당신의 생년월일을 입력해주세요</Text.TitleMenu300>
-        <div css={birthDate}>
-          <Text.FocusedMenu $isFocused={isFocused}>생년월일</Text.FocusedMenu>
+    <div css={birthDateContainer}>
+      <Text.TitleMenu300>당신의 생년월일을 선택해주세요</Text.TitleMenu300>
+      <div css={pickerContainer}>
+        <div css={pickerColumn}>
+          {years.map((year) => (
+            <div
+              key={year}
+              css={[
+                pickerItem,
+                year === selectedYear && {
+                  fontWeight: "bold",
+                  color: "#ff084a",
+                },
+              ]}
+              onClick={() => setSelectedYear(year)}
+            >
+              {year}년
+            </div>
+          ))}
         </div>
-        <div css={birthDate}>
-          <Input.BirthBox
-            type="text"
-            value={birthYear}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleBirthYearChange}
-            placeholder="년도"
-          />
-          <Input.BirthBox
-            type="text"
-            value={birthMonth}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleBirthMonthChange}
-            placeholder="월"
-          />
-          <Input.BirthBox
-            type="text"
-            value={birthDay}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onChange={handleBirthDayChange}
-            placeholder="일"
-          />
+        <div css={pickerColumn}>
+          {months.map((month) => (
+            <div
+              key={month}
+              css={[
+                pickerItem,
+                month === selectedMonth && {
+                  fontWeight: "bold",
+                  color: "#ff084a",
+                },
+              ]}
+              onClick={() => setSelectedMonth(month)}
+            >
+              {month}월
+            </div>
+          ))}
         </div>
-        <div css={textWrapper}>
-          <Text.FocusedWarning $isFocused={isFocused}>
-            생년월일을 정확하게 입력해주세요
-          </Text.FocusedWarning>
+        <div css={pickerColumn}>
+          {days.map((day) => (
+            <div
+              key={day}
+              css={[
+                pickerItem,
+                day === selectedDay && { fontWeight: "bold", color: "#ff084a" },
+              ]}
+              onClick={() => setSelectedDay(day)}
+            >
+              {day}일
+            </div>
+          ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

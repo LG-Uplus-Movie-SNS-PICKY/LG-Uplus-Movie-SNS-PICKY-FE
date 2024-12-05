@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
 import {
   GOOGLE_LOGIN_URL,
   KAKAO_LOGIN_URL,
@@ -8,7 +8,6 @@ import {
 import { BtnGoogle, BtnKakao, BtnNaver, PickyLogo } from "../../assets/svg";
 
 import { Block, Text } from "../../styles/ui";
-import { useLocation, useNavigate } from "react-router-dom";
 
 const StyledText = styled.div`
   display: flex;
@@ -28,6 +27,7 @@ const StyledText = styled.div`
   font-weight: 400;
   line-height: normal;
 `;
+
 const GapContainer = styled(Block.FlexBox)`
   gap: 106px; /* 로고와 StyledText 사이의 간격 설정 */
 `;
@@ -45,32 +45,6 @@ export default function Login() {
     console.log("Naver Login Clicked");
     window.location.href = `${NAVER_LOGIN_URL}`;
   };
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    console.log("useEffect triggered. Location search:", location.search);
-
-    const queryParams = new URLSearchParams(location.search);
-    const accessToken = queryParams.get("access_token");
-    const refreshToken = queryParams.get("refresh_token");
-
-    console.log("Parsed Tokens:", {
-      accessToken,
-      refreshToken,
-    });
-
-    // access_token과 refresh_token이 모두 존재할 경우에만 /signup으로 이동
-    if (accessToken && refreshToken) {
-      console.log("Valid tokens found. Navigating to /signup...");
-      sessionStorage.setItem("access_token", accessToken);
-      sessionStorage.setItem("refresh_token", refreshToken);
-      navigate("/signup");
-    } else {
-      console.error("로그인에 실패했습니다. 유효한 토큰이 없습니다.");
-    }
-  }, [location.search, navigate]);
 
   return (
     <>
