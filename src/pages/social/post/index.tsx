@@ -38,6 +38,7 @@ import {
   modalContainer,
 } from "./index.styles";
 import { FileInput } from "@stories/file-input";
+import SEO from "@components/seo";
 
 const mockMovies = [
   {
@@ -142,123 +143,133 @@ export default function SocialPost() {
   };
 
   return (
-    <div css={wrapper}>
-      {isModalOpen && <div css={modalOverlay} onClick={handleOverlayClick} />}
-      <div css={backButton} onClick={handleBackClick}>
-        <BackPost />
-      </div>
-      {isBackModalOpen && (
-        <>
-          {/* 화면 어두워지는 오버레이 */}
-          <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
-          {/* 모달 컨테이너 */}
-          <div css={modalContainer}>
-            <Modal
-              message="공유하지 않고 화면을 나가면 작성 중인 리뷰가 삭제될 수 있습니다. 나가시겠습니까?"
-              confirmText="나가기"
-              cancelText="취소"
-              onConfirm={() => navigate(-1)}
-              onCancel={() => setIsBackModalOpen(false)}
-            />
-          </div>
-        </>
-      )}
+    <>
+      <SEO
+        title="PICKY: MOVIE LOG POST"
+        description="PICKY에 영화와 관련된 Movie Log 게시물을 올리고, 다른 사용자들과 소통해보세요"
+        url="http://localhost:5173/movie-log/add"
+      />
 
-      {selectedMovieData && (
-        <div css={movieInfo}>
-          <h2 css={movieTitle}>{selectedMovieData.title}</h2>
-          <div css={movieDetails}>
-            <p>🕑 {selectedMovieData.releaseDate}</p>
-            <p>{selectedMovieData.country}</p>
-          </div>
-          <div css={movieGenres}>
-            {selectedMovieData.genres.map((genre, index) => (
-              <span key={index}>{genre}</span>
-            ))}
-          </div>
+      <div css={wrapper}>
+        {isModalOpen && <div css={modalOverlay} onClick={handleOverlayClick} />}
+        <div css={backButton} onClick={handleBackClick}>
+          <BackPost />
         </div>
-      )}
-      {!selectedMovieData && (
-        <div css={[searchBox, filteredMovies.length > 0 && searchBoxExpanded]}>
-          <div css={searchContainer}>
-            <div css={searchSection}>
-              <input
-                css={searchInputWithPadding}
-                type="text"
-                placeholder="영화 제목 검색"
-                value={searchTerm}
-                onChange={handleSearchChange}
-                onFocus={() => setIsModalOpen(true)}
+        {isBackModalOpen && (
+          <>
+            {/* 화면 어두워지는 오버레이 */}
+            <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
+            {/* 모달 컨테이너 */}
+            <div css={modalContainer}>
+              <Modal
+                message="공유하지 않고 화면을 나가면 작성 중인 리뷰가 삭제될 수 있습니다. 나가시겠습니까?"
+                confirmText="나가기"
+                cancelText="취소"
+                onConfirm={() => navigate(-1)}
+                onCancel={() => setIsBackModalOpen(false)}
               />
-              <MovieSearch css={movieSearchIcon} />
-              {isModalOpen && (
-                <button css={deleteIcon} onClick={handleClearSearch}>
-                  <DelButton />
-                </button>
+            </div>
+          </>
+        )}
+
+        {selectedMovieData && (
+          <div css={movieInfo}>
+            <h2 css={movieTitle}>{selectedMovieData.title}</h2>
+            <div css={movieDetails}>
+              <p>🕑 {selectedMovieData.releaseDate}</p>
+              <p>{selectedMovieData.country}</p>
+            </div>
+            <div css={movieGenres}>
+              {selectedMovieData.genres.map((genre, index) => (
+                <span key={index}>{genre}</span>
+              ))}
+            </div>
+          </div>
+        )}
+        {!selectedMovieData && (
+          <div
+            css={[searchBox, filteredMovies.length > 0 && searchBoxExpanded]}
+          >
+            <div css={searchContainer}>
+              <div css={searchSection}>
+                <input
+                  css={searchInputWithPadding}
+                  type="text"
+                  placeholder="영화 제목 검색"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => setIsModalOpen(true)}
+                />
+                <MovieSearch css={movieSearchIcon} />
+                {isModalOpen && (
+                  <button css={deleteIcon} onClick={handleClearSearch}>
+                    <DelButton />
+                  </button>
+                )}
+              </div>
+              {filteredMovies.length > 0 && (
+                <div css={autocompleteBox}>
+                  {filteredMovies.map((movie, index) => (
+                    <div
+                      key={index}
+                      css={autocompleteItem}
+                      onClick={() => handleMovieSelect(movie)}
+                    >
+                      {highlightMatch(movie.title, searchTerm)}
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
-            {filteredMovies.length > 0 && (
-              <div css={autocompleteBox}>
-                {filteredMovies.map((movie, index) => (
-                  <div
-                    key={index}
-                    css={autocompleteItem}
-                    onClick={() => handleMovieSelect(movie)}
-                  >
-                    {highlightMatch(movie.title, searchTerm)}
-                  </div>
-                ))}
-              </div>
-            )}
+          </div>
+        )}
+
+        <div css={postContainer}>
+          <FileInput type="media" />
+        </div>
+
+        <div css={reviewSection}>
+          <div css={reviewContainer}>
+            <textarea
+              placeholder="✏️ 리뷰를 작성해주세요...&#13;&#10;&#13;&#10;욕설, 비방, 명예훼손성 표현은 누군가에게 상처가 될 수 있습니다."
+              css={reviewInput}
+              value={reviewText}
+              onChange={handleInputChange}
+            />
+            <div css={charCount}>{reviewText.length} / 500</div>
           </div>
         </div>
-      )}
 
-      <div css={postContainer}>
-        <FileInput type="media" />
-      </div>
-
-      <div css={reviewSection}>
-        <div css={reviewContainer}>
-          <textarea
-            placeholder="✏️ 리뷰를 작성해주세요...&#13;&#10;&#13;&#10;욕설, 비방, 명예훼손성 표현은 누군가에게 상처가 될 수 있습니다."
-            css={reviewInput}
-            value={reviewText}
-            onChange={handleInputChange}
-          />
-          <div css={charCount}>{reviewText.length} / 500</div>
-        </div>
-      </div>
-
-      <div css={spoilerSection}>
-        <div css={spoilerContainer}>
-          <p css={pText}>게시글에 스포일러가 포함되어있나요?</p>
-          <div css={buttonContainer}>
-            <button
-              css={[
-                buttonStyle,
-                selectedSpoiler === "없음" && activeButtonStyle,
-              ]}
-              onClick={() => handleSpoilerClick("없음")}
-            >
-              없음
-            </button>
-            <button
-              css={[
-                buttonStyle,
-                selectedSpoiler === "있음" && activeButtonStyle,
-              ]}
-              onClick={() => handleSpoilerClick("있음")}
-            >
-              있음
-            </button>
+        <div css={spoilerSection}>
+          <div css={spoilerContainer}>
+            <p css={pText}>게시글에 스포일러가 포함되어있나요?</p>
+            <div css={buttonContainer}>
+              <button
+                css={[
+                  buttonStyle,
+                  selectedSpoiler === "없음" && activeButtonStyle,
+                ]}
+                onClick={() => handleSpoilerClick("없음")}
+              >
+                없음
+              </button>
+              <button
+                css={[
+                  buttonStyle,
+                  selectedSpoiler === "있음" && activeButtonStyle,
+                ]}
+                onClick={() => handleSpoilerClick("있음")}
+              >
+                있음
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div css={shareButton}>
-        <Button btnType="Active" label="공유" />
+        <div css={shareButton}>
+          <Button btnType="Active" label="공유" />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

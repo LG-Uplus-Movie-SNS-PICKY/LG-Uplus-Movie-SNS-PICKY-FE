@@ -58,7 +58,7 @@ export default function ProfileEditPage() {
 
   return (
     <>
-      <SEO title={`PICKY: ${nickname}`} />
+      <SEO title={`${nickname}: 프로필 수정`} />
 
       <div css={containerStyle}>
         <header css={headerStyle}>
