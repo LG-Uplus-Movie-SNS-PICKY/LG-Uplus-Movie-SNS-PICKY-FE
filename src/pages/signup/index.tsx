@@ -24,6 +24,7 @@ import {
   slideWrapper,
   slideContent,
 } from "./index.styles";
+import SEO from "@components/seo";
 
 export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -164,6 +165,8 @@ export default function Signup() {
 
   return (
     <>
+      <SEO title="PICKY: 회원가입" />
+
       <div css={wrapper}>
         <div css={backWrapper}>
           <div css={progressBarContainer}>
