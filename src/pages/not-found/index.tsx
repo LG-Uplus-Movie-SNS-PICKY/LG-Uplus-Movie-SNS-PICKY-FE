@@ -11,7 +11,6 @@ import SEO from "@components/seo";
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   return (
     <>
