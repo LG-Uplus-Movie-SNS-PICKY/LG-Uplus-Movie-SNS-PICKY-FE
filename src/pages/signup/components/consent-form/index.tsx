@@ -38,6 +38,7 @@ export default function InputConsentForm() {
         onClick={toggleConsentAll}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        tabIndex={0} 
       >
         <div css={customCheckbox}>
           {inputData.consentAll ? <Checked /> : <Unchecked />}
@@ -52,6 +53,7 @@ export default function InputConsentForm() {
         onClick={toggleConsentAge}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        tabIndex={0} 
       >
         <div css={customCheckbox}>
           {inputData.consentAge ? <Checked /> : <Unchecked />}
