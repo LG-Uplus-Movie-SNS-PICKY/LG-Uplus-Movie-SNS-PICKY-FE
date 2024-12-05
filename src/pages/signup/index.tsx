@@ -21,40 +21,16 @@ import {
   wrapper,
   backWrapper,
   backButtonStyle,
-  backButtonWrapper,
+  slideWrapper,
+  slideContent,
 } from "./index.styles";
 
 export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
-  const [step, setStep] = useState(1);
-
-  // 줌 비활성화 및 스크롤 비활성화 처리
-  useEffect(() => {
-    // 줌 비활성화
-    const metaTag = document.createElement("meta");
-    metaTag.name = "viewport";
-    metaTag.content =
-      "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no";
-    document.head.appendChild(metaTag);
-
-    // 스크롤 비활성화
-    const originalStyle = window.getComputedStyle(document.body).overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      // 줌 설정 복원
-      document.head.removeChild(metaTag);
-
-      // 스크롤 활성화 복원
-      document.body.style.overflow = originalStyle;
-    };
-  }, []);
+  const [step, setStep] = useState(0); // step을 0부터 시작으로 변경
 
   const steps = [
-    {
-      components: [<InputUserName key="name" />],
-      requiredFields: ["name"],
-    },
+    { components: [<InputUserName key="name" />], requiredFields: ["name"] },
     {
       components: [<InputNickname key="nickname" />],
       requiredFields: ["nickname"],
@@ -63,10 +39,7 @@ export default function Signup() {
       components: [<InputBirthDate key="birthDate" />],
       requiredFields: ["birthDate"],
     },
-    {
-      components: [<InputGender key="gender" />],
-      requiredFields: ["gender"],
-    },
+    { components: [<InputGender key="gender" />], requiredFields: ["gender"] },
     {
       components: [<InputNationality key="nationality" />],
       requiredFields: ["nationality"],
@@ -90,7 +63,7 @@ export default function Signup() {
   ];
 
   const isStepValid = () => {
-    const requiredFields = steps[step - 1].requiredFields;
+    const requiredFields = steps[step].requiredFields;
     return requiredFields.every((field) => {
       const value = inputData[field as keyof IInputData];
       if (field === "profilePicture") {
@@ -111,12 +84,17 @@ export default function Signup() {
   };
 
   const handleNextStep = () => {
-    if (isStepValid()) setStep((prev) => prev + 1);
-    else alert("모든 필드를 입력해주세요.");
+    if (isStepValid() && step < steps.length - 1) {
+      setStep((prev) => prev + 1);
+    } else {
+      alert("모든 필드를 입력해주세요.");
+    }
   };
 
   const handleBackStep = () => {
-    if (step > 1) setStep((prev) => prev - 1);
+    if (step > 0) {
+      setStep((prev) => prev - 1);
+    }
   };
 
   const handleComplete = () => {
@@ -145,37 +123,60 @@ export default function Signup() {
     }
   };
 
-  const { components } = steps[step - 1];
+  // Enter 키 이벤트 리스너 추가
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        if (step === steps.length - 1) {
+          handleComplete();
+        } else if (isStepValid()) {
+          handleNextStep();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [step, inputData]); // step과 inputData 변경 시마다 리렌더링
 
   return (
     <div css={wrapper}>
       <div css={backWrapper}>
         <div css={progressBarContainer}>
-          <div css={progressStyle((step / steps.length) * 100)} />
+          <div css={progressStyle(((step + 1) / steps.length) * 100)} />
         </div>
-        <div css={backButtonWrapper}>
-          {step > 1 && (
-            <button css={backButtonStyle} onClick={handleBackStep}>
-              <BackButtonIcon width="16px" height="16px" />
-              <p>뒤로</p>
-            </button>
-          )}
+        {step > 0 && (
+          <button css={backButtonStyle} onClick={handleBackStep}>
+            <BackButtonIcon width="16px" height="16px" />
+            <p>뒤로</p>
+          </button>
+        )}
+      </div>
+
+      <div css={slideWrapper}>
+        <div css={slideContent(step)}>
+          {steps.map((stepData, index) => (
+            <div
+              key={index}
+              style={{ width: "100%", height: "100%", alignContent: "center" }}
+            >
+              {stepData.components}
+            </div>
+          ))}
         </div>
       </div>
 
-      {components.map((component) => component)}
       <div css={responsiveButtonWrapper}>
         <Button.Confirm
-          onClick={step === steps.length ? handleComplete : handleNextStep}
+          onClick={step === steps.length - 1 ? handleComplete : handleNextStep}
           $isDisabled={!isStepValid()}
-          style={{
-            maxWidth: "768px",
-            width: "100%",
-            fontSize: "16px",
-          }}
+          style={{ maxWidth: "768px", width: "100%", fontSize: "16px" }}
         >
           <Text.TitleMenu300 color="White" style={{ fontSize: "16px" }}>
-            {step === steps.length ? "완료" : "다음"}
+            {step === steps.length - 1 ? "완료" : "다음"}
           </Text.TitleMenu300>
         </Button.Confirm>
       </div>

@@ -1,14 +1,8 @@
 import { css } from "@emotion/react";
 
 export const containerStyle = css`
-  /* width: 100%;
-  max-width: 768px;
-  justify-content: space-between;
-  padding: 0 16px; */
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* padding-bottom: 16px; */
   width: 100%;
   height: 100vh;
   max-width: 768px;
@@ -33,7 +27,6 @@ export const headerTitleStyle = css`
 
 export const profileImageContainerStyle = css`
   text-align: center;
-  /* margin: 32px 0; */
 `;
 
 export const profileImageStyle = css`
@@ -99,15 +92,13 @@ export const readonlyInputStyle = css`
 `;
 
 export const protfileWrapper = css`
-    /* display: flex; */
-/* height: 427px; */
-justify-content: space-between;
-padding: 0px 16px;
-align-items: center;
-gap: 32px;
-flex-shrink: 0;
-align-self: stretch;
-`
+  justify-content: space-between;
+  padding: 0px 16px;
+  align-items: center;
+  gap: 32px;
+  flex-shrink: 0;
+  align-self: stretch;
+`;
 
 export const saveButtonStyle = css`
   width: 100%;

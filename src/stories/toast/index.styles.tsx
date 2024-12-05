@@ -5,7 +5,6 @@ export default {
     toastMessage(direction: 'none' | 'up' | 'down'): SerializedStyles {
         return css`
         position: fixed;
-        top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         padding: 16px;
@@ -19,14 +18,14 @@ export default {
         box-sizing: border-box;
         white-space: normal;
         text-align: center;
-        opacity: 1;
+        max-width: 90%;
+        white-space: nowrap;
         transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 
-        /* &.animate {
-            opacity: 0;
-            transform: translate(-50%, ${direction === 'up' ? '-100%' : '100%'});
-        } */
-        /* ${direction === 'up' ? 'transform: translateY(-150%);' : 'transform: translateY(150%);'}; */
+        /* 위치 설정 */
+        ${direction === "up" && "top: 16px;"}
+        ${direction === "down" && "bottom: 16px;"}
+        ${direction === "none" && "top: 50%; transform: translate(-50%, -50%);"}
         `;
     },
 };
