@@ -28,7 +28,9 @@ interface PlaylistDataTypes {
 // 리액트 쿼리 queryFn
 async function fetchMovies(pageParam: number) {
   const { data } = await axios.get(
-    `/api/movie/playlist?page=${pageParam}&limit=3`
+    `${
+      import.meta.env.VITE_SERVER_URL
+    }/api/movie/playlist?page=${pageParam}&limit=3`
   );
   return data;
 }
