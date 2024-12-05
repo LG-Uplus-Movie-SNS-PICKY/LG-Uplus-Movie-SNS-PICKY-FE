@@ -52,6 +52,8 @@ export const globalStyle = css`
     width: 100%;
     min-height: 100vh;
     letter-spacing: -0.4px; //자간 -4%
+
+    background-color: #f5f5f5;
   }
 
   body::-webkit-scrollbar {
