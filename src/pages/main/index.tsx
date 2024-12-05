@@ -21,7 +21,7 @@ function Main() {
       <FamousMovie isLogin={isLogin} />
 
       {/* Genre Movie Section */}
-      {/* <GenresMovie /> */}
+      <GenresMovie />
     </>
   );
 }

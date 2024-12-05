@@ -711,25 +711,28 @@ const MOCK_PLAYLIST_DATA = [
 // Movie - Playlist 관련 모킹 API(Mocking Object) 설계
 const playlistHandler: HttpHandler[] = [
   // 플레이리스트를 가져오는 모킹 API
-  http.get("/api/movie/playlist", ({ request }) => {
-    const url = new URL(request.url); // URL 생성
+  http.get(
+    `${import.meta.env.VITE_SERVER_URL}/api/movie/playlist`,
+    ({ request }) => {
+      const url = new URL(request.url); // URL 생성
 
-    // 무한 스크롤을 위한 페이지 번호와 리미트 수
-    const page = Number(url.searchParams.get("page") || "1");
-    const limit = Number(url.searchParams.get("limit") || "3");
+      // 무한 스크롤을 위한 페이지 번호와 리미트 수
+      const page = Number(url.searchParams.get("page") || "1");
+      const limit = Number(url.searchParams.get("limit") || "3");
 
-    // 페이징 처리
-    const startIndex = (page - 1) * limit; // 시작 인덱스
-    const endIndex = startIndex + limit; // 끝 인덱스
+      // 페이징 처리
+      const startIndex = (page - 1) * limit; // 시작 인덱스
+      const endIndex = startIndex + limit; // 끝 인덱스
 
-    return HttpResponse.json(
-      {
-        data: MOCK_PLAYLIST_DATA.slice(startIndex, endIndex), // 배열의 원소를 시작 인덱스 부터 끝 인덱스까지의 결과만 구성한다.
-        nextPage: endIndex < MOCK_PLAYLIST_DATA.length ? page + 1 : null,
-      },
-      { status: 200, statusText: "Playlist Data" }
-    );
-  }),
+      return HttpResponse.json(
+        {
+          data: MOCK_PLAYLIST_DATA.slice(startIndex, endIndex), // 배열의 원소를 시작 인덱스 부터 끝 인덱스까지의 결과만 구성한다.
+          nextPage: endIndex < MOCK_PLAYLIST_DATA.length ? page + 1 : null,
+        },
+        { status: 200, statusText: "Playlist Data" }
+      );
+    }
+  ),
 ];
 
 export default playlistHandler;
