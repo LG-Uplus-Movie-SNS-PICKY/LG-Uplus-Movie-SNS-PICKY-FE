@@ -76,6 +76,10 @@ export const contentSection = css`
   letter-spacing: -0.64px;
 `;
 
+export const carouselWrapper = css`
+  position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
+`;
+
 export const carouselSection = css`
   width: 100%;
   overflow-x: auto;
@@ -130,6 +134,7 @@ export const modalOverlay = css`
   align-items: center;
   opacity: 1;
   animation: fadeIn 0.3s ease-out;
+  z-index: 999;
 
   @keyframes fadeIn {
     from {
@@ -158,6 +163,7 @@ export const modalContent = css`
   button:first-of-type {
     border-radius: 10px 10px 0 0;
     border-bottom: 0.5px solid rgba(217, 217, 217, 0.85);
+    color: #000;
   }
 
   button:last-of-type {
@@ -200,9 +206,9 @@ export const spoilerImageWrapper = css`
 
 export const blurredImage = css`
   filter: blur(5px);
-  pointer-events: none;
-  width: 360px;
-  height: auto;
+  cursor: pointer;
+  position: relative;
+  z-index: 1; /* 스포주의 텍스트 아래에 위치 */
 `;
 
 export const spoilerText = css`
@@ -212,24 +218,32 @@ export const spoilerText = css`
   transform: translate(-50%, -50%);
   padding: 16px 16px;
   text-align: center;
-  pointer-events: none;
   color: #f00;
-  text-align: center;
   font-size: 24px;
   font-weight: 800;
-  line-height: normal;
-  letter-spacing: -0.96px;
   background: rgba(255, 255, 255, 0.3);
   border-radius: 12px;
+  pointer-events: none; /* 클릭이 MovieLog로 전달되도록 설정 */
+  z-index: 10; /* 블러 처리된 요소 위에 표시되도록 설정 */
+  p {
+    color: #000;
+    font-size: 16px;
+    font-weight: 400;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    margin-top: 8px;
+  }
 `;
 
 export const blurredContent = css`
-  filter: blur(10px);
+  filter: blur(5px);
   cursor: pointer;
   position: relative;
-  text-align: center;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.3);
   pointer-events: none;
   user-select: none;
 `;

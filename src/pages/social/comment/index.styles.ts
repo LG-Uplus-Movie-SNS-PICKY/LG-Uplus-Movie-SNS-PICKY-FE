@@ -151,7 +151,7 @@ export const modalContent = css`
   position: absolute;
   bottom: 55px;
   border-radius: 10px 10px 0 0;
-  background: #fff;
+  background: #f1f1f1;
   width: 100%;
   padding: 16px;
   display: flex;
