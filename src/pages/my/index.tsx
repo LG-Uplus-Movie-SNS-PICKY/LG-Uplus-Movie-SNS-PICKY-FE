@@ -121,6 +121,7 @@ function My() {
           ) : (
             <ProfileImage src={defaultProfileImage} />
           )}
+
           <ProfileInfoContainer>
             <ProfileInfo>
               <BoldText isZero={dummyData.reviews === 0}>
