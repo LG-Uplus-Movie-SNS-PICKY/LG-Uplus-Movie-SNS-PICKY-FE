@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 
 // API로 호출된 장르 데이터 타입 정의
 interface GenreDataType {
-  genre_id: number;
+  id: number;
   name: string;
 }
 
@@ -41,13 +41,13 @@ function GenreTab() {
         css={styles.swiperContainer()}
       >
         {genres.map((genre: GenreDataType) => (
-          <SwiperSlide key={genre.genre_id}>
+          <SwiperSlide key={genre.id}>
             <GenreTabButton
               label={genre.name}
               emoji={genre.name}
               btnType="Round"
               padding="8px 16px"
-              onClick={() => navigate(`/picky/genre/${genre.genre_id}`)}
+              onClick={() => navigate(`/genre/${genre.id}`)}
             />
           </SwiperSlide>
         ))}

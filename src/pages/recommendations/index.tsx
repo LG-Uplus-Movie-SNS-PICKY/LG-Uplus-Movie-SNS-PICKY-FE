@@ -51,7 +51,8 @@ export default function MovieRecommendationPage() {
       <div css={headerWrapperStyle}>
         <header css={headerStyle}>
           <h1 css={titleStyle}>
-            🧸 PICKY가 <span css={highlightStyle}>까탈스럽게</span> 골라낸 맞춤형 AI 영화 추천
+            🧸 PICKY가 <span css={highlightStyle}>까탈스럽게</span> 골라낸
+            맞춤형 AI 영화 추천
           </h1>
           <h2 css={subtitleStyle}>
             <b>{username}</b>님이 선호하는 장르의 작품들
