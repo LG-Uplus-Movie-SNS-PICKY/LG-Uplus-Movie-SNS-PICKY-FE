@@ -146,7 +146,7 @@ function MovieDetail(props: MovieDetailProps) {
   return (
     <>
       <SEO
-        title={dummyData.title}
+        title={`${dummyData.title}(${dummyData.year})`}
         description={dummyData.content}
         image={dummyData.imageUrl}
         url={`http://localhost:5173/${location.pathname}`}
