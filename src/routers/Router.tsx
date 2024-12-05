@@ -41,30 +41,34 @@ function Router() {
             <Route path="/" element={<Home />} />
             <Route path="/error" element={<ErrorPage />} />
 
-            {/* 로그인 사용자 라우트 */}
-            <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/movie/:id/reviews" element={<MovieReviews />} />
-            <Route path="/my" element={<My />} />
-
-            <Route path="/login/oauth2/callback" element={<Callback />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/notification" element={<NotificationPage />} />
-            <Route path="/recommendations" element={<Recommendations />} />
-
-            {/* 관리자 전용 라우트 */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/user-profile/edit" element={<Edit />} />
-            <Route path="/movie-log" element={<Feed />} />
-            <Route path="/add-feed" element={<Post />} />
-            <Route path="/edit-post" element={<EditFeed />} />
-            <Route path="/comment" element={<Comment />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/picky" element={<PickyPage />} />
+            {/* 비로그인 사용자 라우트 */}
+            <Route path="/auth/sign-in" element={<Login />} />
             <Route
-              path="/picky/genre/:genreId"
-              element={<PickyGenreDetailPage />}
+              path="/auth/sign-in/oauth2/callback"
+              element={<Callback />}
             />
+            <Route path="/auth/sign-up" element={<Signup />} />
+
+            {/* 로그인 사용자 - Movie 관련 라우트 (영화 상세) */}
+            <Route path="/movie/:id" element={<MovieDetail />} />
+            <Route path="/movie/:id/review" element={<MovieReviews />} />
+
+            {/* 로그인 사용자 - User 관련 라우트 */}
+            <Route path="/user/:nickname" element={<My />} />
+            <Route path="/user/:nuckname/edit" element={<Edit />} />
+
+            {/* 로그인 사용자 - Movie Log 관련 라우트 */}
+            <Route path="/movie-log" element={<Feed />} />
+            <Route path="/movie-log/detail" element={<Comment />} />
+            <Route path="/movie-log/add" element={<Post />} />
+            <Route path="/movie-log/edit" element={<EditFeed />} />
+
+            {/* 로그인 사용자 - 이외 라우트 */}
+            <Route path="/picky" element={<PickyPage />} />
+            <Route path="/genre/:genreId" element={<PickyGenreDetailPage />} />
+            <Route path="/notification" element={<NotificationPage />} />
+            <Route path="/recommendation" element={<Recommendations />} />
+            <Route path="/search" element={<Search />} />
 
             {/* 관리자 전용 라우트 */}
             <Route path="/admin/*" element={<AdminLayout />} />
