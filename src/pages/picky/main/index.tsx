@@ -141,7 +141,7 @@ function PickyPage() {
       <BsetMovieSection bestMovie={bestMovie} />
 
       {/* Playlists */}
-      {/* <PlayListSection /> */}
+      <PlayListSection />
     </div>
   );
 }
