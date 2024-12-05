@@ -4,11 +4,6 @@ import axios from "axios";
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
-  const PLATFORM = "naver"; // 플랫폼 값 설정
-  const ROUTES = {
-    LOGIN: "/login",
-    SIGNUP: "/signup",
-  };
 
   useEffect(() => {
     console.log("LoginCallback useEffect triggered");
@@ -19,62 +14,56 @@ const LoginCallback: React.FC = () => {
     const state = queryParams.get("state");
 
     if (!code || !state) {
-      console.error("로그인 리다이렉트 파라미터가 없습니다. (code 또는 state)");
       alert("잘못된 로그인 요청입니다. 다시 시도해주세요.");
       return;
     }
 
-    console.log("Received query parameters:", { code, state });
-
-    // 백엔드로 소셜 로그인 처리 요청
+    // 소셜 로그인 API 요청
     axios
-      .post(`http://43.202.51.30:8080/api/v1/oauth/${PLATFORM}/user`, null, {
-        params: {
-          code, // code 전달
-          state, // state 전달
-        },
-        headers: {
-          "Content-Type": "application/json", // 헤더 설정
-        },
+      .get(`http://43.202.51.30:80/api/v1/oauth/naver/user`, {
+        params: { code, state },
       })
       .then((response) => {
-        console.log("Received response from backend:", response.data);
+        // 응답 데이터 디버깅
+        console.log("Response data:", response.data.data);
 
-        const { oAuth2Token, localJwtDto, isRegistrationDone } = response.data;
+        // 토큰 및 데이터 확인
+        const { oAuth2Token, localJwtDto, isRegistrationDone } = response.data.data;
 
-        if (oAuth2Token && localJwtDto) {
-          console.log("Storing tokens in sessionStorage...");
+        if (
+          oAuth2Token?.access_token &&
+          oAuth2Token?.refresh_token &&
+          localJwtDto?.accessToken
+        ) {
+          // sessionStorage에 저장
           sessionStorage.setItem("access_token", oAuth2Token.access_token);
           sessionStorage.setItem("refresh_token", oAuth2Token.refresh_token);
-          sessionStorage.setItem("local_jwt", localJwtDto.accessToken);
+          sessionStorage.setItem("accessToken", localJwtDto.accessToken);
+          console.log("Tokens stored successfully.");
         } else {
-          console.error("백엔드 응답에 토큰 정보가 없습니다.");
-          alert("로그인 처리 중 문제가 발생했습니다. 다시 시도해주세요.");
+          alert("로그인 처리 중 문제가 발생했습니다.");
           return;
         }
 
-        // 회원가입 여부에 따라 페이지 이동
+        // 회원가입 여부 확인 후 페이지 이동
         if (isRegistrationDone) {
-          console.log("Registration completed. Navigating to /login...");
-          navigate(ROUTES.LOGIN);
+          navigate("/login");
         } else {
-          console.log("Registration not completed. Navigating to /signup...");
-          navigate(ROUTES.SIGNUP);
+          navigate("/signup");
         }
       })
       .catch((error) => {
-        // 에러 처리 개선
-        console.error("Error occurred during backend request:", error);
+        // 에러 처리
         if (error.response) {
-          console.error("Backend error response data:", error.response.data);
-          console.error("HTTP status code:", error.response.status);
-          console.error("Response headers:", error.response.headers);
+          console.error("Error response from server:", error.response);
+          alert(`서버 오류: ${error.response.data.message}`);
         } else if (error.request) {
-          console.error("No response received. Request was:", error.request);
+          console.error("No response received. Request details:", error.request);
+          alert("서버로부터 응답이 없습니다. 다시 시도해주세요.");
         } else {
-          console.error("Error setting up the request:", error.message);
+          console.error("Request setup error:", error.message);
+          alert("요청 설정 중 문제가 발생했습니다. 다시 시도해주세요.");
         }
-        alert("로그인 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
       });
   }, [navigate]);
 
