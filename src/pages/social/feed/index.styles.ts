@@ -174,6 +174,7 @@ export const modalContent = css`
     font-size: 16px;
     font-weight: 400;
     letter-spacing: -0.64px;
+    gap: 12px;
   }
 `;
 
