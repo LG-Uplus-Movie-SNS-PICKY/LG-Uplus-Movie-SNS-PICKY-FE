@@ -8,7 +8,6 @@ const LoginCallback: React.FC = () => {
   useEffect(() => {
     console.log("LoginCallback useEffect triggered");
 
-    // URL에서 query parameters 가져오기
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
