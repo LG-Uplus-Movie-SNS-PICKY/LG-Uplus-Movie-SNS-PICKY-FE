@@ -8,7 +8,7 @@ import {
 } from "./index.styles";
 import NotFound from "@assets/icons/error_message.svg?react";
 
-export default function ErrorPage() {
+export default function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
