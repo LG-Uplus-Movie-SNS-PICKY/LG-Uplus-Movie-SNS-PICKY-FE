@@ -38,10 +38,16 @@ function Router() {
         <Layout>
           <Routes>
             {/* 공개 라우트 */}
+
+            {/* 비로그인 사용자 라우트 */}
+
+            {/* 로그인 사용자 라우트 */}
+
+            {/* 관리자 전용 라우트 */}
+
             <Route path="/" element={<Home />} />
             <Route path="/error" element={<ErrorPage />} />
 
-            {/* 로그인 사용자 라우트 */}
             <Route path="/movie/:id" element={<MovieDetail />} />
             <Route path="/movie/:id/reviews" element={<MovieReviews />} />
             <Route path="/my" element={<My />} />
@@ -51,7 +57,6 @@ function Router() {
             <Route path="/notification" element={<NotificationPage />} />
             <Route path="/recommendations" element={<Recommendations />} />
 
-            {/* 관리자 전용 라우트 */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/user-profile/edit" element={<Edit />} />
