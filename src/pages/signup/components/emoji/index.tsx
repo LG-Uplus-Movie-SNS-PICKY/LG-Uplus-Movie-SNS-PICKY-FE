@@ -14,7 +14,7 @@ const Emoji: React.FC<EmojiProps> = ({
   height = "12px",
 }) => {
   return (
-    <img src={src} alt={alt} style={{ width, height, marginRight: "4px" }} />
+    <img src={src} alt={alt} style={{ width, height }} />
   );
 };
 

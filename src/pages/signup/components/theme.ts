@@ -15,6 +15,7 @@ const fontColor = {
   Gray500: "#80818C",
   Gray600: "#383840", 
   Green: "#82d295",
+  Brown: "#756262",
 };
 
 const fontSize = {
