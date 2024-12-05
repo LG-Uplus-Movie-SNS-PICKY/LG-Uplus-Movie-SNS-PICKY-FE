@@ -9,10 +9,10 @@ const isLogin = true;
 function Main() {
   return (
     <>
-      {/* <SEO
+      <SEO
         title="PICKY"
         description="영화 리뷰와 정보를 한곳에서, 영화 팬들의 소통을 위한 최적의 커뮤니티 서비스입니다."
-      /> */}
+      />
 
       {/* Slider or Banner Section */}
       {isLogin ? <RecommendMovieSlider /> : <LoginBanner />}
@@ -21,7 +21,7 @@ function Main() {
       <FamousMovie isLogin={isLogin} />
 
       {/* Genre Movie Section */}
-      <GenresMovie />
+      {/* <GenresMovie /> */}
     </>
   );
 }
