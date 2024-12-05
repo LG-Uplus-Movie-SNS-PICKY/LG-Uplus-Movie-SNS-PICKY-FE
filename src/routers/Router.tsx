@@ -25,7 +25,7 @@ import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
-import ErrorPage from "@pages/error";
+import NotFoundPage from "@pages/not-found";
 
 function Router() {
   return (
@@ -73,7 +73,7 @@ function Router() {
             <Route path="/admin/*" element={<AdminLayout />} />
 
             {/* 에러 페이지 */}
-            <Route path="/*" element={<ErrorPage />} />
+            <Route path="/*" element={<NotFoundPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>
