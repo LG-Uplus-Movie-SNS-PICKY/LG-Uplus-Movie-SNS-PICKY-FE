@@ -15,6 +15,7 @@ import {
   saveButtonStyle,
   buttonWrapper,
 } from "./index.styles";
+import SEO from "@components/seo";
 
 export default function ProfileEditPage() {
   const [nickname, setNickname] = useState("먹식이");
@@ -56,86 +57,102 @@ export default function ProfileEditPage() {
   };
 
   return (
-    <div css={containerStyle}>
-      <header css={headerStyle}>
-        <h1 css={headerTitleStyle}>프로필 편집</h1>
-      </header>
+    <>
+      {/* <SEO
+        title={`PICKY: ${dummyData.nickname}`}
+      /> */}
 
-      <div css={profileImageContainerStyle}>
-        <label htmlFor="profileImageInput" style={{ cursor: "pointer" }}>
-          <div css={profileWrapper}>
-            <img
-              src={profileImage || profileIcon}
-              alt="프로필 이미지"
-              css={profileImageStyle}
-            />
-            <p css={photoEditStyle}>사진수정</p>
-          </div>
-        </label>
-        <input
-          id="profileImageInput"
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          onChange={handleImageUpload}
-        />
-      </div>
+      <div css={containerStyle}>
+        <header css={headerStyle}>
+          <h1 css={headerTitleStyle}>프로필 편집</h1>
+        </header>
 
-      <div css={profileWrapper}>
-        <div css={inputRowStyle}>
-          <label css={inputLabelStyle}>닉네임</label>
-          <div style={{ width: "65%" }}>
-            <input
-              type="text"
-              value={nickname}
-              onChange={handleNicknameChange}
-              css={inputStyle}
-            />
-            {nicknameError && (
-              <p
-                style={{
-                  color: "#FF084A",
-                  fontSize: "12px",
-                  marginTop: "4px",
-                  marginLeft: "4px",
-                }}
-              >
-                {nicknameError}
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div css={inputRowStyle}>
-          <label css={inputLabelStyle}>이름</label>
-          <input type="text" value="최우진" readOnly css={readonlyInputStyle} />
-        </div>
-
-        <div css={inputRowStyle}>
-          <label css={inputLabelStyle}>생년월일</label>
+        <div css={profileImageContainerStyle}>
+          <label htmlFor="profileImageInput" style={{ cursor: "pointer" }}>
+            <div css={profileWrapper}>
+              <img
+                src={profileImage || profileIcon}
+                alt="프로필 이미지"
+                css={profileImageStyle}
+              />
+              <p css={photoEditStyle}>사진수정</p>
+            </div>
+          </label>
           <input
-            type="text"
-            value="2002-09-18"
-            readOnly
-            css={readonlyInputStyle}
+            id="profileImageInput"
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
           />
         </div>
 
-        <div css={inputRowStyle}>
-          <label css={inputLabelStyle}>성별</label>
-          <input type="text" value="여자" readOnly css={readonlyInputStyle} />
-        </div>
+        <div css={profileWrapper}>
+          <div css={inputRowStyle}>
+            <label css={inputLabelStyle}>닉네임</label>
+            <div style={{ width: "65%" }}>
+              <input
+                type="text"
+                value={nickname}
+                onChange={handleNicknameChange}
+                css={inputStyle}
+              />
+              {nicknameError && (
+                <p
+                  style={{
+                    color: "#FF084A",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                    marginLeft: "4px",
+                  }}
+                >
+                  {nicknameError}
+                </p>
+              )}
+            </div>
+          </div>
 
-        <div css={inputRowStyle}>
-          <label css={inputLabelStyle}>국적</label>
-          <input type="text" value="내국인" readOnly css={readonlyInputStyle} />
+          <div css={inputRowStyle}>
+            <label css={inputLabelStyle}>이름</label>
+            <input
+              type="text"
+              value="최우진"
+              readOnly
+              css={readonlyInputStyle}
+            />
+          </div>
+
+          <div css={inputRowStyle}>
+            <label css={inputLabelStyle}>생년월일</label>
+            <input
+              type="text"
+              value="2002-09-18"
+              readOnly
+              css={readonlyInputStyle}
+            />
+          </div>
+
+          <div css={inputRowStyle}>
+            <label css={inputLabelStyle}>성별</label>
+            <input type="text" value="여자" readOnly css={readonlyInputStyle} />
+          </div>
+
+          <div css={inputRowStyle}>
+            <label css={inputLabelStyle}>국적</label>
+            <input
+              type="text"
+              value="내국인"
+              readOnly
+              css={readonlyInputStyle}
+            />
+          </div>
+        </div>
+        <div css={buttonWrapper}>
+          <button onClick={handleSave} css={saveButtonStyle}>
+            수정하기
+          </button>
         </div>
       </div>
-      <div css={buttonWrapper}>
-        <button onClick={handleSave} css={saveButtonStyle}>
-          수정하기
-        </button>
-      </div>
-    </div>
+    </>
   );
 }
