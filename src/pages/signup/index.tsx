@@ -133,7 +133,7 @@ export default function Signup() {
       }
   
       if (key === "favoriteGenres") {
-        return Array.isArray(value) && value.length > 0;
+        return Array.isArray(value) && value.length > 0 && value.length <= 5;
       }
   
       if (key === "favoriteMovie") {
