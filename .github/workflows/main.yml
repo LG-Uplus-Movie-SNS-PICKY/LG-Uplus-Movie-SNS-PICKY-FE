@@ -20,7 +20,7 @@ jobs:
       # .env에 있던 환경변수들을 등록해주는 단계
       - name: .env setting
         run: |
-          echo "REACT_APP_SERVER_IP=${{ secrets.REACT_APP_SERVER_IP }}"
+          echo "VITE_SERVER_URL=${{ secrets.VITE_SERVER_URL }}" >> .env.production
           echo "VITE_TMDB_API_KEY=${{ secrets.VITE_TMDB_API_KEY }}" >> .env.production
 
       - name: Build
