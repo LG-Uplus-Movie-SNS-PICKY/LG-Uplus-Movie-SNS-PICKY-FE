@@ -17,6 +17,7 @@ import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
 import Check from "@assets/icons/check.svg?react";
+import { TMDB_API_KEY } from "@api/constants";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -91,7 +92,7 @@ function RegistMovieSection() {
         },
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+          Authorization: `Bearer ${TMDB_API_KEY}`,
         },
       }
     );
@@ -109,7 +110,7 @@ function RegistMovieSection() {
         },
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+          Authorization: `Bearer ${TMDB_API_KEY}`,
         },
       }
     );
