@@ -1,7 +1,8 @@
 import { http, HttpHandler, HttpResponse } from "msw";
+import { MovieLogReadResolver } from "./resolver/get";
 
 // Movie 관련 모킹 API(Mocking Object) 설계
-const movieHandelrs: HttpHandler[] = [
+const boardHandlers: HttpHandler[] = [
   // 무비로그 생성 API(Mocking Object)
   http.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, () => {}),
 
@@ -18,7 +19,10 @@ const movieHandelrs: HttpHandler[] = [
   ),
 
   // 무비로그 조회 API(Mocking Object) - 무비로그 탭 최신순 목록 조회
-  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`, () => {}),
+  http.get(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`,
+    MovieLogReadResolver
+  ),
 
   // 무비로그 조회 API(Mocking Object) - 프로필 페이지 사용자가 작성한 목록 조회
   http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, () => {}),
@@ -50,4 +54,4 @@ const movieHandelrs: HttpHandler[] = [
   ),
 ];
 
-export default movieHandelrs;
+export default boardHandlers;
