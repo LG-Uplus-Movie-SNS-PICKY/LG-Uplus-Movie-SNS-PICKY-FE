@@ -1,5 +1,8 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import { MovieLogReadResolver } from "./resolver/get";
+import {
+  MovieLogReadResolver,
+  UserWriterMovieLogReadResolver,
+} from "./resolver/get";
 
 // Movie 관련 모킹 API(Mocking Object) 설계
 const boardHandlers: HttpHandler[] = [
@@ -25,7 +28,10 @@ const boardHandlers: HttpHandler[] = [
   ),
 
   // 무비로그 조회 API(Mocking Object) - 프로필 페이지 사용자가 작성한 목록 조회
-  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, () => {}),
+  http.get(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
+    UserWriterMovieLogReadResolver
+  ),
 
   // 영화 디테일 페이지에서 무비로그 버튼을 클릭할 경우 -> 해당 영화와 관련된 무비로그만 조회 API(Mocking Object)
   http.get(

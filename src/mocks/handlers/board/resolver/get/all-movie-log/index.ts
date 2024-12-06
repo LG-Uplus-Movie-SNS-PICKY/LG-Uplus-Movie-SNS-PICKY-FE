@@ -1,8 +1,6 @@
 import { HttpResponse } from "msw";
 import resposne from "./responseData.json";
 
-// interface HeadersTypes
-
 interface MockedRequest {
   [key: string]: unknown;
   url: string;
@@ -10,8 +8,6 @@ interface MockedRequest {
 
 export default function AllMovieLog({ request }: { request: MockedRequest }) {
   const authorization = request?.headers?.get("Authorization");
-
-  console.log(request.headers.get);
 
   // 권한이 없을 경우 403에러 발생
   if (!authorization) {
