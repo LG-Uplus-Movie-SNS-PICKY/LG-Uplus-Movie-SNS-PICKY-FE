@@ -201,31 +201,32 @@ export const slideContent = (step: number) => css`
   & > div {
     width: 100%;
     height: 100%;
-    visibility: hidden; /* 기본적으로 숨김 */
-    pointer-events: none; /* 숨겨진 스텝과의 상호작용 차단 */
+    visibility: hidden;
+    pointer-events: none;
   }
 
   & > div:nth-of-type(${step + 1}) {
-    visibility: visible; /* 현재 스텝만 표시 */
-    pointer-events: auto; /* 현재 스텝과 상호작용 가능 */
+    visibility: visible;
+    pointer-events: auto;
   }
 `;
 
 export const slideNext = css`
-  transform: translateY(100%); /* 다음 단계가 아래에서 들어옴 */
+  transform: translateY(100%);
   transition: transform 0.3s ease-in-out;
 `;
 
 export const slidePrev = css`
-  transform: translateY(-100%); /* 이전 단계가 위에서 들어옴 */
+  transform: translateY(-100%);
 `;
 
 export const slideIn = css`
-  transform: translateY(0); /* 현재 단계가 중앙에 위치 */
+  transform: translateY(0);
   transition: transform 0.3s ease-in-out;
 `;
 
 export const slideOut = css`
-  transform: translateY(100%); /* 현재 단계가 아래로 사라짐 */
+  transform: translateY(100%);
   transition: transform 0.3s ease-in-out;
-// `;
+  //
+`;

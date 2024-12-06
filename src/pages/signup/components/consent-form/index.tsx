@@ -2,6 +2,7 @@ import { useRecoilState } from "recoil";
 import { inputState, IInputData } from "../../../../review/atoms";
 import { Text } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
+import { useState, useEffect } from "react";
 import { Checked, Unchecked } from "@assets/svg";
 
 import {
@@ -13,7 +14,8 @@ import {
 
 export default function InputConsentForm() {
   const [inputData, setInputData] = useRecoilState(inputState);
-  const { isFocused, handleFocus, handleBlur } = useFocus();
+  const { handleFocus, handleBlur } = useFocus();
+  const [isValid, setIsValid] = useState(true); // 유효성 상태 추가
 
   const toggleConsentAll = () => {
     setInputData((prev: IInputData) => ({
@@ -29,6 +31,11 @@ export default function InputConsentForm() {
     }));
   };
 
+  // 유효성 검사 로직
+  useEffect(() => {
+    setIsValid(inputData.consentAll && inputData.consentAge);
+  }, [inputData.consentAll, inputData.consentAge]);
+
   return (
     <div css={consentWrapper}>
       <Text.TitleMenu300>이용 약관에 동의해주세요</Text.TitleMenu300>
@@ -38,7 +45,7 @@ export default function InputConsentForm() {
         onClick={toggleConsentAll}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        tabIndex={0} 
+        tabIndex={0}
       >
         <div css={customCheckbox}>
           {inputData.consentAll ? <Checked /> : <Unchecked />}
@@ -53,7 +60,7 @@ export default function InputConsentForm() {
         onClick={toggleConsentAge}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        tabIndex={0} 
+        tabIndex={0}
       >
         <div css={customCheckbox}>
           {inputData.consentAge ? <Checked /> : <Unchecked />}
@@ -63,9 +70,16 @@ export default function InputConsentForm() {
         </span>
       </div>
 
-      <Text.FocusedWarning $isFocused={isFocused}>
+      <div
+        style={{
+          color: isValid ? "transparent" : "#FF084A",
+          minHeight: "20px",
+          textAlign: "center",
+          marginTop: "10px",
+        }}
+      >
         필수 약관에 모두 동의 해주세요.
-      </Text.FocusedWarning>
+      </div>
     </div>
   );
 }

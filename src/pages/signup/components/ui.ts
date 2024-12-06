@@ -93,7 +93,7 @@ export const Text = {
       weight ? theme.weight[weight] : theme.weight.Bold};
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
     color: ${({ $isFocused }) =>
-      $isFocused ? theme.color.Brown : theme.color.Gray};
+      $isFocused ? theme.color.Gray : theme.color.Gray};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
   Warning: styled.span<StyleText>`
@@ -118,7 +118,7 @@ export const Text = {
       weight ? theme.weight[weight] : theme.weight.Bold};
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size300)};
     color: ${({ $isFocused }) =>
-      $isFocused ? theme.color.Brown : theme.color.Gray};
+      $isFocused ? theme.color.Red : theme.color.Gray};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
 };

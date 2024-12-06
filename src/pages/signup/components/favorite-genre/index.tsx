@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import Emoji from "../emoji";
 import { inputState } from "../../../../review/atoms";
@@ -11,8 +11,9 @@ import {
   genreGrid,
   title,
   subtitle,
-  // genreGroup,
   requiredBadge,
+  TextWrapper,
+  Warning,
   genreButton,
 } from "./index.styles";
 
@@ -68,14 +69,18 @@ const genres = [
 
 const MovieGenreSelector = () => {
   const [inputData, setInputData] = useRecoilState(inputState);
+  const [isValid, setIsValid] = useState(true); // 유효성 상태 추가
+
+  const validateGenres = useCallback(() => {
+    const genreCount = inputData.favoriteGenres.length;
+    return genreCount >= 3 && genreCount <= 5;
+  }, [inputData.favoriteGenres]);
 
   const toggleGenre = (id: number) => {
     setInputData((prev) => {
       const updatedGenres = prev.favoriteGenres.includes(id)
         ? prev.favoriteGenres.filter((genreId) => genreId !== id)
-        : prev.favoriteGenres.length < 5
-        ? [...prev.favoriteGenres, id]
-        : prev.favoriteGenres;
+        : [...prev.favoriteGenres, id];
 
       return {
         ...prev,
@@ -84,10 +89,9 @@ const MovieGenreSelector = () => {
     });
   };
 
-  const chunkedGenres = [];
-  for (let i = 0; i < genres.length; i += 4) {
-    chunkedGenres.push(genres.slice(i, i + 4));
-  }
+  useEffect(() => {
+    setIsValid(validateGenres()); // 장르 선택 유효성 검사
+  }, [inputData.favoriteGenres, validateGenres]);
 
   return (
     <div css={wrapper}>
@@ -116,6 +120,13 @@ const MovieGenreSelector = () => {
           ))}
         </div>
       </div>
+      <div css={TextWrapper} style={{ height: "20px" }}>
+          <div css ={Warning}
+            style={{ visibility: isValid ? "hidden" : "visible" }}
+          >
+            최소 장르 3개 ~ 최대 장르 5개 선택해 주세요.
+          </div>
+        </div>
     </div>
   );
 };

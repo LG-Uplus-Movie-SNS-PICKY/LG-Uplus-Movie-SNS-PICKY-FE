@@ -2,18 +2,32 @@ import { useRecoilState } from "recoil";
 import { inputState, userState } from "../../../../review/atoms";
 import { Text, Input } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import { useEffect } from "react";
-import { UserNameContainer, TextWrapper } from "./index.styles";
+import { useState, useEffect } from "react";
+import { UserNameContainer, TextWrapper, Warning } from "./index.styles";
 
 export default function InputUserName() {
   const [userInfo, setUserInfo] = useRecoilState(userState);
   const [inputData, setInputData] = useRecoilState(inputState);
   const { isFocused, handleFocus, handleBlur } = useFocus();
+  const [isValid, setIsValid] = useState(true);
+
+  const validateName = (name: string) => {
+    return name.length >= 2 && name.length <= 10 && /^[^\d]+$/.test(name);
+  };
 
   const handleUserNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newData = e.target.value.replace(/\d/g, "");
-    setUserInfo((prev) => ({ ...prev, username: newData }));
-    setInputData((prev) => ({ ...prev, name: newData }));
+    let newData = e.target.value;
+
+    if (newData.length > 10) {
+      newData = newData.slice(0, 10);
+    }
+
+    const isValidName = validateName(newData);
+    setIsValid(isValidName);
+
+    const sanitizedData = newData.replace(/\d/g, "");
+    setUserInfo((prev) => ({ ...prev, username: sanitizedData }));
+    setInputData((prev) => ({ ...prev, name: sanitizedData }));
   };
 
   useEffect(() => {
@@ -36,10 +50,12 @@ export default function InputUserName() {
           onBlur={handleBlur}
           onChange={handleUserNameChange}
         />
-        <div css={TextWrapper}>
-          <Text.FocusedWarning $isFocused={isFocused}>
-            이름은 수정이 불가하니 정확하게 입력해주세요
-          </Text.FocusedWarning>
+        <div css={TextWrapper} style={{ height: "20px" }}>
+          <div css ={Warning}
+            style={{ visibility: isValid ? "hidden" : "visible" }}
+          >
+            이름은 최소 2글자 최대 10글자 입니다.
+          </div>
         </div>
       </div>
     </>
