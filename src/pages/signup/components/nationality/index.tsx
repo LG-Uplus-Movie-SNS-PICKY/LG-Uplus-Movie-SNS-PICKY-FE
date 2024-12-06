@@ -8,6 +8,7 @@ import {
   nationalityButton,
   textWrapper,
 } from "./index.styles";
+// import { useEffect } from "react";
 
 // import { NationContainer } from "./index.styles";˝
 
@@ -29,15 +30,16 @@ export default function InputNationality() {
         <Text.FocusedMenu $isFocused={isFocused}>국적</Text.FocusedMenu>
       </div>
       <div css={nationalityContainer}>
-        <button css={nationalityButton(inputData.nationality === "domestic")}
+        <button
+          css={nationalityButton(inputData.nationality === "domestic")}
           onClick={() => handleNationalitySelect("domestic")}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          
         >
           내국인
         </button>
-        <button css={nationalityButton(inputData.nationality === "foreigner")}
+        <button
+          css={nationalityButton(inputData.nationality === "foreigner")}
           onClick={() => handleNationalitySelect("foreigner")}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -46,11 +48,14 @@ export default function InputNationality() {
         </button>
       </div>
 
-      <div css={textWrapper}>
-        <Text.FocusedWarning $isFocused={isFocused}>
-          국적을 선택해주세요.
+      {/* <div css={textWrapper} style={{ minHeight: "20px" }}>
+        <Text.FocusedWarning
+          $isFocused={isFocused}
+          style={{ visibility: isValid ? "hidden" : "visible" }}
+        >
+          성별을 선택해주세요.
         </Text.FocusedWarning>
-      </div>
+      </div> */}
     </div>
   );
 }

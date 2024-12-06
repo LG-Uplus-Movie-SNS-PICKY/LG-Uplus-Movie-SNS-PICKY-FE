@@ -192,28 +192,41 @@ export const slideWrapper = css`
 `;
 
 export const slideContent = (step: number) => css`
-  transform: translateY(-${step * 100}%); /* 현재 step 기반으로 이동 */
-  transition: transform 0.3s ease-in-out;
   position: absolute;
   width: 100%;
   height: 100%;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(-${step * 100}%);
+
+  & > div {
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  & > div:nth-of-type(${step + 1}) {
+    visibility: visible;
+    pointer-events: auto;
+  }
 `;
 
 export const slideNext = css`
-  transform: translateY(100%); /* 다음 단계가 아래에서 들어옴 */
+  transform: translateY(100%);
   transition: transform 0.3s ease-in-out;
 `;
 
 export const slidePrev = css`
-  transform: translateY(-100%); /* 이전 단계가 위에서 들어옴 */
+  transform: translateY(-100%);
 `;
 
 export const slideIn = css`
-  transform: translateY(0); /* 현재 단계가 중앙에 위치 */
+  transform: translateY(0);
   transition: transform 0.3s ease-in-out;
 `;
 
 export const slideOut = css`
-  transform: translateY(100%); /* 현재 단계가 아래로 사라짐 */
+  transform: translateY(100%);
   transition: transform 0.3s ease-in-out;
-// `;
+  //
+`;

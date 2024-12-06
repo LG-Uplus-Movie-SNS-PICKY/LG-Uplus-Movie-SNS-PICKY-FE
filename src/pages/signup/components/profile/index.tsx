@@ -22,32 +22,39 @@ export default function InputProfile() {
   const [inputData, setInputData] = useRecoilState(inputState);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  const showToastMessage = (message: string) => {
+    setToastMessage(null);
+    setTimeout(() => setToastMessage(message), 0);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
+
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = ""; // 파일 입력 초기화
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        setToastMessage("파일 크기는 5MB를 초과할 수 없습니다.");
-        setTimeout(() => setToastMessage(null), 3000);
+        showToastMessage("파일 크기는 5MB를 초과할 수 없습니다.");
         return;
       }
       const imageUrl = URL.createObjectURL(file);
       setUserInfo((prev) => ({ ...prev, profileImage: imageUrl }));
       setInputData((prev) => ({ ...prev, profileImage: imageUrl }));
-
-      // 메시지 확인용 로그
-      setToastMessage("이미지가 성공적으로 업로드되었습니다.");
-      setTimeout(() => setToastMessage(null), 3000);
-
+      showToastMessage("이미지가 성공적으로 업로드되었습니다.");
       return () => URL.revokeObjectURL(imageUrl);
     }
   };
 
   const setDefaultImage = () => {
-    if (!userInfo.profileImage) {
-      setUserInfo((prev) => ({ ...prev, profileImage: defaultUserImage }));
-      setInputData((prev) => ({ ...prev, profileImage: defaultUserImage }));
-      setToastMessage("기본 이미지가 설정되었습니다.");
-      setTimeout(() => setToastMessage(null), 3000);
+    if (!userInfo.profileImage || userInfo.profileImage === defaultUserImage) {
+      showToastMessage(
+        userInfo.profileImage
+          ? "이미 기본 이미지가 설정되어 있습니다."
+          : "기본 이미지가 설정되었습니다."
+      );
+      if (!userInfo.profileImage) {
+        setUserInfo((prev) => ({ ...prev, profileImage: defaultUserImage }));
+        setInputData((prev) => ({ ...prev, profileImage: defaultUserImage }));
+      }
     }
   };
 
@@ -80,10 +87,10 @@ export default function InputProfile() {
         이미지 업로드
       </label>
       {!userInfo.profileImage && (
-        <span css={defaultImageText} onClick={setDefaultImage}>
+        <span css={[defaultImageText, { cursor: "pointer" }]} onClick={setDefaultImage}>
           기본 이미지 설정
         </span>
       )}
     </div>
   );
-}
+} 

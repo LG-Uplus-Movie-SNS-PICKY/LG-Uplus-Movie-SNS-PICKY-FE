@@ -1,11 +1,8 @@
-/** @jsxImportSource @emotion/react */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRecoilState } from "recoil";
-import aboutTime from "../../../../assets/images/Rectangle 2.jpg";
-import { ArrowLeft, ArrowRight, Checked } from "../../../../assets/svg";
+import axios from "axios";
 import { inputState } from "../../../../review/atoms";
-// import { Text } from "../ui";
+import { ArrowLeft, ArrowRight, Checked } from "../../../../assets/svg";
 import {
   consentWrapper,
   wrapper,
@@ -14,6 +11,8 @@ import {
   title,
   requiredBadge,
   subtitle,
+  TextWrapper,
+  Warning,
   totalContainer,
   pageIndicator,
   currentPage,
@@ -26,58 +25,97 @@ import {
   previousButton,
   nextButton,
   movieTitle,
-  selectedCount
+  selectedCount,
 } from "./index.styles";
 
-const MOVIES = [
-  { id: 1, title: "어바웃타임", image: aboutTime },
-  { id: 2, title: "인사이드아웃2", image: aboutTime },
-  { id: 3, title: "타이타닉", image: aboutTime },
-  { id: 4, title: "인터스텔라", image: aboutTime },
-  { id: 5, title: "라라랜드", image: aboutTime },
-  { id: 6, title: "기생충", image: aboutTime },
-  { id: 7, title: "어벤져스", image: aboutTime },
-  { id: 8, title: "겨울왕국", image: aboutTime },
-  { id: 9, title: "미션임파서블", image: aboutTime },
-  { id: 10, title: "미션임파서블", image: aboutTime },
-  { id: 11, title: "미션임파서블", image: aboutTime },
-  { id: 12, title: "미션임파서블", image: aboutTime },
-  { id: 13, title: "미션임파서블", image: aboutTime },
-  { id: 14, title: "미션임파서블", image: aboutTime },
-  { id: 15, title: "미션임파서블", image: aboutTime },
-  { id: 16, title: "미션임파서블", image: aboutTime },
-  { id: 17, title: "미션임파서블", image: aboutTime },
-  { id: 18, title: "미션임파서블", image: aboutTime },
-  { id: 19, title: "미션임파서블", image: aboutTime },
-  { id: 20, title: "미션임파서블", image: aboutTime },
-  { id: 21, title: "미션임파서블", image: aboutTime },
-  { id: 22, title: "미션임파서블", image: aboutTime },
-  { id: 23, title: "미션임파서블", image: aboutTime },
-  { id: 24, title: "미션임파서블", image: aboutTime },
-  { id: 25, title: "미션임파서블", image: aboutTime },
-  { id: 26, title: "미션임파서블", image: aboutTime },
-  { id: 27, title: "미션임파서블", image: aboutTime },
-];
+const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
 
 const InputFavoriteMovie: React.FC = () => {
   const [current, setCurrent] = useState(1);
   const [inputData, setInputData] = useRecoilState(inputState);
+  const [isValid, setIsValid] = useState(true);
+  const [movies, setMovies] = useState<
+    { movieId: number; title: string; posterUrl: string }[]
+  >([]);
 
   const moviesPerPage = 9;
+
+  const fetchMovies = useCallback(async () => {
+    if (inputData.favoriteGenres.length === 0) {
+      console.warn("장르 ID가 없습니다. API 호출을 건너뜁니다.");
+      return;
+    }
+  
+    try {
+      console.log("보내는 장르 ID 값:", inputData.favoriteGenres);
+  
+      const response = await axios.post(
+        "http://43.202.51.30/api/v1/user/movies-by-genres",
+        {
+          genreIds: inputData.favoriteGenres,
+        }
+      );
+  
+      console.log("받아온 영화 데이터:", response.data);
+  
+      // 응답 데이터의 타입 정의
+      type Movie = {
+        movieId: number;
+        title: string;
+        posterUrl: string;
+      };
+  
+      // 데이터가 배열인지 확인하고 타입 적용
+      const moviesData: Movie[] = Array.isArray(response.data)
+        ? response.data
+        : response.data.data || [];
+  
+      // 이미지 URL 앞에 TMDB_IMAGE_PREFIX 추가
+      const processedMovies = moviesData.map((movie: Movie) => ({
+        ...movie,
+        posterUrl: `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`,
+      }));
+      setMovies(processedMovies);
+    } catch (error) {
+      console.error("영화를 가져오는 중 오류 발생:", error);
+      alert("영화 데이터를 가져오는 데 문제가 발생했습니다. 다시 시도해주세요.");
+      setMovies([]);
+    }
+  }, [inputData.favoriteGenres]);
+
+  const validateSelection = useCallback(() => {
+    const selectedCount = inputData.favoriteMovie.length;
+    return selectedCount >= 5 && selectedCount <= 10;
+  }, [inputData.favoriteMovie]);
 
   const toggleSelection = (id: number) => {
     setInputData((prev) => {
       const updatedMovies = prev.favoriteMovie.includes(id)
         ? prev.favoriteMovie.filter((movieId) => movieId !== id)
-        : [...prev.favoriteMovie, id].slice(0, 10); // 최대 10개 제한
+        : [...prev.favoriteMovie, id].slice(0, 10);
       return { ...prev, favoriteMovie: updatedMovies };
     });
   };
 
-  const total = Math.ceil(MOVIES.length / moviesPerPage);
-  const paginatedMovies = MOVIES.slice(
+  const total = Math.ceil(movies.length / moviesPerPage);
+  const paginatedMovies = movies.slice(
     (current - 1) * moviesPerPage,
     current * moviesPerPage
+  );
+
+  useEffect(() => {
+    setIsValid(validateSelection());
+  }, [inputData.favoriteMovie, validateSelection]);
+
+  useEffect(() => {
+    fetchMovies();
+  }, [fetchMovies]);
+
+  const fillEmptySlots = Array.from(
+    { length: moviesPerPage - paginatedMovies.length },
+    (_, index) => (
+      <div key={`placeholder-${index}`} css={movieCard(false)} />
+    )
   );
 
   return (
@@ -118,50 +156,69 @@ const InputFavoriteMovie: React.FC = () => {
         </div>
 
         <div css={movieGridWrapper}>
-          <button
-            css={previousButton}
-            onClick={() => setCurrent((prev) => prev - 1)}
-            disabled={current === 1}
-          >
-            <ArrowLeft />
-          </button>
-
-          <div css={movieGrid}>
-            {paginatedMovies.map((movie) => (
-              <div
-                key={movie.id}
-                css={movieCard(inputData.favoriteMovie.includes(movie.id))}
-                onClick={() => toggleSelection(movie.id)}
+          {total > 0 && (
+            <>
+              <button
+                css={previousButton}
+                onClick={() => setCurrent((prev) => prev - 1)}
+                disabled={current === 1}
               >
-                <img
-                  src={movie.image}
-                  alt={movie.title}
-                  css={movieImage(inputData.favoriteMovie.includes(movie.id))}
-                />
-                {inputData.favoriteMovie.includes(movie.id) && (
-                  <div css={checkIcon(true)}>
-                    <Checked />
-                  </div>
-                )}
-                <div
-                  css={checkIcon(inputData.favoriteMovie.includes(movie.id))}
-                />
-                <p css={movieTitle}>
-                  {movie.title.length > 8
-                    ? `${movie.title.slice(0, 6)}...`
-                    : movie.title}
-                </p>
-              </div>
-            ))}
-          </div>
+                <ArrowLeft />
+              </button>
 
-          <button
-            css={nextButton}
-            onClick={() => setCurrent((prev) => prev + 1)}
-            disabled={current === total}
-          >
-            <ArrowRight />
-          </button>
+              <div css={movieGrid}>
+                {paginatedMovies.map(
+                  (movie: { movieId: number; title: string; posterUrl: string }) => (
+                    <div
+                      key={movie.movieId}
+                      css={movieCard(
+                        inputData.favoriteMovie.includes(movie.movieId)
+                      )}
+                      onClick={() => toggleSelection(movie.movieId)}
+                    >
+                      <img
+                        src={movie.posterUrl}
+                        alt={movie.title}
+                        css={movieImage(
+                          inputData.favoriteMovie.includes(movie.movieId)
+                        )}
+                      />
+                      {inputData.favoriteMovie.includes(movie.movieId) && (
+                        <div css={checkIcon(true)}>
+                          <Checked />
+                        </div>
+                      )}
+                      <p css={movieTitle}>
+                        {movie.title.length > 8
+                          ? `${movie.title.slice(0, 6)}...`
+                          : movie.title}
+                      </p>
+                    </div>
+                  )
+                )}
+                {fillEmptySlots}
+              </div>
+
+              <button
+                css={nextButton}
+                onClick={() => setCurrent((prev) => prev + 1)}
+                disabled={current === total}
+              >
+                <ArrowRight />
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+      <div
+        css={TextWrapper}
+        style={{ height: "20px", justifyContent: "center" }}
+      >
+        <div
+          css={Warning}
+          style={{ visibility: isValid ? "hidden" : "visible" }}
+        >
+          영화는 최소 5개에서 10개를 골라주세요.
         </div>
       </div>
     </div>

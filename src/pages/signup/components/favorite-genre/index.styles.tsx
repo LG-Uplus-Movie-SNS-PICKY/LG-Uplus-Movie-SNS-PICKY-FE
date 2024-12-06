@@ -115,3 +115,20 @@ export const genreButton = ($isSelected: boolean) => css`
   box-sizing: border-box;
   margin: 0;
 `;
+
+export const Warning = css`
+color: #FF084A;
+font-size: 13px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.52px;
+visibility: hidden; 
+height: 20px;
+`;
+
+export const TextWrapper = css`
+  display: flex;
+  width: 100%;
+  padding-left: 16px;
+`;
