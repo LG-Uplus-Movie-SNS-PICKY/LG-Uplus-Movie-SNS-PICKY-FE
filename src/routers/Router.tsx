@@ -54,7 +54,7 @@ function Router() {
 
             {/* 로그인 사용자 - User 관련 라우트 */}
             <Route path="/user/:nickname" element={<My />} />
-            <Route path="/user/:nuckname/edit" element={<Edit />} />
+            <Route path="/user/:nickname/edit" element={<Edit />} />
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
             <Route path="/movie-log" element={<Feed />} />

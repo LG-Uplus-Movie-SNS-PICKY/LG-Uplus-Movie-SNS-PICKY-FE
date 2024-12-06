@@ -1,3 +1,4 @@
+import SEO from "@components/seo";
 import styles from "./index.styles";
 
 import { GenreDataType } from "@components/genre";
@@ -17,11 +18,17 @@ function PickyGenreDetailPage() {
 
   const genres = loadable.contents.data;
   const currentGenre: GenreDataType = genres.find(
-    (genre: GenreDataType) => genre.genreId === Number(genreId)
+    (genre: GenreDataType) => genre.id === Number(genreId)
   );
 
   return (
     <>
+      <SEO
+        title="PICKY: GENRES"
+        description="사용자님이 원하는 장르의 영화를 찾아보세요"
+        url={`http://localhost:5173/genres/${genreId}`}
+      />
+
       {/* 장르 타이틀 출력 */}
       <div css={styles.title()}>
         <h3>{currentGenre.name}</h3>

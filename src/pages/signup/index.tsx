@@ -24,6 +24,7 @@ import {
   slideWrapper,
   slideContent,
 } from "./index.styles";
+import SEO from "@components/seo";
 
 export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -33,14 +34,38 @@ export default function Signup() {
   const steps = useMemo(
     () => [
       { components: [<InputUserName key="name" />], requiredFields: ["name"] },
-      { components: [<InputNickname key="nickname" />], requiredFields: ["nickname"] },
-      { components: [<InputBirthDate key="birthDate" />], requiredFields: ["birthDate"] },
-      { components: [<InputGender key="gender" />], requiredFields: ["gender"] },
-      { components: [<InputNationality key="nationality" />], requiredFields: ["nationality"] },
-      { components: [<InputProfile key="profile" />], requiredFields: ["profileImage"] },
-      { components: [<InputFavoriteGenre key="favoriteGenres" />], requiredFields: ["favoriteGenres"] },
-      { components: [<InputFavoriteMovie key="favoriteMovie" />], requiredFields: ["favoriteMovie"] },
-      { components: [<InputConsentForm key="consent" />], requiredFields: ["consentAll", "consentAge"] },
+      {
+        components: [<InputNickname key="nickname" />],
+        requiredFields: ["nickname"],
+      },
+      {
+        components: [<InputBirthDate key="birthDate" />],
+        requiredFields: ["birthDate"],
+      },
+      {
+        components: [<InputGender key="gender" />],
+        requiredFields: ["gender"],
+      },
+      {
+        components: [<InputNationality key="nationality" />],
+        requiredFields: ["nationality"],
+      },
+      {
+        components: [<InputProfile key="profile" />],
+        requiredFields: ["profileImage"],
+      },
+      {
+        components: [<InputFavoriteGenre key="favoriteGenres" />],
+        requiredFields: ["favoriteGenres"],
+      },
+      {
+        components: [<InputFavoriteMovie key="favoriteMovie" />],
+        requiredFields: ["favoriteMovie"],
+      },
+      {
+        components: [<InputConsentForm key="consent" />],
+        requiredFields: ["consentAll", "consentAge"],
+      },
     ],
     []
   );
@@ -49,18 +74,27 @@ export default function Signup() {
     const requiredFields = steps[step].requiredFields;
     return requiredFields.every((field) => {
       const value = inputData[field as keyof typeof inputData];
-      if (field === "profilePicture") return typeof value === "string" && value.trim() !== "";
-      if (field === "favoriteGenres") return Array.isArray(value) && value.length > 2;
-      if (field === "favoriteMovie") return Array.isArray(value) && value.length >= 5 && value.length <= 15;
+      if (field === "profilePicture")
+        return typeof value === "string" && value.trim() !== "";
+      if (field === "favoriteGenres")
+        return Array.isArray(value) && value.length > 2;
+      if (field === "favoriteMovie")
+        return Array.isArray(value) && value.length >= 5 && value.length <= 15;
       if (field === "birthDate") {
         if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
           const today = new Date();
-          const fourteenYearsAgo = new Date(today.getFullYear() - 14, today.getMonth(), today.getDate());
+          const fourteenYearsAgo = new Date(
+            today.getFullYear() - 14,
+            today.getMonth(),
+            today.getDate()
+          );
           return new Date(value) <= fourteenYearsAgo;
         }
         return false;
       }
-      return field === "consentAll" || field === "consentAge" ? value === true : !!value?.toString().trim();
+      return field === "consentAll" || field === "consentAge"
+        ? value === true
+        : !!value?.toString().trim();
     });
   }, [steps, step, inputData]);
 
@@ -72,7 +106,6 @@ export default function Signup() {
       setTimeout(() => setToastMessage(null), 3000);
     }
   }, [isStepValid, step, steps.length]);
-  
 
   const handleBackStep = () => {
     if (step > 0) {
@@ -83,14 +116,21 @@ export default function Signup() {
   const handleComplete = useCallback(() => {
     const isValid = Object.keys(inputData).every((key) => {
       const value = inputData[key as keyof typeof inputData];
-      if (key === "profileImage") return typeof value === "string" && value.trim() !== "";
-      if (key === "favoriteGenres") return Array.isArray(value) && value.length > 0;
-      if (key === "favoriteMovie") return Array.isArray(value) && value.length >= 5 && value.length <= 15;
+      if (key === "profileImage")
+        return typeof value === "string" && value.trim() !== "";
+      if (key === "favoriteGenres")
+        return Array.isArray(value) && value.length > 0;
+      if (key === "favoriteMovie")
+        return Array.isArray(value) && value.length >= 5 && value.length <= 15;
       if (key === "consentAll" || key === "consentAge") return value === true;
       if (key === "birthDate") {
         if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
           const today = new Date();
-          const fourteenYearsAgo = new Date(today.getFullYear() - 14, today.getMonth(), today.getDate());
+          const fourteenYearsAgo = new Date(
+            today.getFullYear() - 14,
+            today.getMonth(),
+            today.getDate()
+          );
           return new Date(value) <= fourteenYearsAgo;
         }
         return false;
@@ -100,7 +140,7 @@ export default function Signup() {
 
     if (isValid) {
       setToastMessage("회원가입이 완료되었습니다!");
-      setTimeout(() => setToastMessage(null), 3000); 
+      setTimeout(() => setToastMessage(null), 3000);
       console.log("회원가입 데이터:", inputData);
     } else {
       setToastMessage("입력 데이터가 유효하지 않습니다. 다시 확인해주세요.");
@@ -124,41 +164,54 @@ export default function Signup() {
   }, [step, isStepValid, handleNextStep, handleComplete, steps.length]);
 
   return (
-    <div css={wrapper}>
-      <div css={backWrapper}>
-        <div css={progressBarContainer}>
-          <div css={progressStyle(((step + 1) / steps.length) * 100)} />
-        </div>
-        {step > 0 && (
-          <button css={backButtonStyle} onClick={handleBackStep}>
-            <BackButtonIcon width="16px" height="16px" />
-            <p>뒤로</p>
-          </button>
-        )}
-      </div>
+    <>
+      <SEO title="PICKY: 회원가입" />
 
-      <div css={slideWrapper}>
-        <div css={slideContent(step)}>
-          {steps.map((stepData, index) => (
-            <div key={index} style={{ width: "100%", height: "100%", alignContent: "center" }}>
-              {stepData.components}
-            </div>
-          ))}
+      <div css={wrapper}>
+        <div css={backWrapper}>
+          <div css={progressBarContainer}>
+            <div css={progressStyle(((step + 1) / steps.length) * 100)} />
+          </div>
+          {step > 0 && (
+            <button css={backButtonStyle} onClick={handleBackStep}>
+              <BackButtonIcon width="16px" height="16px" />
+              <p>뒤로</p>
+            </button>
+          )}
+        </div>
+
+        <div css={slideWrapper}>
+          <div css={slideContent(step)}>
+            {steps.map((stepData, index) => (
+              <div
+                key={index}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  alignContent: "center",
+                }}
+              >
+                {stepData.components}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {toastMessage && <Toast message={toastMessage} />}
+        <div css={responsiveButtonWrapper}>
+          <Button.Confirm
+            onClick={
+              step === steps.length - 1 ? handleComplete : handleNextStep
+            }
+            $isDisabled={!isStepValid()}
+            style={{ maxWidth: "768px", width: "100%", fontSize: "16px" }}
+          >
+            <Text.TitleMenu300 color="White" style={{ fontSize: "16px" }}>
+              {step === steps.length - 1 ? "완료" : "다음"}
+            </Text.TitleMenu300>
+          </Button.Confirm>
         </div>
       </div>
-
-      {toastMessage && <Toast message={toastMessage} />}
-      <div css={responsiveButtonWrapper}>
-        <Button.Confirm
-          onClick={step === steps.length - 1 ? handleComplete : handleNextStep}
-          $isDisabled={!isStepValid()}
-          style={{ maxWidth: "768px", width: "100%", fontSize: "16px" }}
-        >
-          <Text.TitleMenu300 color="White" style={{ fontSize: "16px" }}>
-            {step === steps.length - 1 ? "완료" : "다음"}
-          </Text.TitleMenu300>
-        </Button.Confirm>
-      </div>
-    </div>
+    </>
   );
 }

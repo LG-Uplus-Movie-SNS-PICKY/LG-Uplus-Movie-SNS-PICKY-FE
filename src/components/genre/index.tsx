@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 // API로 호출된 장르 데이터 타입 정의
 export interface GenreDataType {
-  genreId: number;
+  id: number;
   name: string;
 }
 
@@ -28,11 +28,11 @@ function GenreButtons(): JSX.Element {
     genres.map((genre: GenreDataType) => (
       // 전역 장르 버튼 컴포넌트 정의
       <GenreTabButton
-        key={genre.genreId}
+        key={genre.id}
         label={genre.name}
         emoji={genre.name}
         btnType="Rectangle"
-        onClick={() => navigate(`/genre/${genre.genreId}`)}
+        onClick={() => navigate(`/genre/${genre.id}`)}
       />
     ))
   ) : (

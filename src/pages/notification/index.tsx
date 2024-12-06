@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./index.styles";
 import { Notification, notificationDummyData } from "./constants";
 import NotificationRander from "./components/notification-rander";
+import SEO from "@components/seo";
 
 interface GroupNotifications {
   today: Array<Notification>;
@@ -43,6 +44,8 @@ function NotificationPage() {
 
   return (
     <>
+      <SEO title="PICKY: NOTIFICATION" />
+
       {groupedNotifications.today.length > 0 && (
         <NotificationRander title="오늘" section={groupedNotifications.today} />
       )}

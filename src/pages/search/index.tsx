@@ -28,6 +28,7 @@ import {
   recentSearchListStyle,
   emptyTextStyle,
 } from "@pages/search/index.styles";
+import SEO from "@components/seo";
 
 const suggestions = [
   { text: "어벤져스 어셈블", type: "영화" },
@@ -146,128 +147,137 @@ export default function SearchPage() {
   };
 
   return (
-    <div css={containerStyle}>
-      <div css={headerStyle}>
-        <button css={backButtonStyle}>
-          <img src={backButton} alt="backButton" width="12" height="25" />
-        </button>
-        <div css={searchInputContainerStyle(isSearchInputFocused)}>
-          <div
-            css={filterButtonStyle}
-            onClick={() => setIsFilterActive((prev) => !prev)}
-          >
-            <div css={filterContainerStyle}>
-              <img
-                src={
-                  selectedFilter
-                    ? filterMiniActiveIcon
-                    : isFilterActive
-                    ? filterActiveIcon
-                    : filterIcon
-                }
-                alt="filterIcon"
-              />
-              <span css={filterLabelStyle}>{selectedFilter}</span>
+    <>
+      <SEO title="PICKY: SEARCH" />
+
+      <div css={containerStyle}>
+        <div css={headerStyle}>
+          <button css={backButtonStyle}>
+            <img src={backButton} alt="backButton" width="12" height="25" />
+          </button>
+          <div css={searchInputContainerStyle(isSearchInputFocused)}>
+            <div
+              css={filterButtonStyle}
+              onClick={() => setIsFilterActive((prev) => !prev)}
+            >
+              <div css={filterContainerStyle}>
+                <img
+                  src={
+                    selectedFilter
+                      ? filterMiniActiveIcon
+                      : isFilterActive
+                      ? filterActiveIcon
+                      : filterIcon
+                  }
+                  alt="filterIcon"
+                />
+                <span css={filterLabelStyle}>{selectedFilter}</span>
+              </div>
             </div>
+            <input
+              css={searchInputStyle}
+              placeholder="영화, 배우, 유저를 검색해보세요."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onFocus={() => setIsSearchInputFocused(true)}
+              onBlur={() => setIsSearchInputFocused(false)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") handleSearch();
+              }}
+            />
+            <button css={searchButtonStyle} onClick={handleSearch}>
+              <img
+                src={searchButton}
+                alt="searchButton"
+                width="16"
+                height="16"
+              />
+            </button>
           </div>
-          <input
-            css={searchInputStyle}
-            placeholder="영화, 배우, 유저를 검색해보세요."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            onFocus={() => setIsSearchInputFocused(true)}
-            onBlur={() => setIsSearchInputFocused(false)}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") handleSearch();
-            }}
-          />
-          <button css={searchButtonStyle} onClick={handleSearch}>
-            <img src={searchButton} alt="searchButton" width="16" height="16" />
+        </div>
+
+        {isFilterActive && (
+          <div css={filterModalStyle} ref={filterRef}>
+            {["영화", "배우", "유저"].map((filter) => (
+              <div
+                key={filter}
+                css={filterOptionStyle}
+                onClick={() => handleFilterSelect(filter)}
+              >
+                {filter}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div css={recentSearchHeaderStyle}>
+          <div css={titleStyle}>
+            {searchText.trim() === "" ? "최근검색어" : "연관검색어"}
+          </div>
+          <button css={clearAllButtonStyle} onClick={handleClearAll}>
+            전체 삭제
           </button>
         </div>
-      </div>
 
-      {isFilterActive && (
-        <div css={filterModalStyle} ref={filterRef}>
-          {["영화", "배우", "유저"].map((filter) => (
-            <div
-              key={filter}
-              css={filterOptionStyle}
-              onClick={() => handleFilterSelect(filter)}
-            >
-              {filter}
+        {searchText.trim() === "" && recentSearches.length === 0 && (
+          <div css={emptyStateContainerStyle}>
+            <div css={emptyIconStyle}>
+              <img
+                src={ClawMachine}
+                alt="Claw Machine"
+                width="100"
+                height="100"
+              />
             </div>
-          ))}
-        </div>
-      )}
-
-      <div css={recentSearchHeaderStyle}>
-        <div css={titleStyle}>
-          {searchText.trim() === "" ? "최근검색어" : "연관검색어"}
-        </div>
-        <button css={clearAllButtonStyle} onClick={handleClearAll}>
-          전체 삭제
-        </button>
-      </div>
-
-      {searchText.trim() === "" && recentSearches.length === 0 && (
-        <div css={emptyStateContainerStyle}>
-          <div css={emptyIconStyle}>
-            <img
-              src={ClawMachine}
-              alt="Claw Machine"
-              width="100"
-              height="100"
-            />
+            <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
           </div>
-          <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
-        </div>
-      )}
+        )}
 
-      {searchText.trim() !== "" && matchingSuggestions.length > 0 && (
-        <ul css={suggestionListStyle}>
-          {matchingSuggestions.map((suggestion, index) => (
-            <li
-              key={index}
-              onClick={() => handleSuggestionClick(suggestion.text)}
-            >
-              <img src={searchButton} alt="searchButton" />
-              <span>{highlightSearchTerm(suggestion.text, searchText)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+        {searchText.trim() !== "" && matchingSuggestions.length > 0 && (
+          <ul css={suggestionListStyle}>
+            {matchingSuggestions.map((suggestion, index) => (
+              <li
+                key={index}
+                onClick={() => handleSuggestionClick(suggestion.text)}
+              >
+                <img src={searchButton} alt="searchButton" />
+                <span>{highlightSearchTerm(suggestion.text, searchText)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      {searchText.trim() === "" && recentSearches.length > 0 && (
-        <ul css={recentSearchListStyle}>
-          {recentSearches.map((search, index) => (
-            <li key={index} onClick={() => handleSuggestionClick(search)}>
-              <div>
-                <img src={timeIcon} alt="timeIcon" />
-                <span
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: "600",
-                    color: "#9D9D9D",
-                  }}
-                >
-                  {search}
-                </span>
-              </div>
-              <div>
-                <img
-                  src={closeButton}
-                  alt="closeButton"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteSearch(search);
-                  }}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+        {searchText.trim() === "" && recentSearches.length > 0 && (
+          <ul css={recentSearchListStyle}>
+            {recentSearches.map((search, index) => (
+              <li key={index} onClick={() => handleSuggestionClick(search)}>
+                <div>
+                  <img src={timeIcon} alt="timeIcon" />
+                  <span
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "600",
+                      color: "#9D9D9D",
+                    }}
+                  >
+                    {search}
+                  </span>
+                </div>
+                <div>
+                  <img
+                    src={closeButton}
+                    alt="closeButton"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteSearch(search);
+                    }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </>
   );
 }

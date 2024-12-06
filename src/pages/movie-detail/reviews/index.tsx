@@ -124,8 +124,8 @@ const ReviewsPage = () => {
   return (
     <>
       <SEO
-        title={dummyData.title}
-        description="영화 리뷰"
+        title={`${dummyData.title}(${dummyData.year})`}
+        description={`${dummyData.title}(${dummyData.year})의 ${dummyData.reviews.length}개의 모든 리뷰를 확인해보세요`}
         image={dummyData.imageUrl}
         url={`http://localhost:5173/${location.pathname}`}
       />
