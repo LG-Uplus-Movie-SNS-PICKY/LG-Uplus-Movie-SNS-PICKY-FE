@@ -3,6 +3,7 @@ import FamousMovie from "./components/famous-movie";
 import GenresMovie from "./components/genres-movie";
 import LoginBanner from "./components/login-banner";
 import RecommendMovieSlider from "./components/recommend-slider";
+import Loading from "@components/loading";
 
 const isLogin = true;
 
