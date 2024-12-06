@@ -59,6 +59,8 @@ const ottDummyData = [
   { icon: Wavve, name: "wavve" },
 ];
 
+console.log(TMDB_API_KEY);
+
 function RegistMovieSection() {
   const [movieSearch, setMovieSearch] = useState<string>("");
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false); // 입력창 포커스(활성화 도중에만 자동완성 검색 결과 보이기)
