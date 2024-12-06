@@ -29,6 +29,8 @@ const movieHandelrs: HttpHandler[] = [
     () => {}
   ),
 
+  // 무비로그 좋아요 API(Mocking Object) - 기능을 잘 모르겠음
+
   // 특정 게시물 댓글 생성 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/coments`,
