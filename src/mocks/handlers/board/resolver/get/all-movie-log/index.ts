@@ -1,5 +1,5 @@
 import { HttpResponse } from "msw";
-import resposne from "./responseData.json";
+import resposne from "../../responseData.json";
 
 interface MockedRequest {
   [key: string]: unknown;
