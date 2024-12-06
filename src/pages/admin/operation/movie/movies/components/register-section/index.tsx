@@ -64,6 +64,8 @@ const ottDummyData = [
   { icon: Wavve, name: "wavve" },
 ];
 
+console.log(import.meta.env.VITE_SERVER_URL);
+
 function RegistMovieSection() {
   const [movieSearch, setMovieSearch] = useState<string>("");
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false); // 입력창 포커스(활성화 도중에만 자동완성 검색 결과 보이기)
@@ -119,8 +121,6 @@ function RegistMovieSection() {
         },
       }
     );
-
-    console.log(data);
 
     setMovieInfo(data);
   };
