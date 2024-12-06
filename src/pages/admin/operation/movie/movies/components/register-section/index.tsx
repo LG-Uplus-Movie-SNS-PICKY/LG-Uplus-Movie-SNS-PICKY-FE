@@ -17,7 +17,12 @@ import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
 import Check from "@assets/icons/check.svg?react";
-import { TMDB_API_KEY } from "@api/constants";
+import {
+  GOOGLE_LOGIN_URL,
+  KAKAO_LOGIN_URL,
+  NAVER_LOGIN_URL,
+  TMDB_API_KEY,
+} from "@api/constants";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -59,7 +64,7 @@ const ottDummyData = [
   { icon: Wavve, name: "wavve" },
 ];
 
-console.log(TMDB_API_KEY);
+console.log(import.meta.env.VITE_SERVER_URL);
 
 function RegistMovieSection() {
   const [movieSearch, setMovieSearch] = useState<string>("");
@@ -116,8 +121,6 @@ function RegistMovieSection() {
         },
       }
     );
-
-    console.log(data);
 
     setMovieInfo(data);
   };
