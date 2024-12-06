@@ -12,6 +12,7 @@ import {
   movieWrapperStyle,
   headerWrapperStyle,
 } from "./index.styles";
+import SEO from "@components/seo";
 
 export default function MovieRecommendationPage() {
   const username = "최우진";
@@ -46,40 +47,49 @@ export default function MovieRecommendationPage() {
   };
 
   return (
-    <div css={containerStyle}>
-      {/* 헤더 */}
-      <div css={headerWrapperStyle}>
-        <header css={headerStyle}>
-          <h1 css={titleStyle}>
-            🧸 PICKY가 <span css={highlightStyle}>까탈스럽게</span> 골라낸 맞춤형 AI 영화 추천
-          </h1>
-          <h2 css={subtitleStyle}>
-            <b>{username}</b>님이 선호하는 장르의 작품들
-          </h2>
-        </header>
-      </div>
+    <>
+      <SEO
+        title="PICKY: RECOMMENDATION"
+        description="사용자님에게 추천하는 PICKY 영화 목록들을 확인해보세요"
+        url="http://location:5173/recommendation"
+      />
 
-      {/* 영화 리스트 */}
-      <div css={movieContainerStyle}>
-        {[...Array(4)].map((_, rowIndex) => (
-          <div css={movieWrapperStyle} key={rowIndex}>
-            {movies.map((movie, index) => (
-              <div
-                key={`${rowIndex}-${index}`}
-                onClick={() => handleMovieClick(movie.id)}
-                style={{ cursor: "pointer" }}
-              >
-                <MovieItem
-                  type="rate"
-                  src={movie.src}
-                  title={movie.title}
-                  name={movie.name}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
+      <div css={containerStyle}>
+        {/* 헤더 */}
+        <div css={headerWrapperStyle}>
+          <header css={headerStyle}>
+            <h1 css={titleStyle}>
+              🧸 PICKY가 <span css={highlightStyle}>까탈스럽게</span> 골라낸
+              맞춤형 AI 영화 추천
+            </h1>
+            <h2 css={subtitleStyle}>
+              <b>{username}</b>님이 선호하는 장르의 작품들
+            </h2>
+          </header>
+        </div>
+
+        {/* 영화 리스트 */}
+        <div css={movieContainerStyle}>
+          {[...Array(4)].map((_, rowIndex) => (
+            <div css={movieWrapperStyle} key={rowIndex}>
+              {movies.map((movie, index) => (
+                <div
+                  key={`${rowIndex}-${index}`}
+                  onClick={() => handleMovieClick(movie.id)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <MovieItem
+                    type="rate"
+                    src={movie.src}
+                    title={movie.title}
+                    name={movie.name}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

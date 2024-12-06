@@ -10,6 +10,7 @@ export default {
       border-radius: 4px;
       font-family: "Pretendard", sans-serif;
       font-weight: 600;
+      cursor: pointer;
     `;
   },
 
@@ -22,6 +23,7 @@ export default {
       font-size: 16px;
       background-color: ${isActive ? "#FF084A" : "#D9D9D9"};
       color: #fff;
+      cursor: pointer;
     `;
   },
 
@@ -36,6 +38,7 @@ export default {
 
       background-color: ${isActive ? "#EFEFEF" : "#0095F6"};
       color: ${isActive ? "#000000" : "#FFFFFF"};
+      cursor: pointer;
     `;
   },
 
@@ -51,6 +54,7 @@ export default {
       border-bottom: 0.5px solid #d9d9d9;
       border-radius: 0px;
       font-weight: 400;
+      cursor: pointer;
     `;
   },
 };

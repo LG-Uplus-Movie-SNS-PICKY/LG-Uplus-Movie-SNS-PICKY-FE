@@ -26,10 +26,12 @@ import TabMenu from "./components/tab-menu";
 import { Button } from "@stories/button";
 import { useNavigate } from "react-router-dom";
 import { Toast } from "@stories/toast";
+import SEO from "@components/seo";
 
 function My() {
   const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement | null>(null); // SettingsButton ref 추가
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
@@ -91,7 +93,7 @@ function My() {
   };
 
   const handleEditClick = () => {
-    navigate("/user-profile/edit");
+    navigate(`/user/${dummyData.nickname}/edit`);
   };
 
   const handleFollowClick = () => {
@@ -114,6 +116,13 @@ function My() {
 
   return (
     <>
+      <SEO
+        title={`PICKY: ${dummyData.nickname}`}
+        description={`${dummyData.nickname}님의 프로필(팔로워: ${dummyData.followers.length}명, 팔로잉: ${dummyData.followings.length}명)`}
+        image={dummyData.profileImage}
+        url={`http://localhost:5173/${location.pathname}`}
+      />
+
       <Wrapper ref={wrapperRef}>
         <ProfileContainer>
           {dummyData.profileImage ? (
@@ -127,7 +136,7 @@ function My() {
               <BoldText isZero={dummyData.reviews === 0}>
                 {dummyData.reviews}
               </BoldText>
-              <Text>리뷰</Text>
+              <Text>게시글</Text>
             </ProfileInfo>
             <ProfileInfo onClick={() => openFollowersModal("followers")}>
               {" "}
@@ -167,7 +176,7 @@ function My() {
               onClick={handleFollowClick}
             />
           )}
-          <SettingsButton onClick={toggleModal}>
+          <SettingsButton ref={settingsButtonRef} onClick={toggleModal}>
             <SettingsSvg />
           </SettingsButton>
         </ButtonContainer>
@@ -176,10 +185,10 @@ function My() {
         <TabMenu wrapperRef={wrapperRef} />
       </Wrapper>
 
-      {/* 로그아웃 or 탈퇴하기 모달 */}
+      {/* 로그아웃 or 탈퇴 확인 모달 */}
       {isModalOpen && (
         <div>
-          <LogoutModal onClose={closeModal} />
+          <LogoutModal onClose={closeModal} targetRef={settingsButtonRef} />
         </div>
       )}
 

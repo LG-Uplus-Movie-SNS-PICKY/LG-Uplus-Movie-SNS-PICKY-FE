@@ -30,6 +30,7 @@ import ReportButton from "@assets/icons/report_button.svg?react";
 import EditPost from "@assets/icons/edit_post.svg?react";
 import DeletePost from "@assets/icons/delete_post.svg?react";
 import { Modal } from "@stories/modal";
+import SEO from "@components/seo";
 
 export default function SocialFeed() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,7 +56,7 @@ export default function SocialFeed() {
   };
 
   const goToCommentPage = () => {
-    navigate("/comment");
+    navigate(`/movie-log/detail?boardId=1`);
   };
 
   const handleEditPost = () => {
@@ -74,141 +75,151 @@ export default function SocialFeed() {
   };
 
   return (
-    <div css={wrapper}>
-      <div css={banner}></div>
-      <div css={feedContainer}>
-        <div css={feedItem}>
-          <div css={infoSection}>
-            <div css={profileSection}>
-              <Profile />
-            </div>
-            <div css={textSection}>
-              경원쨩
-              <span css={movieTitle}>어벤져스 엔드게임</span>
-            </div>
-          </div>
-          <div css={timeSection}>4시간 전</div>
-        </div>
-        <div css={[contentSection, !showSpoiler && blurredContent]}>
-          이 영화 정말 재미있었어요! 꼭 보세요! 👍
-        </div>
+    <>
+      <SEO
+        title={`PICKY: MOVIE LOG`}
+        description="MOVIE LOG는 PICKY에 등록된 영화 팬들을 위한 최적의 커뮤니티 서비스입니다. 이곳에서 영화와 관련된 게시물을 올리고, 다른 사용자들과 소통해보세요."
+        url="http://localhost:5173/movie-log"
+      />
 
-        <div css={carouselSection}>
-          <div css={spoilerImageWrapper} onClick={revealSpoiler}>
-            <img
-              css={showSpoiler ? undefined : blurredImage}
-              src="https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
-              alt="사진 1"
-              style={{ width: "360px" }}
-            />
-            {!showSpoiler && (
-              <div css={spoilerText}>
-                🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+      <div css={wrapper}>
+        <div css={banner}></div>
+        <div css={feedContainer}>
+          <div css={feedItem}>
+            <div css={infoSection}>
+              <div css={profileSection}>
+                <Profile />
               </div>
-            )}
-          </div>
-        </div>
-
-        <div css={reactionsContainer}>
-          <div css={reactionsSection}>
-            <span onClick={toggleLike}>
-              {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
-              {isLiked ? "101" : "100"}
-            </span>
-            <span onClick={goToCommentPage}>
-              <CommentFeed />
-              20
-            </span>
-          </div>
-          <div css={moreOptions} onClick={toggleModal}>
-            <ReportButton />
-          </div>
-        </div>
-      </div>
-
-      <div css={feedContainer}>
-        <div css={feedItem}>
-          <div css={infoSection}>
-            <div css={profileSection}>
-              <Profile />
+              <div css={textSection}>
+                경원쨩
+                <span css={movieTitle}>어벤져스 엔드게임</span>
+              </div>
             </div>
-            <div css={textSection}>
-              경원쨩
-              <span css={movieTitle}>어벤져스 엔드게임</span>
+            <div css={timeSection}>4시간 전</div>
+          </div>
+          <div css={[contentSection, !showSpoiler && blurredContent]}>
+            이 영화 정말 재미있었어요! 꼭 보세요! 👍
+          </div>
+
+          <div css={carouselSection}>
+            <div css={spoilerImageWrapper} onClick={revealSpoiler}>
+              <img
+                css={showSpoiler ? undefined : blurredImage}
+                src="https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
+                alt="사진 1"
+                style={{ width: "360px" }}
+              />
+              {!showSpoiler && (
+                <div css={spoilerText}>
+                  🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+                </div>
+              )}
             </div>
           </div>
-          <div css={timeSection}>4시간 전</div>
-        </div>
-        <div css={contentSection}>이 영화 정말 재미있었어요! 꼭 보세요! 👍</div>
 
-        <div css={carouselSection}>
-          <div css={spoilerImageWrapper} onClick={revealSpoiler}>
-            <img
-              src="https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
-              alt="사진 1"
-              style={{ width: "360px" }}
+          <div css={reactionsContainer}>
+            <div css={reactionsSection}>
+              <span onClick={toggleLike}>
+                {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
+                {isLiked ? "101" : "100"}
+              </span>
+              <span onClick={goToCommentPage}>
+                <CommentFeed />
+                20
+              </span>
+            </div>
+            <div css={moreOptions} onClick={toggleModal}>
+              <ReportButton />
+            </div>
+          </div>
+        </div>
+
+        <div css={feedContainer}>
+          <div css={feedItem}>
+            <div css={infoSection}>
+              <div css={profileSection}>
+                <Profile />
+              </div>
+              <div css={textSection}>
+                경원쨩
+                <span css={movieTitle}>어벤져스 엔드게임</span>
+              </div>
+            </div>
+            <div css={timeSection}>4시간 전</div>
+          </div>
+          <div css={contentSection}>
+            이 영화 정말 재미있었어요! 꼭 보세요! 👍
+          </div>
+
+          <div css={carouselSection}>
+            <div css={spoilerImageWrapper} onClick={revealSpoiler}>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg"
+                alt="사진 1"
+                style={{ width: "360px" }}
+              />
+            </div>
+          </div>
+
+          <div css={reactionsContainer}>
+            <div css={reactionsSection}>
+              <span onClick={toggleLike}>
+                {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
+                {isLiked ? "101" : "100"}
+              </span>
+              <span onClick={goToCommentPage}>
+                <CommentFeed />
+                20
+              </span>
+            </div>
+            <div css={moreOptions} onClick={toggleModal}>
+              <ReportButton />
+            </div>
+          </div>
+        </div>
+
+        {/* 기존 모달 */}
+        {isModalOpen && !isDeleteModalOpen && (
+          <div css={modalOverlay} onClick={toggleModal}>
+            <div css={modalContent} onClick={(e) => e.stopPropagation()}>
+              {postUserId === myUserId ? (
+                <>
+                  <button onClick={handleEditPost} style={{ color: "#000" }}>
+                    <EditPost /> 게시글 수정
+                  </button>
+                  <button onClick={handleDeletePost}>
+                    <DeletePost /> 삭제하기
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
+                    욕설 신고
+                  </button>
+                  <button
+                    onClick={() => alert("스포일러 신고가 접수되었습니다!")}
+                  >
+                    스포일러 신고
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* 삭제 확인 모달 */}
+        {isDeleteModalOpen && (
+          <div css={modalOverlay}>
+            <Modal
+              message="게시글을 삭제하시겠습니까?"
+              confirmText="삭제"
+              cancelText="취소"
+              onConfirm={confirmDelete}
+              onCancel={() => setIsDeleteModalOpen(false)}
             />
           </div>
-        </div>
-
-        <div css={reactionsContainer}>
-          <div css={reactionsSection}>
-            <span onClick={toggleLike}>
-              {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
-              {isLiked ? "101" : "100"}
-            </span>
-            <span onClick={goToCommentPage}>
-              <CommentFeed />
-              20
-            </span>
-          </div>
-          <div css={moreOptions} onClick={toggleModal}>
-            <ReportButton />
-          </div>
-        </div>
+        )}
       </div>
-
-      {/* 기존 모달 */}
-      {isModalOpen && !isDeleteModalOpen && (
-        <div css={modalOverlay} onClick={toggleModal}>
-          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {postUserId === myUserId ? (
-              <>
-                <button onClick={handleEditPost} style={{ color: "#000" }}>
-                  <EditPost /> 게시글 수정
-                </button>
-                <button onClick={handleDeletePost}>
-                  <DeletePost /> 삭제하기
-                </button>
-              </>
-            ) : (
-              <>
-                <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
-                  욕설 신고
-                </button>
-                <button
-                  onClick={() => alert("스포일러 신고가 접수되었습니다!")}
-                >
-                  스포일러 신고
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* 삭제 확인 모달 */}
-      {isDeleteModalOpen && (
-        <div css={modalOverlay}>
-          <Modal
-            message="게시글을 삭제하시겠습니까?"
-            confirmText="삭제"
-            cancelText="취소"
-            onConfirm={confirmDelete}
-            onCancel={() => setIsDeleteModalOpen(false)}
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 }

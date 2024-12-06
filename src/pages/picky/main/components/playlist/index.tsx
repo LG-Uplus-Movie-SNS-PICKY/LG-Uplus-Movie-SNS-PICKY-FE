@@ -28,7 +28,9 @@ interface PlaylistDataTypes {
 // 리액트 쿼리 queryFn
 async function fetchMovies(pageParam: number) {
   const { data } = await axios.get(
-    `/api/movie/playlist?page=${pageParam}&limit=3`
+    `${
+      import.meta.env.VITE_SERVER_URL
+    }/api/movie/playlist?page=${pageParam}&limit=3`
   );
   return data;
 }
@@ -71,39 +73,42 @@ function PlayListSection() {
   return (
     <div css={styles.container()}>
       {/* 페이지 순회 -> 무한 스크롤링 */}
-      {data?.pages.map((page, index) => (
-        <React.Fragment key={index}>
-          {/* Playlist Data JSX Element Mapping  */}
-          {page?.data.map((list: PlaylistDataTypes) => (
-            <div css={styles.playlistCard()} key={list.movie_playlist_id}>
-              <h3>{list.movie_playlist_title}</h3>
-              {/* Playlist Items Slider Mapping */}
-              <Swiper
-                slidesPerView={"auto"}
-                spaceBetween={10}
-                direction={"horizontal"}
-                freeMode={true}
-                modules={[FreeMode, Mousewheel]}
-                mousewheel={{
-                  forceToAxis: true,
-                }}
-                css={styles.swiperContainer()}
-              >
-                {list.movie_playlist_item.map((item) => (
-                  <SwiperSlide key={item.movie_id}>
-                    <MovieItem
-                      type="basic"
-                      src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
-                      title={item.movie_title}
-                      name={item.movie_title}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          ))}
-        </React.Fragment>
-      ))}
+      {Array.isArray(data?.pages) &&
+        data?.pages.map((page, index) => (
+          <React.Fragment key={index}>
+            {/* Playlist Data JSX Element Mapping  */}
+            {Array.isArray(page?.data) &&
+              page?.data.map((list: PlaylistDataTypes) => (
+                <div css={styles.playlistCard()} key={list.movie_playlist_id}>
+                  <h3>{list.movie_playlist_title}</h3>
+                  {/* Playlist Items Slider Mapping */}
+                  <Swiper
+                    slidesPerView={"auto"}
+                    spaceBetween={10}
+                    direction={"horizontal"}
+                    freeMode={true}
+                    modules={[FreeMode, Mousewheel]}
+                    mousewheel={{
+                      forceToAxis: true,
+                    }}
+                    css={styles.swiperContainer()}
+                  >
+                    {list.movie_playlist_item.length > 0 &&
+                      list.movie_playlist_item.map((item) => (
+                        <SwiperSlide key={item.movie_id}>
+                          <MovieItem
+                            type="basic"
+                            src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
+                            title={item.movie_title}
+                            name={item.movie_title}
+                          />
+                        </SwiperSlide>
+                      ))}
+                  </Swiper>
+                </div>
+              ))}
+          </React.Fragment>
+        ))}
 
       <div ref={ref}>
         {isFetchingNextPage

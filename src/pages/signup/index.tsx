@@ -26,6 +26,7 @@ import {
   slideWrapper,
   slideContent,
 } from "./index.styles";
+import SEO from "@components/seo";
 
 export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -213,18 +214,21 @@ export default function Signup() {
   }, [step, isStepValid, handleNextStep, handleComplete, steps.length]);
 
   return (
-    <div css={wrapper}>
-      <div css={backWrapper}>
-        <div css={progressBarContainer}>
-          <div css={progressStyle(((step + 1) / steps.length) * 100)} />
+    <>
+      <SEO title="PICKY: 회원가입" />
+
+      <div css={wrapper}>
+        <div css={backWrapper}>
+          <div css={progressBarContainer}>
+            <div css={progressStyle(((step + 1) / steps.length) * 100)} />
+          </div>
+          {step > 0 && (
+            <button css={backButtonStyle} onClick={handleBackStep}>
+              <BackButtonIcon width="16px" height="16px" />
+              <p>뒤로</p>
+            </button>
+          )}
         </div>
-        {step > 0 && (
-          <button css={backButtonStyle} onClick={handleBackStep}>
-            <BackButtonIcon width="16px" height="16px" />
-            <p>뒤로</p>
-          </button>
-        )}
-      </div>
 
       <div css={slideWrapper}>
         <div css={slideContent(step)}>
@@ -243,18 +247,22 @@ export default function Signup() {
         </div>
       </div>
 
-      {toastMessage && <Toast message={toastMessage} />}
-      <div css={responsiveButtonWrapper}>
-        <Button.Confirm
-          onClick={step === steps.length - 1 ? handleComplete : handleNextStep}
-          $isDisabled={!isStepValid()}
-          style={{ maxWidth: "768px", width: "100%", fontSize: "16px" }}
-        >
-          <Text.TitleMenu300 color="White" style={{ fontSize: "16px" }}>
-            {step === steps.length - 1 ? "완료" : "다음"}
-          </Text.TitleMenu300>
-        </Button.Confirm>
+        {toastMessage && <Toast message={toastMessage} />}
+        <div css={responsiveButtonWrapper}>
+          <Button.Confirm
+            onClick={
+              step === steps.length - 1 ? handleComplete : handleNextStep
+            }
+            $isDisabled={!isStepValid()}
+            style={{ maxWidth: "768px", width: "100%", fontSize: "16px" }}
+          >
+            <Text.TitleMenu300 color="White" style={{ fontSize: "16px" }}>
+              {step === steps.length - 1 ? "완료" : "다음"}
+            </Text.TitleMenu300>
+          </Button.Confirm>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
+

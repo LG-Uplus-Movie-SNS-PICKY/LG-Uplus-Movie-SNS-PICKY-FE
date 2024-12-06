@@ -8,6 +8,7 @@ import {
 import { BtnGoogle, BtnKakao, BtnNaver, PickyLogo } from "../../assets/svg";
 
 import { Block, Text } from "../../styles/ui";
+import SEO from "@components/seo";
 
 const StyledText = styled.div`
   display: flex;
@@ -48,6 +49,11 @@ export default function Login() {
 
   return (
     <>
+      <SEO
+        title="PICKY: 로그인"
+        description="PICKY에 로그인 하고 영화 리뷰와 정보를 한곳에서 확인하고, 영화 팬들을 위한 최적의 커뮤니티 서비스를 이용해 보세요"
+      />
+
       <Block.FlexBox
         $width="100%"
         $height="100vh"

@@ -17,6 +17,12 @@ import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
 import Check from "@assets/icons/check.svg?react";
+import {
+  GOOGLE_LOGIN_URL,
+  KAKAO_LOGIN_URL,
+  NAVER_LOGIN_URL,
+  TMDB_API_KEY,
+} from "@api/constants";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -58,6 +64,8 @@ const ottDummyData = [
   { icon: Wavve, name: "wavve" },
 ];
 
+console.log(import.meta.env.VITE_SERVER_URL);
+
 function RegistMovieSection() {
   const [movieSearch, setMovieSearch] = useState<string>("");
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false); // 입력창 포커스(활성화 도중에만 자동완성 검색 결과 보이기)
@@ -91,7 +99,7 @@ function RegistMovieSection() {
         },
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+          Authorization: `Bearer ${TMDB_API_KEY}`,
         },
       }
     );
@@ -109,12 +117,10 @@ function RegistMovieSection() {
         },
         headers: {
           accept: "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+          Authorization: `Bearer ${TMDB_API_KEY}`,
         },
       }
     );
-
-    console.log(data);
 
     setMovieInfo(data);
   };

@@ -19,6 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": "/src",
+      "@api": "/src/api",
       "@assets": "/src/assets",
       "@stories": "/src/stories",
       "@constants": "/src/constants",
