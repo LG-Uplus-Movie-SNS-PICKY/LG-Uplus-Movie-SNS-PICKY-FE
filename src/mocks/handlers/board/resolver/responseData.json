@@ -16,7 +16,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -40,7 +43,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -55,7 +61,10 @@
     "likesCount": 12,
     "commentsCount": 8,
     "contents": [],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -83,7 +92,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -115,7 +127,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -139,7 +154,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -147,7 +165,7 @@
     "writerId": 7,
     "writerNickname": "최우진",
     "writerProfileUrl": "",
-    "context": "타이타닉이 더 재밌어요!!",
+    "context": "제 최애 영화에요",
     "isSpoiler": false,
     "createdDate": "2024-11-07T14:31:22.282Z",
     "updatedDate": "2024-11-07T14:31:22.282Z",
@@ -155,11 +173,14 @@
     "commentsCount": 23,
     "contents": [
       {
-        "contentUrl": "https://img.khan.co.kr/news/2015/11/19/l_2015111901002867900249421.jpg",
+        "contentUrl": "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 2,
+      "title": "타이타닉"
+    },
     "isLike": true
   },
   {
@@ -179,7 +200,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -203,7 +227,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -218,7 +245,10 @@
     "likesCount": 12,
     "commentsCount": 8,
     "contents": [],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -246,7 +276,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -278,7 +311,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -302,7 +338,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -310,7 +349,7 @@
     "writerId": 7,
     "writerNickname": "최우진",
     "writerProfileUrl": "",
-    "context": "타이타닉이 더 재밌어요!!",
+    "context": "제 최애 영화에요",
     "isSpoiler": false,
     "createdDate": "2024-11-07T14:31:22.282Z",
     "updatedDate": "2024-11-07T14:31:22.282Z",
@@ -318,11 +357,14 @@
     "commentsCount": 23,
     "contents": [
       {
-        "contentUrl": "https://img.khan.co.kr/news/2015/11/19/l_2015111901002867900249421.jpg",
+        "contentUrl": "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 2,
+      "title": "타이타닉"
+    },
     "isLike": true
   },
   {
@@ -342,7 +384,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -366,7 +411,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -381,7 +429,10 @@
     "likesCount": 12,
     "commentsCount": 8,
     "contents": [],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -409,7 +460,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": false
   },
   {
@@ -441,7 +495,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -465,7 +522,10 @@
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 1,
+      "title": "이터널 선샤인"
+    },
     "isLike": true
   },
   {
@@ -473,7 +533,7 @@
     "writerId": 7,
     "writerNickname": "최우진",
     "writerProfileUrl": "",
-    "context": "타이타닉이 더 재밌어요!!",
+    "context": "제 최애 영화에요",
     "isSpoiler": false,
     "createdDate": "2024-11-07T14:31:22.282Z",
     "updatedDate": "2024-11-07T14:31:22.282Z",
@@ -481,11 +541,14 @@
     "commentsCount": 23,
     "contents": [
       {
-        "contentUrl": "https://img.khan.co.kr/news/2015/11/19/l_2015111901002867900249421.jpg",
+        "contentUrl": "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
         "boardContentType": "image"
       }
     ],
-    "movieTitle": "이터널 선샤인",
+    "movie": {
+      "id": 2,
+      "title": "타이타닉"
+    },
     "isLike": true
   }
 ]

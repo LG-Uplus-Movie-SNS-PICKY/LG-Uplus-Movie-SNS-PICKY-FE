@@ -13,14 +13,11 @@ function Main() {
   useEffect(() => {
     const fetch = async () => {
       await axios
-        .get(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board?nickname=조계원`,
-          {
-            headers: {
-              Authorization: "123",
-            },
-          }
-        )
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/1`, {
+          headers: {
+            Authorization: "123",
+          },
+        })
         .then((res) => console.log(res.data));
     };
 

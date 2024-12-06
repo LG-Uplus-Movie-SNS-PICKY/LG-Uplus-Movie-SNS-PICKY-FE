@@ -1,6 +1,7 @@
 import { http, HttpHandler, HttpResponse } from "msw";
 import {
   MovieLogReadResolver,
+  SeletorMovieLogReadResolver,
   UserWriterMovieLogReadResolver,
 } from "./resolver/get";
 
@@ -36,7 +37,7 @@ const boardHandlers: HttpHandler[] = [
   // 영화 디테일 페이지에서 무비로그 버튼을 클릭할 경우 -> 해당 영화와 관련된 무비로그만 조회 API(Mocking Object)
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:movieId`,
-    () => {}
+    SeletorMovieLogReadResolver
   ),
 
   // 무비로그 좋아요 API(Mocking Object) - 기능을 잘 모르겠음
