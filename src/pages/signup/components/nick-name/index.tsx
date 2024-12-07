@@ -26,6 +26,7 @@ export default function InputNickname({ onValidChange }: InputNicknameProps) {
   const checkNicknameAvailability = async (nickname: string) => {
     try {
       const accessToken = sessionStorage.getItem("accessToken");
+      console.log(accessToken);
 
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
