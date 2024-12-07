@@ -4,10 +4,26 @@ import GenresMovie from "./components/genres-movie";
 import LoginBanner from "./components/login-banner";
 import RecommendMovieSlider from "./components/recommend-slider";
 import Loading from "@components/loading";
+import { useEffect } from "react";
+import axios from "axios";
 
 const isLogin = true;
 
 function Main() {
+  useEffect(() => {
+    const fetch = async () => {
+      await axios
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/1`, {
+          headers: {
+            Authorization: "123",
+          },
+        })
+        .then((res) => console.log(res.data));
+    };
+
+    fetch();
+  }, []);
+
   return (
     <>
       <SEO
