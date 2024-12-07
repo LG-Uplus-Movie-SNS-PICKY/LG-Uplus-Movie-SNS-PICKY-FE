@@ -70,7 +70,7 @@ export default function InputProfile() {
           <img
             src={userInfo.profileImage}
             alt="프로필 미리보기"
-            css={styledImage(isAnimating)} // 애니메이션 적용
+            // css={styledImage(isAnimating)}
             width={240}
             height={240}
           />
