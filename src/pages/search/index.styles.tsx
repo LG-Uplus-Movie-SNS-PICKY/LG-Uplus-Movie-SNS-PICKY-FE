@@ -36,19 +36,27 @@ export const filterContainerStyle = css`
   font-family: 12px;
   font-weight: 600;
   color: #FF084A;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 export const filterLabelStyle = css`
-font-family: Pretendard;
-font-size: 12px;
-font-weight: 600;
 color: #FF084A;
+font-size: 12px;
+font-style: normal;
+font-weight: 600;
+text-align: center; /* 텍스트 중앙 정렬 */
+  display: flex; /* Flex로 자식 요소 정렬 */
+  align-items: center; /* 수직 중앙 정렬 */
+letter-spacing: 0.5px;
 `;
 
 export const filterModalStyle = css`
   position: absolute;
-  top: 12.5%;
-  left: 10%;
+  top: 11%;
+  left:12%;
   background: #FFFFFF;
   border-radius: 10px;
   border: 1px solid #D9D9D9;
@@ -76,10 +84,11 @@ export const filterButtonStyle = css`
   height: 38px;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   background-color: #f1f1f1;
   padding: 8px 0 8px 16px;
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
+  border-radius: 50px 0px 0px 50px;
+  background: #F1F1F1;
 `;
 
 export const filterIconStyle = css`
@@ -92,6 +101,7 @@ export const searchInputStyle = css`
   display: flex;
   padding: 8px 12px 8px 8px;
   justify-content: space-between;
+  height: 38px;
   align-items: center;
   flex-shrink: 0;
   border-top-right-radius: 50px;

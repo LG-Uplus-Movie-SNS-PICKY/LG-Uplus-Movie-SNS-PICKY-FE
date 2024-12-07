@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
+import { validateAge } from "../../utils/index";
 import {
   birthDateContainer,
   pickerContainer,
@@ -20,7 +21,7 @@ export default function InputBirthDate() {
     new Date().getMonth() + 1
   );
   const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
-  const [isFocused, setIsFocused] = useState(false); // Focus 상태 관리
+  const [isValid, setIsValid] = useState(true);
 
   const years = useMemo(
     () => Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i),
@@ -45,7 +46,15 @@ export default function InputBirthDate() {
     const formattedMonth = String(selectedMonth).padStart(2, "0");
     const formattedDay = String(selectedDay).padStart(2, "0");
     const birthDate = `${selectedYear}-${formattedMonth}-${formattedDay}`;
-    setInputData((prev) => ({ ...prev, birthDate }));
+  
+    const isValidAge = validateAge(birthDate);
+  
+    setIsValid(isValidAge);
+  
+    setInputData((prev) => ({
+      ...prev,
+      birthDate: isValidAge ? birthDate : "",
+    }));
   }, [selectedYear, selectedMonth, selectedDay, setInputData]);
 
   useEffect(() => {
@@ -54,25 +63,23 @@ export default function InputBirthDate() {
       index: number
     ) => {
       if (ref.current) {
-        const itemHeight = ref.current.firstElementChild
-          ? (ref.current.firstElementChild as HTMLElement).offsetHeight
-          : 0; // 동적으로 항목 높이 가져오기
+        const itemHeight =
+          ref.current.firstElementChild instanceof HTMLElement
+            ? ref.current.firstElementChild.offsetHeight
+            : 0;
         const containerHeight = ref.current.clientHeight;
-  
+
         ref.current.scrollTo({
           top: index * itemHeight - containerHeight / 2 + itemHeight / 2,
           behavior: "smooth",
         });
       }
     };
-  
+
     scrollToCenter(yearRef, years.indexOf(selectedYear));
     scrollToCenter(monthRef, months.indexOf(selectedMonth));
     scrollToCenter(dayRef, days.indexOf(selectedDay));
   }, [selectedYear, years, selectedMonth, months, selectedDay, days]);
-
-  const handleFocus = () => setIsFocused(true);
-  const handleBlur = () => setIsFocused(false);
 
   return (
     <div css={birthDateContainer}>
@@ -90,8 +97,6 @@ export default function InputBirthDate() {
                 },
               ]}
               onClick={() => setSelectedYear(year)}
-              onMouseEnter={handleFocus}
-              onMouseLeave={handleBlur}
               tabIndex={0}
             >
               {year}년
@@ -110,8 +115,6 @@ export default function InputBirthDate() {
                 },
               ]}
               onClick={() => setSelectedMonth(month)}
-              onMouseEnter={handleFocus}
-              onMouseLeave={handleBlur}
               tabIndex={0}
             >
               {month}월
@@ -127,8 +130,6 @@ export default function InputBirthDate() {
                 day === selectedDay && { fontWeight: "bold", color: "#ff084a" },
               ]}
               onClick={() => setSelectedDay(day)}
-              onMouseEnter={handleFocus}
-              onMouseLeave={handleBlur}
               tabIndex={0}
             >
               {day}일
@@ -136,8 +137,14 @@ export default function InputBirthDate() {
           ))}
         </div>
       </div>
-      <div css={TextWrapper}>
-        <Text.FocusedWarning $isFocused={isFocused}>
+      <div css={TextWrapper} style={{ height: "20px" }}>
+        <Text.FocusedWarning
+          $isFocused={!isValid}
+          style={{
+            visibility: isValid ? "hidden" : "visible",
+            color: "#ff084a",
+          }}
+        >
           만 14세 이상만 사용할 수 있습니다.
         </Text.FocusedWarning>
       </div>

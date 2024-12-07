@@ -171,6 +171,17 @@ export const arrowButton = css`
   }
 `;
 
+export const Warning = css`
+color: #FF084A;
+font-size: 13px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+letter-spacing: -0.52px;
+visibility: hidden; 
+height: 20px;
+`;
+
 export const previousButton = css`
   ${arrowButton};
 `;
@@ -178,3 +189,10 @@ export const previousButton = css`
 export const nextButton = css`
   ${arrowButton};
 `;
+
+export const TextWrapper = css`
+  display: flex;
+  width: 100%;
+  padding-left: 16px;
+`;
+

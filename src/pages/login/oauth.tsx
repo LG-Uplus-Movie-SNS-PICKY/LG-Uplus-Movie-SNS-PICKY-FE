@@ -11,7 +11,8 @@ const LoginCallback: React.FC = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
-
+    console.log(code);
+    console.log(state);
     if (!code || !state) {
       alert("잘못된 로그인 요청입니다. 다시 시도해주세요.");
       return;
@@ -19,7 +20,8 @@ const LoginCallback: React.FC = () => {
 
     // 소셜 로그인 API 요청
     axios
-      .get(`http://43.202.51.30:80/api/v1/oauth/naver/user`, {
+      // .get(`http://api.picky-movie.com/api/v1/oauth/naver/user`, {
+        .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
       .then((response) => {
@@ -46,9 +48,9 @@ const LoginCallback: React.FC = () => {
 
         // 회원가입 여부 확인 후 페이지 이동
         if (isRegistrationDone) {
-          navigate("/login");
+          navigate("/auth/sign-in");
         } else {
-          navigate("/signup");
+          navigate("/auth/sign-up");
         }
       })
       .catch((error) => {

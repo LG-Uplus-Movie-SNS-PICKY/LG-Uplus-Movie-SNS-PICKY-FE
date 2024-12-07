@@ -1,27 +1,83 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRecoilState } from "recoil";
 import { userState, inputState } from "../../../../review/atoms";
 import { Text, Input } from "../ui";
 import useFocus from "../../../../components/hooks/useFocus";
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import axios from "axios";
 import { nickNameContainer, textWrapper } from "./index.styles";
+import { debounce } from "lodash";
 
-export default function InputNickname() {
+interface InputNicknameProps {
+  onValidChange: (isValid: boolean) => void;
+}
+
+export default function InputNickname({ onValidChange }: InputNicknameProps) {
   const [userInfo, setUserInfo] = useRecoilState(userState);
   const [inputData, setInputData] = useRecoilState(inputState);
   const { isFocused, handleFocus, handleBlur } = useFocus();
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
+  const [isNicknameValid, setIsNicknameValid] = useState(false);
+
+  const validateNickname = (nickname: string) => {
+    return nickname.length >= 2 && nickname.length <= 15;
+  };
+
+  const checkNicknameAvailability = async (nickname: string) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
+        { params: { nickname } }
+      );
+
+      console.log("API 응답:", response.data);
+
+      if (!response.data.data.isValid) {
+        setNicknameError("이미 사용 중인 닉네임입니다.");
+        setIsNicknameValid(false);
+      } else {
+        setNicknameError("사용이 가능한 닉네임입니다.");
+        setIsNicknameValid(true);
+      }
+    } catch (error) {
+      console.error("API 요청 중 오류 발생:", error);
+      setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+      setIsNicknameValid(false);
+    }
+  };
+
+  const debouncedCheckNicknameAvailability = useCallback(
+    debounce((nickname: string) => {
+      if (validateNickname(nickname)) {
+        checkNicknameAvailability(nickname);
+      }
+    }, 300),
+    []
+  );
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newData = e.target.value;
+    let newData = e.target.value;
+
+    if (newData.length > 15) {
+      newData = newData.slice(0, 15);
+    }
+
+    if (!validateNickname(newData)) {
+      setNicknameError("닉네임은 2자 이상 15자 이하로 입력해주세요.");
+      setIsNicknameValid(false);
+    } else {
+      setNicknameError(null);
+    }
 
     setUserInfo((prev) => ({ ...prev, nickname: newData }));
     setInputData((prev) => ({ ...prev, nickname: newData }));
+
+    debouncedCheckNicknameAvailability(newData);
   };
 
   useEffect(() => {
-    if (userInfo.nickname && inputData.nickname === "") {
-      setInputData((prev) => ({ ...prev, nickname: userInfo.nickname }));
-    }
-  }, [userInfo.nickname, inputData.nickname, setInputData]);
+    onValidChange(isNicknameValid);
+  }, [isNicknameValid, onValidChange]);
 
   return (
     <>
@@ -37,10 +93,14 @@ export default function InputNickname() {
           onBlur={handleBlur}
           onChange={handleNicknameChange}
         />
-        {/* <Block.FlexBox $alignItems="center" $gap="10px"> */}
-        <div css={textWrapper}>
-          <Text.FocusedWarning $isFocused={isFocused}>
-            닉네임은 다른 사용자와 겹치지 않도록 입력해주세요
+        <div css={textWrapper} style={{ height: "20px" }}>
+          <Text.FocusedWarning
+            $isFocused={isFocused}
+            style={{
+              visibility: nicknameError ? "visible" : "hidden",
+            }}
+          >
+            {nicknameError || ""}
           </Text.FocusedWarning>
         </div>
       </div>
