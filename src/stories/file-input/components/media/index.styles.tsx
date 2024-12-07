@@ -3,8 +3,8 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   container(isFile: boolean): SerializedStyles {
     return css`
-      /* width: 100%; */
-      width: 361px;
+      width: 100%;
+      /* width: 361px; */
       /* max-width: 361px; */
       height: 361px;
       background-color: #fff;

@@ -35,7 +35,7 @@ export default function InputNickname({ onValidChange }: InputNicknameProps) {
             nickname,
           },
           headers: {
-            Authorization: accessToken,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
