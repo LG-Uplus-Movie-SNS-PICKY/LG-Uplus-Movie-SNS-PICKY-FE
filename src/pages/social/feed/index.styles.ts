@@ -100,11 +100,11 @@ export const reactionsSection = css`
   justify-content: center;
   align-items: center;
   gap: 16px;
+
   span {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: 60px;
     gap: 8px;
     color: #000;
     font-size: 16px;
@@ -112,6 +112,17 @@ export const reactionsSection = css`
     line-height: normal;
     letter-spacing: -0.64px;
     cursor: pointer;
+
+    &.reaction {
+      min-width: 58px; /* 좋아요와 댓글 버튼 각각의 최소 너비를 고정 */
+      justify-content: space-between; /* 버튼 내용 간 간격 유지 */
+    }
+
+    .like-number,
+    .comment-number {
+      min-width: 24px; /* 숫자의 최소 너비를 고정 */
+      text-align: center; /* 숫자를 중앙 정렬 */
+    }
   }
 `;
 
@@ -163,7 +174,6 @@ export const modalContent = css`
   button:first-of-type {
     border-radius: 10px 10px 0 0;
     border-bottom: 0.5px solid rgba(217, 217, 217, 0.85);
-    color: #000;
   }
 
   button:last-of-type {

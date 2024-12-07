@@ -103,17 +103,29 @@ export const reactionsSection = css`
   justify-content: center;
   align-items: center;
   gap: 16px;
+
   span {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
     color: #000;
-    min-width: 60px;
     font-size: 16px;
     font-weight: 600;
     line-height: normal;
     letter-spacing: -0.64px;
+    cursor: pointer;
+
+    &.reaction {
+      min-width: 58px; /* 좋아요와 댓글 버튼 각각의 최소 너비를 고정 */
+      justify-content: space-between; /* 버튼 내용 간 간격 유지 */
+    }
+
+    .like-number,
+    .comment-number {
+      min-width: 24px; /* 숫자의 최소 너비를 고정 */
+      text-align: center; /* 숫자를 중앙 정렬 */
+    }
   }
 `;
 
@@ -136,6 +148,7 @@ export const modalOverlay = css`
   align-items: center;
   opacity: 1;
   animation: fadeIn 0.3s ease-out;
+  z-index: 999;
 
   @keyframes fadeIn {
     from {
@@ -181,26 +194,6 @@ export const modalContent = css`
     font-weight: 400;
     letter-spacing: -0.64px;
     gap: 12px;
-  }
-`;
-
-export const spoilerImageWrapper = css`
-  position: relative;
-  width: 100%;
-  cursor: pointer;
-  p {
-    color: #000;
-    text-align: center;
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: -0.64px;
-    text-decoration-line: underline;
-    text-decoration-style: solid;
-    text-decoration-skip-ink: auto;
-    text-decoration-thickness: auto;
-    text-underline-offset: auto;
-    text-underline-position: from-font;
-    margin-top: 8px;
   }
 `;
 
@@ -301,4 +294,8 @@ export const registerImage = css`
 export const commentBox = css`
   display: flex;
   gap: 4px;
+`;
+
+export const carouselWrapper = css`
+  position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
 `;
