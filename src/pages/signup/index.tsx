@@ -185,7 +185,8 @@ export default function Signup() {
         }
 
         const response = await axios.patch(
-          "http://43.202.51.30/api/v1/user",
+          // "http://43.202.51.30/api/v1/user",
+          "https://api.picky-movie.com/api/v1/user",
           payload,
           {
             headers: {

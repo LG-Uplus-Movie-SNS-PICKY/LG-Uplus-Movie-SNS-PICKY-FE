@@ -50,7 +50,7 @@ const InputFavoriteMovie: React.FC = () => {
       console.log("보내는 장르 ID 값:", inputData.favoriteGenres);
   
       const response = await axios.post(
-        "http://43.202.51.30/api/v1/user/movies-by-genres",
+        "https://api.picky-movie.com/api/v1/user/movies-by-genres",
         {
           genreIds: inputData.favoriteGenres,
         }

@@ -26,8 +26,8 @@ export default function InputNickname({ onValidChange }: InputNicknameProps) {
   const checkNicknameAvailability = async (nickname: string) => {
     try {
       const response = await axios.get(
-        // `https://api.picky-movie.com/api/v1/user/nickname-validation`,
-        `http://43.202.51.30/api/v1/user/nickname-validation`,
+        `https://api.picky-movie.com/api/v1/user/nickname-validation`,
+        // `http://43.202.51.30/api/v1/user/nickname-validation`,
         { params: { nickname } }
       );
 
