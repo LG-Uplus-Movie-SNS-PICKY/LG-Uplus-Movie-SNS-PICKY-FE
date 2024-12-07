@@ -177,7 +177,7 @@ export default function Signup() {
         genreId: inputData.favoriteGenres || [],
       };
 
-      console.log(payload);
+      console.log(payload);
 
       try {
         const accessToken = sessionStorage.getItem("accessToken");
