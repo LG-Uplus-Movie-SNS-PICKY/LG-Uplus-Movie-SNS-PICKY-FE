@@ -21,6 +21,7 @@ export default function InputProfile() {
   const [userInfo, setUserInfo] = useRecoilState(userState);
   const [inputData, setInputData] = useRecoilState(inputState);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const showToastMessage = (message: string) => {
     setToastMessage(null);
@@ -37,6 +38,9 @@ export default function InputProfile() {
         return;
       }
       const imageUrl = URL.createObjectURL(file);
+      setIsAnimating(true); // 애니메이션 시작
+      setTimeout(() => setIsAnimating(false), 600); // 애니메이션 종료
+
       setUserInfo((prev) => ({ ...prev, profileImage: imageUrl }));
       setInputData((prev) => ({ ...prev, profileImage: imageUrl }));
       showToastMessage("이미지가 성공적으로 업로드되었습니다.");
@@ -45,16 +49,14 @@ export default function InputProfile() {
   };
 
   const setDefaultImage = () => {
-    if (!userInfo.profileImage || userInfo.profileImage === defaultUserImage) {
-      showToastMessage(
-        userInfo.profileImage
-          ? "이미 기본 이미지가 설정되어 있습니다."
-          : "기본 이미지가 설정되었습니다."
-      );
-      if (!userInfo.profileImage) {
-        setUserInfo((prev) => ({ ...prev, profileImage: defaultUserImage }));
-        setInputData((prev) => ({ ...prev, profileImage: defaultUserImage }));
-      }
+    if (userInfo.profileImage !== defaultUserImage) {
+      setIsAnimating(true); // 애니메이션 시작
+      setTimeout(() => setIsAnimating(false), 600); // 애니메이션 종료
+      setUserInfo((prev) => ({ ...prev, profileImage: defaultUserImage }));
+      setInputData((prev) => ({ ...prev, profileImage: defaultUserImage }));
+      showToastMessage("기본 이미지가 설정되었습니다.");
+    } else {
+      showToastMessage("이미 기본 이미지가 설정되어 있습니다.");
     }
   };
 
@@ -63,12 +65,12 @@ export default function InputProfile() {
       <Text.TitleMenu300>당신의 프로필을 선택해주세요</Text.TitleMenu300>
       <Text.FocusedMenu $isFocused={isFocused}>프로필 이미지</Text.FocusedMenu>
       {toastMessage && <Toast message={toastMessage} />}
-      <div css={imageContainer(!!userInfo.profileImage)}>
+      <div css={imageContainer}>
         {userInfo.profileImage ? (
           <img
             src={userInfo.profileImage}
             alt="프로필 미리보기"
-            css={styledImage}
+            css={styledImage(isAnimating)} // 애니메이션 적용
             width={240}
             height={240}
           />
@@ -86,11 +88,15 @@ export default function InputProfile() {
       <label htmlFor="profile-upload" css={customFileLabel}>
         이미지 업로드
       </label>
-      {!userInfo.profileImage && (
-        <span css={[defaultImageText, { cursor: "pointer" }]} onClick={setDefaultImage}>
-          기본 이미지 설정
-        </span>
-      )}
+      <span
+        css={[
+          defaultImageText,
+          { visibility: userInfo.profileImage === defaultUserImage ? "hidden" : "visible" },
+        ]}
+        onClick={setDefaultImage}
+      >
+        기본 이미지 설정
+      </span>
     </div>
   );
-} 
+}

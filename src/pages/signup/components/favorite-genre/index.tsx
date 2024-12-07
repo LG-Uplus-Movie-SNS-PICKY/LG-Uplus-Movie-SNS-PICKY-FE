@@ -124,7 +124,7 @@ const MovieGenreSelector = () => {
           <div css ={Warning}
             style={{ visibility: isValid ? "hidden" : "visible" }}
           >
-            최소 장르 3개 ~ 최대 장르 5개 선택해 주세요.
+            {/* 최소 장르 3개 ~ 최대 장르 5개 선택해 주세요. */}
           </div>
         </div>
     </div>

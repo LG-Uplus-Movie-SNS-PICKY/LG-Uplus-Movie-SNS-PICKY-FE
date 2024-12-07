@@ -65,7 +65,7 @@ export const inputLabelStyle = css`
   font-family: Pretendard;
   font-size: 16px;
   font-weight: 600;
-  flex: 1 0 0;
+  /* flex: 1 0 0; */
 `;
 
 const sharedInputStyle = css`
@@ -83,7 +83,12 @@ const sharedInputStyle = css`
 `;
 
 export const inputStyle = css`
-  ${sharedInputStyle};
+ display: flex;
+padding: 16px 0px;
+align-items: center;
+align-self: stretch;
+border-bottom: 1px solid #D9D9D9;
+/* width: 100%; */
 `;
 
 export const readonlyInputStyle = css`
@@ -121,4 +126,17 @@ export const buttonWrapper = css`
   justify-content: center;
   align-items: center;
   padding: 16px;
+`;
+
+export const photoEditWrapper = css`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const errorTextStyle = css`
+  color: #ff084a;
+  font-size: 12px;
+  margin-top: 4px;
 `;
