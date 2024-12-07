@@ -171,8 +171,8 @@ export default function Signup() {
         nickname: inputData.nickname,
         profile_url: inputData.profileImage,
         birthdate: inputData.birthDate,
-        gender: inputData.gender,
-        nationality: inputData.nationality,
+        gender: inputData.gender.toUpperCase(),
+        nationality: inputData.nationality.toUpperCase(),
         movieId: inputData.favoriteMovie || [],
         genreId: inputData.favoriteGenres || [],
       };
