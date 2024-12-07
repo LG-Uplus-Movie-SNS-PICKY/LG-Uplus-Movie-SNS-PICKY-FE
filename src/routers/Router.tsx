@@ -17,10 +17,8 @@ import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import My from "@pages/my";
 import Recommendations from "@pages/recommendations";
-import Edit from "@pages/social/edit";
 import Callback from "@pages/login/oauth";
 import Post from "@pages/social/post";
-import EditFeed from "@pages/social/edit";
 import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
@@ -54,13 +52,13 @@ function Router() {
 
             {/* 로그인 사용자 - User 관련 라우트 */}
             <Route path="/user/:nickname" element={<My />} />
-            <Route path="/user/:nickname/edit" element={<Edit />} />
+            {/* <Route path="/user/:nickname/edit" element={<Edit />} /> */}
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
             <Route path="/movie-log" element={<Feed />} />
             <Route path="/movie-log/detail" element={<Comment />} />
             <Route path="/movie-log/add" element={<Post />} />
-            <Route path="/movie-log/edit" element={<EditFeed />} />
+            {/* <Route path="/movie-log/edit" element={<EditFeed />} /> */}
 
             {/* 로그인 사용자 - 이외 라우트 */}
             <Route path="/picky" element={<PickyPage />} />
