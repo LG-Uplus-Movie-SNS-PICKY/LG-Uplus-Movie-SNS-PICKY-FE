@@ -31,7 +31,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
 
       {/* Content - Slider */}
       <Swiper
-        slidesPerView={"auto"}
+        slidesPerView={3.8}
         spaceBetween={10}
         direction={"horizontal"}
         freeMode={true}

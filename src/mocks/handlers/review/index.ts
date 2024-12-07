@@ -13,6 +13,11 @@ interface bodyTypes {
   content: string;
 }
 
+interface RequestBody {
+  context: string;
+  isSpoiler: boolean;
+}
+
 const reviewHandler: HttpHandler[] = [
   // 특정 영화의 댓글을 추가
   http.post(
@@ -75,7 +80,32 @@ const reviewHandler: HttpHandler[] = [
     }
   ),
 
-  http.patch(`${import.meta.env.VITE_SERVER_URL}`, () => {}),
+  http.patch(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:lineReviewId`,
+    async ({ params, request }) => {
+      const { lineReviewId } = params;
+      const requestBody: RequestBody = (await request.json()) as RequestBody;
+
+      // Line Review Id를 제대로 가지고 오지 못한 경우 + 숫자가 아닌 경우
+      if (!lineReviewId || Number.isNaN(Number(lineReviewId)))
+        return HttpResponse.json(
+          { message: "Invalid or missing Line Review Id" },
+          { status: 400, statusText: "LINE_REVIEW_ID_MISSING" }
+        );
+
+      response.forEach((data) => {
+        if (data.id === Number(lineReviewId)) {
+          data.context = requestBody.context;
+          data.isSpoiler = requestBody.isSpoiler;
+        }
+      });
+
+      return HttpResponse.json(
+        { message: "Comment updated successfully" },
+        { status: 200, statusText: "OK" }
+      );
+    }
+  ),
 
   // 특정 영화에 대한 한줄평 목록을 조회
   http.get(
