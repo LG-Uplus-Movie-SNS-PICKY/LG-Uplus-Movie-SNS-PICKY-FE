@@ -13,7 +13,7 @@ function Main() {
   useEffect(() => {
     const fetch = async () => {
       await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/1`, {
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`, {
           headers: {
             Authorization: "123",
           },
