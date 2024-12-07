@@ -75,6 +75,8 @@ const reviewHandler: HttpHandler[] = [
     }
   ),
 
+  http.patch(`${import.meta.env.VITE_SERVER_URL}`, () => {}),
+
   // 특정 영화에 대한 한줄평 목록을 조회
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/:movieId`,
