@@ -13,11 +13,22 @@ function Main() {
   useEffect(() => {
     const fetch = async () => {
       await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`, {
-          headers: {
-            Authorization: "123",
+        .post(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/create`,
+          {
+            userId: 0,
+            writerNickname: "asd",
+            movieId: 0,
+            rating: 0,
+            content: "string",
+            isSpoler: true,
           },
-        })
+          {
+            headers: {
+              Authorization: "123",
+            },
+          }
+        )
         .then((res) => console.log(res.data));
     };
 
