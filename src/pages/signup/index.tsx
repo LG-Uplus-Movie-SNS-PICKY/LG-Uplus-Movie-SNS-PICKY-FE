@@ -185,7 +185,7 @@ export default function Signup() {
         }
 
         const response = await axios.patch(
-          "http://43.202.51.30/api/v1/user",
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
           payload,
           {
             headers: {
@@ -194,7 +194,7 @@ export default function Signup() {
           }
         );
         console.log("회원가입 성공:", response.data);
-
+        
         setToastMessage("회원가입이 완료되었습니다!");
         setTimeout(() => setToastMessage(null), 3000);
       } catch (error) {
