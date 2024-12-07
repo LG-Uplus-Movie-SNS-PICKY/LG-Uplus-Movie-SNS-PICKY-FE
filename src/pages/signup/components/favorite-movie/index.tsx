@@ -49,6 +49,7 @@ const InputFavoriteMovie: React.FC = () => {
     try {
       console.log("보내는 장르 ID 값:", inputData.favoriteGenres);
       const accessToken = sessionStorage.getItem("accessToken");
+      console.log("보내는 장르 ID:", accessToken);
 
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/movies-by-genres`,
