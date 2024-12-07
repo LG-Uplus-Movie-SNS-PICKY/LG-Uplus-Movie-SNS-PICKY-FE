@@ -7,7 +7,7 @@ import Loading from "@components/loading";
 import { useEffect } from "react";
 import axios from "axios";
 
-const isLogin = true;
+const isLogin = false;
 
 function Main() {
   useEffect(() => {
