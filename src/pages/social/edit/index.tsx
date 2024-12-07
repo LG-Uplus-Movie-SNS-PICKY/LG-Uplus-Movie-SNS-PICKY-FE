@@ -14,14 +14,24 @@ import {
   profileWrapper,
   saveButtonStyle,
   buttonWrapper,
+  photoEditWrapper,
+  errorTextStyle,
 } from "./index.styles";
 import SEO from "@components/seo";
 
 export default function ProfileEditPage() {
-  const [nickname, setNickname] = useState("먹식이");
-  const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [nicknameError, setNicknameError] = useState<string | null>(null);
+  const initialNickname = "먹식이";
+  const initialProfileImage = null;
 
+  const [nickname, setNickname] = useState(initialNickname);
+  const [profileImage, setProfileImage] = useState<string | null>(
+    initialProfileImage
+  );
+  const [nicknameError, setNicknameError] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
+
+  // 닉네임 변경 핸들러
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNickname(value);
@@ -36,25 +46,38 @@ export default function ProfileEditPage() {
     }
   };
 
+  // 이미지 업로드 핸들러
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
       reader.onload = () => {
         setProfileImage(reader.result as string);
+        setImageError(null); // 이미지 업로드 시 오류 상태 초기화
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // 수정 버튼 클릭 핸들러
   const handleSave = () => {
-    if (nicknameError) {
-      alert("닉네임을 올바르게 입력해주세요.");
+    if (nicknameError || imageError) {
+      alert("입력을 확인해주세요.");
       return;
     }
 
     alert("프로필이 수정되었습니다.");
   };
+
+  // 초기값과 비교하여 수정 버튼 활성/비활성 상태 업데이트
+  useEffect(() => {
+    const isUnchanged =
+      nickname === initialNickname && profileImage === initialProfileImage;
+
+    const hasError = !!nicknameError || !!imageError;
+
+    setIsSaveDisabled(isUnchanged || hasError);
+  }, [nickname, profileImage, nicknameError, imageError]);
 
   return (
     <>
@@ -66,16 +89,16 @@ export default function ProfileEditPage() {
         </header>
 
         <div css={profileImageContainerStyle}>
-          <label htmlFor="profileImageInput" style={{ cursor: "pointer" }}>
-            <div css={profileWrapper}>
-              <img
-                src={profileImage || profileIcon}
-                alt="프로필 이미지"
-                css={profileImageStyle}
-              />
+          <div css={profileWrapper}>
+            <img
+              src={profileImage || profileIcon}
+              alt="프로필 이미지"
+              css={profileImageStyle}
+            />
+            <label htmlFor="profileImageInput" css={photoEditWrapper}>
               <p css={photoEditStyle}>사진수정</p>
-            </div>
-          </label>
+            </label>
+          </div>
           <input
             id="profileImageInput"
             type="file"
@@ -83,12 +106,13 @@ export default function ProfileEditPage() {
             style={{ display: "none" }}
             onChange={handleImageUpload}
           />
+          {imageError && <p css={errorTextStyle}>{imageError}</p>} 
         </div>
 
         <div css={profileWrapper}>
           <div css={inputRowStyle}>
             <label css={inputLabelStyle}>닉네임</label>
-            <div style={{ width: "65%" }}>
+            <div style={{ width: "100%" }}>
               <input
                 type="text"
                 value={nickname}
@@ -96,16 +120,7 @@ export default function ProfileEditPage() {
                 css={inputStyle}
               />
               {nicknameError && (
-                <p
-                  style={{
-                    color: "#FF084A",
-                    fontSize: "12px",
-                    marginTop: "4px",
-                    marginLeft: "4px",
-                  }}
-                >
-                  {nicknameError}
-                </p>
+                <p css={errorTextStyle}>{nicknameError}</p> 
               )}
             </div>
           </div>
@@ -146,7 +161,15 @@ export default function ProfileEditPage() {
           </div>
         </div>
         <div css={buttonWrapper}>
-          <button onClick={handleSave} css={saveButtonStyle}>
+          <button
+            onClick={handleSave}
+            css={saveButtonStyle}
+            disabled={isSaveDisabled} // 비활성화 상태 적용
+            style={{
+              backgroundColor: isSaveDisabled ? "#d9d9d9" : "#ff084a",
+              cursor: isSaveDisabled ? "not-allowed" : "pointer",
+            }}
+          >
             수정하기
           </button>
         </div>

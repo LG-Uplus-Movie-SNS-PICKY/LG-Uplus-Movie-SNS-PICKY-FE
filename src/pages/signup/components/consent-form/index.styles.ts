@@ -14,7 +14,7 @@ export const consentContainer = ($isSelected: boolean) => css`
   display: flex;
   align-items: center;
   gap: 12px;
-  border: 2px solid ${($isSelected ? "red" : "#d9d9d9")};
+  border: 2px solid ${$isSelected ? "red" : "#d9d9d9"};
   border-radius: 10px;
   padding: 12px 16px;
   background-color: #ffffff;
@@ -22,10 +22,10 @@ export const consentContainer = ($isSelected: boolean) => css`
   width: 100%;
 `;
 
-export const customCheckbox =  css`
+export const customCheckbox = css`
   width: 20px;
   height: 20px;
-  border-radius: 4px; /* 모서리를 둥글게 */
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -58,4 +58,16 @@ export const textWrapper = css`
   display: flex;
   width: 100%;
   padding-left: 16px;
+`;
+
+export const warning = css`
+  color: #ff084a;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  letter-spacing: -0.52px;
+  justify-content: center;
+  visibility: hidden;
+  height: 20px;
 `;
