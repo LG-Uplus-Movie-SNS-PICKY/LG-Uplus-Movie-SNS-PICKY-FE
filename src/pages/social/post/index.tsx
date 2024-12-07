@@ -256,7 +256,7 @@ export default function SocialPost() {
 
       <div css={reviewSection}>
         <div css={reviewContainer}>
-          <Review css={reviewIcon} />
+          {!reviewText && <Review css={reviewIcon} />}
           <textarea
             placeholder="        리뷰를 작성해주세요...&#13;&#10;&#13;&#10;욕설, 비방, 명예훼손성 표현은 누군가에게 상처가 될 수 있습니다."
             css={reviewInput}

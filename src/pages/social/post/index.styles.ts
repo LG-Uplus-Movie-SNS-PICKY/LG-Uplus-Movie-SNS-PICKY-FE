@@ -207,10 +207,10 @@ export const reviewInputWrapper = css`
 `;
 
 export const reviewIcon = css`
-  /* position: absolute;
-  left: 10%;
-  top: 650px;
-  transform: translateY(-50%); */
+  position: absolute;
+  left: 20px;
+  top: 31px;
+  transform: translateY(-50%);
 `;
 
 export const reviewInputWithIcon = css`
@@ -233,6 +233,8 @@ export const reviewSection = css`
 `;
 
 export const reviewContainer = css`
+  position: relative;
+
   display: flex;
   justify-content: center;
   flex-direction: column;
