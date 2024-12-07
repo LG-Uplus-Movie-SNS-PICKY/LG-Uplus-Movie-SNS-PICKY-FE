@@ -9,7 +9,7 @@ import { nickNameContainer, textWrapper } from "./index.styles";
 import { debounce } from "lodash";
 
 interface InputNicknameProps {
-  onValidChange: (isValid: boolean) => void; // 유효성 상태 변경 콜백
+  onValidChange: (isValid: boolean) => void;
 }
 
 export default function InputNickname({ onValidChange }: InputNicknameProps) {
@@ -25,28 +25,26 @@ export default function InputNickname({ onValidChange }: InputNicknameProps) {
 
   const checkNicknameAvailability = async (nickname: string) => {
     try {
-        const response = await axios.get(
-            `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
-            { params: { nickname } }
-        );
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
+        { params: { nickname } }
+      );
 
-        console.log("API 응답:", response.data);
+      console.log("API 응답:", response.data);
 
-        if (!response.data.data.isValid) {
-            // isValid가 false면 닉네임 사용 중
-            setNicknameError("이미 사용 중인 닉네임입니다.");
-            setIsNicknameValid(false);
-        } else {
-            // isValid가 true면 닉네임 사용 가능
-            setNicknameError("사용이 가능한 닉네임입니다.");
-            setIsNicknameValid(true);
-        }
-    } catch (error) {
-        console.error("API 요청 중 오류 발생:", error);
-        setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+      if (!response.data.data.isValid) {
+        setNicknameError("이미 사용 중인 닉네임입니다.");
         setIsNicknameValid(false);
+      } else {
+        setNicknameError("사용이 가능한 닉네임입니다.");
+        setIsNicknameValid(true);
+      }
+    } catch (error) {
+      console.error("API 요청 중 오류 발생:", error);
+      setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+      setIsNicknameValid(false);
     }
-};
+  };
 
   const debouncedCheckNicknameAvailability = useCallback(
     debounce((nickname: string) => {

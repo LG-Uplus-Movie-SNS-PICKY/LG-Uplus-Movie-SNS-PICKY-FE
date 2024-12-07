@@ -8,6 +8,8 @@ import { Checked, Unchecked } from "@assets/svg";
 import {
   consentWrapper,
   consentContainer,
+  textWrapper,
+  warning,
   customCheckbox,
   consentText,
 } from "./index.styles";
@@ -15,7 +17,7 @@ import {
 export default function InputConsentForm() {
   const [inputData, setInputData] = useRecoilState(inputState);
   const { handleFocus, handleBlur } = useFocus();
-  const [isValid, setIsValid] = useState(true); // 유효성 상태 추가
+  const [isValid, setIsValid] = useState(true);
 
   const toggleConsentAll = () => {
     setInputData((prev: IInputData) => ({
@@ -70,15 +72,13 @@ export default function InputConsentForm() {
         </span>
       </div>
 
-      <div
-        style={{
-          color: isValid ? "transparent" : "#FF084A",
-          minHeight: "20px",
-          textAlign: "center",
-          marginTop: "10px",
-        }}
-      >
-        필수 약관에 모두 동의 해주세요.
+      <div css={textWrapper} style={{ height: "20px" }}>
+        <div
+          css={warning}
+          style={{ visibility: isValid ? "hidden" : "visible" }}
+        >
+          필수 약관에 모두 동의 해주세요.
+        </div>
       </div>
     </div>
   );
