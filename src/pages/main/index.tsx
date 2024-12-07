@@ -13,15 +13,11 @@ function Main() {
   useEffect(() => {
     const fetch = async () => {
       await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/create`,
+        .patch(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/6`,
           {
-            userId: 0,
-            writerNickname: "asd",
-            movieId: 0,
-            rating: 0,
-            content: "string",
-            isSpoler: true,
+            context: "와우 판타스틱",
+            isSpoiler: false,
           },
           {
             headers: {
