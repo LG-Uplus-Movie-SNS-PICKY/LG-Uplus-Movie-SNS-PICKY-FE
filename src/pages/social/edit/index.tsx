@@ -28,8 +28,8 @@ export default function ProfileEditPage() {
     initialProfileImage
   );
   const [nicknameError, setNicknameError] = useState<string | null>(null);
-  const [imageError, setImageError] = useState<string | null>(null); // 프로필 이미지 오류 상태
-  const [isSaveDisabled, setIsSaveDisabled] = useState(true); // 수정 버튼 활성/비활성
+  const [imageError, setImageError] = useState<string | null>(null);
+  const [isSaveDisabled, setIsSaveDisabled] = useState(true);
 
   // 닉네임 변경 핸들러
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,7 +106,7 @@ export default function ProfileEditPage() {
             style={{ display: "none" }}
             onChange={handleImageUpload}
           />
-          {imageError && <p css={errorTextStyle}>{imageError}</p>} {/* 이미지 오류 메시지 */}
+          {imageError && <p css={errorTextStyle}>{imageError}</p>} 
         </div>
 
         <div css={profileWrapper}>
@@ -120,7 +120,7 @@ export default function ProfileEditPage() {
                 css={inputStyle}
               />
               {nicknameError && (
-                <p css={errorTextStyle}>{nicknameError}</p> // 닉네임 오류 메시지
+                <p css={errorTextStyle}>{nicknameError}</p> 
               )}
             </div>
           </div>

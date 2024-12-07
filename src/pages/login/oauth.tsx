@@ -21,7 +21,7 @@ const LoginCallback: React.FC = () => {
     // 소셜 로그인 API 요청
     axios
       // .get(`http://api.picky-movie.com/api/v1/oauth/naver/user`, {
-        .get(`http://43.202.51.30:80/api/v1/oauth/naver/user`, {
+        .get(`http://43.202.51.30/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
       .then((response) => {
