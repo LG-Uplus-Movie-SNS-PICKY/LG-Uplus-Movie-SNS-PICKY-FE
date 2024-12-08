@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { inputState } from "../../review/atoms";
 import InputUserName from "./components/user-name";
@@ -33,6 +34,7 @@ export default function Signup() {
   const [step, setStep] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState(true);
+  const navigate = useNavigate();
 
   const steps = useMemo(
     () => [
@@ -171,11 +173,13 @@ export default function Signup() {
         nickname: inputData.nickname,
         profile_url: inputData.profileImage,
         birthdate: inputData.birthDate,
-        gender: inputData.gender,
-        nationality: inputData.nationality,
+        gender: inputData.gender.toUpperCase(),
+        nationality: inputData.nationality.toUpperCase(),
         movieId: inputData.favoriteMovie || [],
         genreId: inputData.favoriteGenres || [],
       };
+
+      console.log(payload);
 
       try {
         const accessToken = sessionStorage.getItem("accessToken");
@@ -194,9 +198,11 @@ export default function Signup() {
           }
         );
         console.log("회원가입 성공:", response.data);
-        
+
         setToastMessage("회원가입이 완료되었습니다!");
         setTimeout(() => setToastMessage(null), 3000);
+
+        navigate("/");
       } catch (error) {
         console.error("회원가입 요청 중 오류 발생:", error);
         setToastMessage("회원가입 요청 중 오류가 발생했습니다.");
@@ -206,7 +212,7 @@ export default function Signup() {
       setToastMessage("입력 데이터가 유효하지 않습니다. 다시 확인해주세요.");
       setTimeout(() => setToastMessage(null), 3000);
     }
-  }, [inputData, isNicknameValid]);
+  }, [inputData, isNicknameValid, navigate]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {

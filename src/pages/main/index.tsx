@@ -7,18 +7,25 @@ import Loading from "@components/loading";
 import { useEffect } from "react";
 import axios from "axios";
 
-const isLogin = true;
+const isLogin = false;
 
 function Main() {
 
   useEffect(() => {
     const fetch = async () => {
       await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`, {
-          headers: {
-            Authorization: "123",
+        .patch(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/6`,
+          {
+            context: "와우 판타스틱",
+            isSpoiler: false,
           },
-        })
+          {
+            headers: {
+              Authorization: "123",
+            },
+          }
+        )
         .then((res) => console.log(res.data));
     };
 

@@ -45,31 +45,38 @@ const InputFavoriteMovie: React.FC = () => {
       console.warn("장르 ID가 없습니다. API 호출을 건너뜁니다.");
       return;
     }
-  
+
     try {
       console.log("보내는 장르 ID 값:", inputData.favoriteGenres);
-  
+      const accessToken = sessionStorage.getItem("accessToken");
+      console.log("보내는 장르 ID:", accessToken);
+
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/movies-by-genres`,
         {
           genreIds: inputData.favoriteGenres,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
-  
+
       console.log("받아온 영화 데이터:", response.data);
-  
+
       // 응답 데이터의 타입 정의
       type Movie = {
         movieId: number;
         title: string;
         posterUrl: string;
       };
-  
+
       // 데이터가 배열인지 확인하고 타입 적용
       const moviesData: Movie[] = Array.isArray(response.data)
         ? response.data
         : response.data.data || [];
-  
+
       // 이미지 URL 앞에 TMDB_IMAGE_PREFIX 추가
       const processedMovies = moviesData.map((movie: Movie) => ({
         ...movie,
@@ -78,7 +85,9 @@ const InputFavoriteMovie: React.FC = () => {
       setMovies(processedMovies);
     } catch (error) {
       console.error("영화를 가져오는 중 오류 발생:", error);
-      alert("영화 데이터를 가져오는 데 문제가 발생했습니다. 다시 시도해주세요.");
+      alert(
+        "영화 데이터를 가져오는 데 문제가 발생했습니다. 다시 시도해주세요."
+      );
       setMovies([]);
     }
   }, [inputData.favoriteGenres]);
@@ -113,9 +122,7 @@ const InputFavoriteMovie: React.FC = () => {
 
   const fillEmptySlots = Array.from(
     { length: moviesPerPage - paginatedMovies.length },
-    (_, index) => (
-      <div key={`placeholder-${index}`} css={movieCard(false)} />
-    )
+    (_, index) => <div key={`placeholder-${index}`} css={movieCard(false)} />
   );
 
   return (
@@ -168,7 +175,11 @@ const InputFavoriteMovie: React.FC = () => {
 
               <div css={movieGrid}>
                 {paginatedMovies.map(
-                  (movie: { movieId: number; title: string; posterUrl: string }) => (
+                  (movie: {
+                    movieId: number;
+                    title: string;
+                    posterUrl: string;
+                  }) => (
                     <div
                       key={movie.movieId}
                       css={movieCard(
