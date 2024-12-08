@@ -49,7 +49,13 @@ const boardHandlers: HttpHandler[] = [
 
       return HttpResponse.json(
         {
-          data: resposne.slice(start, end),
+          data: resposne
+            .sort(
+              (a, b) =>
+                new Date(b.createdDate).getTime() -
+                new Date(a.createdDate).getTime()
+            )
+            .slice(start, end),
           nextPage: end < resposne.length ? page + 1 : null,
         },
         { status: 200 }

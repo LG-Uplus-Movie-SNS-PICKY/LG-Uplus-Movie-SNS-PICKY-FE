@@ -13,18 +13,11 @@ function Main() {
   useEffect(() => {
     const fetch = async () => {
       await axios
-        .patch(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/6`,
-          {
-            context: "와우 판타스틱",
-            isSpoiler: false,
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`, {
+          headers: {
+            Authorization: "123",
           },
-          {
-            headers: {
-              Authorization: "123",
-            },
-          }
-        )
+        })
         .then((res) => console.log(res.data));
     };
 
