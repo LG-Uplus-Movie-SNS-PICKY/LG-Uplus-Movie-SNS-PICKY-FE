@@ -61,7 +61,7 @@ const authHandler: HttpHandler[] = [
         return HttpResponse.json(
           {
             message:
-              "권한이 없습니다. Request Headers에 Authorization를 추가 또는 로그인을 해주세요.",
+              "권한이 없습니다 - Request Headers에 Authorization를 추가 또는 로그인을 해주세요.",
             errorCode: "AUTH_HEADER_MISSING",
           },
           { status: 403, statusText: "Forbidden" }

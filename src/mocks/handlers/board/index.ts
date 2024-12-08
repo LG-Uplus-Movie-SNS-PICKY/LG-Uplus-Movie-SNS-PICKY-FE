@@ -21,27 +21,6 @@ interface MovieLogPostTypes {
   isSpoiler: true;
 }
 
-// {
-//   "boardId": 0,
-//   "writerId": 0,
-//   "writerNickname": "string",
-//   "writerProfileUrl": "string",
-//   "context": "string",
-//   "isSpoiler": true,
-//   "createdDate": "2024-12-08T16:46:55.473Z",
-//   "updatedDate": "2024-12-08T16:46:55.473Z",
-//   "likesCount": 0,
-//   "commentsCount": 0,
-//   "contents": [
-//     {
-//       "contentUrl": "string",
-//       "boardContentType": "string"
-//     }
-//   ],
-//   "movieTitle": "string",
-//   "isLike": true
-// }
-
 // Movie 관련 모킹 API(Mocking Object) 설계
 const boardHandlers: HttpHandler[] = [
   // 무비로그 생성 API(Mocking Object)
@@ -92,48 +71,32 @@ const boardHandlers: HttpHandler[] = [
       const user = JSON.parse(userString);
 
       // 게시물 등록
-      // board.push({
-      //   board_id: board.length,
-      //   board_context: body.boardContext,
-      //   movie_id: body.movieId,
-      //   user_id: user.id,
-      //   writer_nickname: user.nickname,
-      //   is_deleted: false,
-      //   createdDate: new Date().toISOString(),
-      //   updatedDate: new Date().toISOString(),
-      // });
+      board.push({
+        board_id: board.length,
+        board_context: body.boardContext,
+        movie_id: body.movieId,
+        user_id: user.id,
+        is_spoiler: body.isSpoiler,
+        writer_nickname: user.nickname,
+        is_deleted: false,
+        createdDate: new Date().toISOString(),
+        updatedDate: new Date().toISOString(),
+      });
 
       // 사진을 올렸을 경우
-      // if(body.contents.length) {
-      //   body.contents.forEach((content) => {
-
-      //   });
-      // }
-
-      // board.push({
-      //   boardId: board.length,
-      //   writerId: user.id,
-      //   writerNickname: user.nickname,
-      //   writerProfileUrl: user.profileUrl,
-      //   context: body?.boardContext,
-      //   isSpoiler: body.isSpoiler,
-      //   createdDate: new Date().toISOString(),
-      //   updatedDate: new Date().toISOString(),
-      //   likesCount: 0,
-      //   commentsCount: 0,
-      //   contents: body.contents.map((content) => ({
-      //     contentUrl: content.contentUrl,
-      //     boardContentType: content.type,
-      //   })),
-      //   movie: {
-      //     id: 2,
-      //     title: "타이타닉",
-      //   },
-      //   isLike: true,
-      // });
+      if (body.contents.length) {
+        body.contents.forEach((content) => {
+          boardContent.push({
+            board_content_id: boardContent.length,
+            board_content_type: content.type,
+            board_content_url: content.contentUrl,
+            board_id: board.length - 1,
+          });
+        });
+      }
 
       return HttpResponse.json(
-        { message: "REQUEST_FRONT_SUCCESS", data: board },
+        { message: "REQUEST_FRONT_SUCCESS" },
         { status: 200 }
       );
     }
@@ -142,7 +105,68 @@ const boardHandlers: HttpHandler[] = [
   // 무비로그 수정 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId`,
-    () => {}
+    async ({ params, request }) => {
+      // 권환 확인
+      const authorization = request.headers.get("Authorization");
+      const { boardId } = params;
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가해주세요. (임시로 아무값이나 넣어도 무관)",
+          },
+          { status: 403 }
+        );
+      }
+
+      const body = (await request.json()) as MovieLogPostTypes;
+
+      // Request Body를 보내지 않은 경우
+      if (isEmpty(body)) {
+        return HttpResponse.json(
+          {
+            message:
+              "Body를 올바른 형식으로 작성해주세요. (SwaggerAPI - board-controlle 보고 참고)",
+            errorCode: "ERR_EMPTY_BODY",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      // for(let i = 0; i < ;)
+      // 이진 탐색(Binary Search)으로 변경할 값의 위치를 찾는다.
+      //  - 할 수 있는 이유 : id는 1 ~ N 까지 순차적으로 증가하기 때문
+      //  - target -> 쿼리 스트링으로 넘어오는 boardId가 됨
+      //  - left는 board[0], right는 board.length - 1
+      const target = Number(boardId);
+      let left = 0;
+      let right = board.length - 1;
+
+      while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+
+        if (board[mid].board_id === target) {
+          board[mid].board_context = body.boardContext;
+          board[mid].is_spoiler = body.isSpoiler;
+          break;
+        }
+
+        if (board[mid].board_id < target) {
+          left = mid + 1;
+        } else {
+          right = mid - 1;
+        }
+      }
+
+      return HttpResponse.json(
+        {
+          message: "REQUEST_FRONT_SUCCESS",
+        },
+        { status: 200 }
+      );
+    }
   ),
 
   // 무비로그 삭제 API(Mocking Object)
@@ -211,6 +235,7 @@ const boardHandlers: HttpHandler[] = [
           likesCount: likes.length,
           commentsCount: comments.length,
           contents: contents,
+          movieId: movieInfo?.movie_id,
           movieTitle: movieInfo?.movie_title,
           isLike: loginUser.user_id === userInfo?.user_id,
         };
@@ -284,11 +309,69 @@ const boardHandlers: HttpHandler[] = [
         );
       }
 
-      // return HttpResponse.json(
-      //   { data: board.filter((data) => data.movie.id === Number(movieId)) },
-      //   { status: 200 }
-      // );
-      return HttpResponse.json({ data: board }, { status: 200 });
+      const url = new URL(request.url);
+      const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
+      const page = Number(url.searchParams.get("page") || 1);
+      const limit = Number(url.searchParams.get("limit") || 10);
+
+      // 가져올 인덱스를 계산한다.
+      // start(시작값) : (page - 1) * limit
+      // end(마지막) : start + limit
+      const start = (page - 1) * limit;
+      const end = start + limit;
+
+      const response = board
+        .filter((boardItem) => boardItem.movie_id === Number(movieId))
+        .slice(start, end)
+        .map((boardItem) => {
+          const boardId = boardItem.board_id; // board_id 가져오기
+
+          // 관련 데이터 필터링
+          const movieInfo = movie.find(
+            (movie) => movie.movie_id === boardItem.movie_id
+          );
+          const userInfo = user.find(
+            (info) => info.user_id === boardItem.user_id
+          );
+          const comments = boardComment.filter(
+            (comment) => comment.board_id === boardId
+          );
+          const contents = boardContent.filter(
+            (content) => content.board_id === boardId
+          );
+          const likes = boardLike.filter((like) => like.board_id === boardId);
+
+          return {
+            boardId,
+            writerId: userInfo?.user_id,
+            writerNickname: userInfo?.user_nickname,
+            writerProfileUrl: userInfo?.user_profile_url,
+            context: boardItem.board_context,
+            isSpoiler: boardItem.is_spoiler,
+            createdDate: boardItem.createdDate,
+            updatedDate: boardItem.updatedDate,
+            likesCount: likes.length,
+            commentsCount: comments.length,
+            contents: contents,
+            movieId: movieId,
+            movieTitle: movieInfo?.movie_title,
+            isLike: loginUser.user_id === userInfo?.user_id,
+          };
+        });
+
+      return HttpResponse.json(
+        {
+          data: response,
+          nextPage:
+            end <
+            board.filter((item) => item.movie_id === Number(movieId)).length
+              ? page + 1
+              : null,
+        },
+        { status: 200 }
+      );
     }
   ),
 

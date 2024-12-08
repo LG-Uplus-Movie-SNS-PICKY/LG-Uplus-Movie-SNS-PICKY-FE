@@ -7,6 +7,10 @@ import Loading from "@components/loading";
 import { useEffect } from "react";
 import axios from "axios";
 
+import board from "@constants/json/board/board.json";
+import boardComments from "@constants/json/board/board_comments.json";
+import boardContents from "@constants/json/board/board_contents.json";
+
 const isLogin = false;
 
 function Main() {
@@ -14,16 +18,19 @@ function Main() {
     // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
 
     const fetch = async () => {
-      // const response = await axios
-      //   .post(
-      //     `${import.meta.env.VITE_SERVER_URL}/api/v1/user/auth`,
-      //     {},
-      //     {
-      //       headers: { Authorization: sessionStorage.getItem("user") },
-      //     }
-      //   )
-      //   .then((res) => res.data);
-      // console.log(response);
+      const response = await axios
+        .post(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/611`,
+          {
+            boardContext: "string",
+            isSpoiler: false,
+          },
+          {
+            headers: { Authorization: "1" },
+          }
+        )
+        .then((res) => res.data);
+      console.log(response);
     };
 
     fetch();
