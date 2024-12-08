@@ -21,18 +21,25 @@ import {
   ScoreText,
   ScoreBar,
   PercentageText,
-  GenderStats,
-  GenderStat,
   TitleBorder,
   PercentageWrapper,
-  PercentageContainer
+  PercentageContainer,
 } from './index.styles';
 import MaleSvg from '@assets/icons/male.svg?react';
 import FemaleSvg from '@assets/icons/female.svg?react';
 
 interface Review {
+  id: number;
+  writerNickname: string;
+  userId: number;
+  movieId: number;
   rating: number;
-  gender: string;
+  context: string;
+  isSpoiler: boolean;
+  likes: number;
+  dislikes: number;
+  createdAt: string;
+  gender?: string;
 }
 
 interface Props {
@@ -78,8 +85,8 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   const CircleChart = ({ genderStats }: { genderStats: { male: number; female: number } }) => {
     // 남성과 여성 비율 계산
     const total = genderStats.male + genderStats.female;
-    const malePercentage = (genderStats.male / total) * 100;
-    const femalePercentage = (genderStats.female / total) * 100;
+    const malePercentage = total > 0 ? (genderStats.male / total) * 100 : 0;
+    const femalePercentage = total > 0 ? (genderStats.female / total) * 100 : 0;
 
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>

@@ -54,8 +54,6 @@ const ReviewRegist = () => {
         }
     };
 
-    console.log("Hello")
-
     return (
         <Container>
             <TitleContainer>
