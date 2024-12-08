@@ -69,7 +69,7 @@ const boardHandlers: HttpHandler[] = [
         boardId: board.length,
         writerId: user.id,
         writerNickname: user.nickname,
-        writerProfileUrl: user.profile_url,
+        writerProfileUrl: user.profileUrl,
         context: body?.boardContext,
         isSpoiler: body.isSpoiler,
         createdDate: new Date().toISOString(),
@@ -88,7 +88,7 @@ const boardHandlers: HttpHandler[] = [
       });
 
       return HttpResponse.json(
-        { message: "REQUEST_FRONT_SUCCESS" },
+        { message: "REQUEST_FRONT_SUCCESS", data: board },
         { status: 200 }
       );
     }
