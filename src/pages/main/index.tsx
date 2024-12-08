@@ -18,19 +18,15 @@ function Main() {
     // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
 
     const fetch = async () => {
-      const response = await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1`,
-          {
-            boardContext: "string",
-            isSpoiler: false,
-          },
+      const data = await axios
+        .get(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/board?nickname=front-1`,
           {
             headers: { Authorization: "1" },
           }
         )
         .then((res) => res.data);
-      console.log(response);
+      console.log(data);
     };
 
     fetch();

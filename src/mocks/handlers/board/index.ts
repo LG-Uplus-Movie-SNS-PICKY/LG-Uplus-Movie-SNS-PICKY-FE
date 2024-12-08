@@ -287,47 +287,6 @@ const boardHandlers: HttpHandler[] = [
     }
   ),
 
-  // 무비로그 조회 API(Mocking Object) - 프로필 페이지 사용자가 작성한 목록 조회
-  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, ({ request }) => {
-    const authorization = request?.headers?.get("Authorization");
-
-    // 권한이 없을 경우 403에러 발생
-    if (!authorization) {
-      return HttpResponse.json(
-        {
-          message: "권한이 없습니다.",
-        },
-        { status: 403 }
-      );
-    }
-
-    const url = new URL(request.url);
-    const nickname = url.searchParams.get("nickname");
-
-    // 등록된 사용자가 아닐 경우 -> 404에러 발생
-    if (!nickname) {
-      return HttpResponse.json(
-        {
-          message: "해당 닉네임을 가진 사용자가 존재하지 않습니다.",
-        },
-        { status: 404 }
-      );
-    }
-
-    return HttpResponse.json(
-      {
-        data: board,
-      },
-      { status: 200 }
-    );
-    // return HttpResponse.json(
-    //   {
-    //     data: board.filter((data) => data.writerNickname === nickname),
-    //   },
-    //   { status: 200 }
-    // );
-  }),
-
   // 영화 디테일 페이지에서 무비로그 버튼을 클릭할 경우 -> 해당 영화와 관련된 무비로그만 조회 API(Mocking Object)
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:movieId`,
@@ -410,6 +369,71 @@ const boardHandlers: HttpHandler[] = [
       );
     }
   ),
+
+  // 무비로그 조회 API(Mocking Object) - 프로필 페이지 사용자가 작성한 목록 조회
+  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, ({ request }) => {
+    const authorization = request.headers.get("Authorization");
+
+    const url = new URL(request.url);
+    const nickname = url.searchParams.get("nickname");
+
+    // 권환이 없을 경우 403 에러 발생
+    if (!authorization || !nickname) {
+      return HttpResponse.json(
+        {
+          message:
+            "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Query String에 nickname를 추가했는지 확인해주세요.",
+        },
+        { status: 403 }
+      );
+    }
+
+    // Query String으로 넘겨받은 정보를 통해 유저의 정보를 찾는다.
+    const userInfo = user.find((element) => element.user_nickname === nickname);
+
+    // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
+    const page = Number(url.searchParams.get("page") || 1);
+    const limit = Number(url.searchParams.get("limit") || 10);
+
+    // 가져올 인덱스를 계산한다.
+    // start(시작값) : (page - 1) * limit
+    // end(마지막) : start + limit
+    const start = (page - 1) * limit;
+    const end = start + limit;
+
+    // 해당 유저가 등록한 무비로그만 추출한다.
+    const response = board
+      .filter((element) => element.user_id === userInfo?.user_id)
+      .slice(start, end)
+      .map((boardItem) => {
+        const boardId = boardItem.board_id; // board_id 가져오기
+
+        // 관련 데이터 필터링
+        const contents = boardContent.filter(
+          (content) => content.board_id === boardId
+        );
+
+        return {
+          boardId,
+          context: boardItem.board_context,
+          createdDate: boardItem.createdDate,
+          updatedDate: boardItem.updatedDate,
+          contents: contents,
+        };
+      });
+
+    return HttpResponse.json(
+      {
+        data: response,
+        nextPage:
+          end <
+          board.filter((item) => item.user_id === userInfo?.user_id).length
+            ? page + 1
+            : null,
+      },
+      { status: 200 }
+    );
+  }),
 
   // 무비로그 좋아요 API(Mocking Object) - 기능을 잘 모르겠음
 
