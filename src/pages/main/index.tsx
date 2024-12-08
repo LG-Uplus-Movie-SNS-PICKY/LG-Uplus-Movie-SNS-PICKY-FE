@@ -10,34 +10,6 @@ import axios from "axios";
 const isLogin = false;
 
 function Main() {
-  useEffect(() => {
-    const fetch = async () => {
-      await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
-          {
-            boardContext: "asdsad",
-            movieId: 1,
-            contents: [
-              {
-                contentUrl: "asdasd",
-                boardContentType: "IMAGE",
-              },
-            ],
-            isSpoiler: false,
-          },
-          {
-            headers: {
-              Authorization: "123",
-            },
-          }
-        )
-        .then((res) => console.log(res.data));
-    };
-
-    fetch();
-  }, []);
-
   return (
     <>
       <SEO
