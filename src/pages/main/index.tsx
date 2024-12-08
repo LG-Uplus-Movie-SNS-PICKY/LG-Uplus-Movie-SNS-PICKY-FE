@@ -20,7 +20,7 @@ function Main() {
     const fetch = async () => {
       const response = await axios
         .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/611`,
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1`,
           {
             boardContext: "string",
             isSpoiler: false,

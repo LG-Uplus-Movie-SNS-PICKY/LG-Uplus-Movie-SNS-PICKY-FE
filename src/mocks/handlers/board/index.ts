@@ -26,7 +26,7 @@ const boardHandlers: HttpHandler[] = [
   // 무비로그 생성 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
-    async ({ params, request }) => {
+    async ({ request }) => {
       // 권환 확인
       const authorization = request.headers.get("Authorization");
 
@@ -150,7 +150,12 @@ const boardHandlers: HttpHandler[] = [
         if (board[mid].board_id === target) {
           board[mid].board_context = body.boardContext;
           board[mid].is_spoiler = body.isSpoiler;
-          break;
+          return HttpResponse.json(
+            {
+              message: "REQUEST_FRONT_SUCCESS",
+            },
+            { status: 200 }
+          );
         }
 
         if (board[mid].board_id < target) {
@@ -162,9 +167,11 @@ const boardHandlers: HttpHandler[] = [
 
       return HttpResponse.json(
         {
-          message: "REQUEST_FRONT_SUCCESS",
+          message: "해당 게시물은 존재하지 않습니다.",
         },
-        { status: 200 }
+        {
+          status: 403,
+        }
       );
     }
   ),
@@ -172,7 +179,36 @@ const boardHandlers: HttpHandler[] = [
   // 무비로그 삭제 API(Mocking Object)
   http.delete(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId`,
-    () => {}
+    ({ params, request }) => {
+      // 권환 확인
+      const authorization = request.headers.get("Authorization");
+      const { boardId } = params;
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || !boardId) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 boardId를 추가했는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      for (let i = 0; i < board.length; i++) {
+        if (board[i].board_id === Number(boardId)) {
+          board.splice(i, 1); // board는 import이기 때문에 할당이 안되므로 원본 배열의 값을 수정한다.
+          break;
+        }
+      }
+
+      return HttpResponse.json(
+        {
+          message: "REQUEST_FRONT_SUCCESS",
+        },
+        { status: 200 }
+      );
+    }
   ),
 
   // 무비로그 조회 API(Mocking Object) - 무비로그 탭 최신순 목록 조회
