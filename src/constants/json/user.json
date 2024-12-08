@@ -1,0 +1,93 @@
+[
+  {
+    "user_id": 1,
+    "user_email": "backend1@naver.com",
+    "user_name": "권예진",
+    "user_nickname": "backend-1",
+    "user_gender": "Female",
+    "user_profile_url": "",
+    "user_birthdate": "1999-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "Criric",
+    "user_nationality": "Domestic",
+    "is_active": true
+  },
+  {
+    "user_id": 2,
+    "user_email": "backend2@naver.com",
+    "user_name": "김채원",
+    "user_nickname": "backend-2",
+    "user_gender": "Female",
+    "user_profile_url": "",
+    "user_birthdate": "2000-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "User",
+    "user_nationality": "Domestic",
+    "is_active": true
+  },
+  {
+    "user_id": 3,
+    "user_email": "front1@naver.com",
+    "user_name": "손성욱",
+    "user_nickname": "front-1",
+    "user_gender": "Male",
+    "user_profile_url": "",
+    "user_birthdate": "1996-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "User",
+    "user_nationality": "Domestic",
+    "is_active": true
+  },
+  {
+    "user_id": 4,
+    "user_email": "backend3@naver.com",
+    "user_name": "이승훈",
+    "user_nickname": "backend-3",
+    "user_gender": "Male",
+    "user_profile_url": "",
+    "user_birthdate": "1998-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "Admin",
+    "user_nationality": "Domestic",
+    "is_active": true
+  },
+  {
+    "user_id": 5,
+    "user_email": "front2@naver.com",
+    "user_name": "전경원",
+    "user_nickname": "front-2",
+    "user_gender": "Male",
+    "user_profile_url": "",
+    "user_birthdate": "1998-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "User",
+    "user_nationality": "Domestic",
+    "is_active": true
+  },
+  {
+    "user_id": 6,
+    "user_email": "front3@naver.com",
+    "user_name": "조계원",
+    "user_nickname": "front-1",
+    "user_gender": "Male",
+    "user_profile_url": "",
+    "user_birthdate": "1999-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "Admin",
+    "user_nationality": "Domestic",
+    "is_active": true
+  },
+  {
+    "user_id": 7,
+    "user_email": "front4@naver.com",
+    "user_name": "최우진",
+    "user_nickname": "front-4",
+    "user_gender": "Female",
+    "user_profile_url": "",
+    "user_birthdate": "2002-01-01",
+    "user_social_platform": "Naver",
+    "user_role": "Criric",
+    "user_nationality": "Domestic",
+    "is_active": true
+  }
+]

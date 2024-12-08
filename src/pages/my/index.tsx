@@ -1,5 +1,5 @@
 // pages/my/index.tsx
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Wrapper,
   ProfileContainer,
@@ -24,11 +24,13 @@ import FollowersModal from "./components/followers-modal";
 import TabMenu from "./components/tab-menu";
 
 import { Button } from "@stories/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
+import axios, { AxiosError } from "axios";
 
 function My() {
+  const param = useParams();
   const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const settingsButtonRef = useRef<HTMLButtonElement | null>(null); // SettingsButton ref 추가
@@ -113,6 +115,40 @@ function My() {
   const closeFollowersModal = () => {
     setIsFollowersModalOpen(false);
   };
+
+  useEffect(() => {
+    const { nickname } = param;
+
+    const fetchUserInfo = async () => {
+      try {
+        const { data } = await axios.post(
+          `${
+            import.meta.env.VITE_SERVER_URL
+          }/api/v1/user/validate-user?${nickname}`,
+          {},
+          {
+            headers: {
+              Authorization: 1,
+            },
+          }
+        );
+      } catch (error) {
+        if (error instanceof AxiosError && error.response) {
+          switch (error.response.data.errorCode) {
+            case "AUTH_HEADER_MISSING":
+              navigate("/"); // Authorization 값을 보내지 않는 경우
+              break;
+
+            case "USER_NOT_FOUND":
+              navigate("/"); // 존재하지 않는 사용자인 경우
+              break;
+          }
+        }
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   return (
     <>
