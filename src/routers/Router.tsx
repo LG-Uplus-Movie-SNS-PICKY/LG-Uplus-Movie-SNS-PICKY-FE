@@ -16,6 +16,7 @@ import AdminLayout from "./AdminLayout";
 import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import My from "@pages/my";
+import Edit from "@pages/edit";
 import Recommendations from "@pages/recommendations";
 import Callback from "@pages/login/oauth";
 import Post from "@pages/social/post";
@@ -52,7 +53,7 @@ function Router() {
 
             {/* 로그인 사용자 - User 관련 라우트 */}
             <Route path="/user/:nickname" element={<My />} />
-            {/* <Route path="/user/:nickname/edit" element={<Edit />} /> */}
+            <Route path="/user/:nickname/edit" element={<Edit />} />
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
             <Route path="/movie-log" element={<Feed />} />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import axios from "axios";
 import { debounce } from "lodash";
@@ -25,30 +26,69 @@ import SEO from "@components/seo";
 import { Toast } from "@stories/toast";
 
 export default function ProfileEditPage() {
-  const initialNickname = "먹식이";
-  const initialProfileImage = null;
-
-  const [nickname, setNickname] = useState(initialNickname);
-  const [profileImage, setProfileImage] = useState<string | null>(
-    initialProfileImage
-  );
+  const [nickname, setNickname] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState("");
+  const [nationality, setNationality] = useState("");
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
 
-  // Toast 표시 함수
   const showToast = (message: string) => {
     setToastMessage(message);
   };
 
-  // 닉네임 중복 체크 API 호출 함수
+  const fetchUserData = useCallback(async () => {
+    try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      }
+
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = response.data.data;
+
+      setNickname(data.nickname);
+      setProfileImage(data.profile_url || null);
+      setBirthDate(data.birthdate);
+      setGender(data.gender === "MALE" ? "남자" : "여자");
+      setNationality(data.nationality === "DOMESTIC" ? "내국인" : "외국인");
+    } catch (error) {
+      console.error("유저 데이터 조회 중 오류 발생:", error);
+      showToast("유저 정보를 불러오는 데 실패했습니다.");
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
   const checkNicknameAvailability = useCallback(async (nickname: string) => {
     try {
+      const accessToken = sessionStorage.getItem("accessToken");
+
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
-        { params: { nickname } }
+        {
+          params: {
+            nickname,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
       if (!response.data.data.isValid) {
@@ -65,7 +105,6 @@ export default function ProfileEditPage() {
     }
   }, []);
 
-  // debounce된 닉네임 중복 체크 함수
   const debouncedCheckNickname = useMemo(
     () =>
       debounce((nickname: string) => {
@@ -84,7 +123,7 @@ export default function ProfileEditPage() {
     const value = e.target.value;
 
     if (value.length > 10) {
-      return; // 입력값이 10자를 초과하면 무시
+      return;
     }
 
     setNickname(value);
@@ -114,6 +153,9 @@ export default function ProfileEditPage() {
     }
   };
 
+  const initialNickname = "";
+  const initialProfileImage = null;
+
   const handleSave = () => {
     const isUnchanged =
       nickname === initialNickname && profileImage === initialProfileImage;
@@ -136,32 +178,13 @@ export default function ProfileEditPage() {
 
     const isUnchanged =
       nickname === initialNickname && profileImage === initialProfileImage;
+
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
     } else if (nicknameError || imageError) {
       showToast("닉네임의 요구사항을 따라주세요.");
     }
   };
-
-  useEffect(() => {
-    const isUnchanged =
-      nickname === initialNickname && profileImage === initialProfileImage;
-
-    const hasError =
-      !!nicknameError || !!imageError || isNicknameValid === false;
-
-    setIsSaveDisabled(isUnchanged || hasError);
-  }, [nickname, profileImage, nicknameError, imageError, isNicknameValid]);
-
-  useEffect(() => {
-    if (toastMessage) {
-      const timer = setTimeout(() => {
-        setToastMessage(null);
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [toastMessage]);
 
   return (
     <>
@@ -216,20 +239,10 @@ export default function ProfileEditPage() {
           </div>
 
           <div css={inputRowStyle}>
-            <label css={labelStyle}>이름</label>
-            <input
-              type="text"
-              value="최우진"
-              readOnly
-              css={readonlyInputStyle}
-            />
-          </div>
-
-          <div css={inputRowStyle}>
             <label css={labelStyle}>생년월일</label>
             <input
               type="text"
-              value="2002-09-18"
+              value={birthDate}
               readOnly
               css={readonlyInputStyle}
             />
@@ -237,14 +250,19 @@ export default function ProfileEditPage() {
 
           <div css={inputRowStyle}>
             <label css={labelStyle}>성별</label>
-            <input type="text" value="여자" readOnly css={readonlyInputStyle} />
+            <input
+              type="text"
+              value={gender}
+              readOnly
+              css={readonlyInputStyle}
+            />
           </div>
 
           <div css={inputRowStyle}>
             <label css={labelStyle}>국적</label>
             <input
               type="text"
-              value="내국인"
+              value={nationality}
               readOnly
               css={readonlyInputStyle}
             />
