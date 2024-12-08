@@ -66,26 +66,44 @@ const boardHandlers: HttpHandler[] = [
 
       // 게시물 등록
       board.push({
-        boardId: board.length,
-        writerId: user.id,
-        writerNickname: user.nickname,
-        writerProfileUrl: user.profileUrl,
-        context: body?.boardContext,
-        isSpoiler: body.isSpoiler,
+        board_id: board.length,
+        board_context: body.boardContext,
+        movie_id: body.movieId,
+        user_id: user.id,
+        writer_nickname: user.nickname,
+        is_deleted: false,
         createdDate: new Date().toISOString(),
         updatedDate: new Date().toISOString(),
-        likesCount: 0,
-        commentsCount: 0,
-        contents: body.contents.map((content) => ({
-          contentUrl: content.contentUrl,
-          boardContentType: content.type,
-        })),
-        movie: {
-          id: 2,
-          title: "타이타닉",
-        },
-        isLike: true,
       });
+
+      // 사진을 올렸을 경우
+      // if(body.contents.length) {
+      //   body.contents.forEach((content) => {
+
+      //   });
+      // }
+
+      // board.push({
+      //   boardId: board.length,
+      //   writerId: user.id,
+      //   writerNickname: user.nickname,
+      //   writerProfileUrl: user.profileUrl,
+      //   context: body?.boardContext,
+      //   isSpoiler: body.isSpoiler,
+      //   createdDate: new Date().toISOString(),
+      //   updatedDate: new Date().toISOString(),
+      //   likesCount: 0,
+      //   commentsCount: 0,
+      //   contents: body.contents.map((content) => ({
+      //     contentUrl: content.contentUrl,
+      //     boardContentType: content.type,
+      //   })),
+      //   movie: {
+      //     id: 2,
+      //     title: "타이타닉",
+      //   },
+      //   isLike: true,
+      // });
 
       return HttpResponse.json(
         { message: "REQUEST_FRONT_SUCCESS", data: board },
@@ -180,10 +198,16 @@ const boardHandlers: HttpHandler[] = [
 
     return HttpResponse.json(
       {
-        data: board.filter((data) => data.writerNickname === nickname),
+        data: board,
       },
       { status: 200 }
     );
+    // return HttpResponse.json(
+    //   {
+    //     data: board.filter((data) => data.writerNickname === nickname),
+    //   },
+    //   { status: 200 }
+    // );
   }),
 
   // 영화 디테일 페이지에서 무비로그 버튼을 클릭할 경우 -> 해당 영화와 관련된 무비로그만 조회 API(Mocking Object)
@@ -203,10 +227,11 @@ const boardHandlers: HttpHandler[] = [
         );
       }
 
-      return HttpResponse.json(
-        { data: board.filter((data) => data.movie.id === Number(movieId)) },
-        { status: 200 }
-      );
+      // return HttpResponse.json(
+      //   { data: board.filter((data) => data.movie.id === Number(movieId)) },
+      //   { status: 200 }
+      // );
+      return HttpResponse.json({ data: board }, { status: 200 });
     }
   ),
 
