@@ -44,8 +44,8 @@ interface Review {
 }
 
 interface ReviewResponse {
-  data: Review[]; 
-  nextPage?: number; 
+  data: Review[];
+  nextPage?: number;
 }
 
 const fetchReviews = async ({
@@ -55,24 +55,18 @@ const fetchReviews = async ({
   pageParam: number;
   sortBy: string;
 }): Promise<ReviewResponse> => {
-  try {
-    const response = await axios.get<ReviewResponse>(
-      `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
-      {
-        headers: { Authorization: "123" },
-        params: {
-          page: pageParam,
-          limit: 10,
-          sortType: sortBy,
-        },
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error("Failed to fetch reviews:", error);
-    throw error;
-  }
+  const response = await axios.get<ReviewResponse>(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
+    {
+      headers: { Authorization: "123" },
+      params: {
+        page: pageParam,
+        limit: 10,
+        sortType: sortBy,
+      },
+    }
+  );
+  return response.data;
 };
 
 const ReviewsPage = () => {
@@ -87,22 +81,39 @@ const ReviewsPage = () => {
   });
 
   const {
+    data: allReviewsData,
+    fetchNextPage: fetchAllReviewsNextPage,
+    hasNextPage: hasAllReviewsNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["allReviews"], // 스포일러 토글 상태와 무관한 데이터
+    queryFn: ({ pageParam = 1 }) =>
+      fetchReviews({ pageParam, sortBy: "latest" }), // 최신순 데이터 전체 가져오기
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
+  });
+
+  const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ["reviews", { sortBy, includeSpoilers }],
-    queryFn: ({ pageParam = 1 }) => fetchReviews({ pageParam, sortBy }), // sortBy 전달
-    initialPageParam: 1, // 초기 페이지를 명시적으로 설정
-    getNextPageParam: (lastPage) => {
-      return lastPage.nextPage ?? undefined; // 다음 페이지가 없다면 undefined 반환
-    },
+    queryKey: ["reviews", { sortBy, includeSpoilers }], // 스포일러 토글 상태에 따라 데이터 가져오기
+    queryFn: ({ pageParam = 1 }) => fetchReviews({ pageParam, sortBy }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
   });
 
   const { ref, inView } = useInView({
     threshold: 1.0,
   });
+
+  // 모든 페이지를 병합
+  useEffect(() => {
+    if (hasAllReviewsNextPage) {
+      fetchAllReviewsNextPage(); // 다음 페이지 요청
+    }
+  }, [allReviewsData, fetchAllReviewsNextPage, hasAllReviewsNextPage]);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -114,7 +125,7 @@ const ReviewsPage = () => {
     setIncludeSpoilers(!includeSpoilers);
   };
 
-  const allReviews = data?.pages.flatMap((page) => page.data) || [];
+  const allReviews: Review[] = allReviewsData?.pages.flatMap((page) => page.data) || [];
 
   const filteredReviews = includeSpoilers
     ? allReviews // 스포일러 포함 시 모든 리뷰
@@ -135,6 +146,10 @@ const ReviewsPage = () => {
     const mins = minutes % 60;
     return `${hours}시간 ${mins}분`;
   };
+
+  console.log("모든 리뷰 데이터 개수:", allReviews.length); // 예상 값: 28
+console.log("필터링된 리뷰 데이터 개수:", filteredReviews.length); // 스포일러 필터링 후 개수
+console.log("현재 렌더링 중인 데이터 개수:", sortedReviews.length); // 정렬된 데이터 개수
 
   return (
     <>

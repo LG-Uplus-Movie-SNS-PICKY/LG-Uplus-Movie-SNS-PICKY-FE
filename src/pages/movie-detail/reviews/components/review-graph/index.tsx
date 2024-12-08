@@ -48,7 +48,9 @@ interface Props {
 
 const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   // 전체 평균 평점 계산
-  const totalAverage = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+  const totalAverage = reviews.length
+  ? Math.round((reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length) * 10) / 10
+  : 0; // 리뷰가 없을 경우 0 반환
 
   // 남성/여성 리뷰 분리 및 평균 평점 계산
   const maleReviews = reviews.filter((review) => review.gender === 'male');
@@ -63,10 +65,11 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   const ratingsDistribution = new Array(5).fill(0).map((_, index) => {
     const score = 5 - index; // 점수를 5부터 1까지 역순으로 계산
     const count = reviews.filter(
-      (review) => Math.ceil(review.rating) === score // 점수가 해당 범위에 포함되는지 확인
+      (review) =>
+        review.rating <= score && review.rating > score - 1 // 범위를 명확히 정의
     ).length;
     return {
-      score: score, // 역순으로 점수를 표시
+      score: score,
       percentage: (count / reviews.length) * 100,
     };
   });
@@ -112,7 +115,7 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
             strokeDashoffset={-malePercentage}
           />
         </svg>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)"}}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)" }}>
           <PercentageWrapper>
             <PercentageContainer>
               <ScoreText>남자</ScoreText>
@@ -127,6 +130,8 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
       </div>
     );
   };
+
+  console.log("총 리뷰 데이터 개수:", reviews.length);
 
   return (
     <GraphWrapper>

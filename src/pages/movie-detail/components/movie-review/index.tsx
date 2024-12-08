@@ -1,4 +1,4 @@
-// pages/MovieDetail/components/MovieReview/index.tsx
+// pages/movie-detail/components/movie-review/index.tsx
 import React, { useEffect, useState } from "react";
 import {
   TotalReviewsContainer,
@@ -109,7 +109,6 @@ const MovieReview = ({ reviews, lastReviewRef }: ReviewProps) => {
   if (reviews.length === 0 || reviewInteractions.length !== reviews.length) {
     return <div>Loading...</div>; // 데이터 로드 중 또는 비동기 상태 보호
   }
-
 
   return (
     <TotalReviewsContainer>
