@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "name": "권예진",
+    "nickname": "backend-1",
+    "profileUrl": "",
+    "role": "CRIRIC"
+  },
+  {
+    "id": 2,
+    "name": "김채원",
+    "nickname": "backend-2",
+    "profileUrl": "",
+    "role": "USER"
+  },
+  {
+    "id": 3,
+    "name": "손성욱",
+    "nickname": "front-1",
+    "profileUrl": "",
+    "role": "USER"
+  },
+  {
+    "id": 4,
+    "name": "이승훈",
+    "nickname": "backend-3",
+    "profileUrl": "",
+    "role": "ADMIN"
+  },
+  {
+    "id": 5,
+    "name": "전경원",
+    "nickname": "front-2",
+    "profileUrl": "",
+    "role": "USER"
+  },
+  {
+    "id": 6,
+    "name": "조계원",
+    "nickname": "front-3",
+    "profileUrl": "",
+    "role": "ADMIN"
+  },
+  {
+    "id": 7,
+    "name": "최우진",
+    "nickname": "front-4",
+    "profileUrl": "",
+    "role": "CRIRIC"
+  }
+]

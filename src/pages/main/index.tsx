@@ -10,19 +10,33 @@ import axios from "axios";
 const isLogin = false;
 
 function Main() {
-  useEffect(() => {
-    const fetch = async () => {
-      await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`, {
-          headers: {
-            Authorization: "123",
-          },
-        })
-        .then((res) => console.log(res.data));
-    };
+  // useEffect(() => {
+  //   const login = {
+  //     id: 1,
+  //     name: "권예진",
+  //     nickname: "backend-1",
+  //     profileUrl: "",
+  //     role: "CRIRIC",
+  //   };
 
-    fetch();
-  }, []);
+  //   sessionStorage.setItem("user", JSON.stringify(login));
+
+  //   const fetch = async () => {
+  //     await axios
+  //       .post(
+  //         `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
+  //         { id: 1 },
+  //         {
+  //           headers: {
+  //             Authorization: "123",
+  //           },
+  //         }
+  //       )
+  //       .then((res) => console.log(res.data));
+  //   };
+
+  //   fetch();
+  // }, []);
 
   return (
     <>

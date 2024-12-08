@@ -1,10 +1,98 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import resposne from "./responseData.json";
+import board from "@constants/json/board.json";
+
+import { isEmpty } from "lodash";
+
+interface MovieLogContentsTypes {
+  contentUrl: "string";
+  type: "string";
+}
+
+interface MovieLogPostTypes {
+  boardContext: "string";
+  movieId: number;
+  contents: MovieLogContentsTypes[];
+  isSpoiler: true;
+}
 
 // Movie 관련 모킹 API(Mocking Object) 설계
 const boardHandlers: HttpHandler[] = [
   // 무비로그 생성 API(Mocking Object)
-  http.post(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, () => {}),
+  http.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
+    async ({ params, request }) => {
+      // 권환 확인
+      const authorization = request.headers.get("Authorization");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가해주세요. (임시로 아무값이나 넣어도 무관)",
+          },
+          { status: 403 }
+        );
+      }
+
+      const body = (await request.json()) as MovieLogPostTypes;
+
+      // Request Body를 보내지 않은 경우
+      if (isEmpty(body)) {
+        return HttpResponse.json(
+          {
+            message:
+              "Body를 올바른 형식으로 작성해주세요. (SwaggerAPI - board-controlle 보고 참고)",
+            errorCode: "ERR_EMPTY_BODY",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      // 사용자가 로그인하지 않은 경우
+      const userString = sessionStorage.getItem("user");
+
+      if (!userString) {
+        return HttpResponse.json(
+          {
+            message: "로그인이 필요합니다. 로그인 후 다시 시도해주세요.",
+            errorCode: "ERR_UNAUTHORIZED",
+          },
+          { status: 401, statusText: "Unauthorized" }
+        );
+      }
+
+      const user = JSON.parse(userString);
+
+      // 게시물 등록
+      board.push({
+        boardId: board.length,
+        writerId: user.id,
+        writerNickname: user.nickname,
+        writerProfileUrl: user.profile_url,
+        context: body?.boardContext,
+        isSpoiler: body.isSpoiler,
+        createdDate: new Date().toISOString(),
+        updatedDate: new Date().toISOString(),
+        likesCount: 0,
+        commentsCount: 0,
+        contents: body.contents.map((content) => ({
+          contentUrl: content.contentUrl,
+          boardContentType: content.type,
+        })),
+        movie: {
+          id: 2,
+          title: "타이타닉",
+        },
+        isLike: true,
+      });
+
+      return HttpResponse.json(
+        { message: "REQUEST_FRONT_SUCCESS" },
+        { status: 200 }
+      );
+    }
+  ),
 
   // 무비로그 수정 API(Mocking Object)
   http.post(
@@ -25,6 +113,7 @@ const boardHandlers: HttpHandler[] = [
       const authorization = request?.headers?.get("Authorization");
 
       // 권한이 없을 경우 403에러 발생
+      // 권한이 있을 경우 게시물을 반환한다.
       if (!authorization) {
         return HttpResponse.json(
           {
@@ -34,7 +123,6 @@ const boardHandlers: HttpHandler[] = [
         );
       }
 
-      // 권한이 있을 경우 게시물을 반환한다.
       const url = new URL(request.url);
 
       // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
@@ -49,14 +137,14 @@ const boardHandlers: HttpHandler[] = [
 
       return HttpResponse.json(
         {
-          data: resposne
+          data: board
             .sort(
               (a, b) =>
                 new Date(b.createdDate).getTime() -
                 new Date(a.createdDate).getTime()
             )
             .slice(start, end),
-          nextPage: end < resposne.length ? page + 1 : null,
+          nextPage: end < board.length ? page + 1 : null,
         },
         { status: 200 }
       );
@@ -92,7 +180,7 @@ const boardHandlers: HttpHandler[] = [
 
     return HttpResponse.json(
       {
-        data: resposne.filter((data) => data.writerNickname === nickname),
+        data: board.filter((data) => data.writerNickname === nickname),
       },
       { status: 200 }
     );
@@ -116,7 +204,7 @@ const boardHandlers: HttpHandler[] = [
       }
 
       return HttpResponse.json(
-        { data: resposne.filter((data) => data.movie.id === Number(movieId)) },
+        { data: board.filter((data) => data.movie.id === Number(movieId)) },
         { status: 200 }
       );
     }
