@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import board from "@constants/json/board.json";
+import board from "@constants/json/board/board.json";
 
 import { isEmpty } from "lodash";
 
@@ -153,19 +153,29 @@ const boardHandlers: HttpHandler[] = [
       const start = (page - 1) * limit;
       const end = start + limit;
 
+      const pageBoardData = board.slice(start, end);
+      console.log(pageBoardData);
+
       return HttpResponse.json(
         {
-          data: board
-            .sort(
-              (a, b) =>
-                new Date(b.createdDate).getTime() -
-                new Date(a.createdDate).getTime()
-            )
-            .slice(start, end),
+          data: board,
           nextPage: end < board.length ? page + 1 : null,
         },
         { status: 200 }
       );
+      // return HttpResponse.json(
+      //   {
+      //     data: board
+      //       .sort(
+      //         (a, b) =>
+      //           new Date(b.createdDate).getTime() -
+      //           new Date(a.createdDate).getTime()
+      //       )
+      //       .slice(start, end),
+      //     nextPage: end < board.length ? page + 1 : null,
+      //   },
+      //   { status: 200 }
+      // );
     }
   ),
 

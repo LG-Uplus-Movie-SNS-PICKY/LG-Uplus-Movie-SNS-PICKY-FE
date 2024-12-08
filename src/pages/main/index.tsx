@@ -10,6 +10,20 @@ import axios from "axios";
 const isLogin = false;
 
 function Main() {
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`, {
+          headers: { Authorization: "1" },
+        })
+        .then((res) => res.data);
+
+      console.log(response);
+    };
+
+    fetch();
+  });
+
   return (
     <>
       <SEO
