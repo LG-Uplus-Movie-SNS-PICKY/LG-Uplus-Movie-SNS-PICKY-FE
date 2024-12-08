@@ -5,7 +5,7 @@
     "movie_id": 1,
     "user_id": 6,
     "writer_nickname": "조계원",
-    "is_spoiler": false,
+    "is_spoiler": true,
     "is_deleted": false,
     "createdDate": "2024-10-07T14:31:22.282Z",
     "updatedDate": "2024-10-07T14:31:22.282Z"
@@ -38,7 +38,7 @@
     "movie_id": 1,
     "user_id": 4,
     "writer_nickname": "이승훈",
-    "is_spoiler": false,
+    "is_spoiler": true,
     "is_deleted": false,
     "createdDate": "2024-10-07T14:31:22.282Z",
     "updatedDate": "2024-10-07T14:31:22.282Z"
@@ -82,7 +82,7 @@
     "movie_id": 1,
     "user_id": 1,
     "writer_nickname": "권예진",
-    "is_spoiler": false,
+    "is_spoiler": true,
     "is_deleted": false,
     "createdDate": "2024-10-07T14:31:22.282Z",
     "updatedDate": "2024-10-07T14:31:22.282Z"
@@ -104,7 +104,7 @@
     "movie_id": 1,
     "user_id": 2,
     "writer_nickname": "김채원",
-    "is_spoiler": false,
+    "is_spoiler": true,
     "is_deleted": false,
     "createdDate": "2024-10-07T14:31:22.282Z",
     "updatedDate": "2024-10-07T14:31:22.282Z"

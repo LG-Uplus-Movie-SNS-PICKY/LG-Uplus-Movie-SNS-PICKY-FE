@@ -11,14 +11,19 @@ const isLogin = false;
 
 function Main() {
   useEffect(() => {
-    const fetch = async () => {
-      const response = await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`, {
-          headers: { Authorization: "1" },
-        })
-        .then((res) => res.data);
+    // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
 
-      console.log(response);
+    const fetch = async () => {
+      // const response = await axios
+      //   .post(
+      //     `${import.meta.env.VITE_SERVER_URL}/api/v1/user/auth`,
+      //     {},
+      //     {
+      //       headers: { Authorization: sessionStorage.getItem("user") },
+      //     }
+      //   )
+      //   .then((res) => res.data);
+      // console.log(response);
     };
 
     fetch();

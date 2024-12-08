@@ -169,6 +169,7 @@ const boardHandlers: HttpHandler[] = [
       }
 
       const url = new URL(request.url);
+      const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
 
       // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
       const page = Number(url.searchParams.get("page") || 1);
@@ -211,7 +212,7 @@ const boardHandlers: HttpHandler[] = [
           commentsCount: comments.length,
           contents: contents,
           movieTitle: movieInfo?.movie_title,
-          isLike: false,
+          isLike: loginUser.user_id === userInfo?.user_id,
         };
       });
 
