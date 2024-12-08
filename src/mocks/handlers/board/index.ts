@@ -1,5 +1,11 @@
 import { http, HttpHandler, HttpResponse } from "msw";
+
+import user from "@constants/json/user.json";
+import movie from "@constants/json/movie.json";
 import board from "@constants/json/board/board.json";
+import boardComment from "@constants/json/board/board_comments.json";
+import boardContent from "@constants/json/board/board_contents.json";
+import boardLike from "@constants/json/board/board_likes.json";
 
 import { isEmpty } from "lodash";
 
@@ -14,6 +20,27 @@ interface MovieLogPostTypes {
   contents: MovieLogContentsTypes[];
   isSpoiler: true;
 }
+
+// {
+//   "boardId": 0,
+//   "writerId": 0,
+//   "writerNickname": "string",
+//   "writerProfileUrl": "string",
+//   "context": "string",
+//   "isSpoiler": true,
+//   "createdDate": "2024-12-08T16:46:55.473Z",
+//   "updatedDate": "2024-12-08T16:46:55.473Z",
+//   "likesCount": 0,
+//   "commentsCount": 0,
+//   "contents": [
+//     {
+//       "contentUrl": "string",
+//       "boardContentType": "string"
+//     }
+//   ],
+//   "movieTitle": "string",
+//   "isLike": true
+// }
 
 // Movie 관련 모킹 API(Mocking Object) 설계
 const boardHandlers: HttpHandler[] = [
@@ -65,16 +92,16 @@ const boardHandlers: HttpHandler[] = [
       const user = JSON.parse(userString);
 
       // 게시물 등록
-      board.push({
-        board_id: board.length,
-        board_context: body.boardContext,
-        movie_id: body.movieId,
-        user_id: user.id,
-        writer_nickname: user.nickname,
-        is_deleted: false,
-        createdDate: new Date().toISOString(),
-        updatedDate: new Date().toISOString(),
-      });
+      // board.push({
+      //   board_id: board.length,
+      //   board_context: body.boardContext,
+      //   movie_id: body.movieId,
+      //   user_id: user.id,
+      //   writer_nickname: user.nickname,
+      //   is_deleted: false,
+      //   createdDate: new Date().toISOString(),
+      //   updatedDate: new Date().toISOString(),
+      // });
 
       // 사진을 올렸을 경우
       // if(body.contents.length) {
@@ -153,29 +180,48 @@ const boardHandlers: HttpHandler[] = [
       const start = (page - 1) * limit;
       const end = start + limit;
 
-      const pageBoardData = board.slice(start, end);
-      console.log(pageBoardData);
+      const response = board.slice(start, end).map((boardItem) => {
+        const boardId = boardItem.board_id; // board_id 가져오기
+
+        // 관련 데이터 필터링
+        const movieInfo = movie.find(
+          (movie) => movie.movie_id === boardItem.movie_id
+        );
+        const userInfo = user.find(
+          (info) => info.user_id === boardItem.user_id
+        );
+        const comments = boardComment.filter(
+          (comment) => comment.board_id === boardId
+        );
+        const contents = boardContent.filter(
+          (content) => content.board_id === boardId
+        );
+        const likes = boardLike.filter((like) => like.board_id === boardId);
+
+        return {
+          boardId,
+          writerId: userInfo?.user_id,
+          writerNickname: userInfo?.user_nickname,
+          writerProfileUrl: userInfo?.user_profile_url,
+          context: boardItem.board_context,
+          isSpoiler: boardItem.is_spoiler,
+          createdDate: boardItem.createdDate,
+          updatedDate: boardItem.updatedDate,
+          likesCount: likes.length,
+          commentsCount: comments.length,
+          contents: contents,
+          movieTitle: movieInfo?.movie_title,
+          isLike: false,
+        };
+      });
 
       return HttpResponse.json(
         {
-          data: board,
+          data: response,
           nextPage: end < board.length ? page + 1 : null,
         },
         { status: 200 }
       );
-      // return HttpResponse.json(
-      //   {
-      //     data: board
-      //       .sort(
-      //         (a, b) =>
-      //           new Date(b.createdDate).getTime() -
-      //           new Date(a.createdDate).getTime()
-      //       )
-      //       .slice(start, end),
-      //     nextPage: end < board.length ? page + 1 : null,
-      //   },
-      //   { status: 200 }
-      // );
     }
   ),
 
