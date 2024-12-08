@@ -74,7 +74,7 @@ export const ReviewText = styled.div`
 `;
 
 export const UserText = styled.div`
-  font-size: 12px;
+  font-size: 10px;
   display: flex; 
   align-items: center;
   justify-content: center; 
