@@ -43,20 +43,36 @@ interface Review {
   createdAt: string;
 }
 
-const fetchReviews = async ({ pageParam = 1, sortBy }: { pageParam: number; sortBy: string }) => {
-  // await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
-  const response = await axios.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
-    {
-      headers: { Authorization: "123" },
-      params: {
-        page: pageParam,
-        limit: 10,
-        sortType: sortBy, // sortBy 파라미터를 요청에 포함
-      },
-    }
-  );
-  return response.data;
+interface ReviewResponse {
+  data: Review[]; 
+  nextPage?: number; 
+}
+
+const fetchReviews = async ({
+  pageParam = 1,
+  sortBy,
+}: {
+  pageParam: number;
+  sortBy: string;
+}): Promise<ReviewResponse> => {
+  try {
+    const response = await axios.get<ReviewResponse>(
+      `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
+      {
+        headers: { Authorization: "123" },
+        params: {
+          page: pageParam,
+          limit: 10,
+          sortType: sortBy,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch reviews:", error);
+    throw error;
+  }
 };
 
 const ReviewsPage = () => {
