@@ -84,6 +84,7 @@ const ReviewsPage = () => {
     data: allReviewsData,
     fetchNextPage: fetchAllReviewsNextPage,
     hasNextPage: hasAllReviewsNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryKey: ["allReviews"], // 스포일러 토글 상태와 무관한 데이터
     queryFn: ({ pageParam = 1 }) =>
@@ -147,10 +148,6 @@ const ReviewsPage = () => {
     return `${hours}시간 ${mins}분`;
   };
 
-  console.log("모든 리뷰 데이터 개수:", allReviews.length); // 예상 값: 28
-console.log("필터링된 리뷰 데이터 개수:", filteredReviews.length); // 스포일러 필터링 후 개수
-console.log("현재 렌더링 중인 데이터 개수:", sortedReviews.length); // 정렬된 데이터 개수
-
   return (
     <>
       <SEO
@@ -176,7 +173,7 @@ console.log("현재 렌더링 중인 데이터 개수:", sortedReviews.length); 
             </DetailContainer>
           </InfoContainer>
           <ReviewGraph reviews={allReviews} />
-          <ReviewRegist />
+          <ReviewRegist refetch={refetch}/>
           <ReviewsWrapper>
             <FilterContainer>
               <SortContainer>

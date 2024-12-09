@@ -131,8 +131,6 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
     );
   };
 
-  console.log("총 리뷰 데이터 개수:", reviews.length);
-
   return (
     <GraphWrapper>
       <GraphContainer>
