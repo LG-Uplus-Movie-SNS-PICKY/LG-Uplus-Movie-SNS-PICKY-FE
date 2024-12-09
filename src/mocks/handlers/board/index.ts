@@ -435,6 +435,43 @@ const boardHandlers: HttpHandler[] = [
   }),
 
   // 무비로그 좋아요 API(Mocking Object) - 기능을 잘 모르겠음
+  http.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/like`,
+    async ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { boardId } = params;
+
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || !boardId || isEmpty(userInfo)) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Path Validation에 boardId를 추가했는지 또는 로그인을 하셨는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      console.log(boardLike.length);
+
+      boardLike.push({
+        board_id: Number(boardId),
+        board_like_id: boardLike.length + 1,
+        user_id: userInfo.user_id,
+      });
+
+      console.log(boardLike.length);
+
+      return HttpResponse.json(
+        {
+          message: "REQUEST_FRONT_SUCCESS",
+        },
+        { status: 200 }
+      );
+    }
+  ),
 
   // 특정 게시물 댓글 생성 API(Mocking Object)
   http.post(
