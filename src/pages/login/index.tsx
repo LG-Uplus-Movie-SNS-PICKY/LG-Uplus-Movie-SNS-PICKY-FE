@@ -47,8 +47,11 @@ export default function Login() {
     window.location.href = `${GOOGLE_LOGIN_URL}`;
   };
   const handleNaverLoginClick = async () => {
-    // console.log("Naver Login Clicked");
-    // window.location.href = `${NAVER_LOGIN_URL}`;
+    console.log("Naver Login Clicked");
+    window.location.href = `${NAVER_LOGIN_URL}`;
+  };
+
+  const socialLoginClikc = async () => {
     const data = await axios
       .patch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
@@ -110,6 +113,10 @@ export default function Login() {
             cursor="pointer"
           />
         </Block.FlexBox>
+
+        <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
+          Local Login Btn
+        </button>
       </Block.FlexBox>
     </>
   );
