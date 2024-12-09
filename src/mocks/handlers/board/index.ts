@@ -135,7 +135,6 @@ const boardHandlers: HttpHandler[] = [
         );
       }
 
-      // for(let i = 0; i < ;)
       // 이진 탐색(Binary Search)으로 변경할 값의 위치를 찾는다.
       //  - 할 수 있는 이유 : id는 1 ~ N 까지 순차적으로 증가하기 때문
       //  - target -> 쿼리 스트링으로 넘어오는 boardId가 됨
@@ -440,7 +439,56 @@ const boardHandlers: HttpHandler[] = [
   // 특정 게시물 댓글 생성 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/coments`,
-    () => {}
+    async ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { boardId } = params;
+
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const { content } = (await request.json()) as { content: string };
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || !boardId || isEmpty(userInfo) || !content) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Path Validation에 boardId를 추가했는지 또는 로그인을 하셨는지 또는 body 값을 제대로 보내고 있는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      // 유효한 게시물이 있는지 확인
+      const writerBoardComment = board.find(
+        (board) => board.board_id === Number(boardId)
+      );
+
+      // 해당 게시물이 없을 경우
+      if (isEmpty(writerBoardComment)) {
+        return HttpResponse.json(
+          {
+            message: "유효하지 않은 게시물 ID입니다.",
+            errorCode: "ERR_INVALID_BOARD_ID",
+          },
+          { status: 400, statusText: "Invalid Board ID" }
+        );
+      }
+
+      // 해당 게시물이 있을 경우 값 추가
+      boardComment.push({
+        board_id: writerBoardComment.board_id,
+        commend_id: boardComment.length + 1,
+        comment_context: content,
+        user_id: userInfo.user_id,
+        writer_nickname: userInfo.user_nickname,
+      });
+
+      return HttpResponse.json(
+        {
+          message: "REQUEST_FRONT_SUCCESS",
+        },
+        { status: 200 }
+      );
+    }
   ),
 
   // 특정 게시물 댓글 조회 API(Mocking Object)
