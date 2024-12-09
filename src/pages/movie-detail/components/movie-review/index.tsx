@@ -120,7 +120,7 @@ const MovieReview = ({ reviews, lastReviewRef }: ReviewProps) => {
         >
           {renderStars(review.rating)}
           <ReviewContainer>
-            <ReviewBadge>관람평</ReviewBadge>
+            <ReviewBadge>한줄평</ReviewBadge>
             <ReviewText>{review.context}</ReviewText>
           </ReviewContainer>
           <ReviewDetailsContainer>
