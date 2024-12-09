@@ -18,7 +18,7 @@ function Main() {
     // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
     const fetch = async () => {
       const data = await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`, {
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/user/recommend`, {
           headers: { Authorization: "1" },
         })
         .then((res) => res.data);

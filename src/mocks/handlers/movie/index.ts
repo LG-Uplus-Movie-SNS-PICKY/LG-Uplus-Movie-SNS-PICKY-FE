@@ -10,6 +10,7 @@ import platforms from "@constants/json/movie/platforms.json";
 import movieLikes from "@constants/json/movie/movieLikes.json";
 
 import user from "@constants/json/user.json";
+import genrePreferences from "@constants/json/user/genrePreferences.json";
 
 function calculateTotalRating(likes: number) {
   const maxValue = user.length; // 기준값
@@ -140,7 +141,7 @@ const movieHandlers: HttpHandler[] = [
               ],
             },
 
-            backdrop_path: "",
+            backdrop_path: movieInfo.movie_backdrop_url,
           },
           trailer: movieInfo.movie_trailer_url,
           ost: movieInfo.movie_ost_url,
@@ -168,48 +169,91 @@ const movieHandlers: HttpHandler[] = [
   ),
 
   // 영화 Top 10 조회 API(Mocking Object)
+  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`, ({}) => {
+    const bestMovies = movies
+      .map((movie) => {
+        const movieLike = movieLikes.filter(
+          (like) => like.movie_id === movie.movie_id
+        ).length;
+
+        return {
+          movieId: movie.movie_id,
+          title: movie.movie_title,
+          likes: movieLike,
+          posterUrl: movie.movie_poster_url,
+          backdropUrl: movie.movie_backdrop_url,
+          totalRating: calculateTotalRating(movieLike),
+        };
+      })
+      .sort((a, b) => b.totalRating - a.totalRating)
+      .slice(0, 10);
+
+    return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
+  }),
+
+  // 영화 추천 리스트 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/user/recommend`,
     ({ request }) => {
       const authorization = request.headers.get("Authorization");
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
 
       // 권환이 없을 경우 403 에러 발생
-      if (!authorization) {
+      if (!authorization || isEmpty(userInfo)) {
         return HttpResponse.json(
           {
             message:
-              "권한이 없습니다. Request Headers에 Authorization를 추가해주세요. (임시로 아무값이나 넣어도 무관)",
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 확인해주세요.",
           },
           { status: 403 }
         );
       }
 
-      const bestMovies = movies
-        .map((movie) => {
-          const movieLike = movieLikes.filter(
-            (like) => like.movie_id === movie.movie_id
-          ).length;
+      // 해당 사용자가 등록한 장르 확인
+      const preference = genrePreferences.filter(
+        (preference) => preference.user_id === userInfo.user_id
+      );
 
-          return {
-            movieId: movie.movie_id,
-            title: movie.movie_title,
-            likes: movieLike,
-            posterUrl: movie.movie_poster_url,
-            backdropUrl: "",
-            totalRating: calculateTotalRating(movieLike),
-          };
+      const recommendMovies = movies
+        .filter((movie) => {
+          // 1. 현재 Movie의 장르를 파악한다.
+          const genre = movieAndGenres.find(
+            (genre) => genre.movie_id === movie.movie_id
+          );
+
+          // 2. 현재 Movie 장르와 사용자가 선호하는 장르와 일치한 데이터만 반환한다.
+          const recommendMovie = preference.find(
+            (preference) => preference.genre_id === genre?.genre_id
+          );
+
+          if (!isEmpty(recommendMovie)) {
+            return movie;
+          }
         })
-        .sort((a, b) => b.totalRating - a.totalRating)
-        .slice(0, 10);
+        .slice(0, 30);
 
-      return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
+      return HttpResponse.json(
+        {
+          data: [
+            ...recommendMovies.map((movie) => {
+              const movieLike = movieLikes.filter(
+                (like) => like.movie_id === movie.movie_id
+              ).length;
+
+              return {
+                movieId: movie.movie_id,
+                title: movie.movie_title,
+                likes: movieLike,
+                posterUrl: movie.movie_poster_url,
+                backdropUrl: movie.movie_backdrop_url,
+                totalRating: calculateTotalRating(movieLike),
+              };
+            }),
+          ],
+        },
+        { status: 200 }
+      );
     }
-  ),
-
-  // 영화 추천 리스트 API(Mocking Object)
-  http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
-    ({ request }) => {}
   ),
 
   // 장르별 영화 조회 API(Mocking Object)
