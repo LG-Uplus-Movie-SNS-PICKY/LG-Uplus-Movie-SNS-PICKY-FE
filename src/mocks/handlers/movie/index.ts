@@ -258,7 +258,7 @@ const movieHandlers: HttpHandler[] = [
 
   // 장르별 영화 조회 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/genre`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/genre/movie`,
     ({ request }) => {}
   ),
 ];
