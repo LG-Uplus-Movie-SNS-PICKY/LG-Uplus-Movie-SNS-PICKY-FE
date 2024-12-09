@@ -43,15 +43,12 @@ export default function ProfileEditPage() {
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-
   const accessToken = sessionStorage.getItem("accessToken");
 
-  // Toast 표시 함수
   const showToast = (message: string) => {
     setToastMessage(message);
   };
 
-  // 사용자 데이터 불러오기
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -90,7 +87,14 @@ export default function ProfileEditPage() {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
-        { params: { nickname } }
+        {
+          params: {
+            nickname,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
       if (!response.data.data.isValid) {

@@ -4,6 +4,7 @@ import user from "@constants/json/user.json";
 import { isEmpty } from "lodash";
 
 const authHandler: HttpHandler[] = [
+  // 로그인
   http.patch(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
     async ({ request }) => {
@@ -50,51 +51,52 @@ const authHandler: HttpHandler[] = [
     }
   ),
 
-  // http.post(
-  //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user/validate-user`,
-  //   ({ params, request }) => {
-  //     const authorization = request.headers.get("Authorization");
-  //     const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+  // 프로필 페이지 접속 시 해당 사용자 유무 파악
+  http.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/user/validate-user`,
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
 
-  //     // 권환이 없을 경우 403 에러 발생
-  //     if (!authorization || isEmpty(loginUser)) {
-  //       return HttpResponse.json(
-  //         {
-  //           message:
-  //             "권한이 없습니다 - Request Headers에 Authorization를 추가 또는 로그인을 해주세요.",
-  //           errorCode: "AUTH_HEADER_MISSING",
-  //         },
-  //         { status: 403, statusText: "Forbidden" }
-  //       );
-  //     }
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || isEmpty(loginUser)) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다 - Request Headers에 Authorization를 추가 또는 로그인을 해주세요.",
+            errorCode: "AUTH_HEADER_MISSING",
+          },
+          { status: 403, statusText: "Forbidden" }
+        );
+      }
 
-  //     const userInfo = JSON.parse(authorization); // Authorization 정보에 등록된 사용자 정보를 가져온다.
-  //     const { nickname } = params;
+      const url = new URL(request.url);
+      const nickname = url.searchParams.get("nickname");
 
-  //     // 사용자 정보를 가져온다.
-  //     const findUser = user.find((user) => user.user_nickname === nickname);
+      // 사용자 정보를 가져온다.
+      const findUser = user.find((user) => user.user_nickname === nickname);
 
-  //     if (isEmpty(findUser)) {
-  //       return HttpResponse.json(
-  //         {
-  //           message: "존재하지 않는 사용자 프로필입니다.",
-  //           errorCode: "USER_NOT_FOUND",
-  //         },
-  //         { status: 403, statusText: "Forbidden" }
-  //       );
-  //     }
+      if (isEmpty(findUser)) {
+        return HttpResponse.json(
+          {
+            message: "존재하지 않는 사용자 프로필입니다.",
+            errorCode: "USER_NOT_FOUND",
+          },
+          { status: 403, statusText: "Forbidden" }
+        );
+      }
 
-  //     return HttpResponse.json(
-  //       {
-  //         message:
-  //           userInfo.user_nickname !== loginUser.user_nickname
-  //             ? "OUTER_USER"
-  //             : "USER",
-  //       },
-  //       { status: 200 }
-  //     );
-  //   }
-  // ),
+      return HttpResponse.json(
+        {
+          message:
+            findUser.user_nickname !== loginUser.user_nickname
+              ? "OUTER_USER"
+              : "USER",
+        },
+        { status: 200 }
+      );
+    }
+  ),
 ];
 
 export default authHandler;

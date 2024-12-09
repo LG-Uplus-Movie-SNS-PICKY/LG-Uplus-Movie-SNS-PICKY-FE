@@ -18,7 +18,9 @@ import MovieReviews from "@pages/movie-detail/reviews";
 import My from "@pages/my";
 import Edit from "@pages/edit";
 import Recommendations from "@pages/recommendations";
-import Callback from "@pages/login/oauth";
+import CallbackNaver from "@pages/login/naver/oauth";
+import CallbackGoogle from "@pages/login/google/oauth";
+import CallbackKakao from "@pages/login/kakao/oauth";
 import Post from "@pages/social/post";
 import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
@@ -42,8 +44,16 @@ function Router() {
             {/* 비로그인 사용자 라우트 */}
             <Route path="/auth/sign-in" element={<Login />} />
             <Route
-              path="/auth/sign-in/oauth2/callback"
-              element={<Callback />}
+              path="/auth/sign-in/oauth2/naver/callback"
+              element={<CallbackNaver />}
+            />
+             <Route
+              path="/auth/sign-in/oauth2/google/callback"
+              element={<CallbackGoogle />}
+            />
+             <Route
+              path="/auth/sign-in/oauth2/kakao/callback"
+              element={<CallbackKakao />}
             />
             <Route path="/auth/sign-up" element={<Signup />} />
 
