@@ -434,7 +434,7 @@ const boardHandlers: HttpHandler[] = [
     );
   }),
 
-  // 무비로그 좋아요 API(Mocking Object) - 기능을 잘 모르겠음
+  // 무비로그 좋아요 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/like`,
     async ({ params, request }) => {
@@ -454,15 +454,67 @@ const boardHandlers: HttpHandler[] = [
         );
       }
 
-      console.log(boardLike.length);
-
       boardLike.push({
         board_id: Number(boardId),
         board_like_id: boardLike.length + 1,
         user_id: userInfo.user_id,
       });
 
-      console.log(boardLike.length);
+      return HttpResponse.json(
+        {
+          message: "REQUEST_FRONT_SUCCESS",
+        },
+        { status: 200 }
+      );
+    }
+  ),
+
+  // 무비로그 좋아요 취소 API(Mocking Object)
+  http.delete(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/like`,
+    async ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { boardId } = params;
+
+      const url = new URL(request.url);
+
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || !boardId || isEmpty(userInfo)) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Path Validation에 boardId를 추가했는지 또는 로그인 했는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+      const likeId = Number(url.searchParams.get("likeId"));
+
+      // 존재하지 않는 좋아요일 경우
+      const like = boardLike.find(
+        (like) =>
+          like.board_id === Number(boardId) && like.board_like_id === likeId
+      );
+
+      if (isEmpty(like)) {
+        return HttpResponse.json(
+          {
+            message: "유효하지 않은 댓글 ID입니다.",
+            errorCode: "ERR_INVALID_BOARD_COMMENT_ID",
+          },
+          { status: 400, statusText: "Invalid Board Comment ID" }
+        );
+      }
+
+      // 존재하는 코멘트일 경우
+      for (let i = 0; i < boardLike.length; i++) {
+        if (boardLike[i].board_like_id === likeId) {
+          boardLike.splice(i, 1); // board는 import이기 때문에 할당이 안되므로 원본 배열의 값을 수정한다.
+          break;
+        }
+      }
 
       return HttpResponse.json(
         {

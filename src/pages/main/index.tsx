@@ -19,9 +19,8 @@ function Main() {
 
     const fetch = async () => {
       const data = await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/like`,
-          {},
+        .delete(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/like?likeId=1`,
           {
             headers: { Authorization: "1" },
           }
