@@ -43,15 +43,12 @@ export default function ProfileEditPage() {
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-
   const accessToken = sessionStorage.getItem("accessToken");
 
-  // Toast 표시 함수
   const showToast = (message: string) => {
     setToastMessage(message);
   };
 
-  // 사용자 데이터 불러오기
   useEffect(() => {
     const fetchUserData = async () => {
       try {
