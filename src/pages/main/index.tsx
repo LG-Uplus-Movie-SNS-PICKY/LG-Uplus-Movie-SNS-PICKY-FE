@@ -19,9 +19,14 @@ function Main() {
 
     const fetch = async () => {
       const data = await axios
-        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/coments`, {
-          headers: { Authorization: "1" },
-        })
+        .delete(
+          `${
+            import.meta.env.VITE_SERVER_URL
+          }/api/v1/board/:boardId/coments?commentId=1`,
+          {
+            headers: { Authorization: "1" },
+          }
+        )
         .then((res) => res.data);
       console.log(data);
     };

@@ -480,6 +480,8 @@ const boardHandlers: HttpHandler[] = [
         comment_context: content,
         user_id: userInfo.user_id,
         writer_nickname: userInfo.user_nickname,
+        createdDate: new Date().toISOString(),
+        updatedDate: new Date().toISOString(),
       });
 
       return HttpResponse.json(
@@ -538,7 +540,8 @@ const boardHandlers: HttpHandler[] = [
             writerNickname: writerUser?.user_nickname,
             writerProfileUrl: writerUser?.user_profile_url,
             context: comment.comment_context,
-            isAuthor: writerUser?.user_id === userInfo.user_id,
+            createdDate: comment.createdDate,
+            updatedDate: comment.updatedDate,
           };
         });
 
@@ -559,7 +562,54 @@ const boardHandlers: HttpHandler[] = [
   // 특정 댓글 삭제 API(Mocking Object)
   http.delete(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/coments`,
-    () => {}
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { boardId } = params;
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || !boardId) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 boardId 또는 commentId를 추가했는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      const url = new URL(request.url);
+      const commentId = Number(url.searchParams.get("commentId"));
+
+      // 존재하지 않는 코멘트일 경우
+      const comment = boardComment.find(
+        (comment) => comment.commend_id === commentId
+      );
+
+      if (isEmpty(comment)) {
+        return HttpResponse.json(
+          {
+            message: "유효하지 않은 댓글 ID입니다.",
+            errorCode: "ERR_INVALID_BOARD_COMMENT_ID",
+          },
+          { status: 400, statusText: "Invalid Board Comment ID" }
+        );
+      }
+
+      // 존재하는 코멘트일 경우
+      for (let i = 0; i < boardComment.length; i++) {
+        if (boardComment[i].commend_id === commentId) {
+          boardComment.splice(i, 1); // board는 import이기 때문에 할당이 안되므로 원본 배열의 값을 수정한다.
+          break;
+        }
+      }
+
+      return HttpResponse.json(
+        {
+          message: "REQUEST_FRONT_SUCCESS",
+        },
+        { status: 200 }
+      );
+    }
   ),
 ];
 
