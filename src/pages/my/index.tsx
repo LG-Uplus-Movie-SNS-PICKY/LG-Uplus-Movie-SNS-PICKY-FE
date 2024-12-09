@@ -124,7 +124,7 @@ function My() {
         const { data } = await axios.post(
           `${
             import.meta.env.VITE_SERVER_URL
-          }/api/v1/user/validate-user?${nickname}`,
+          }/api/v1/user/validate-user?nickname=${nickname}`,
           {},
           {
             headers: {
@@ -132,6 +132,8 @@ function My() {
             },
           }
         );
+
+        console.log(data);
       } catch (error) {
         if (error instanceof AxiosError && error.response) {
           switch (error.response.data.errorCode) {
@@ -140,7 +142,7 @@ function My() {
               break;
 
             case "USER_NOT_FOUND":
-              navigate("/"); // 존재하지 않는 사용자인 경우
+              // navigate("/"); // 존재하지 않는 사용자인 경우
               break;
           }
         }

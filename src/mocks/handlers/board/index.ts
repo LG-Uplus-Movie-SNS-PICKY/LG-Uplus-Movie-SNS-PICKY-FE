@@ -1,7 +1,7 @@
 import { http, HttpHandler, HttpResponse } from "msw";
 
 import user from "@constants/json/user.json";
-import movie from "@constants/json/movie.json";
+import movie from "@constants/json/movie/movie.json";
 import board from "@constants/json/board/board.json";
 import boardComment from "@constants/json/board/board_comments.json";
 import boardContent from "@constants/json/board/board_contents.json";
@@ -72,7 +72,7 @@ const boardHandlers: HttpHandler[] = [
 
       // 게시물 등록
       board.push({
-        board_id: board.length,
+        board_id: board.length + 1,
         board_context: body.boardContext,
         movie_id: body.movieId,
         user_id: user.id,
@@ -90,7 +90,7 @@ const boardHandlers: HttpHandler[] = [
             board_content_id: boardContent.length,
             board_content_type: content.type,
             board_content_url: content.contentUrl,
-            board_id: board.length - 1,
+            board_id: board.length,
           });
         });
       }
@@ -660,7 +660,7 @@ const boardHandlers: HttpHandler[] = [
         return HttpResponse.json(
           {
             message:
-              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 boardId 또는 commentId를 추가했는지 확인해주세요.",
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 boardId를 추가했는지 확인해주세요.",
           },
           { status: 403 }
         );
