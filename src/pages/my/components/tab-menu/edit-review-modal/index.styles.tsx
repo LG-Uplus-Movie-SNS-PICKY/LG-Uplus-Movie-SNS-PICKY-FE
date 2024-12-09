@@ -1,4 +1,4 @@
-// pages/MovieDetail/Reviews/components/ReviewRegist/index.styles.tsx
+// pages/my/components/tab-menu/edit-review-modal/index.styles.tsx
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
@@ -9,6 +9,8 @@ export const Container = styled.div`
   padding: 16px;
   gap: 16px;
   background-color: #FFFFFF;
+  border-radius: 20px;
+  width: 100%;
 `;
 
 export const TitleContainer = styled.div`
@@ -113,7 +115,7 @@ export const ReviewInput = styled.input`
   }
 `;
 
-export const SubmitButton = styled.div`
+export const EditButton = styled.div<{ active: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,11 +123,13 @@ export const SubmitButton = styled.div`
   font-weight: 600;
   padding: 8px 16px;
   color: #FFFFFF;
-  background-color: #756262;
+  background-color: ${props => (props.active ? '#756262' : '#D9D9D9')}; // 활성화 여부에 따른 색상 변경
+  border-top-right-radius: 4px;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
   height: 32px;
-  cursor: pointer;
+  cursor: ${props => (props.active ? 'pointer' : 'default')}; // 비활성화 시 커서 변경
+  pointer-events: ${props => (props.active ? 'auto' : 'none')}; // 클릭 가능 여부 조정
 `;
 
 export const WithinText = styled.div`
