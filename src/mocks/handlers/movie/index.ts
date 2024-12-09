@@ -11,6 +11,7 @@ import movieLikes from "@constants/json/movie/movieLikes.json";
 
 import user from "@constants/json/user.json";
 import genrePreferences from "@constants/json/user/genrePreferences.json";
+import { data } from "@pages/admin/main/components/list-container/constant";
 
 function calculateTotalRating(likes: number) {
   const maxValue = user.length; // 기준값
@@ -259,7 +260,66 @@ const movieHandlers: HttpHandler[] = [
   // 장르별 영화 조회 API(Mocking Object)
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/genre/movie`,
-    ({ request }) => {}
+    ({ request }) => {
+      const authorization = request.headers.get("Authorization");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      const url = new URL(request.url);
+      const genreId = Number(url.searchParams.get("genreId") || 0);
+      const lastMovieId = url.searchParams.get("genreId");
+      const lastLikeCount = url.searchParams.get("genreId");
+
+      // Query String으로 GenreId를 보내지 않은 경우
+      if (!genreId) {
+        return HttpResponse.json(
+          {
+            message:
+              "필수 쿼리 파라미터인 genreId가 누락되었습니다. genreId를 추가하거나 요청을 확인하세요.",
+            errorCode: "GENRE_ID_MISSING",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      const response = movies
+        .filter((movie) => {
+          // 1. 해당 영화의 장르 리스트를 확인 후 사용자가 선택한 장르와 같은지 확인한다.
+          const genre = movieAndGenres
+            .filter((genre) => genre.movie_id === movie.movie_id)
+            .find((genre) => genre.genre_id === genreId);
+
+          // 2. 현재 영화가 사용자가 선택한 장르일 경우 해당 영화를 반환한다.
+          if (!isEmpty(genre)) {
+            return movie;
+          }
+        })
+        .map((movie) => {
+          const movieLike = movieLikes.filter(
+            (like) => like.movie_id === movie.movie_id
+          ).length;
+
+          return {
+            movieId: movie.movie_id,
+            title: movie.movie_title,
+            likes: movieLike,
+            posterUrl: movie.movie_poster_url,
+            backdropUrl: movie.movie_backdrop_url,
+            totalRating: calculateTotalRating(movieLike),
+          };
+        });
+
+      return HttpResponse.json({ data: response }, { status: 200 });
+    }
   ),
 ];
 
