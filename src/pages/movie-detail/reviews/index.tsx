@@ -55,6 +55,7 @@ const fetchReviews = async ({
   pageParam: number;
   sortBy: string;
 }): Promise<ReviewResponse> => {
+  // await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
   const response = await axios.get<ReviewResponse>(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
     {
@@ -81,40 +82,19 @@ const ReviewsPage = () => {
   });
 
   const {
-    data: allReviewsData,
-    fetchNextPage: fetchAllReviewsNextPage,
-    hasNextPage: hasAllReviewsNextPage,
-    refetch,
-  } = useInfiniteQuery({
-    queryKey: ["allReviews"], // 스포일러 토글 상태와 무관한 데이터
-    queryFn: ({ pageParam = 1 }) =>
-      fetchReviews({ pageParam, sortBy: "latest" }), // 최신순 데이터 전체 가져오기
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
-  });
-
-  const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = useInfiniteQuery({
-    queryKey: ["reviews", { sortBy, includeSpoilers }], // 스포일러 토글 상태에 따라 데이터 가져오기
+    queryKey: ["reviews", { sortBy, includeSpoilers }],
     queryFn: ({ pageParam = 1 }) => fetchReviews({ pageParam, sortBy }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
   });
 
-  const { ref, inView } = useInView({
-    threshold: 1.0,
-  });
-
-  // 모든 페이지를 병합
-  useEffect(() => {
-    if (hasAllReviewsNextPage) {
-      fetchAllReviewsNextPage(); // 다음 페이지 요청
-    }
-  }, [allReviewsData, fetchAllReviewsNextPage, hasAllReviewsNextPage]);
+  const { ref, inView } = useInView({ threshold: 1.0 });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -126,18 +106,20 @@ const ReviewsPage = () => {
     setIncludeSpoilers(!includeSpoilers);
   };
 
-  const allReviews: Review[] = allReviewsData?.pages.flatMap((page) => page.data) || [];
+  const currentPageReviews: Review[] =
+    data?.pages[data.pages.length - 1]?.data || []; // 현재 페이지의 데이터
+  const allReviews: Review[] = data?.pages.flatMap((page) => page.data) || [];
 
   const filteredReviews = includeSpoilers
-    ? allReviews // 스포일러 포함 시 모든 리뷰
-    : allReviews.filter((review: Review) => !review.isSpoiler); // 스포일러 제외
+    ? allReviews
+    : allReviews.filter((review) => !review.isSpoiler);
 
   const sortedReviews = [...filteredReviews].sort((a, b) => {
     if (sortBy === "likes") {
-      return b.likes - a.likes; // 좋아요 순 정렬
+      return b.likes - a.likes;
     }
     if (sortBy === "latest") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // 최신순 정렬
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     }
     return 0;
   });
@@ -173,7 +155,7 @@ const ReviewsPage = () => {
             </DetailContainer>
           </InfoContainer>
           <ReviewGraph reviews={allReviews} />
-          <ReviewRegist refetch={refetch}/>
+          <ReviewRegist refetch={refetch} />
           <ReviewsWrapper>
             <FilterContainer>
               <SortContainer>

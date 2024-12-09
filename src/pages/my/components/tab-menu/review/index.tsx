@@ -115,8 +115,14 @@ function LineReviewContent({ data }: LineReviewContentProps) {
             </div>
 
             {/* 삭제 버튼 */}
-            <div css={styles.reviewDeleteBtn()}>
+            {/* <div css={styles.reviewDeleteBtn()}>
               <DeleteCircle />
+            </div> */}
+
+            {/* 수정 & 삭제 버튼 */}
+            <div css={styles.reviewBtnContainer()}>
+              <div css={styles.reviewEditBtn()}>수정</div>
+              <div css={styles.reviewDeleteBtn()}>삭제</div>
             </div>
           </div>
         ))}
