@@ -9,6 +9,20 @@ import movieBehindVideos from "@constants/json/movie/movieBehindVideos.json";
 import platforms from "@constants/json/movie/platforms.json";
 import movieLikes from "@constants/json/movie/movieLikes.json";
 
+import user from "@constants/json/user.json";
+
+function calculateTotalRating(likes: number) {
+  const maxValue = user.length; // 기준값
+  const minRating = 1.0;
+  const maxRating = 5.0;
+
+  // total rating 계산
+  const totalRating = minRating + (likes / maxValue) * (maxRating - minRating);
+
+  // total rating 값이 최대값 5.0을 넘지 않도록 제한
+  return Number(Math.min(totalRating, maxRating).toFixed(1));
+}
+
 const movieHandlers: HttpHandler[] = [
   // 영화 등록 API(Mocking Object)
   http.post(
@@ -28,8 +42,6 @@ const movieHandlers: HttpHandler[] = [
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { movieId } = params;
-
-      // console.log()
 
       const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
 
@@ -157,8 +169,41 @@ const movieHandlers: HttpHandler[] = [
 
   // 영화 Top 10 조회 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/top10`,
-    ({ request }) => {}
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`,
+    ({ request }) => {
+      const authorization = request.headers.get("Authorization");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가해주세요. (임시로 아무값이나 넣어도 무관)",
+          },
+          { status: 403 }
+        );
+      }
+
+      const bestMovies = movies
+        .map((movie) => {
+          const movieLike = movieLikes.filter(
+            (like) => like.movie_id === movie.movie_id
+          ).length;
+
+          return {
+            movieId: movie.movie_id,
+            title: movie.movie_title,
+            likes: movieLike,
+            posterUrl: movie.movie_poster_url,
+            backdropUrl: "",
+            totalRating: calculateTotalRating(movieLike),
+          };
+        })
+        .sort((a, b) => b.totalRating - a.totalRating)
+        .slice(0, 10);
+
+      return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
+    }
   ),
 
   // 영화 추천 리스트 API(Mocking Object)
