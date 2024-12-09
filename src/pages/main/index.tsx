@@ -22,7 +22,7 @@ function Main() {
         .delete(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/like?likeId=1`,
           {
-            headers: { Authorization: "1" },
+            // headers: { Authorization: "1" },
           }
         )
         .then((res) => res.data);
