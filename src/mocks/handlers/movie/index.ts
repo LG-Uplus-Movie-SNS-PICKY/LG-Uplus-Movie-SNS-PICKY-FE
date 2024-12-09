@@ -11,7 +11,57 @@ import movieLikes from "@constants/json/movie/movieLikes.json";
 
 import user from "@constants/json/user.json";
 import genrePreferences from "@constants/json/user/genrePreferences.json";
-import { data } from "@pages/admin/main/components/list-container/constant";
+
+type TrailerType = string;
+type OstType = string;
+type MovieBehindVideosType = string;
+
+interface CastTypes {
+  [key: string]: unknown;
+  id: number;
+  character: string;
+  original_name: string;
+  profile_path: string;
+}
+interface CrewsTypes {
+  [key: string]: unknown;
+  id: number;
+  original_name: string;
+  profile_path: string;
+  job: string;
+}
+
+interface CreditsTypes {
+  cast: CastTypes[];
+  crew: CrewsTypes[];
+  directingCrew: CrewsTypes[];
+}
+
+interface GenresTypes {
+  id: number;
+}
+
+interface MovieInfoTypes {
+  [key: string]: unknown;
+  id: number;
+  title: string;
+  original_title: string;
+  release_date: string;
+  poster_path: string;
+  overview: string;
+  runtime: number;
+  genres: GenresTypes[];
+  credits: CreditsTypes;
+  backdrop_path: string;
+}
+
+interface BodyType {
+  movie_info: MovieInfoTypes;
+  trailer: TrailerType;
+  ost: OstType;
+  movie_behind_videos: MovieBehindVideosType;
+  selectPlatform: number[];
+}
 
 function calculateTotalRating(likes: number) {
   const maxValue = user.length; // 기준값
@@ -29,7 +79,151 @@ const movieHandlers: HttpHandler[] = [
   // 영화 등록 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie`,
-    ({ request }) => {}
+    async ({ request }) => {
+      const authorization = request.headers.get("Authorization");
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (
+        !authorization ||
+        isEmpty(userInfo) ||
+        userInfo.user_role !== "Admin"
+      ) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 또는 어드민 계정인지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      const { movie_info, ost, trailer, movie_behind_videos, selectPlatform } =
+        (await request.json()) as BodyType;
+
+      // 영화 추가
+      movies.push({
+        movie_id: movie_info.id,
+        movie_title: movie_info.title,
+        movie_original_title: movie_info.original_title,
+        movie_release_data: movie_info.release_date,
+        movie_poster_url: movie_info.poster_path,
+        movie_backdrop_url: movie_info.backdrop_path,
+        movie_total_rating: 0,
+        movie_plot: movie_info.overview,
+        movie_running_time: movie_info.runtime,
+        movie_trailer_url: trailer,
+        movie_ost_url: ost,
+        is_deleted: false,
+      });
+
+      // 해당 영화 장르 추가
+      movie_info.genres.forEach((genre) => {
+        movieAndGenres.push({ genre_id: genre.id, movie_id: movie_info.id });
+      });
+
+      // 해당 영화 비하인드 추가
+      movieBehindVideos.push({
+        movie_behind_video_id: movieBehindVideos.length + 1,
+        movie_behind_video_url: movie_behind_videos,
+        movie_id: movie_info.id,
+      });
+
+      // 해당 영화 OTT 서비스 추가
+      selectPlatform.forEach((selector) => {
+        const platform = platforms.find(
+          (platform) => platform.platform_id === selector
+        );
+
+        if (!isEmpty(platform)) {
+          platforms.push({
+            movie_id: movie_info.id,
+            platform_id: platform.platform_id,
+            platform_name: platform.platform_name,
+            platform_url: platform.platform_url,
+          });
+        }
+      });
+
+      // 해당 영화 배우 추가
+      if (movie_info.credits.cast.length) {
+        movie_info.credits.cast.forEach((credit) => {
+          // 중복된 영화배우가 있는지 확인
+          const actor = filmCrew.find(
+            (crew) => crew.film_crew_id === credit.id
+          );
+
+          // 중복된 영화배우가 없을 경우 해당 배우 추가
+          if (isEmpty(actor)) {
+            filmCrew.push({
+              film_crew_id: credit.id,
+              film_crew_name: credit.original_name,
+              film_crew_profile_url: credit.profile_path,
+            });
+          }
+
+          movieCrews.push({
+            movie_id: movie_info.id,
+            film_crew_id: credit.id,
+            movie_crew_position: "Actor",
+            movie_crew_role: credit.character,
+          });
+        });
+      }
+
+      // 해당 영화 제작 디자인 추가
+      if (movie_info.credits.crew.length) {
+        movie_info.credits.crew.forEach((credit) => {
+          // 중복된 제작 디자인이 있는지 확인
+          const crew = filmCrew.find((crew) => crew.film_crew_id === credit.id);
+
+          // 중복된 제작 디자인이 없을 경우 해당 제작 디자인 추가
+          if (isEmpty(crew)) {
+            filmCrew.push({
+              film_crew_id: credit.id,
+              film_crew_name: credit.original_name,
+              film_crew_profile_url: credit.profile_path,
+            });
+          }
+
+          movieCrews.push({
+            movie_id: movie_info.id,
+            film_crew_id: credit.id,
+            movie_crew_position: "Crew",
+            movie_crew_role: credit.job,
+          });
+        });
+      }
+
+      // 해당 영화 제작진 추가
+      if (movie_info.credits.directingCrew.length) {
+        movie_info.credits.directingCrew.forEach((credit) => {
+          // 중복된 제작진이 있는지 확인
+          const crew = filmCrew.find((crew) => crew.film_crew_id === credit.id);
+
+          // 중복된 제작진이 없을 경우 해당 제작진 추가
+          if (isEmpty(crew)) {
+            filmCrew.push({
+              film_crew_id: credit.id,
+              film_crew_name: credit.original_name,
+              film_crew_profile_url: credit.profile_path,
+            });
+          }
+
+          movieCrews.push({
+            movie_id: movie_info.id,
+            film_crew_id: credit.id,
+            movie_crew_position: "Director",
+            movie_crew_role: credit.job,
+          });
+        });
+      }
+
+      return HttpResponse.json(
+        { message: "REQUEST_FRONT_SUCCESS" },
+        { status: 200 }
+      );
+    }
   ),
 
   // 영화 좋아요 API(Mocking Object)
