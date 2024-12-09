@@ -19,12 +19,9 @@ function Main() {
 
     const fetch = async () => {
       const data = await axios
-        .delete(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/like?likeId=1`,
-          {
-            headers: { Authorization: "1" },
-          }
-        )
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/37`, {
+          headers: { Authorization: "1" },
+        })
         .then((res) => res.data);
       console.log(data);
     };

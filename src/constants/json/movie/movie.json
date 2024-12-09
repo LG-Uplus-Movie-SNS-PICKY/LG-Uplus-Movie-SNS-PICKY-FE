@@ -2,6 +2,7 @@
   {
     "movie_id": 1,
     "movie_title": "센과 치히로의 행방불명",
+    "movie_original_title": "Spirited Away",
     "movie_release_data": "2001-07-20",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/a/a3/Spirited_Away_poster.jpg",
     "movie_total_rating": 4.9,
@@ -14,6 +15,7 @@
   {
     "movie_id": 2,
     "movie_title": "토이 스토리 4",
+    "movie_original_title": "Toy Story 4",
     "movie_release_data": "2019-06-21",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/6/66/Toy_Story_4_poster.jpg",
     "movie_total_rating": 4.5,
@@ -26,6 +28,7 @@
   {
     "movie_id": 3,
     "movie_title": "겨울왕국 2",
+    "movie_original_title": "Frozen II",
     "movie_release_data": "2019-11-22",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/c/c6/Frozen_2_poster.jpg",
     "movie_total_rating": 4.6,
@@ -38,6 +41,7 @@
   {
     "movie_id": 4,
     "movie_title": "너의 이름은",
+    "movie_original_title": "Your Name",
     "movie_release_data": "2016-08-26",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/5/5f/Your_Name_poster.jpg",
     "movie_total_rating": 4.8,
@@ -50,6 +54,7 @@
   {
     "movie_id": 5,
     "movie_title": "라이온 킹",
+    "movie_original_title": "The Lion King",
     "movie_release_data": "1994-06-24",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/42/The_Lion_King_poster.jpg",
     "movie_total_rating": 4.7,
@@ -62,6 +67,7 @@
   {
     "movie_id": 6,
     "movie_title": "코코",
+    "movie_original_title": "Coco",
     "movie_release_data": "2017-11-22",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/f/f6/Coco_poster.jpg",
     "movie_total_rating": 4.8,
@@ -74,6 +80,7 @@
   {
     "movie_id": 7,
     "movie_title": "하울의 움직이는 성",
+    "movie_original_title": "Howl's Moving Castle",
     "movie_release_data": "2004-11-20",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/a/a3/Howls_Moving_Castle_poster.jpg",
     "movie_total_rating": 4.7,
@@ -86,6 +93,7 @@
   {
     "movie_id": 8,
     "movie_title": "주토피아",
+    "movie_original_title": "Zootopia",
     "movie_release_data": "2016-03-04",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/4/47/Zootopia_poster.jpg",
     "movie_total_rating": 4.5,
@@ -98,6 +106,7 @@
   {
     "movie_id": 9,
     "movie_title": "니모를 찾아서",
+    "movie_original_title": "Finding Nemo",
     "movie_release_data": "2003-05-30",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/d/d6/Finding_Nemo_poster.jpg",
     "movie_total_rating": 4.6,
@@ -110,6 +119,7 @@
   {
     "movie_id": 10,
     "movie_title": "인크레더블",
+    "movie_original_title": "The Incredibles",
     "movie_release_data": "2004-11-05",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/e/e9/The_Incredibles_poster.jpg",
     "movie_total_rating": 4.7,
@@ -122,6 +132,7 @@
   {
     "movie_id": 11,
     "movie_title": "해리 포터와 마법사의 돌",
+    "movie_original_title": "Harry Potter and the Sorcerer's Stone",
     "movie_release_data": "2001-11-14",
     "movie_poster_url": "https://i.namu.wiki/i/yEOEQndo1uvjY3e7V3OOJLRylxmFT-Yf6X3PQPFK20Oj4uIQE87NYba6OG_r-ixRL7GOvFy8DiFBwCYdfcHqIpT_6Syfh6CnzqxBPiea0kPf86lY1BiAW0NpNQufvxDuJ3q7pd8e5bvhLHrNZTxT1Q.webp",
     "movie_total_rating": 4.1,
@@ -134,6 +145,7 @@
   {
     "movie_id": 12,
     "movie_title": "해리 포터와 비밀의 방",
+    "movie_original_title": "Harry Potter and the Chamber of Secrets",
     "movie_release_data": "2002-11-15",
     "movie_poster_url": "https://i.namu.wiki/i/WRC_yQ33uTd0xDcZUD26aWtb66RT4GCB-sXnX95H33lysmy87avXs3-DrBxfl6mz7PJ46Yltnerg0Pb_zGQrx59QorRFvp1d_j5dmdquzGmn26J3I1kWqhWaRS-PPr6a0-uppbn3619bFzkCF62nNw.webp",
     "movie_total_rating": 4.3,
@@ -146,6 +158,7 @@
   {
     "movie_id": 13,
     "movie_title": "해리 포터와 아즈카반의 죄수",
+    "movie_original_title": "Harry Potter and the Prisoner of Azkaban",
     "movie_release_data": "2004-06-04",
     "movie_poster_url": "https://i.namu.wiki/i/8Ffz6avTJDV9Cc3jZ-4-Hcq4N2yUz-jBVv48X1fOvC_5OgslnoeExZODyUcEajLKcvvjyaZ91Nru9YIC3TekoftDPwwpoIkxaa4eZ2YCtw4E6nwK-WcvCUd4E6lItvxyAyASGQpD9Dv6nkgBYbNpCg.webp",
     "movie_total_rating": 4.5,
@@ -158,6 +171,7 @@
   {
     "movie_id": 14,
     "movie_title": "해리 포터와 불의 잔",
+    "movie_original_title": "Harry Potter and the Goblet of Fire",
     "movie_release_data": "2005-11-18",
     "movie_poster_url": "https://i.namu.wiki/i/Qah8ZSP5NInR2AfmRFDz3T3JMHRx4mzL3EAOuQ5H2-qeFbXLD2phWXOswfXQXti_haBzJZcEn5dG6TOLFXAX6dJY2LyEY3CPnaJGR8AITqhBU5L_IZ4XfdOA2vCCXS6eSm8yZ9v9HJ69apddpDKYdA.webp",
     "movie_total_rating": 3.9,
@@ -170,6 +184,7 @@
   {
     "movie_id": 15,
     "movie_title": "해리 포터와 불사조 기사단",
+    "movie_original_title": "Harry Potter and the Order of the Phoenix",
     "movie_release_data": "2007-07-11",
     "movie_poster_url": "https://i.namu.wiki/i/KN5ylsx2mhYuF0dqfeX2pSORAMh26Omt8xYd9iqIv_FWrI5G-PfW_1YSbxE9qJWl-PEMm50cwcxAdJte0d7JrZ1tQjj3JYqKxxEAHmgXCx-Ffz8DLul6puYQWuAYtBoJ2Om0jHoVmZpyD93r5Wfdqw.webp",
     "movie_total_rating": 4.6,
@@ -182,6 +197,7 @@
   {
     "movie_id": 16,
     "movie_title": "해리 포터와 혼혈 왕자",
+    "movie_original_title": "Harry Potter and the Half-Blood Prince",
     "movie_release_data": "2009-07-12",
     "movie_poster_url": "https://i.namu.wiki/i/kOwPejxt1_3YztgoF92URIXJs2rrikeRUYUk5pZklVgKjOslI8iGm8lxATtUp3IhFFrFrsjPvADtaWILVmar9N0AzHo2mTjlF9z7FRxL4fhRXkJQpJgCSvDpCcG1kwF5WJfpPsyGE3MYxeETw3zz7A.webp",
     "movie_total_rating": 4.2,
@@ -194,6 +210,7 @@
   {
     "movie_id": 17,
     "movie_title": "해리 포터와 죽음의 성물 1부",
+    "movie_original_title": "Harry Potter and the Deathly Hallows: Part 1",
     "movie_release_data": "2010-11-19",
     "movie_poster_url": "https://i.namu.wiki/i/kiilvewRCjO53-W44hDknYOR_baO7mbVSCPL2So6uyIqunybiNICQw2VYvJ2HEbXKXtLrgUX90XmNDkNwtk51_xFBwbvlM2MpwioF5WhCba8hUSFWJ15yCR76AV8A74oNzA9Vra7VlOlIRySseBiGg.webp",
     "movie_total_rating": 4.6,
@@ -206,6 +223,7 @@
   {
     "movie_id": 18,
     "movie_title": "해리 포터와 죽음의 성물 2부",
+    "movie_original_title": "Harry Potter and the Deathly Hallows: Part 2",
     "movie_release_data": "2011-07-13",
     "movie_poster_url": "https://i.namu.wiki/i/FhsnhC089tWD2Zu46hAVSswcsrsWHt-DRY3N1KNdcjEdRv35G3JkHmr_RuXxiRTyqqZXgX0EuCvycfhksGl1R5OX9uQzPawEdUBCey3oah4LVanlevBIY9W8w5HwBWcFhdqj9Lu_5amg9bYMah4ulg.webp",
     "movie_total_rating": 4.2,
@@ -218,6 +236,7 @@
   {
     "movie_id": 19,
     "movie_title": "신비한 동물사전",
+    "movie_original_title": "Fantastic Beasts and Where to Find Them",
     "movie_release_data": "2016-11-16",
     "movie_poster_url": "https://i.namu.wiki/i/6hwK3UbxX-w_OggaoUPjjqHo2NLIGQR8EJhaIf5m5jVOT71uM7ysIhbPDh0qtpF2_FksYjuUtcZtgt2BFZPpBJ9jxALHYH28zIvHpLyr1ocN_wx7SaEmNuaFMejkD6AswabckeSiPaQ3Gz_XtaK_tQ.webp",
     "movie_total_rating": 4.6,
@@ -230,6 +249,7 @@
   {
     "movie_id": 20,
     "movie_title": "신비한 동물들과 그린델왈드의 범죄",
+    "movie_original_title": "Fantastic Beasts: The Crimes of Grindelwald",
     "movie_release_data": "2018-11-14",
     "movie_poster_url": "https://i.namu.wiki/i/NsZQm9C2VR6xRwBimYsw8DWIPHErL5qW0lP1ac268PpBtyOzKuUWNAA-SblaLtfbNXkhkSjO7JQ9NmwGKmaBRimW_ITe-ezSD13ELRxFoRtxBlPHEjPURk2UqwOzXG1WsFnmtdM5q5SazoDnpWcuMQ.webp",
     "movie_total_rating": 3.8,
@@ -242,6 +262,7 @@
   {
     "movie_id": 21,
     "movie_title": "어메이징 스파이더맨",
+    "movie_original_title": "The Amazing Spider-Man",
     "movie_release_data": "2012-06-28",
     "movie_poster_url": "https://i.namu.wiki/i/4eCTQjd5ivRwrQm7mDz2fNZ89e2_-pzLfAP4FkNuU8svLolj_sW_RaVC2sCa8b2uRDwb0nsfn0dGbHHp8F-Sbw.webp",
     "movie_total_rating": 3.9,
@@ -254,6 +275,7 @@
   {
     "movie_id": 22,
     "movie_title": "어메이징 스파이더맨2",
+    "movie_original_title": "The Amazing Spider-Man 2",
     "movie_release_data": "2014-04-23",
     "movie_poster_url": "https://i.namu.wiki/i/GzSl-6lkugq-hq3hgNHpol_C8rmL2_dFDKnRHc6t2-bRUyCgMnkxSXCTTg77D0U8qg77YlB7_BEKXMEO-FJFWg.webp",
     "movie_total_rating": 4.0,
@@ -266,6 +288,7 @@
   {
     "movie_id": 23,
     "movie_title": "스파이더맨: 홈커밍",
+    "movie_original_title": "Spider-Man: Homecoming",
     "movie_release_data": "2017-07-05",
     "movie_poster_url": "https://i.namu.wiki/i/owh75DUfOhIDtk2DzvTLDmiA4v5YZ5oT5Ox_-NqLMLWsgAYQ4r8-EF2CZmqklfQ9eoompuJnA9PMQl4UpJ6-bw.webp",
     "movie_total_rating": 4.4,
@@ -278,6 +301,7 @@
   {
     "movie_id": 24,
     "movie_title": "스파이더맨: 파 프롬 홈",
+    "movie_original_title": "Spider-Man: Far From Home",
     "movie_release_data": "2019-07-02",
     "movie_poster_url": "https://i.namu.wiki/i/3P2YXolv1TjxyJpjLej7zTXZw5yNIBc2K1i9BGZXRDMDwCnvV0txMVm1btZflKLdGO2CNQ1MkPzsFJ_plIU83g.webp",
     "movie_total_rating": 4.5,
@@ -290,6 +314,7 @@
   {
     "movie_id": 25,
     "movie_title": "스파이더맨: 노 웨이 홈",
+    "movie_original_title": "Spider-Man: No Way Home",
     "movie_release_data": "2021-12-15",
     "movie_poster_url": "https://i.namu.wiki/i/eZY4FI2HdpzQ9llDEGJN1xyakbgYMHpAYTxHXRw72RB53TO7Y7MxZMCWZMSaTshGOodY18DLUIvrUUs-B2z3UQ.webp",
     "movie_total_rating": 4.5,
@@ -302,6 +327,7 @@
   {
     "movie_id": 26,
     "movie_title": "캡틴 아메리카: 윈터 솔져",
+    "movie_original_title": "Captain America: The Winter Soldier",
     "movie_release_data": "2014-03-26",
     "movie_poster_url": "https://i.namu.wiki/i/PgDi5sJMTusiyiGKwbEZajTcRxCdt_DQ3FoPn3W36MvHWc-jZHuH70EamodThaciPnobjLmlacYBT92uxSRA7g.webp",
     "movie_total_rating": 4.4,
@@ -314,6 +340,7 @@
   {
     "movie_id": 27,
     "movie_title": "캡틴 아메리카: 시빌 워",
+    "movie_original_title": "Captain America: Civil War",
     "movie_release_data": "2016-04-27",
     "movie_poster_url": "https://i.namu.wiki/i/D8XxD3MtgJXyIrh7lppjtBRPjQTXf1otMiHd0rAzUiVXDd_6gP-PriDqJjJN-nCJU5sjbiWVNweY9FCjOZar1Q.webp",
     "movie_total_rating": 4.4,
@@ -326,6 +353,7 @@
   {
     "movie_id": 28,
     "movie_title": "어벤져스: 에이지 오브 울트론",
+    "movie_original_title": "Avengers: Age of Ultron",
     "movie_release_data": "2015-04-23",
     "movie_poster_url": "https://i.namu.wiki/i/TV0pCZGrMtRP94yamzb5D5_5BgeZvYIQUbIo8BZdTdDmEacONNgPzOQvX7VzP5xEiljNy4mJSRvlqTNQk-RjDQ.webp",
     "movie_total_rating": 4.3,
@@ -338,6 +366,7 @@
   {
     "movie_id": 29,
     "movie_title": "어벤져스: 인피니티 워",
+    "movie_original_title": "Avengers: Infinity War",
     "movie_release_data": "2018-04-25",
     "movie_poster_url": "https://i.namu.wiki/i/_33_6GMFJ2tl_JF2as-w_tL9VnmcrHPMFN5IIz88yFIhLOJVEXfTQNltUZT6CHoc8rGIMOFy7bZmsWPIdq5uFQ.webp",
     "movie_total_rating": 5.0,
@@ -350,6 +379,7 @@
   {
     "movie_id": 30,
     "movie_title": "어벤져스: 엔드게임",
+    "movie_original_title": "Avengers: Endgame",
     "movie_release_data": "2019-04-24",
     "movie_poster_url": "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
     "movie_total_rating": 5.0,
@@ -362,6 +392,7 @@
   {
     "movie_id": 31,
     "movie_title": "나니아 연대기: 사자, 마녀 그리고 옷장",
+    "movie_original_title": "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe",
     "movie_release_data": "2005-12-09",
     "movie_poster_url": "https://i.namu.wiki/i/5GUdeohhgrtw-XKIft5x1Mjx3hJ2u8yonPpZFSFyykGMgCiXABlBHu7cD4x-i6Uk3aSZfqKOm6qYKuWvgdkwZKI0C26mVHuRJ4fxqy99i1T5wrXJgOmB4en1tq_0hDTxZREr_p3TbRgU8aFBHUVURg.webp",
     "movie_total_rating": 4.0,
@@ -374,6 +405,7 @@
   {
     "movie_id": 32,
     "movie_title": "나니아 연대기: 캐스피언 왕자",
+    "movie_original_title": "The Chronicles of Narnia: Prince Caspian",
     "movie_release_data": "2008-05-16",
     "movie_poster_url": "https://i.namu.wiki/i/B1v5Idc1ZZ9cIdW6pheoUCIxt8rfHsD2Dwl8o41oljStN5QMMZ5d2NSq_cvAz_96vGgrsYvQpK1M_H1OrTB45lvDLsoVYMk_ZvUZn7o3oXA1guD8n2iMPLEOwE_n9Yw9Dh-4dY9A2UM5OggVFQrapw.webp",
     "movie_total_rating": 3.4,
@@ -386,6 +418,7 @@
   {
     "movie_id": 33,
     "movie_title": "나니아 연대기: 새벽 출정호의 항해",
+    "movie_original_title": "The Chronicles of Narnia: The Voyage of the Dawn Treader",
     "movie_release_data": "2010-05-16",
     "movie_poster_url": "https://i.namu.wiki/i/Q7U-HJqmpYCGnKRljvByhcqBBrBJpDRZKZIqGwASCtI1QoT4ewFLn8jEdWT5wpyzzDXVKviaFp1Ah_WM_74KMASUZtODkBFx7WZ50Voz_Rd2BXJxw7c7XpF5bRDHMp8-PO-uBLomKGD3cRXlIdEpQA.webp",
     "movie_total_rating": 3.2,
@@ -398,6 +431,7 @@
   {
     "movie_id": 34,
     "movie_title": "반지의 제왕: 반지 원정대",
+    "movie_original_title": "The Lord of the Rings: The Fellowship of the Ring",
     "movie_release_data": "2001-12-19",
     "movie_poster_url": "https://i.namu.wiki/i/G8CeZ91qk0Zmm2qEMqj3GcfFOKXk52AKhpnQO2Bf_eIPrpYIUcMH9z_K7pOnVmpdSNVgoA3YSXK2STfneK-pAJdVEFC7XHKlQTJKCbpsUKuB43RtpNlFHoNIo1pYa8x764aLrkKrRgyKfvzhTiWbrQ.webp",
     "movie_total_rating": 4.7,
@@ -410,6 +444,7 @@
   {
     "movie_id": 35,
     "movie_title": "반지의 제왕: 두 개의 탑",
+    "movie_original_title": "The Lord of the Rings: The Two Towers",
     "movie_release_data": "2002-12-18",
     "movie_poster_url": "https://i.namu.wiki/i/La23J6nlTxJEKVTzn7x6FYFU3jhoAADRyMD33mEz0kNVZVTjsoaIky_sQi-pVe_zgzfn5cA-Evj5z-fvuNvnlFUImh_xEpp7FI99Ox1VwGSAv9qJ7R10k4QA3jE7NHQ93G6556_hUHNZ43f5EZFmxQ.webp",
     "movie_total_rating": 4.8,
@@ -422,6 +457,7 @@
   {
     "movie_id": 36,
     "movie_title": "반지의 제왕: 왕의 귀환",
+    "movie_original_title": "The Lord of the Rings: The Return of the King",
     "movie_release_data": "2003-12-17",
     "movie_poster_url": "https://i.namu.wiki/i/DBHzXXrIP5RV5qJPnZDwBS78w13tpLPppGdgPQeS_TS5JNOYemJ2SHZY6quIvHO4h1AfNUIfwamcsz7xSTgDCMTJXZ5IG4O63jGQl133ATWdJ1MdMkejQLiW-byBQ-FfehLqgyrqzqovRGFBBs5b0A.webp",
     "movie_total_rating": 5.0,
@@ -434,6 +470,7 @@
   {
     "movie_id": 37,
     "movie_title": "대부",
+    "movie_original_title": "The Godfather",
     "movie_release_data": "1972-03-14",
     "movie_poster_url": "https://i.namu.wiki/i/UbBaKPdSdzU1Cq_I2cQN0LjHj8bBWZn6mewfj7MA3TkZ1R4dQEwsRl-QukhtLDxwEpo5KWd096-HTcDX24jXDBcKW5MQ4PtvUgIr2aFyBjII0QnNTAttCIr4RnpCAEN3ZDuySYVNJG0i0suh9xH1yA.webp",
     "movie_total_rating": 4.9,
@@ -446,6 +483,7 @@
   {
     "movie_id": 38,
     "movie_title": "대부 2",
+    "movie_original_title": "The Godfather Part II",
     "movie_release_data": "1974-12-12",
     "movie_poster_url": "https://i.namu.wiki/i/mri6sl1xGipmRbqqntfjIRig-lRcgTDNbpaYcKUr5TCrXhzCaH6FhmSYyG7IDA3cAuaH0jmzfe54jQGfDy3DWRvGL4r0XAaORG6CmCKYK3-esp3GdihpCtiykzGJ7qaHq1usb1R_--t5XIr5VHbcmg.webp",
     "movie_total_rating": 4.3,
@@ -458,6 +496,7 @@
   {
     "movie_id": 39,
     "movie_title": "대부 3",
+    "movie_original_title": "The Godfather Part III",
     "movie_release_data": "1990-12-20",
     "movie_poster_url": "https://i.namu.wiki/i/udqGFNeoTue4iBc6kle5dHBweGoURaEl3vANHqc0ZNXBUPX1_fKr6Qyz6SvcELLeyG0Xy5iFF_vMH6WRDHygRvp7KNhbPjwjDLcylNS4F-F_rE9LgMHcaUtOwkvfn3rIsadp9fzpoujil9yELj0yqA.webp",
     "movie_total_rating": 4.1,
@@ -470,6 +509,7 @@
   {
     "movie_id": 40,
     "movie_title": "좋은 놈, 나쁜 놈, 이상한 놈",
+    "movie_original_title": "The Good, the Bad, the Weird",
     "movie_release_data": "2008-07-17",
     "movie_poster_url": "https://i.namu.wiki/i/NLqm5xAZPawjie0n_xtkksBMtKSbSNIB6jyTPREVmX26kYXB4x9LU_MH9yAmK_5w6KhgA3xtY9Bt-cJmLLXDkw258rnh_hQ2uiergD6uDz6DuGVd9qImjT7BBR9-9SaoscfccZGzzLD-pJ7cS4Da4w.webp",
     "movie_total_rating": 3.2,
