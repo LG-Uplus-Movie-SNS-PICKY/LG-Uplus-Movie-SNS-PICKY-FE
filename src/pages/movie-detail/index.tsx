@@ -116,30 +116,30 @@ function MovieDetail(props: MovieDetailProps) {
     ],
     reviews: [
       // Add this reviews array
-      {
-        rating: 4.0,
-        text: "이 시절 마블 그리워요!!",
-        user: "jaes****",
-        date: "2022.12.24",
-        likes: 18,
-        dislikes: 0,
-      },
-      {
-        rating: 4.0,
-        text: "이 시절 마블 그리워요!!",
-        user: "kimy****",
-        date: "2022.12.25",
-        likes: 12,
-        dislikes: 2,
-      },
-      {
-        rating: 5.0,
-        text: "이 시절 마블 그리워요!!",
-        user: "parkj****",
-        date: "2022.12.26",
-        likes: 30,
-        dislikes: 3,
-      },
+      // {
+      //   rating: 4.0,
+      //   text: "이 시절 마블 그리워요!!",
+      //   user: "jaes****",
+      //   date: "2022.12.24",
+      //   likes: 18,
+      //   dislikes: 0,
+      // },
+      // {
+      //   rating: 4.0,
+      //   text: "이 시절 마블 그리워요!!",
+      //   user: "kimy****",
+      //   date: "2022.12.25",
+      //   likes: 12,
+      //   dislikes: 2,
+      // },
+      // {
+      //   rating: 5.0,
+      //   text: "이 시절 마블 그리워요!!",
+      //   user: "parkj****",
+      //   date: "2022.12.26",
+      //   likes: 30,
+      //   dislikes: 3,
+      // },
     ],
   };
 
