@@ -7,30 +7,31 @@ import Loading from "@components/loading";
 import { useEffect } from "react";
 import axios from "axios";
 
+import board from "@constants/json/board/board.json";
+import boardComments from "@constants/json/board/board_comments.json";
+import boardContents from "@constants/json/board/board_contents.json";
+
 const isLogin = false;
 
 function Main() {
 
   useEffect(() => {
+    // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
+
     const fetch = async () => {
-      await axios
-        .patch(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/6`,
+      const data = await axios
+        .get(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/board?nickname=front-1`,
           {
-            context: "와우 판타스틱",
-            isSpoiler: false,
-          },
-          {
-            headers: {
-              Authorization: "123",
-            },
+            headers: { Authorization: "1" },
           }
         )
-        .then((res) => console.log(res.data));
+        .then((res) => res.data);
+      console.log(data);
     };
 
     fetch();
-  }, []);
+  });
 
   return (
     <>
