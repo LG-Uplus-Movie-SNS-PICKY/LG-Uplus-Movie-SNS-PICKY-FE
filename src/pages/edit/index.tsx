@@ -87,7 +87,14 @@ export default function ProfileEditPage() {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
-        { params: { nickname } }
+        {
+          params: {
+            nickname,
+          },
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
       if (!response.data.data.isValid) {
