@@ -19,13 +19,9 @@ function Main() {
 
     const fetch = async () => {
       const data = await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/coments`,
-          { content: "asdasdsa" },
-          {
-            headers: { Authorization: "1" },
-          }
-        )
+        .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/coments`, {
+          headers: { Authorization: "1" },
+        })
         .then((res) => res.data);
       console.log(data);
     };
