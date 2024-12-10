@@ -6,7 +6,7 @@
     "movieId": 1,
     "rating": 5.0,
     "context": "이 시절 마블 그리워요!!",
-    "isSpoiler": false,
+    "isSpoiler": true,
     "likes": 18,
     "dislikes": 9,
     "createdAt": "2024-12-07T01:51:41.839Z"
@@ -66,7 +66,7 @@
     "movieId": 1,
     "rating": 5.0,
     "context": "이 시절 마블 그리워요!!",
-    "isSpoiler": true,
+    "isSpoiler": false,
     "likes": 30,
     "dislikes": 9,
     "createdAt": "2024-12-07T01:51:41.839Z"

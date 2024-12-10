@@ -27,7 +27,7 @@ import { FreeMode, Mousewheel } from 'swiper/modules';
 interface CastMember {
   name: string;
   role: string;
-  image: string;
+  image: string | null;
 }
 
 interface MovieInfoProps {
@@ -80,7 +80,20 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
     
                   {group.map((cast, idx) => (
                     <CastCard key={idx}>
-                      <CastImage src={cast.image} alt={cast.name} />
+                      {/* 이미지가 없으면 배경색을 회색으로 설정 */}
+                  {cast.image ? (
+                    <CastImage src={cast.image} alt={cast.name} />
+                  ) : (
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        backgroundColor: '#D9D9D9',
+                        borderRadius: '2px',
+                      }}
+                    >
+                    </div>
+                  )}
                       <CastDetails>
                         <CastName>{cast.name}</CastName>
                         <CastRole>{cast.role}</CastRole>
@@ -92,64 +105,8 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
                 )}
               )
             }
-
-            {/*  */}
-
-                {/* {group.map((cast, idx) => (
-                      <CastCard key={idx}>
-                        <CastImage src={cast.image} alt={cast.name} />
-                        <CastDetails>
-                          <CastName>{cast.name}</CastName>
-                          <CastRole>{cast.role}</CastRole>
-                        </CastDetails>
-                      </CastCard>
-                    ))} */}
           </Swiper>
-
-          {/* 각 슬라이더 아이템 */}
-            {/* {groupedCast.map((group, index) => (
-              <SwiperSlide key={index}>
-                <CastContainer>
-
-                  {group.map((cast, idx) => (
-                    <CastCard key={idx}>
-                      <CastImage src={cast.image} alt={cast.name} />
-                      <CastDetails>
-                        <CastName>{cast.name}</CastName>
-                        <CastRole>{cast.role}</CastRole>
-                      </CastDetails>
-                    </CastCard>
-                  ))}
-
-                </CastContainer>
-              </SwiperSlide>
-            ))} */}
-
-          
-
-        
-
-
-        {/* <CastContainer>
-          {groupedCast.map((group, index) => (
-            
-            //  각 슬라이더 아이템
-            <CastSlide key={index}>
-              {group.map((cast, idx) => (
-                <CastCard key={idx}>
-                  <CastImage src={cast.image} alt={cast.name} />
-                  <CastDetails>
-                    <CastName>{cast.name}</CastName>
-                    <CastRole>{cast.role}</CastRole>
-                  </CastDetails>
-                </CastCard>
-              ))}
-            </CastSlide>
-          ))}
-        
-        </CastContainer> */}
       </CastInfoContainer>
-    
    </MovieInfoContainer>
   );
 };
