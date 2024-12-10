@@ -71,8 +71,6 @@ export function MovieItem({
   style
 }: MovieItemProps): JSX.Element {
 
-  console.log(style);
-
   return (
     <div css={styles.movieItemContainer()} style={style}>
       {/* 영화 썸네일 이미지 */}
