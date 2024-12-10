@@ -20,8 +20,11 @@ function Main() {
     const fetch = async () => {
       const data = await axios
         .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/like`,
-          {},
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereviewlike`,
+          {
+            lineReviewId: 3,
+            preference: "LIKE",
+          },
           {
             headers: { Authorization: "1" },
           }
