@@ -61,6 +61,7 @@ export default function ProfileEditPage() {
           }
         );
         const data = response.data.data;
+        console.log(data);
         setUserData({
           name: data.name,
           nickname: data.nickname,
@@ -78,10 +79,9 @@ export default function ProfileEditPage() {
         showToast("사용자 정보를 불러오는 데 실패했습니다.");
       }
     };
-  
+
     fetchUserData();
   }, [accessToken]);
-
 
   const checkNicknameAvailability = useCallback(async (nickname: string) => {
     try {
@@ -151,13 +151,13 @@ export default function ProfileEditPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-  
+
       // 파일 크기 제한: 5MB
       if (file.size > 5 * 1024 * 1024) {
         setImageError("이미지 크기는 5MB를 초과할 수 없습니다.");
         return;
       }
-  
+
       const reader = new FileReader();
       reader.onload = () => {
         if (typeof reader.result === "string") {
@@ -178,17 +178,17 @@ export default function ProfileEditPage() {
     }
     const isUnchanged =
       nickname === userData.nickname && profileImage === userData.profile_url;
-  
+
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
       return;
     }
-  
+
     if (nicknameError || imageError || isNicknameValid === false) {
       showToast("입력을 확인해주세요.");
       return;
     }
-  
+
     const payload = {
       name: userData.name,
       nickname,
@@ -199,16 +199,16 @@ export default function ProfileEditPage() {
       movieId: userData.movieId,
       genreId: userData.genreId,
     };
-  
+
     console.log(payload);
-  
+
     try {
       const accessToken = sessionStorage.getItem("accessToken");
-  
+
       if (!accessToken) {
         throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
       }
-  
+
       const response = await axios.patch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
         payload,
@@ -218,7 +218,7 @@ export default function ProfileEditPage() {
           },
         }
       );
-  
+
       if (response.status === 200) {
         showToast("프로필이 성공적으로 수정되었습니다.");
         setUserData({
@@ -250,12 +250,19 @@ export default function ProfileEditPage() {
   useEffect(() => {
     const isUnchanged =
       nickname === userData.nickname && profileImage === userData.profile_url;
-  
+
     const hasError =
       !!nicknameError || !!imageError || isNicknameValid === false;
-  
+
     setIsSaveDisabled(isUnchanged || hasError);
-  }, [nickname, profileImage, nicknameError, imageError, isNicknameValid, userData]);
+  }, [
+    nickname,
+    profileImage,
+    nicknameError,
+    imageError,
+    isNicknameValid,
+    userData,
+  ]);
 
   useEffect(() => {
     if (toastMessage) {
