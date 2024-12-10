@@ -1,0 +1,866 @@
+[
+  {
+    "platform_id": 1,
+    "movie_id": 1,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 2,
+    "movie_id": 1,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 3,
+    "movie_id": 1,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 4,
+    "movie_id": 2,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 5,
+    "movie_id": 2,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 6,
+    "movie_id": 2,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 7,
+    "movie_id": 3,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 8,
+    "movie_id": 3,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 9,
+    "movie_id": 3,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 10,
+    "movie_id": 4,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 11,
+    "movie_id": 4,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 12,
+    "movie_id": 4,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 13,
+    "movie_id": 4,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 14,
+    "movie_id": 4,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 15,
+    "movie_id": 4,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 16,
+    "movie_id": 5,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 17,
+    "movie_id": 5,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 18,
+    "movie_id": 5,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 19,
+    "movie_id": 5,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 20,
+    "movie_id": 5,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 21,
+    "movie_id": 5,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 22,
+    "movie_id": 6,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 23,
+    "movie_id": 6,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 24,
+    "movie_id": 6,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 25,
+    "movie_id": 7,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 26,
+    "movie_id": 7,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 27,
+    "movie_id": 7,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 28,
+    "movie_id": 7,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 29,
+    "movie_id": 7,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 30,
+    "movie_id": 7,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 31,
+    "movie_id": 8,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 32,
+    "movie_id": 8,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 33,
+    "movie_id": 8,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 34,
+    "movie_id": 8,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 35,
+    "movie_id": 8,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 36,
+    "movie_id": 9,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 37,
+    "movie_id": 9,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 38,
+    "movie_id": 9,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 39,
+    "movie_id": 9,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 40,
+    "movie_id": 10,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 41,
+    "movie_id": 10,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 42,
+    "movie_id": 10,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 43,
+    "movie_id": 10,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 44,
+    "movie_id": 11,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 45,
+    "movie_id": 11,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 46,
+    "movie_id": 12,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 47,
+    "movie_id": 12,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 48,
+    "movie_id": 12,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 49,
+    "movie_id": 12,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 50,
+    "movie_id": 12,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 51,
+    "movie_id": 12,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 52,
+    "movie_id": 13,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 53,
+    "movie_id": 14,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 54,
+    "movie_id": 15,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 55,
+    "movie_id": 15,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 56,
+    "movie_id": 15,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 57,
+    "movie_id": 15,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 58,
+    "movie_id": 16,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 59,
+    "movie_id": 16,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 60,
+    "movie_id": 16,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 61,
+    "movie_id": 16,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 62,
+    "movie_id": 17,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 63,
+    "movie_id": 17,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 64,
+    "movie_id": 17,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 65,
+    "movie_id": 17,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 66,
+    "movie_id": 18,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 67,
+    "movie_id": 18,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 68,
+    "movie_id": 18,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 69,
+    "movie_id": 19,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 70,
+    "movie_id": 19,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 71,
+    "movie_id": 20,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 72,
+    "movie_id": 20,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 73,
+    "movie_id": 20,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 74,
+    "movie_id": 20,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 75,
+    "movie_id": 20,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 76,
+    "movie_id": 21,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 77,
+    "movie_id": 21,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 78,
+    "movie_id": 21,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 79,
+    "movie_id": 21,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 80,
+    "movie_id": 21,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 81,
+    "movie_id": 22,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 82,
+    "movie_id": 22,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 83,
+    "movie_id": 22,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 84,
+    "movie_id": 23,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 85,
+    "movie_id": 23,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 86,
+    "movie_id": 23,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 87,
+    "movie_id": 24,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 88,
+    "movie_id": 24,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 89,
+    "movie_id": 24,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 90,
+    "movie_id": 25,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 91,
+    "movie_id": 25,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 92,
+    "movie_id": 25,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 93,
+    "movie_id": 26,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 94,
+    "movie_id": 26,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 95,
+    "movie_id": 27,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 96,
+    "movie_id": 27,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 97,
+    "movie_id": 28,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 98,
+    "movie_id": 28,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 99,
+    "movie_id": 29,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 100,
+    "movie_id": 29,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 101,
+    "movie_id": 29,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 102,
+    "movie_id": 29,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 103,
+    "movie_id": 29,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 104,
+    "movie_id": 29,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 105,
+    "movie_id": 30,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 106,
+    "movie_id": 30,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 107,
+    "movie_id": 30,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 108,
+    "movie_id": 30,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 109,
+    "movie_id": 30,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 110,
+    "movie_id": 31,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 111,
+    "movie_id": 31,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 112,
+    "movie_id": 32,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 113,
+    "movie_id": 32,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 114,
+    "movie_id": 32,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 115,
+    "movie_id": 33,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 116,
+    "movie_id": 33,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 117,
+    "movie_id": 33,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 118,
+    "movie_id": 33,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 119,
+    "movie_id": 33,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 120,
+    "movie_id": 34,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 121,
+    "movie_id": 35,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 122,
+    "movie_id": 35,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 123,
+    "movie_id": 35,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 124,
+    "movie_id": 35,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 125,
+    "movie_id": 35,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 126,
+    "movie_id": 36,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 127,
+    "movie_id": 36,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 128,
+    "movie_id": 36,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 129,
+    "movie_id": 36,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 130,
+    "movie_id": 37,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 131,
+    "movie_id": 37,
+    "platform_name": "DISNEY",
+    "platform_url": "https://www.disneyplus.com/"
+  },
+  {
+    "platform_id": 132,
+    "movie_id": 37,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 133,
+    "movie_id": 37,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 134,
+    "movie_id": 37,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 135,
+    "movie_id": 37,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 136,
+    "movie_id": 38,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 137,
+    "movie_id": 38,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 138,
+    "movie_id": 39,
+    "platform_name": "COUPANG",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 139,
+    "movie_id": 39,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 140,
+    "movie_id": 39,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 141,
+    "movie_id": 40,
+    "platform_name": "NETFLIX",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 142,
+    "movie_id": 40,
+    "platform_name": "WHATCHA",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 143,
+    "movie_id": 40,
+    "platform_name": "TVING",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 144,
+    "movie_id": 40,
+    "platform_name": "WAVVE",
+    "platform_url": "https://www.wavve.com/"
+  }
+]

@@ -1,0 +1,158 @@
+[
+  {
+    "preference_id": 1,
+    "user_id": 1,
+    "genre_id": 10749,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 2,
+    "user_id": 1,
+    "genre_id": 10402,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 3,
+    "user_id": 1,
+    "genre_id": 35,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 4,
+    "user_id": 1,
+    "genre_id": 18,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 5,
+    "user_id": 2,
+    "genre_id": 35,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 6,
+    "user_id": 2,
+    "genre_id": 10402,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 7,
+    "user_id": 2,
+    "genre_id": 18,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 8,
+    "user_id": 3,
+    "genre_id": 28,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 9,
+    "user_id": 3,
+    "genre_id": 80,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 10,
+    "user_id": 3,
+    "genre_id": 99,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 11,
+    "user_id": 3,
+    "genre_id": 16,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 12,
+    "user_id": 4,
+    "genre_id": 99,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 13,
+    "user_id": 4,
+    "genre_id": 10402,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 14,
+    "user_id": 4,
+    "genre_id": 10752,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 15,
+    "user_id": 5,
+    "genre_id": 10749,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 16,
+    "user_id": 5,
+    "genre_id": 35,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 17,
+    "user_id": 5,
+    "genre_id": 10402,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 18,
+    "user_id": 5,
+    "genre_id": 18,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 19,
+    "user_id": 6,
+    "genre_id": 28,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 20,
+    "user_id": 6,
+    "genre_id": 80,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 21,
+    "user_id": 6,
+    "genre_id": 12,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 22,
+    "user_id": 6,
+    "genre_id": 10752,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 23,
+    "user_id": 6,
+    "genre_id": 37,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 24,
+    "user_id": 7,
+    "genre_id": 10749,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 25,
+    "user_id": 7,
+    "genre_id": 35,
+    "preference_value": 1
+  },
+  {
+    "preference_id": 26,
+    "user_id": 7,
+    "genre_id": 10402,
+    "preference_value": 1
+  }
+]
