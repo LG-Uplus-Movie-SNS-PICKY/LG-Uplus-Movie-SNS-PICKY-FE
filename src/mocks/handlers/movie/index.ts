@@ -412,10 +412,12 @@ const movieHandlers: HttpHandler[] = [
   ),
 
   // 영화 정보 수정 API(Mocking Object)
-  http.patch(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId`,
-    ({ params, request }) => {}
-  ),
+  // http.patch(
+  //   `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId`,
+  //   ({ params, request }) => {
+
+  //   }
+  // ),
 
   // 영화 Top 10 조회 API(Mocking Object)
   http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`, ({}) => {
