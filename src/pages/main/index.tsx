@@ -18,13 +18,9 @@ function Main() {
     // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
     const fetch = async () => {
       const data = await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/1/like`,
-          {},
-          {
-            headers: { Authorization: "1" },
-          }
-        )
+        .delete(`${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/2`, {
+          headers: { Authorization: "1" },
+        })
         .then((res) => res.data);
       console.log(data);
     };

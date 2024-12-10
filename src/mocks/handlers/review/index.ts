@@ -1,6 +1,7 @@
 import { http, HttpHandler, HttpResponse } from "msw";
 import response from "./resposneData.json";
 
+import user from "@constants/json/user.json";
 import lineReview from "@constants/json/line-review/lineReviews.json";
 
 import { isEmpty } from "lodash";
@@ -149,6 +150,8 @@ const reviewHandler: HttpHandler[] = [
   ),
 
   // 사용자가 작성한 한줄평 목록 조회
+  // param = size: 가져올 데이터 개수, lastReviewId: 제일 마지막에 본 리뷰 ID, lastCreatedAt: 제일 마지막에 본 리뷰 Date
+  // headers -> 필수
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:nickname`,
     ({ params, request }) => {
@@ -167,6 +170,8 @@ const reviewHandler: HttpHandler[] = [
         );
       }
 
+      const userInfo = user.find((user) => user.user_nickname === nickname);
+
       const url = new URL(request.url);
       const size = Number(url.searchParams.get("size")) || 10; // 데이터를 보내줄 개수 (기본값: 10개)
       const lastReviewId = Number(url.searchParams.get("lastReviewId")) || null;
@@ -175,7 +180,7 @@ const reviewHandler: HttpHandler[] = [
 
       // 현재 사용자가 작성한 한줄평 조회
       let filterLineReview = lineReview.filter(
-        (review) => review.writer_nickname === nickname
+        (review) => review.user_id === userInfo?.user_id
       );
 
       // 커서 기반 필터링(lastCreatedAt을 통해서 해당 날짜 이후 데이터 필터링)
@@ -226,61 +231,55 @@ const reviewHandler: HttpHandler[] = [
     }
   ),
 
-  // 사용자가 작성한 한줄평 목록 조회
-  // ${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:nickname
-  // param = size: 가져올 데이터 개수, lastReviewId: 제일 마지막에 본 리뷰 ID, lastCreatedAt: 제일 마지막에 본 리뷰 Date
-  // headers -> 필수
-  /*
-  
-      {
-        "size": 10,
-        "content": [
-          {
-            "id": 0,
-            "writerNickname": "string",
-            "userId": 0,
-            "movieId": 0,
-            "rating": 0,
-            "context": "string",
-            "isSpoiler": true,
-            "likes": 0,
-            "dislikes": 0,
-            "createdAt": "2024-12-10T08:18:09.435Z"
-          }
-        ],
-        "number": 0, // 현재 페이지 번호
-        // 처리안해도 되는 데이터
-        "sort": {
-          "empty": true,
-          "sorted": true,
-          "unsorted": true
-        },
-        "numberOfElements": 0, // 현재 페이지의 항목 수
-        
-        // 페이지 정보
-        "pageable": {
-          "offset": 0,
-          "sort": {
-            "empty": true,
-            "sorted": true,
-            "unsorted": true
-          },
-          "paged": true,
-          "pageNumber": 0,
-          "pageSize": 0,
-          "unpaged": true
-        },
-
-        "first": true, // 첫 번째 페이지 여부
-        "last": true, // 마지막 페이지 여부
-        "empty": true // 데이터가 비어있는지 여부
-      }
-  
-  */
-
   // 사용자가 작성한 한줄평 삭제
   // delete!  /api/v1/linereview/{lineReviewId}
   // isDelete = !isDelete
+  http.delete(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:lineReviewId`,
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { lineReviewId } = params;
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // Authorization 또는 lineReviewId 보내지 않은 경우
+      if (!authorization || !lineReviewId) {
+        return HttpResponse.json(
+          {
+            message:
+              "Authorization 값을 추가 또는 Path Validation으로 nickname 값을 추가했는지 확인해주세요.",
+            errorCode: "ERR_EMPTY_BODY_AUTH",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      // Path Validation으로 입력된 한줄평 정보를 찾는다.
+      const review = lineReview.find(
+        (review) =>
+          review.line_review_id === Number(lineReviewId) &&
+          review.user_id === userInfo?.user_id
+      );
+      if (isEmpty(review)) {
+        // 삭제하려는 한줄평 정보가 없을 경우
+        return HttpResponse.json(
+          {
+            message:
+              "삭제하려는 한줄평 정보를 찾을 수 없습니다. 요청된 ID를 확인하세요.",
+            errorCode: "REVIEW_NOT_FOUND",
+          },
+          { status: 404, statusText: "Not Found" }
+        );
+      }
+
+      review.is_delete = true; // 한줄평 논리적 삭제로 수정
+
+      // 한줄평 정보가 있을 경우
+      return HttpResponse.json(
+        { message: "해당 한줄평이 성공적으로 삭제되었습니다." },
+        { status: 200 }
+      );
+    }
+  ),
 
   // 좋아요 / 싫어요
   // 자기 글 안되고, 중복 불가능(좋아요 / 싫어요 취소), 좋아요 누르고 싫어요 누르면 자동으로 업데이트
