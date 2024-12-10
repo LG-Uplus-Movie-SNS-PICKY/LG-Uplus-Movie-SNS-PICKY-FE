@@ -19,7 +19,7 @@ function Main() {
     const fetch = async () => {
       const data = await axios
         .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/1/like`,
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/3/like`,
           {},
           {
             headers: { Authorization: "1" },

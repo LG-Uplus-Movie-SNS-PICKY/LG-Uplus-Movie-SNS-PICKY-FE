@@ -249,19 +249,40 @@ const movieHandlers: HttpHandler[] = [
         );
       }
 
-      console.log(movieLikes.length);
+      const movieLikeInfo = movieLikes.find(
+        (like) =>
+          like.movie_id === Number(movieId) && like.user_id === userInfo.user_id
+      );
 
-      // 권환이 있을 경우 좋아요를 개수를 카운팅 시킨다.
-      movieLikes.push({
-        movie_like_id: movieLikes.length + 1,
-        user_id: userInfo.user_id,
-        movie_id: Number(movieId),
-      });
+      // 사용자가 해당 영화를 좋아요를 누르지 않은 경우
+      if (isEmpty(movieLikeInfo)) {
+        // 권환이 있을 경우 좋아요를 개수를 카운팅 시킨다.
+        movieLikes.push({
+          movie_like_id: movieLikes.length + 1,
+          user_id: userInfo.user_id,
+          movie_id: Number(movieId),
+        });
 
-      console.log(movieLikes.length);
-      console.log(movieLikes);
+        return HttpResponse.json(
+          { success: true, message: "좋아요 추가" },
+          { status: 200 }
+        );
+      } else {
+        // 사용자가 해당 영화를 좋아요를 누른 경우
+        for (let i = 0; i < movieLikes.length; i++) {
+          if (
+            movieLikes[i].movie_id === Number(movieId) &&
+            movieLikes[i].user_id === userInfo.user_id
+          ) {
+            movieLikes.splice(i, 1);
+          }
+        }
 
-      return HttpResponse.json({ data: true }, { status: 200 });
+        return HttpResponse.json(
+          { success: true, message: "좋아요 삭제" },
+          { status: 200 }
+        );
+      }
     }
   ),
 
