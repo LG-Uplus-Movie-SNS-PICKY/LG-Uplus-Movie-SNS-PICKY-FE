@@ -10,13 +10,10 @@ import {
   subtitleStyle,
   movieContainerStyle,
   movieGridStyle,
-  movieCardStyle,
-  movieImageStyle,
-  movieTitleStyle,
-  movieRatingStyle,
   headerWrapperStyle,
 } from "./index.styles";
 import SEO from "@components/seo";
+import { MovieItem } from "@stories/movie-item";
 
 interface Movie {
   movieId: number;
@@ -44,8 +41,6 @@ export default function MovieRecommendationPage() {
         }
       );
 
-      console.log("받아온 영화 추천 데이터:", response.data);
-
       const movieData = response.data.data.map((movie: Movie) => ({
         movieId: movie.movieId,
         title: movie.title,
@@ -64,10 +59,6 @@ export default function MovieRecommendationPage() {
   useEffect(() => {
     fetchRecommendedMovies();
   }, [fetchRecommendedMovies]);
-
-  const handleMovieClick = (id: number) => {
-    navigate(`/movie/${id}`);
-  };
 
   return (
     <>
@@ -100,18 +91,16 @@ export default function MovieRecommendationPage() {
               {movies.map((movie) => (
                 <div
                   key={movie.movieId}
-                  onClick={() => handleMovieClick(movie.movieId)}
-                  css={movieCardStyle}
+                  onClick={() => navigate(`/movie/${movie.movieId}`)}
+                  style={{ cursor: "pointer" }}
                 >
-                  <img
+                  <MovieItem
+                    type="rate"
                     src={movie.posterUrl}
-                    alt={movie.title}
-                    css={movieImageStyle}
+                    title={movie.title}
+                    rate={movie.totalRating}
+                    name={movie.title}
                   />
-                  <div css={movieTitleStyle}>{movie.title}</div>
-                  <div css={movieRatingStyle}>
-                   {movie.totalRating}
-                  </div>
                 </div>
               ))}
             </div>
