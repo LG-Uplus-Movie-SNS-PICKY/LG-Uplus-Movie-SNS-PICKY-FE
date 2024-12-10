@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { MovieItem } from "@stories/movie-item";
 import {
   containerStyle,
@@ -14,33 +15,50 @@ import {
 } from "./index.styles";
 import SEO from "@components/seo";
 
-export default function MovieRecommendationPage() {
-  const username = "최우진";
-  const navigate = useNavigate();
+// 영화 데이터 타입 정의
+interface Movie {
+  movieId: number;
+  title: string;
+  posterUrl: string;
+}
 
-  const movies = [
-    {
-      id: 1,
-      type: "rate",
-      src: "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      title: "타이타닉",
-      name: "타이타닉",
-    },
-    {
-      id: 2,
-      type: "rate",
-      src: "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      title: "인사이드 아웃 2",
-      name: "인사이드 아웃 2",
-    },
-    {
-      id: 3,
-      type: "rate",
-      src: "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      title: "어바웃 타임",
-      name: "어바웃 타임",
-    },
-  ];
+export default function MovieRecommendationPage() {
+  const username = "최우진"; // 사용자 이름
+  const navigate = useNavigate();
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const accessToken = sessionStorage.getItem("accessToken");
+
+  const fetchRecommendedMovies = useCallback(async () => {
+    try {
+      const response = await axios.get<Movie[]>(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      console.log("받아온 영화 추천 데이터:", response.data);
+
+      // API 응답 데이터를 상태로 저장
+      const movieData = response.data.map((movie) => ({
+        movieId: movie.movieId,
+        title: movie.title,
+        posterUrl: movie.posterUrl,
+      }));
+      setMovies(movieData);
+      setError(null); // 오류 초기화
+    } catch (err) {
+      console.error("영화 추천 데이터를 가져오는 중 오류 발생:", err);
+      setError("영화 추천 데이터를 불러오는 데 문제가 발생했습니다.");
+    }
+  }, [accessToken]); // 의존성: accessToken
+
+  useEffect(() => {
+    fetchRecommendedMovies();
+  }, [fetchRecommendedMovies]); // 의존성 배열에 fetchRecommendedMovies 추가
 
   const handleMovieClick = (id: number) => {
     navigate(`/movie/${id}`);
@@ -68,27 +86,34 @@ export default function MovieRecommendationPage() {
           </header>
         </div>
 
+        {/* 오류 메시지 */}
+        {error && (
+          <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
+            {error}
+          </div>
+        )}
+
         {/* 영화 리스트 */}
-        <div css={movieContainerStyle}>
-          {[...Array(4)].map((_, rowIndex) => (
-            <div css={movieWrapperStyle} key={rowIndex}>
-              {movies.map((movie, index) => (
+        {!error && movies.length > 0 && (
+          <div css={movieContainerStyle}>
+            <div css={movieWrapperStyle}>
+              {movies.map((movie) => (
                 <div
-                  key={`${rowIndex}-${index}`}
-                  onClick={() => handleMovieClick(movie.id)}
+                  key={movie.movieId}
+                  onClick={() => handleMovieClick(movie.movieId)}
                   style={{ cursor: "pointer" }}
                 >
                   <MovieItem
                     type="rate"
-                    src={movie.src}
+                    src={movie.posterUrl}
                     title={movie.title}
-                    name={movie.name}
+                    name={movie.title}
                   />
                 </div>
               ))}
             </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
     </>
   );
