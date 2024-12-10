@@ -229,7 +229,61 @@ const movieHandlers: HttpHandler[] = [
   // 영화 좋아요 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId/like`,
-    ({ params, request }) => {}
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { movieId } = params;
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (
+        !authorization ||
+        isEmpty(userInfo) ||
+        userInfo.user_role !== "Admin"
+      ) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 또는 어드민 계정인지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      const movieLikeInfo = movieLikes.find(
+        (like) =>
+          like.movie_id === Number(movieId) && like.user_id === userInfo.user_id
+      );
+
+      // 사용자가 해당 영화를 좋아요를 누르지 않은 경우
+      if (isEmpty(movieLikeInfo)) {
+        // 권환이 있을 경우 좋아요를 개수를 카운팅 시킨다.
+        movieLikes.push({
+          movie_like_id: movieLikes.length + 1,
+          user_id: userInfo.user_id,
+          movie_id: Number(movieId),
+        });
+
+        return HttpResponse.json(
+          { success: true, message: "좋아요 추가" },
+          { status: 200 }
+        );
+      } else {
+        // 사용자가 해당 영화를 좋아요를 누른 경우
+        for (let i = 0; i < movieLikes.length; i++) {
+          if (
+            movieLikes[i].movie_id === Number(movieId) &&
+            movieLikes[i].user_id === userInfo.user_id
+          ) {
+            movieLikes.splice(i, 1);
+          }
+        }
+
+        return HttpResponse.json(
+          { success: true, message: "좋아요 삭제" },
+          { status: 200 }
+        );
+      }
+    }
   ),
 
   // 영화 상세 정보 조회 API(Mocking Object)
@@ -271,11 +325,12 @@ const movieHandlers: HttpHandler[] = [
           // 영화 정보
           movie_info: {
             id: movieInfo.movie_id,
-            original_title: movieInfo.movie_original_title,
+            original_title: movieInfo.movie_title,
             release_date: movieInfo.movie_release_data,
             poster_path: movieInfo.movie_poster_url,
             overview: movieInfo.movie_plot,
             runtime: movieInfo.movie_running_time,
+            rating: movieInfo.movie_total_rating,
 
             // 장르 정보 필터링
             genres: [
@@ -358,10 +413,12 @@ const movieHandlers: HttpHandler[] = [
   ),
 
   // 영화 정보 수정 API(Mocking Object)
-  http.patch(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId`,
-    ({ params, request }) => {}
-  ),
+  // http.patch(
+  //   `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId`,
+  //   ({ params, request }) => {
+
+  //   }
+  // ),
 
   // 영화 Top 10 조회 API(Mocking Object)
   http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`, ({}) => {
@@ -388,7 +445,7 @@ const movieHandlers: HttpHandler[] = [
 
   // 영화 추천 리스트 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/user/recommend`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
     ({ request }) => {
       const authorization = request.headers.get("Authorization");
       const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");

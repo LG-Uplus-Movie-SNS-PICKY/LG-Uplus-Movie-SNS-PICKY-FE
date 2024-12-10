@@ -6,11 +6,13 @@ import movieHandelrs from "./handlers/movie/index";
 // import movieHandelrs from "./handlers/movie/genre";
 import playlistHandler from "./handlers/movie/playlist";
 import authHandler from "./handlers/auth";
+import userHandler from "./handlers/user";
 
 export const worker = setupWorker(
   ...boardHandlers,
   ...reviewHandler,
   ...movieHandelrs,
   ...playlistHandler,
-  ...authHandler
+  ...authHandler,
+  ...userHandler
 );
