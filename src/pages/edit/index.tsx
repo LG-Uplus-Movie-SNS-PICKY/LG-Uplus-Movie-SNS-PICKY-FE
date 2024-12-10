@@ -210,7 +210,8 @@ export default function ProfileEditPage() {
       }
 
       const response = await axios.patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+        // `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+        `http://43.202.51.30/api/v1/user`,
         payload,
         {
           headers: {
