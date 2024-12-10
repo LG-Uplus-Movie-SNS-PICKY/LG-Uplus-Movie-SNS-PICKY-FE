@@ -357,7 +357,7 @@ const movieHandlers: HttpHandler[] = [
     }
   ),
 
-  // 영화 정보 업데이트 API(Mocking Object)
+  // 영화 정보 수정 API(Mocking Object)
   http.patch(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId`,
     ({ params, request }) => {}

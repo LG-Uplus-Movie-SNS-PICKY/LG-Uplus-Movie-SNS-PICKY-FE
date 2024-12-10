@@ -1,5 +1,5 @@
 import { http, HttpHandler, HttpResponse } from "msw";
-import genres from "@constants/json/genres.json";
+import genres from "@constants/json/genres/genres.json";
 
 // Movie 관련 모킹 API(Mocking Object) 설계
 const movieHandelrs: HttpHandler[] = [
