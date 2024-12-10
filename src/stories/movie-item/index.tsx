@@ -17,6 +17,7 @@ export interface MovieItemProps {
   comment?: number;
   state?: string;
   name: string;
+  style?: React.CSSProperties;
 }
 
 interface RateComponentProps {

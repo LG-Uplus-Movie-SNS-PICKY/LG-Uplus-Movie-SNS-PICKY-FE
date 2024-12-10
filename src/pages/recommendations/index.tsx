@@ -100,6 +100,7 @@ export default function MovieRecommendationPage() {
                     title={movie.title}
                     rate={movie.totalRating}
                     name={movie.title}
+                    style={{ width: "90px" }}
                   />
                 </div>
               ))}
