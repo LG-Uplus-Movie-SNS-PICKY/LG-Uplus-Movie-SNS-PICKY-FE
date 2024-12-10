@@ -3,8 +3,14 @@ import response from "./resposneData.json";
 
 import user from "@constants/json/user.json";
 import lineReview from "@constants/json/line-review/lineReviews.json";
+import lineReviewLikes from "@constants/json/line-review/lineReviewLikes.json";
 
 import { isEmpty } from "lodash";
+
+interface ReviewLikeBodyTypes {
+  lineReviewId: number;
+  preference: "LIKE" | "DISLIKE";
+}
 
 interface bodyTypes {
   [key: string]: unknown;
@@ -284,6 +290,98 @@ const reviewHandler: HttpHandler[] = [
   // 좋아요 / 싫어요
   // 자기 글 안되고, 중복 불가능(좋아요 / 싫어요 취소), 좋아요 누르고 싫어요 누르면 자동으로 업데이트
   // 보내야되는 값은  "lineReviewId": 1, "preference": "LIKE, DISLIKE"
+  http.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereviewlike`,
+    async ({ request }) => {
+      const authorization = request.headers.get("Authorization");
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const body = (await request.json()) as ReviewLikeBodyTypes;
+
+      // Authorization 또는 lineReviewId 보내지 않은 경우
+      if (!authorization || !userInfo || isEmpty(body)) {
+        return HttpResponse.json(
+          {
+            message:
+              "Authorization 값을 추가 또는 로그인을 했는지 확인해주세요. 또는 body(lineReviewId, preference)를 추가했는지 확인해주세요.",
+            errorCode: "ERR_EMPTY_BODY_AUTH",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      // 한줄평 정보를 Request Body를 통해 얻은 lineReviewId 값을 통해 해당 한줄평 정보를 얻는다.
+      const reviewInfo = lineReview.find(
+        (review) => review.line_review_id === body.lineReviewId
+      );
+
+      // #1. 한줄평이 현재 로그인한 사용자가 자기 글에 좋아요 또는 싫어요를 누르는 경우 -> 승인 X
+      if (reviewInfo?.user_id === userInfo.user_id) {
+        return HttpResponse.json(
+          {
+            message:
+              "자신이 등록한 한줄평에는 좋아요를 누를 수 없습니다. 다른 사용자의 한줄평을 확인해주세요.",
+            errorCode: "ERR_SELF_LIKE_NOT_ALLOWED",
+          },
+          { status: 403, statusText: "Forbidden" }
+        );
+      }
+
+      // body로 넘겨받은 lineReviewId를 통해 사용자가 해당 한줄평에 평가를 남겼는지 확인하나.
+      const reviewLikeInfo = lineReviewLikes.find(
+        (like) =>
+          like.line_review_id === body.lineReviewId &&
+          like.user_id === userInfo.user_id
+      );
+
+      // #2. 사용자가 해당 한줄평에 평가를 남기지 않았을 경우 -> 평가 추가
+      if (isEmpty(reviewLikeInfo)) {
+        // 사용자가 등록한 평가를 추가한다.
+        lineReviewLikes.push({
+          line_review_id: body.lineReviewId,
+          line_review_like_id: lineReviewLikes.length + 1,
+          preference: body.preference,
+          user_id: userInfo.user_id,
+        });
+
+        // 이후 성공 응답을 반환한다.
+        return HttpResponse.json(
+          { message: `REQUEST_FRONT_SUCCESS(${body.preference} 추가)` },
+          { status: 200 }
+        );
+      }
+
+      // #3. 사용자가 한줄평에 대한 평가를 남긴 적이 있을 경우
+      else {
+        // #3-1. 중복 클릭 -> 좋아요 / 싫어요 취소
+        if (reviewLikeInfo.preference === body.preference) {
+          for (let i = 0; i < lineReviewLikes.length; i++) {
+            if (
+              lineReviewLikes[i].line_review_like_id ===
+              reviewLikeInfo.line_review_like_id
+            ) {
+              lineReviewLikes.splice(i, 1);
+
+              return HttpResponse.json(
+                { message: `REQUEST_FRONT_SUCCESS(${body.preference} 취소)` },
+                { status: 200 }
+              );
+            }
+          }
+        }
+
+        // #3-2. 반대값으로 수정한 경우
+        else {
+          reviewLikeInfo.preference =
+            body.preference === "LIKE" ? "DISLIKE" : "LIKE";
+
+          return HttpResponse.json(
+            { message: `REQUEST_FRONT_SUCCESS(${body.preference} 수정)` },
+            { status: 200 }
+          );
+        }
+      }
+    }
+  ),
 ];
 
 export default reviewHandler;
