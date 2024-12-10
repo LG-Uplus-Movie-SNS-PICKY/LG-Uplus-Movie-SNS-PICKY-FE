@@ -1,7 +1,7 @@
 import { http, HttpHandler, HttpResponse } from "msw";
 import response from "./resposneData.json";
 
-// import lineReview from "@constants/json/board/board_comments.json";
+import lineReview from "@constants/json/line-review/lineReviews.json";
 
 import { isEmpty } from "lodash";
 
@@ -174,7 +174,55 @@ const reviewHandler: HttpHandler[] = [
         Number(url.searchParams.get("lastCreatedAt")) || null;
 
       // 현재 사용자가 작성한 한줄평 조회
-      // let filterLineReview =
+      let filterLineReview = lineReview.filter(
+        (review) => review.writer_nickname === nickname
+      );
+
+      // 커서 기반 필터링(lastCreatedAt을 통해서 해당 날짜 이후 데이터 필터링)
+      if (lastCreatedAt && lastReviewId) {
+        filterLineReview = filterLineReview.filter((review) => {
+          if (new Date(review.created_at) < new Date(lastCreatedAt)) {
+            return true;
+          } else if (
+            new Date(review.created_at).getTime() ===
+            new Date(lastCreatedAt).getTime()
+          ) {
+            return review.line_review_id < lastReviewId;
+          }
+
+          return false;
+        });
+      }
+
+      // 최신순으로 내림차순 정렬
+      const paginatedReviews = filterLineReview
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+        .slice(0, size);
+
+      return HttpResponse.json(
+        {
+          size,
+          content: paginatedReviews,
+          lastCursor:
+            paginatedReviews.length > 0
+              ? {
+                  lastCreatedAt:
+                    paginatedReviews[paginatedReviews.length - 1].created_at,
+                  lastReviewId:
+                    paginatedReviews[paginatedReviews.length - 1]
+                      .line_review_id,
+                }
+              : null,
+          numberOfElements: paginatedReviews.length,
+          first: !lastCreatedAt && !lastReviewId,
+          last: paginatedReviews.length < size,
+          empty: paginatedReviews.length === 0,
+        },
+        { status: 200 }
+      );
     }
   ),
 
