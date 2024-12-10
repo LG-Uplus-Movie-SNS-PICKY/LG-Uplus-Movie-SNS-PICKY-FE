@@ -7,8 +7,15 @@ import bestMovies from "@pages/main/constants";
 import { MovieItem } from "@stories/movie-item";
 import Emoji from "@pages/signup/components/emoji";
 import GenreButtons from "@components/genre";
+import { useNavigate } from "react-router-dom";
 
 function GenresMovie() {
+  const navigate = useNavigate();
+
+  const GenreOnClick = (id: number) => {
+    navigate(`/genre/${id}`);
+  };
+
   return (
     <div css={styles.genreContainer()}>
       <div css={styles.genreCard()}>
@@ -20,7 +27,7 @@ function GenresMovie() {
 
         {/* Genres Button */}
         <div className="genres">
-          <GenreButtons />
+          <GenreButtons onClick={GenreOnClick} />
         </div>
 
         {/* Select Genre Movies */}
