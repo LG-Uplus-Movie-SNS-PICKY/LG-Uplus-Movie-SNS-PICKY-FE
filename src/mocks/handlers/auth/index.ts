@@ -4,6 +4,7 @@ import user from "@constants/json/user.json";
 import { isEmpty } from "lodash";
 
 const authHandler: HttpHandler[] = [
+  // 로그인
   http.patch(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
     async ({ request }) => {
@@ -50,6 +51,7 @@ const authHandler: HttpHandler[] = [
     }
   ),
 
+  // 프로필 페이지 접속 시 해당 사용자 유무 파악
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/user/validate-user`,
     ({ params, request }) => {
@@ -68,8 +70,8 @@ const authHandler: HttpHandler[] = [
         );
       }
 
-      const userInfo = JSON.parse(authorization); // Authorization 정보에 등록된 사용자 정보를 가져온다.
-      const { nickname } = params;
+      const url = new URL(request.url);
+      const nickname = url.searchParams.get("nickname");
 
       // 사용자 정보를 가져온다.
       const findUser = user.find((user) => user.user_nickname === nickname);
@@ -87,7 +89,7 @@ const authHandler: HttpHandler[] = [
       return HttpResponse.json(
         {
           message:
-            userInfo.user_nickname !== loginUser.user_nickname
+            findUser.user_nickname !== loginUser.user_nickname
               ? "OUTER_USER"
               : "USER",
         },

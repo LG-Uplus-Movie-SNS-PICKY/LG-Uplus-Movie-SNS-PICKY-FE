@@ -80,6 +80,8 @@ export default {
       justify-content: space-around;
       gap: 4px;
 
+      padding: 8px 4px;
+
       & > .line-review-info {
         font-size: 12px;
 
@@ -106,7 +108,7 @@ export default {
       & > .sub-info {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 4px;
 
         font-size: 10px;
         color: #756262;
@@ -142,23 +144,104 @@ export default {
     `;
   },
 
-  reviewDeleteBtn(): SerializedStyles {
+  // reviewDeleteBtn(): SerializedStyles {
+  //   return css`
+  //     position: absolute;
+
+  //     top: 1px;
+  //     right: 4px;
+
+  //     padding: 0 8px;
+
+  //     & > svg {
+  //       cursor: pointer;
+  //       transition: all 0.3s;
+
+  //       &:hover path {
+  //         fill: #191919;
+  //       }
+  //     }
+  //   `;
+  // },
+
+  reviewBtnContainer(): SerializedStyles {
     return css`
       position: absolute;
-
-      top: 1px;
+      top: 4px;
       right: 4px;
-
-      padding: 0 8px;
-
-      & > svg {
-        cursor: pointer;
-        transition: all 0.3s;
-
-        &:hover path {
-          fill: #191919;
-        }
-      }
     `;
   },
+
+  reviewEditBtn(): SerializedStyles {
+    return css`
+      text-align: center;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      background-color: #FF084A;
+      padding: 2px 4px;
+      margin-bottom: 8px;
+      border: 1px solid #FF084A;
+      
+      &:hover {
+      color: #FF084A;
+      background-color: #FFFFFF;
+      border-radius: 4px;
+    }
+    `;
+  },
+
+  reviewDeleteBtn(): SerializedStyles {
+    return css`
+      text-align: center;
+      color: #FF084A;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      background-color: #FFFFFF;
+      padding: 2px 4px;
+      border: 1px solid #FF084A;
+
+      &:hover {
+      color: #FFFFFF;
+      background-color: #FF084A;
+      border: 1px solid #FF084A;
+    }
+    `;
+  },
+
+  modalContainer(): SerializedStyles {
+    return css`
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.2);
+      z-index: 10000;
+      padding: 0 32px;
+    `;
+  },
+
+  modalContent(): SerializedStyles {
+    return css`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      position: relative;
+      max-width: 430px;
+      width: 100%;
+    `;
+  },
+
+  toastContainer(): SerializedStyles {
+    return css`
+      z-index: 10001;
+    `;
+  }
 };
