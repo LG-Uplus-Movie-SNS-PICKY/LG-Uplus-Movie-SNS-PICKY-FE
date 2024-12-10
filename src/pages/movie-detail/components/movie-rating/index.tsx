@@ -25,6 +25,16 @@ interface MovieRatingProps {
 
 const MovieRating = ({ rating }: MovieRatingProps) => {
     const totalStars = 5;
+
+    // 각 별의 채워짐 단계를 계산
+    const starLevels = Array.from({ length: totalStars }).map((_, index) => {
+        const starPosition = index + 1;
+        const difference = rating - (starPosition - 1);
+        if (difference >= 1) return 6; // 완전히 채워진 별
+        if (difference > 0) return Math.round(difference * 6); // 부분적으로 채워진 별
+        return 0; // 빈 별
+    });
+
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5 ? 1 : 0;
     const emptyStars = totalStars - fullStars - halfStar;
@@ -43,12 +53,8 @@ const MovieRating = ({ rating }: MovieRatingProps) => {
                 <PeopleText>(2000명)</PeopleText>
             </RatingTextContainer>
             <RatingStarContainer>
-                {Array.from({ length: fullStars }).map((_, index) => (
-                    <Star key={`full-${index}`} filled={true} />
-                ))}
-                {halfStar === 1 && <Star key="half" filled={false} filledHalf={true} />}
-                {Array.from({ length: emptyStars }).map((_, index) => (
-                    <Star key={`empty-${index}`} filled={false} />
+                {starLevels.map((level, index) => (
+                    <Star key={index} filledLevel={level} />
                 ))}
             </RatingStarContainer>
             <TabBarContainer>

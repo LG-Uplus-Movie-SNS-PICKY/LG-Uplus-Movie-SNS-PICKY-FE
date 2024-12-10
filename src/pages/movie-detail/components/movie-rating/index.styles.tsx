@@ -48,7 +48,7 @@ export const RatingStarContainer = styled.div`
     border-top: solid 1px #D9D9D9;
 `;
 
-export const Star = styled.div<{ filled: boolean, filledHalf?: boolean }>`
+export const Star = styled.div<{ filledLevel: number }>`
   width: 45px;
   height: 45px;
   clip-path: polygon(
@@ -63,7 +63,12 @@ export const Star = styled.div<{ filled: boolean, filledHalf?: boolean }>`
     2% 35%,
     39% 35%
   );
-  background-color: ${props => props.filled ? '#FFEB00' : props.filledHalf ? 'linear-gradient(to right, #FFEB00 50%, #C8C8C8 50%)' : '#C8C8C8'};
+  background: linear-gradient(
+    to right,
+    #FFEB00 ${(props) => (props.filledLevel * 100) / 6}%,
+    #C8C8C8 ${(props) => (props.filledLevel * 100) / 6}%
+  );
+  background-clip: content-box;
 `;
 
 export const TabBarContainer = styled.div`

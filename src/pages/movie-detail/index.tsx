@@ -1,5 +1,6 @@
 // pages/MovieDetail/index.tsx
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import MovieHeader from "./components/movie-header";
 import MoviePoster from "./components/movie-poster";
 import MovieRating from "./components/movie-rating";
@@ -41,26 +42,17 @@ interface MovieDetailProps {
 }
 
 function MovieDetail(props: MovieDetailProps) {
+  const { id } = useParams(); // URL에서 movieId 추출
+  console.log("movieId:", id); // movieId가 undefined인지 확인
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<string>("home");
+  const [movieData, setMovieData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleTabChange = (
-    event: React.MouseEvent<HTMLDivElement>,
-    name: string
-  ) => {
-    setActiveTab(name);
-  };
-
-  const handleReviewClick = () => {
-    navigate("/movie/:id/review");
-  };
-
-  // const { ott } = props;
-  // const ottData = ott?.map(name => ({
-  //     name,
-  //     url: ottUrls[name] || "URL not found" // 매핑 객체를 사용하여 URL 동적 할당
-  // }));
+  // const handleReviewClick = () => {
+  //   navigate(`/movie/${movieId}/review`); // movieId 변수를 사용
+  // };
 
   // 더미 데이터
   const dummyData = {
@@ -143,28 +135,64 @@ function MovieDetail(props: MovieDetailProps) {
     ],
   };
 
+  useEffect(() => {
+    // API 호출
+    const fetchMovieData = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`,
+          {
+            headers: { Authorization: "123" },
+          }
+        ).then(res => res.data);
+
+        console.log(response)
+
+        setMovieData(response.movie_info); // API에서 반환된 데이터에 맞게 설정
+        setLoading(false);
+      } catch (err: any) {
+        setError(err.response?.message || "Failed to fetch movie data");
+        setLoading(false);
+      }
+    };
+
+    fetchMovieData();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!movieData) {
+    return <div>No movie data found</div>;
+  }
+
   return (
     <>
       <SEO
-        title={`${dummyData.title}(${dummyData.year})`}
-        description={dummyData.content}
-        image={dummyData.imageUrl}
+        title={`${movieData.original_title}(${movieData.release_date.split("-")[0]})`}
+        description={movieData.overview}
+        image={movieData.poster_path}
         url={`http://localhost:5173/${location.pathname}`}
       />
 
       <MovieDetailContainer>
         <MovieHeader />
         <MoviePoster
-          imageUrl={dummyData.imageUrl}
-          title={dummyData.title}
-          year={dummyData.year}
-          nation={dummyData.nation}
-          genre={dummyData.genre}
+          imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
+          title={movieData.original_title}
+          year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
+          nation="N/A" // nation 정보가 없다면 기본값 설정
+          genre={movieData.genres.map((genre: any) => genre.name).join(", ")} // 장르 이름 표시
           ott={dummyData.ott}
         />
 
-        <MovieRating rating={dummyData.rating} />
-        <MovieInfo content={dummyData.content} castData={dummyData.castData} />
+        <MovieRating rating={movieData.rating || 0} />
+        <MovieInfo content={movieData.overview} castData={movieData.credits.cast} />
         <ReviewHeader>
           <Title>관람평</Title>
           <ReviewCountContainer>
@@ -173,12 +201,12 @@ function MovieDetail(props: MovieDetailProps) {
           </ReviewCountContainer>
         </ReviewHeader>
         <MovieReview reviews={dummyData.reviews} />
-        <Button btnType="More" label="모두 보기" onClick={handleReviewClick} />
+        <Button btnType="More" label="모두 보기"  />
         <MovieFooter
-          year={dummyData.year}
-          production={dummyData.nation}
-          age={dummyData.age}
-          genre={dummyData.genre}
+          year={movieData.release_date.split("-")[0]}
+          production="N/A" // 제작 정보가 없으므로 기본값 설정
+          age="N/A" // 연령 제한 정보가 없으므로 기본값 설정
+          genre={movieData.genres.map((genre: any) => genre.name).join(", ")}
         />
       </MovieDetailContainer>
     </>

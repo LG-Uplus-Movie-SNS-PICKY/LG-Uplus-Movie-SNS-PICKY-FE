@@ -265,6 +265,7 @@ const movieHandlers: HttpHandler[] = [
           { status: 400, statusText: "Invalid Movie ID" }
         );
       }
+
       // response data 구성
       return HttpResponse.json(
         {
