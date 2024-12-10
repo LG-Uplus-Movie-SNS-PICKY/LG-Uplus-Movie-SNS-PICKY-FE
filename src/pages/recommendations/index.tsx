@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { MovieItem } from "@stories/movie-item";
 import {
   containerStyle,
   headerStyle,
@@ -10,7 +9,11 @@ import {
   highlightStyle,
   subtitleStyle,
   movieContainerStyle,
-  movieWrapperStyle,
+  movieGridStyle,
+  movieCardStyle,
+  movieImageStyle,
+  movieTitleStyle,
+  movieRatingStyle,
   headerWrapperStyle,
 } from "./index.styles";
 import SEO from "@components/seo";
@@ -86,38 +89,34 @@ export default function MovieRecommendationPage() {
             </h2>
           </header>
         </div>
-
-        {/* 에러 메시지 */}
-        {error && (
-          <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
-            {error}
-          </div>
-        )}
-
         {/* 영화 리스트 */}
-        {!error && movies.length > 0 && (
-          <div css={movieContainerStyle}>
-            {[...Array(4)].map((_, rowIndex) => (
-              <div css={movieWrapperStyle} key={rowIndex}>
-                {movies.map((movie) => (
-                  <div
-                    key={`${rowIndex}-${movie.movieId}`}
-                    onClick={() => handleMovieClick(movie.movieId)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <MovieItem
-                      type="rate"
-                      src={movie.posterUrl}
-                      title={movie.title}
-                      name={movie.title}
-                      rate={movie.rate}
-                    />
+        <div css={movieContainerStyle}>
+          {error ? (
+            <div style={{ color: "red", textAlign: "center" }}>{error}</div>
+          ) : movies.length === 0 ? (
+            <p>추천할 영화가 없습니다. 나중에 다시 시도해주세요.</p>
+          ) : (
+            <div css={movieGridStyle}>
+              {movies.map((movie) => (
+                <div
+                  key={movie.movieId}
+                  onClick={() => handleMovieClick(movie.movieId)}
+                  css={movieCardStyle}
+                >
+                  <img
+                    src={movie.posterUrl}
+                    alt={movie.title}
+                    css={movieImageStyle}
+                  />
+                  <div css={movieTitleStyle}>{movie.title}</div>
+                  <div css={movieRatingStyle}>
+                    {movie.rate > 0 ? `${movie.rate}/10` : "평점 없음"}
                   </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </>
   );
