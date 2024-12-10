@@ -229,7 +229,40 @@ const movieHandlers: HttpHandler[] = [
   // 영화 좋아요 API(Mocking Object)
   http.post(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId/like`,
-    ({ params, request }) => {}
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { movieId } = params;
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // 권환이 없을 경우 403 에러 발생
+      if (
+        !authorization ||
+        isEmpty(userInfo) ||
+        userInfo.user_role !== "Admin"
+      ) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 또는 어드민 계정인지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      console.log(movieLikes.length);
+
+      // 권환이 있을 경우 좋아요를 개수를 카운팅 시킨다.
+      movieLikes.push({
+        movie_like_id: movieLikes.length + 1,
+        user_id: userInfo.user_id,
+        movie_id: Number(movieId),
+      });
+
+      console.log(movieLikes.length);
+      console.log(movieLikes);
+
+      return HttpResponse.json({ data: true }, { status: 200 });
+    }
   ),
 
   // 영화 상세 정보 조회 API(Mocking Object)
@@ -388,7 +421,7 @@ const movieHandlers: HttpHandler[] = [
 
   // 영화 추천 리스트 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/user/recommend`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
     ({ request }) => {
       const authorization = request.headers.get("Authorization");
       const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
