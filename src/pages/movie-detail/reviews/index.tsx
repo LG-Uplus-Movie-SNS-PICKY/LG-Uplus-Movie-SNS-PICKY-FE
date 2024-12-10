@@ -29,6 +29,7 @@ import SEO from "@components/seo";
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import { useParams } from "react-router-dom";
 
 interface Review {
   id: number;
@@ -41,6 +42,14 @@ interface Review {
   likes: number;
   dislikes: number;
   createdAt: string;
+}
+
+interface MovieInfo {
+  imageUrl: string;
+  title: string;
+  year: string;
+  age: string;
+  runtime: number;
 }
 
 interface ReviewResponse {
@@ -71,15 +80,10 @@ const fetchReviews = async ({
 };
 
 const ReviewsPage = () => {
+  const { id: movieId } = useParams(); // 영화 ID 가져오기
   const [includeSpoilers, setIncludeSpoilers] = useState(false);
   const [sortBy, setSortBy] = useState("likes");
-  const [movieInfo, setMovieInfo] = useState({
-    imageUrl: "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%A0%9C%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
-    title: "어벤져스: 엔드게임",
-    year: "2019",
-    age: "12",
-    runtime: 181,
-  });
+  const [movieInfo, setMovieInfo] = useState<MovieInfo | null>(null);
 
   const {
     data,
@@ -101,6 +105,35 @@ const ReviewsPage = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  
+  useEffect(() => {
+    const fetchMovieInfo = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}`,
+          {
+            headers: { Authorization: "123" },
+          }
+        );
+        const movieData = response.data.movie_info;
+        setMovieInfo({
+          imageUrl: movieData.backdrop_path
+            ? `https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`
+            : "",
+          title: movieData.original_title,
+          year: movieData.release_date.split("-")[0],
+          age: "12", // 임시 설정. 적절히 API에서 가져올 수 있음.
+          runtime: movieData.runtime,
+        });
+      } catch (error) {
+        console.error("영화 정보를 불러오는 중 오류 발생:", error);
+      }
+    };
+
+    if (movieId) {
+      fetchMovieInfo();
+    }
+  }, [movieId]);
 
   const handleToggleSpoilers = () => {
     setIncludeSpoilers(!includeSpoilers);
@@ -130,6 +163,10 @@ const ReviewsPage = () => {
     return `${hours}시간 ${mins}분`;
   };
 
+  if (!movieInfo) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <SEO
@@ -142,7 +179,7 @@ const ReviewsPage = () => {
       <div style={{ width: "100%" }}>
         <MovieReviewContainer>
           <MovieHeader />
-          <MovieReviewsPoster imageUrl={movieInfo.imageUrl} />
+          <MovieReviewsPoster imageUrl={movieInfo.imageUrl || ""} />
           <InfoContainer>
             <Title>{movieInfo.title}</Title>
             <DetailContainer>
