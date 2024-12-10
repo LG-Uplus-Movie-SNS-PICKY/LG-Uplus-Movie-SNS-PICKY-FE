@@ -69,11 +69,12 @@ export const subtitleStyle = css`
   }
 `;
 
-export const movieGridStyle = css`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 16px;
-`;
+export const movieGridStyle = {
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: "16px",
+  justifyContent: "center",
+};
 
 export const movieCardStyle = css`
   display: flex;
@@ -113,10 +114,10 @@ export const movieWrapperStyle = css`
 `;
 
 export const movieContainerStyle = css`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 16px;
-align-self: stretch;
-`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+`;

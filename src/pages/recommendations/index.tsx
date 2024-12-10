@@ -22,7 +22,7 @@ interface Movie {
   movieId: number;
   title: string;
   posterUrl: string;
-  rate: number;
+  totalRating: number;
 }
 
 export default function MovieRecommendationPage() {
@@ -50,7 +50,7 @@ export default function MovieRecommendationPage() {
         movieId: movie.movieId,
         title: movie.title,
         posterUrl: `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`,
-        rate: movie.rate || 0,
+        totalRating: movie.totalRating || 0,
       }));
 
       setMovies(movieData);
@@ -110,7 +110,7 @@ export default function MovieRecommendationPage() {
                   />
                   <div css={movieTitleStyle}>{movie.title}</div>
                   <div css={movieRatingStyle}>
-                    {movie.rate > 0 ? `${movie.rate}/10` : "평점 없음"}
+                    {movie.totalRating > 0 ? `${movie.totalRating}/10` : "평점 없음"}
                   </div>
                 </div>
               ))}
