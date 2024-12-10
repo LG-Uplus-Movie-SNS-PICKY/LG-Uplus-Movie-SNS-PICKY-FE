@@ -191,27 +191,24 @@ export default function ProfileEditPage() {
 
     const payload = {
       name: userData.name,
-      nickname,
+      nickname: nickname,
       profile_url: profileImage,
       birthdate: userData.birthdate,
       gender: userData.gender.toUpperCase(),
       nationality: userData.nationality.toUpperCase(),
-      movieId: userData.movieId,
-      genreId: userData.genreId,
+      movieId: userData.movieId || [],
+      genreId: userData.genreId || [],
     };
 
     console.log(payload);
 
     try {
-      const accessToken = sessionStorage.getItem("accessToken");
-
       if (!accessToken) {
         throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
       }
 
       const response = await axios.patch(
-        // `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        `http://43.202.51.30/api/v1/user`,
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
         payload,
         {
           headers: {
