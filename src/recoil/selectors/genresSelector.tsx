@@ -8,6 +8,6 @@ export const genresSelector = selector({
     // 장르 API 호출
     return await axios
       .get("https://api.picky-movie.com/api/v1/user/genres")
-      .then((res) => res);
+      .then((res) => res.data);
   },
 });
