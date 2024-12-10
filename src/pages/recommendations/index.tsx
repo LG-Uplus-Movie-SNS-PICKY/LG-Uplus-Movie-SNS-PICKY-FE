@@ -15,7 +15,6 @@ import {
 } from "./index.styles";
 import SEO from "@components/seo";
 
-// 영화 데이터 타입 정의
 interface Movie {
   movieId: number;
   title: string;
@@ -23,7 +22,7 @@ interface Movie {
 }
 
 export default function MovieRecommendationPage() {
-  const username = "최우진"; // 사용자 이름
+  const username = "최우진";
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -31,7 +30,7 @@ export default function MovieRecommendationPage() {
 
   const fetchRecommendedMovies = useCallback(async () => {
     try {
-      const response = await axios.get<Movie[]>(
+      const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
         {
           headers: {
@@ -42,23 +41,24 @@ export default function MovieRecommendationPage() {
 
       console.log("받아온 영화 추천 데이터:", response.data);
 
-      // API 응답 데이터를 상태로 저장
-      const movieData = response.data.map((movie) => ({
+      // 데이터 매핑
+      const movieData = response.data.data.map((movie: Movie) => ({
         movieId: movie.movieId,
         title: movie.title,
         posterUrl: movie.posterUrl,
       }));
+
       setMovies(movieData);
-      setError(null); // 오류 초기화
+      setError(null);
     } catch (err) {
       console.error("영화 추천 데이터를 가져오는 중 오류 발생:", err);
       setError("영화 추천 데이터를 불러오는 데 문제가 발생했습니다.");
     }
-  }, [accessToken]); // 의존성: accessToken
+  }, [accessToken]);
 
   useEffect(() => {
     fetchRecommendedMovies();
-  }, [fetchRecommendedMovies]); // 의존성 배열에 fetchRecommendedMovies 추가
+  }, [fetchRecommendedMovies]);
 
   const handleMovieClick = (id: number) => {
     navigate(`/movie/${id}`);
@@ -86,7 +86,6 @@ export default function MovieRecommendationPage() {
           </header>
         </div>
 
-        {/* 오류 메시지 */}
         {error && (
           <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
             {error}
