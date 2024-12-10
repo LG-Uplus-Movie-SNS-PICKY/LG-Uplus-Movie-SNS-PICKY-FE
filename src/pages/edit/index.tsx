@@ -189,13 +189,26 @@ export default function ProfileEditPage() {
       return;
     }
 
+    // 성별 및 국적 값을 변환
+    const genderMap: { 남자: string; 여자: string } = {
+      남자: "MALE",
+      여자: "FEMALE",
+    };
+    const nationalityMap: { 내국인: string; 외국인: string } = {
+      내국인: "DOMESTIC",
+      외국인: "FOREIGNER",
+    };
+
     const payload = {
       name: userData.name,
       nickname: nickname,
       profile_url: profileImage,
       birthdate: userData.birthdate,
-      gender: userData.gender.toUpperCase(),
-      nationality: userData.nationality.toUpperCase(),
+      gender:
+        genderMap[userData.gender as keyof typeof genderMap] || userData.gender,
+      nationality:
+        nationalityMap[userData.nationality as keyof typeof nationalityMap] ||
+        userData.nationality,
       movieId: userData.movieId || [],
       genreId: userData.genreId || [],
     };
@@ -203,10 +216,6 @@ export default function ProfileEditPage() {
     console.log(payload);
 
     try {
-      if (!accessToken) {
-        throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      }
-
       const response = await axios.patch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
         payload,
