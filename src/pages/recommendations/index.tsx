@@ -50,7 +50,7 @@ export default function MovieRecommendationPage() {
         movieId: movie.movieId,
         title: movie.title,
         posterUrl: `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`,
-        totalRating: movie.totalRating || 0,
+        totalRating: movie.totalRating,
       }));
 
       setMovies(movieData);
@@ -110,7 +110,7 @@ export default function MovieRecommendationPage() {
                   />
                   <div css={movieTitleStyle}>{movie.title}</div>
                   <div css={movieRatingStyle}>
-                    {movie.totalRating > 0 ? `${movie.totalRating}/10` : "평점 없음"}
+                   {movie.totalRating}
                   </div>
                 </div>
               ))}

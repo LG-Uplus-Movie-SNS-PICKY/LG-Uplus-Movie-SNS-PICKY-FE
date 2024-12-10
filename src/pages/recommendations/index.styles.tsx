@@ -69,12 +69,13 @@ export const subtitleStyle = css`
   }
 `;
 
-export const movieGridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(3, 1fr)",
-  gap: "16px",
-  justifyContent: "center",
-};
+export const movieGridStyle = css`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  justify-content: center;
+  padding: 0px 32px;
+`;
 
 export const movieCardStyle = css`
   display: flex;
