@@ -19,6 +19,7 @@ interface Movie {
   movieId: number;
   title: string;
   posterUrl: string;
+  rate: number;
 }
 
 export default function MovieRecommendationPage() {
@@ -41,11 +42,11 @@ export default function MovieRecommendationPage() {
 
       console.log("받아온 영화 추천 데이터:", response.data);
 
-      // 데이터 매핑
       const movieData = response.data.data.map((movie: Movie) => ({
         movieId: movie.movieId,
         title: movie.title,
         posterUrl: movie.posterUrl,
+        rate: movie.rate,
       }));
 
       setMovies(movieData);
@@ -92,7 +93,6 @@ export default function MovieRecommendationPage() {
           </div>
         )}
 
-        {/* 영화 리스트 */}
         {!error && movies.length > 0 && (
           <div css={movieContainerStyle}>
             <div css={movieWrapperStyle}>
@@ -107,6 +107,7 @@ export default function MovieRecommendationPage() {
                     src={movie.posterUrl}
                     title={movie.title}
                     name={movie.title}
+                    rate={movie.rate}
                   />
                 </div>
               ))}
