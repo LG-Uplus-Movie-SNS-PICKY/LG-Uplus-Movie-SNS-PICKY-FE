@@ -325,11 +325,12 @@ const movieHandlers: HttpHandler[] = [
           // 영화 정보
           movie_info: {
             id: movieInfo.movie_id,
-            original_title: movieInfo.movie_original_title,
+            original_title: movieInfo.movie_title,
             release_date: movieInfo.movie_release_data,
             poster_path: movieInfo.movie_poster_url,
             overview: movieInfo.movie_plot,
             runtime: movieInfo.movie_running_time,
+            rating: movieInfo.movie_total_rating,
 
             // 장르 정보 필터링
             genres: [
