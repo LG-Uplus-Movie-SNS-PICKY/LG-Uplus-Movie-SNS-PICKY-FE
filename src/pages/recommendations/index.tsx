@@ -24,6 +24,7 @@ interface Movie {
 
 export default function MovieRecommendationPage() {
   const username = "최우진";
+  const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -45,8 +46,8 @@ export default function MovieRecommendationPage() {
       const movieData = response.data.data.map((movie: Movie) => ({
         movieId: movie.movieId,
         title: movie.title,
-        posterUrl: movie.posterUrl,
-        rate: movie.rate,
+        posterUrl: `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`,
+        rate: movie.rate || 0,
       }));
 
       setMovies(movieData);
@@ -70,7 +71,6 @@ export default function MovieRecommendationPage() {
       <SEO
         title="PICKY: RECOMMENDATION"
         description="사용자님에게 추천하는 PICKY 영화 목록들을 확인해보세요"
-        url="http://location:5173/recommendation"
       />
 
       <div css={containerStyle}>
@@ -87,31 +87,35 @@ export default function MovieRecommendationPage() {
           </header>
         </div>
 
+        {/* 에러 메시지 */}
         {error && (
           <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
             {error}
           </div>
         )}
 
+        {/* 영화 리스트 */}
         {!error && movies.length > 0 && (
           <div css={movieContainerStyle}>
-            <div css={movieWrapperStyle}>
-              {movies.map((movie) => (
-                <div
-                  key={movie.movieId}
-                  onClick={() => handleMovieClick(movie.movieId)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <MovieItem
-                    type="rate"
-                    src={movie.posterUrl}
-                    title={movie.title}
-                    name={movie.title}
-                    rate={movie.rate}
-                  />
-                </div>
-              ))}
-            </div>
+            {[...Array(4)].map((_, rowIndex) => (
+              <div css={movieWrapperStyle} key={rowIndex}>
+                {movies.map((movie) => (
+                  <div
+                    key={`${rowIndex}-${movie.movieId}`}
+                    onClick={() => handleMovieClick(movie.movieId)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <MovieItem
+                      type="rate"
+                      src={movie.posterUrl}
+                      title={movie.title}
+                      name={movie.title}
+                      rate={movie.rate}
+                    />
+                  </div>
+                ))}
+              </div>
+            ))}
           </div>
         )}
       </div>
