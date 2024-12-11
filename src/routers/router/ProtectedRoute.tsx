@@ -1,6 +1,8 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuthorizaion } from "@recoil/selectors/useAuthorization";
 import Loading from "@components/loading";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
 interface ProtectedRouteProps {
   role: string;
@@ -11,9 +13,15 @@ function ProtectedRoute({ role, children }: ProtectedRouteProps) {
   const { accessGuestPage, accessUserPage, accessAdminPage } =
     useAuthorizaion();
 
+  const { isLoading } = useRecoilValue(isLogin);
+
   // 로딩 중 상태를 확인
-  if (accessGuestPage && !accessUserPage && !accessAdminPage) {
-    return null;
+  if (isLoading) {
+    return (
+      <div style={{ margin: "auto 0" }}>
+        <Loading />
+      </div>
+    );
   }
 
   // 로그인 사용자만 접근할 수 있는 페이지 권환 관리

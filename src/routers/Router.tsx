@@ -7,16 +7,10 @@ import { globalStyle } from "@styles/global";
 // Route import
 import Home from "@pages/main";
 
-import Login from "@pages/login";
-import Signup from "@pages/signup";
-import CallbackNaver from "@pages/login/naver/oauth";
-import CallbackGoogle from "@pages/login/google/oauth";
-import CallbackKakao from "@pages/login/kakao/oauth";
-
 import Layout from "@components/layout";
 
 import { HelmetProvider } from "react-helmet-async";
-import NotFoundPage from "@pages/not-found";
+
 import { useEffect } from "react";
 
 import { useSetRecoilState } from "recoil";
@@ -29,20 +23,19 @@ import ProtectedRoute from "./router/ProtectedRoute";
 import GuestRouter from "./router/GuestRoutes";
 import UserRoutes from "./router/UserRoutes";
 import AdminRouter from "./router/AdminRoutes";
-import { useSyncLoginState } from "@recoil/selectors/useAuthorization";
 
 function Router() {
-  // useSyncLoginState();
   const setIsLoginState = useSetRecoilState(isLogin);
 
   useEffect(() => {
     const user = JSON.parse(sessionStorage.getItem("user") || "{}");
 
-    if (!isEmpty(user)) {
+    if (user) {
       setIsLoginState({
-        isLoginState: true,
+        isLoginState: !isEmpty(user),
         isAuthUser: user.isAuthUser,
         isLoginInfo: user,
+        isLoading: false,
       });
     }
   }, [setIsLoginState]);
@@ -56,7 +49,7 @@ function Router() {
 
         <Layout>
           <Routes>
-            {/* 공개 라우트 */}
+            {/* 공개 라우트 - 관리자 접근 X */}
             <Route
               path="/"
               element={
@@ -74,9 +67,6 @@ function Router() {
 
             {/* 관리자 사용자 라우트 */}
             <Route path="/admin/*" element={<AdminRouter />} />
-
-            {/* 에러 페이지 */}
-            <Route path="/*" element={<NotFoundPage />} />
 
             {/* 도메인 */}
             <Route path="/domain" element={<DomainGoogle />} />

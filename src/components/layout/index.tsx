@@ -2,24 +2,21 @@ import GlobalHeader from "@components/header";
 import { Flex as MainLayout } from "./index.styles";
 import { Flex as Wrapper } from "./index.styles";
 import { LayoutProps } from "./type";
-import {
-  matchPath,
-  useLocation,
-  useNavigate,
-  useSearchParams,
-} from "react-router-dom";
+import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import GlobalNavigatorBar from "@components/navbar";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { routeConfig } from "@constants/routes/routeConfig";
 import { HeaderProps } from "@type/navigation";
+import { genresSelector } from "@recoil/selectors/genresSelector";
 
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 주소 가져오기
 
   const isLoginInfo = useRecoilValue(isLogin);
+  const loadable = useRecoilValueLoadable(genresSelector);
 
   const [headerTypes, setHeaderTypes] =
     useState<HeaderProps["headerType"]>("login");
@@ -39,8 +36,33 @@ function Layout({ children }: LayoutProps): JSX.Element {
     setHeaderLabel(config?.label || "");
 
     setShowGlobalNavbar(config?.gnb || false);
-    setIsDefaultMargin(config?.margin || "0");
-  }, [isLoginInfo, location]);
+
+    switch (config?.path) {
+      case "/":
+        if (!isLoginInfo.isLoginState) {
+          setIsDefaultMargin("60px 0 0 0");
+        } else {
+          setIsDefaultMargin(config?.margin || "0");
+        }
+
+        break;
+      case "/genre/:genreId":
+        const genreId = matchPath(config.path, location.pathname)?.params
+          .genreId;
+
+        if (loadable.state === "hasValue") {
+          const genres = loadable.contents.data;
+
+          setHeaderLabel(
+            genres.find(
+              (genre: { genreId: number }) => genre.genreId === Number(genreId)
+            ).name || ""
+          );
+        }
+
+        break;
+    }
+  }, [isLoginInfo, location, loadable]);
 
   return (
     <>
@@ -62,8 +84,6 @@ function Layout({ children }: LayoutProps): JSX.Element {
           direction="column"
           justify="flex-start"
           margin={isDefaultMargin}
-          // backgroundColor={isLoginTestValue.role === "admin" ? "#ffffff" : ""}
-          // padding="16px"
           height="100vh"
         >
           {children}

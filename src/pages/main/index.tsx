@@ -7,13 +7,8 @@ import Loading from "@components/loading";
 import { useEffect } from "react";
 import axios from "axios";
 
-import board from "@constants/json/board/board.json";
-import boardComments from "@constants/json/board/board_comments.json";
-import boardContents from "@constants/json/board/board_contents.json";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
-
-// const isLogin = false;
 
 function Main() {
   const isLoginState = useRecoilValue(isLogin);

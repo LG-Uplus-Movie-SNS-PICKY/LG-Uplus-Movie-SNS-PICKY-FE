@@ -19,6 +19,8 @@ import Search from "@pages/search";
 import Recommendations from "@pages/recommendations";
 import NotificationPage from "@pages/notification";
 
+import NotFoundPage from "@pages/not-found";
+
 function UserRoutes() {
   return (
     <ProtectedRoute role="user">
@@ -51,6 +53,8 @@ function UserRoutes() {
         <Route path="notification" element={<NotificationPage />} />
         <Route path="recommendation" element={<Recommendations />} />
         <Route path="search" element={<Search />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </ProtectedRoute>
   );
