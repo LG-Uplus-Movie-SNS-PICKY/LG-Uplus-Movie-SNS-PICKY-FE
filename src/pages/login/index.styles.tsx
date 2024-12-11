@@ -44,5 +44,5 @@ export const StyledText = css`
 // `;
 
 export const GapContainer = css`
-  gap: 46px;
+  gap: 108px;
 `;
