@@ -21,18 +21,25 @@ import {
   ScoreText,
   ScoreBar,
   PercentageText,
-  GenderStats,
-  GenderStat,
   TitleBorder,
   PercentageWrapper,
-  PercentageContainer
+  PercentageContainer,
 } from './index.styles';
 import MaleSvg from '@assets/icons/male.svg?react';
 import FemaleSvg from '@assets/icons/female.svg?react';
 
 interface Review {
+  id: number;
+  writerNickname: string;
+  userId: number;
+  movieId: number;
   rating: number;
-  gender: string;
+  context: string;
+  isSpoiler: boolean;
+  likes: number;
+  dislikes: number;
+  createdAt: string;
+  gender?: string;
 }
 
 interface Props {
@@ -41,7 +48,9 @@ interface Props {
 
 const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   // 전체 평균 평점 계산
-  const totalAverage = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+  const totalAverage = reviews.length
+  ? Math.round((reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length) * 10) / 10
+  : 0; // 리뷰가 없을 경우 0 반환
 
   // 남성/여성 리뷰 분리 및 평균 평점 계산
   const maleReviews = reviews.filter((review) => review.gender === 'male');
@@ -56,10 +65,11 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   const ratingsDistribution = new Array(5).fill(0).map((_, index) => {
     const score = 5 - index; // 점수를 5부터 1까지 역순으로 계산
     const count = reviews.filter(
-      (review) => Math.ceil(review.rating) === score // 점수가 해당 범위에 포함되는지 확인
+      (review) =>
+        review.rating <= score && review.rating > score - 1 // 범위를 명확히 정의
     ).length;
     return {
-      score: score, // 역순으로 점수를 표시
+      score: score,
       percentage: (count / reviews.length) * 100,
     };
   });
@@ -78,8 +88,8 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   const CircleChart = ({ genderStats }: { genderStats: { male: number; female: number } }) => {
     // 남성과 여성 비율 계산
     const total = genderStats.male + genderStats.female;
-    const malePercentage = (genderStats.male / total) * 100;
-    const femalePercentage = (genderStats.female / total) * 100;
+    const malePercentage = total > 0 ? (genderStats.male / total) * 100 : 0;
+    const femalePercentage = total > 0 ? (genderStats.female / total) * 100 : 0;
 
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
@@ -105,7 +115,7 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
             strokeDashoffset={-malePercentage}
           />
         </svg>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)"}}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)" }}>
           <PercentageWrapper>
             <PercentageContainer>
               <ScoreText>남자</ScoreText>

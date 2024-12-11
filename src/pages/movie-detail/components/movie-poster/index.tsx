@@ -37,7 +37,7 @@ const ottUrls: { [key: string]: string } = {
 interface MoviePosterProps {
     imageUrl: string;
     title: string;
-    year: string;
+    year: number;
     nation: string;
     genre: string;
     ott: Array<string>;

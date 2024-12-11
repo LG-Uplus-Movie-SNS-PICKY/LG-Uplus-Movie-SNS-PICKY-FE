@@ -71,8 +71,10 @@ export const subtitleStyle = css`
 
 export const movieGridStyle = css`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  justify-content: center;
+  padding: 0px 32px;
 `;
 
 export const movieCardStyle = css`
@@ -113,10 +115,10 @@ export const movieWrapperStyle = css`
 `;
 
 export const movieContainerStyle = css`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 16px;
-align-self: stretch;
-`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+`;

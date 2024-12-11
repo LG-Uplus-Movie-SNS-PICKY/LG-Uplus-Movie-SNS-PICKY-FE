@@ -150,7 +150,7 @@ type StyleButton = {
 };
 
 export const Button = {
-  Confirm: styled.div<StyleButton & { $isDisabled: boolean }>`
+  Confirm: styled.button<StyleButton & { $isDisabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -165,6 +165,7 @@ export const Button = {
   cursor: ${({ $isDisabled }) => ($isDisabled ? "not-allowed" : "pointer")};
   margin: 0 auto; /* 가운데 정렬 */
   padding: 0; /* 여백 제거 */
+  border: none;
 `,
   Select: styled.button<{ isSelected: boolean }>`
     padding: 10px 20px;

@@ -10,10 +10,14 @@ export interface GenreDataType {
 
 interface GenreButtonsProps {
   onClick: (genreId: number) => void;
+  selectedGenres?: number[];
 }
 
 // 장르 전역 컴포넌트
-function GenreButtons({ onClick }: GenreButtonsProps): JSX.Element {
+function GenreButtons({
+  onClick,
+  selectedGenres = [],
+}: GenreButtonsProps): JSX.Element {
   // useRecoilValueLoadable -> 비동기 데이터의 처리 상태와 데이터를 반환
   const loadable = useRecoilValueLoadable(genresSelector);
 

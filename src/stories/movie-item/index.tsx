@@ -17,6 +17,7 @@ export interface MovieItemProps {
   comment?: number;
   state?: string;
   name: string;
+  style?: React.CSSProperties;
 }
 
 interface RateComponentProps {
@@ -67,9 +68,11 @@ export function MovieItem({
   comment = 0,
   state = "abouttime",
   name,
+  style
 }: MovieItemProps): JSX.Element {
+
   return (
-    <div css={styles.movieItemContainer()}>
+    <div css={styles.movieItemContainer()} style={style}>
       {/* 영화 썸네일 이미지 */}
       <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
         {type === "basic" && state === name ? <Checked /> : null}
