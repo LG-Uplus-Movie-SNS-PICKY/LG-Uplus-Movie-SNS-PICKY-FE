@@ -1,7 +1,16 @@
 import { http, HttpHandler, HttpResponse } from "msw";
 import response from "./resposneData.json";
 
+import user from "@constants/json/user.json";
+import lineReview from "@constants/json/line-review/lineReviews.json";
+import lineReviewLikes from "@constants/json/line-review/lineReviewLikes.json";
+
 import { isEmpty } from "lodash";
+
+interface ReviewLikeBodyTypes {
+  lineReviewId: number;
+  preference: "LIKE" | "DISLIKE";
+}
 
 interface bodyTypes {
   [key: string]: unknown;
@@ -143,6 +152,234 @@ const reviewHandler: HttpHandler[] = [
         },
         { status: 200 }
       );
+    }
+  ),
+
+  // 사용자가 작성한 한줄평 목록 조회
+  // param = size: 가져올 데이터 개수, lastReviewId: 제일 마지막에 본 리뷰 ID, lastCreatedAt: 제일 마지막에 본 리뷰 Date
+  // headers -> 필수
+  http.get(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:nickname`,
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { nickname } = params;
+
+      // Authorization 또는 nickname 보내지 않은 경우
+      if (!authorization || !nickname) {
+        return HttpResponse.json(
+          {
+            message:
+              "Authorization 값을 추가 또는 Path Validation으로 nickname 값을 추가했는지 확인해주세요.",
+            errorCode: "ERR_EMPTY_BODY_AUTH",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      const userInfo = user.find((user) => user.user_nickname === nickname);
+
+      const url = new URL(request.url);
+      const size = Number(url.searchParams.get("size")) || 10; // 데이터를 보내줄 개수 (기본값: 10개)
+      const lastReviewId = Number(url.searchParams.get("lastReviewId")) || null;
+      const lastCreatedAt =
+        Number(url.searchParams.get("lastCreatedAt")) || null;
+
+      // 현재 사용자가 작성한 한줄평 조회
+      let filterLineReview = lineReview.filter(
+        (review) => review.user_id === userInfo?.user_id
+      );
+
+      // 커서 기반 필터링(lastCreatedAt을 통해서 해당 날짜 이후 데이터 필터링)
+      if (lastCreatedAt && lastReviewId) {
+        filterLineReview = filterLineReview.filter((review) => {
+          if (new Date(review.created_at) < new Date(lastCreatedAt)) {
+            return true;
+          } else if (
+            new Date(review.created_at).getTime() ===
+            new Date(lastCreatedAt).getTime()
+          ) {
+            return review.line_review_id < lastReviewId;
+          }
+
+          return false;
+        });
+      }
+
+      // 최신순으로 내림차순 정렬
+      const paginatedReviews = filterLineReview
+        .sort(
+          (a, b) =>
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        )
+        .slice(0, size);
+
+      return HttpResponse.json(
+        {
+          size,
+          content: paginatedReviews,
+          lastCursor:
+            paginatedReviews.length > 0
+              ? {
+                  lastCreatedAt:
+                    paginatedReviews[paginatedReviews.length - 1].created_at,
+                  lastReviewId:
+                    paginatedReviews[paginatedReviews.length - 1]
+                      .line_review_id,
+                }
+              : null,
+          numberOfElements: paginatedReviews.length,
+          first: !lastCreatedAt && !lastReviewId,
+          last: paginatedReviews.length < size,
+          empty: paginatedReviews.length === 0,
+        },
+        { status: 200 }
+      );
+    }
+  ),
+
+  // 사용자가 작성한 한줄평 삭제
+  // delete!  /api/v1/linereview/{lineReviewId}
+  // isDelete = !isDelete
+  http.delete(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:lineReviewId`,
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
+      const { lineReviewId } = params;
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      // Authorization 또는 lineReviewId 보내지 않은 경우
+      if (!authorization || !lineReviewId) {
+        return HttpResponse.json(
+          {
+            message:
+              "Authorization 값을 추가 또는 Path Validation으로 nickname 값을 추가했는지 확인해주세요.",
+            errorCode: "ERR_EMPTY_BODY_AUTH",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      // Path Validation으로 입력된 한줄평 정보를 찾는다.
+      const review = lineReview.find(
+        (review) =>
+          review.line_review_id === Number(lineReviewId) &&
+          review.user_id === userInfo?.user_id
+      );
+      if (isEmpty(review)) {
+        // 삭제하려는 한줄평 정보가 없을 경우
+        return HttpResponse.json(
+          {
+            message:
+              "삭제하려는 한줄평 정보를 찾을 수 없습니다. 요청된 ID를 확인하세요.",
+            errorCode: "REVIEW_NOT_FOUND",
+          },
+          { status: 404, statusText: "Not Found" }
+        );
+      }
+
+      review.is_delete = true; // 한줄평 논리적 삭제로 수정
+
+      // 한줄평 정보가 있을 경우
+      return HttpResponse.json(
+        { message: "해당 한줄평이 성공적으로 삭제되었습니다." },
+        { status: 200 }
+      );
+    }
+  ),
+
+  // 좋아요 / 싫어요
+  // 자기 글 안되고, 중복 불가능(좋아요 / 싫어요 취소), 좋아요 누르고 싫어요 누르면 자동으로 업데이트
+  // 보내야되는 값은  "lineReviewId": 1, "preference": "LIKE, DISLIKE"
+  http.post(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereviewlike`,
+    async ({ request }) => {
+      const authorization = request.headers.get("Authorization");
+      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const body = (await request.json()) as ReviewLikeBodyTypes;
+
+      // Authorization 또는 lineReviewId 보내지 않은 경우
+      if (!authorization || !userInfo || isEmpty(body)) {
+        return HttpResponse.json(
+          {
+            message:
+              "Authorization 값을 추가 또는 로그인을 했는지 확인해주세요. 또는 body(lineReviewId, preference)를 추가했는지 확인해주세요.",
+            errorCode: "ERR_EMPTY_BODY_AUTH",
+          },
+          { status: 400, statusText: "Bad Request" }
+        );
+      }
+
+      // 한줄평 정보를 Request Body를 통해 얻은 lineReviewId 값을 통해 해당 한줄평 정보를 얻는다.
+      const reviewInfo = lineReview.find(
+        (review) => review.line_review_id === body.lineReviewId
+      );
+
+      // #1. 한줄평이 현재 로그인한 사용자가 자기 글에 좋아요 또는 싫어요를 누르는 경우 -> 승인 X
+      if (reviewInfo?.user_id === userInfo.user_id) {
+        return HttpResponse.json(
+          {
+            message:
+              "자신이 등록한 한줄평에는 좋아요를 누를 수 없습니다. 다른 사용자의 한줄평을 확인해주세요.",
+            errorCode: "ERR_SELF_LIKE_NOT_ALLOWED",
+          },
+          { status: 403, statusText: "Forbidden" }
+        );
+      }
+
+      // body로 넘겨받은 lineReviewId를 통해 사용자가 해당 한줄평에 평가를 남겼는지 확인하나.
+      const reviewLikeInfo = lineReviewLikes.find(
+        (like) =>
+          like.line_review_id === body.lineReviewId &&
+          like.user_id === userInfo.user_id
+      );
+
+      // #2. 사용자가 해당 한줄평에 평가를 남기지 않았을 경우 -> 평가 추가
+      if (isEmpty(reviewLikeInfo)) {
+        // 사용자가 등록한 평가를 추가한다.
+        lineReviewLikes.push({
+          line_review_id: body.lineReviewId,
+          line_review_like_id: lineReviewLikes.length + 1,
+          preference: body.preference,
+          user_id: userInfo.user_id,
+        });
+
+        // 이후 성공 응답을 반환한다.
+        return HttpResponse.json(
+          { message: `REQUEST_FRONT_SUCCESS(${body.preference} 추가)` },
+          { status: 200 }
+        );
+      }
+
+      // #3. 사용자가 한줄평에 대한 평가를 남긴 적이 있을 경우
+      else {
+        // #3-1. 중복 클릭 -> 좋아요 / 싫어요 취소
+        if (reviewLikeInfo.preference === body.preference) {
+          for (let i = 0; i < lineReviewLikes.length; i++) {
+            if (
+              lineReviewLikes[i].line_review_like_id ===
+              reviewLikeInfo.line_review_like_id
+            ) {
+              lineReviewLikes.splice(i, 1);
+
+              return HttpResponse.json(
+                { message: `REQUEST_FRONT_SUCCESS(${body.preference} 취소)` },
+                { status: 200 }
+              );
+            }
+          }
+        }
+
+        // #3-2. 반대값으로 수정한 경우
+        else {
+          reviewLikeInfo.preference =
+            body.preference === "LIKE" ? "DISLIKE" : "LIKE";
+
+          return HttpResponse.json(
+            { message: `REQUEST_FRONT_SUCCESS(${body.preference} 수정)` },
+            { status: 200 }
+          );
+        }
+      }
     }
   ),
 ];
