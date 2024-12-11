@@ -337,7 +337,7 @@ const reviewHandler: HttpHandler[] = [
         return HttpResponse.json(
           {
             message:
-              "자신이 등록한 한줄평에는 좋아요를 누를 수 없습니다. 다른 사용자의 한줄평을 확인해주세요.",
+              "자신이 등록한 한줄평에는 좋아요를 누를 수 없습니다.",
             errorCode: "ERR_SELF_LIKE_NOT_ALLOWED",
           },
           { status: 403, statusText: "Forbidden" }
