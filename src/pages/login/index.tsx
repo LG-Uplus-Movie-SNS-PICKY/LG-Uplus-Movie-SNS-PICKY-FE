@@ -12,7 +12,7 @@ import SEO from "@components/seo";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { isLoginState } from "@recoil/atoms/isLoginState";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
 const StyledText = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const GapContainer = styled(Block.FlexBox)`
 
 export default function Login() {
   const navigate = useNavigate();
-  const setIsLoginState = useSetRecoilState(isLoginState);
+  const setIsLoginState = useSetRecoilState(isLogin);
 
   const handleKakaoLoginClick = () => {
     console.log("Kakao Login Clicked");
@@ -68,8 +68,14 @@ export default function Login() {
         )
         .then((res) => res.data);
 
-      sessionStorage.setItem("user", JSON.stringify(data));
-      setIsLoginState(true);
+      sessionStorage.setItem("user", JSON.stringify(data)); // 세션 스토리지에 저장
+      setIsLoginState({
+        isLoginState: true,
+        isLoginUserAmdin: data.isAuthUser,
+        isLoginInfo: data,
+      });
+      // console.log(data);
+
       navigate("/");
     } catch (error) {
       console.warn(

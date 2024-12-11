@@ -25,18 +25,22 @@ import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
 import NotFoundPage from "@pages/not-found";
 import { useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoginState } from "@recoil/atoms/isLoginState";
+import { useSetRecoilState } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { isEmpty } from "lodash";
 
 function Router() {
-  const isLoginValue = useRecoilValue(isLoginState);
-  const setIsLoginState = useSetRecoilState(isLoginState);
+  const setIsLoginState = useSetRecoilState(isLogin);
 
   useEffect(() => {
-    const user = sessionStorage.getItem("user");
+    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
 
-    if (user) {
-      setIsLoginState(true);
+    if (!isEmpty(user)) {
+      setIsLoginState({
+        isLoginState: true,
+        isLoginUserAmdin: user.isRegistrationDone,
+        isLoginInfo: user,
+      });
     }
   }, [setIsLoginState]);
 

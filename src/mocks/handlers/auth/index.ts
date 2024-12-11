@@ -57,6 +57,7 @@ const authHandler: HttpHandler[] = [
         localJwtDto: {
           accessToken: userInfo.user_id,
         },
+        isAuthUser: userInfo.user_role === "Admin",
         isRegistrationDone: true,
         user: {
           name: userInfo.user_name,
@@ -66,7 +67,6 @@ const authHandler: HttpHandler[] = [
           gender: userInfo.user_gender,
           nationality: userInfo.user_nationality,
           genres: [],
-          role: userInfo.user_role,
         },
       };
 

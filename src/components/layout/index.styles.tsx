@@ -29,7 +29,10 @@ export const Flex = styled.div<FlexProps>`
   align-items: ${({ align }) => (align ? `${align}` : "center")};
   gap: ${({ webGap }) => (webGap ? `${webGap}rem` : "0rem")};
   height: ${({ height }) => (height ? height : "auto")};
-  margin: ${({ margin }) => (margin ? margin : "0")};
+  margin: ${({ margin }) => {
+    console.log(margin);
+    return margin ? margin : "0";
+  }};
   padding: ${({ padding }) => (padding ? padding : "0")};
   box-sizing: border-box;
   border-radius: ${({ borderRadius }) =>
