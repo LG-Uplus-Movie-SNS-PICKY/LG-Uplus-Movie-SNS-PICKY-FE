@@ -58,6 +58,7 @@ function MovieDetail(props: MovieDetailProps) {
   const [error, setError] = useState<string | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]); // 리뷰 상태 타입 지정
   const [totalReviews, setTotalReviews] = useState<number>(0); // 전체 한줄평 개수
+  const [likeActive, setLikeActive] = useState<boolean>(false); // 좋아요 상태
 
   const loadable = useRecoilValueLoadable(genresSelector);
 
@@ -109,6 +110,11 @@ function MovieDetail(props: MovieDetailProps) {
           (a: any, b: any) => a.id - b.id
         );
 
+        console.log(response); // API 응답 데이터 확인 move_info에 데이터가 있는지 확인
+
+        // `like` 상태 가져오기
+        setLikeActive(response.like || false); // response.like 값 설정 (true/false)
+
         // movieData에 정렬된 데이터 설정
         setMovieData({
           ...response.movie_info,
@@ -118,8 +124,10 @@ function MovieDetail(props: MovieDetailProps) {
             directingCrew: sortedDirectingCrew,
           },
         });
+
         setLoading(false);
       } catch (err: any) {
+        console.error("영화 데이터 불러오기 실패", err);
         setError(err.response?.message || "Failed to fetch movie data");
         setLoading(false);
       }
@@ -204,7 +212,11 @@ function MovieDetail(props: MovieDetailProps) {
           ott={["Netflix", "DisneyPlus", "Watcha"]}
         />
 
-        <MovieRating rating={movieData.rating || 0} />
+        <MovieRating
+          rating={movieData.rating || 0}
+          initialLike={likeActive} // movie_info에서 가져온 초기 좋아요 상태
+          movieId={movieData.id} // 영화 ID
+        />
         <MovieInfo
           content={movieData.overview}
           castData={[

@@ -238,7 +238,7 @@ const movieHandlers: HttpHandler[] = [
       if (
         !authorization ||
         isEmpty(userInfo) ||
-        userInfo.user_role !== "Admin"
+        !movieId
       ) {
         return HttpResponse.json(
           {

@@ -129,81 +129,6 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
     },
   ];
 
-  const reviews: LineReviewData[] = [
-    {
-      line_review_id: 1,
-      line_review_rating: 4,
-      line_review_content: "재밌어요",
-      movie: {
-        movie_id: 1,
-        movie_title: "타이타닉",
-        movie_poster_src:
-          "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      },
-      line_review_like: 421,
-      line_review_hate: 84,
-      writer: {
-        writer_id: 1,
-        writer_nickname: "PICKY",
-      },
-      created_at: "2024-12-04 00:43:38",
-    },
-    {
-      line_review_id: 2,
-      line_review_rating: 4,
-      line_review_content: "재밌어요",
-      movie: {
-        movie_id: 1,
-        movie_title: "타이타닉",
-        movie_poster_src:
-          "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      },
-      line_review_like: 421,
-      line_review_hate: 84,
-      writer: {
-        writer_id: 1,
-        writer_nickname: "PICKY",
-      },
-      created_at: "2024-12-04 00:43:38",
-    },
-    {
-      line_review_id: 3,
-      line_review_rating: 4,
-      line_review_content: "재밌어요",
-      movie: {
-        movie_id: 1,
-        movie_title: "타이타닉",
-        movie_poster_src:
-          "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      },
-      line_review_like: 421,
-      line_review_hate: 84,
-      writer: {
-        writer_id: 1,
-        writer_nickname: "PICKY",
-      },
-      created_at: "2024-12-04 00:43:38",
-    },
-    {
-      line_review_id: 4,
-      line_review_rating: 4,
-      line_review_content: "재밌어요",
-      movie: {
-        movie_id: 1,
-        movie_title: "타이타닉",
-        movie_poster_src:
-          "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      },
-      line_review_like: 421,
-      line_review_hate: 84,
-      writer: {
-        writer_id: 1,
-        writer_nickname: "PICKY",
-      },
-      created_at: "2024-12-04 00:43:38",
-    },
-  ];
-
   return (
     <div css={styles.tabMenuContainer()}>
       {/* Tab Menus */}
@@ -238,7 +163,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
         {Array.from({ length: 3 }, (_, idx) => (
           <SwiperSlide key={idx}>
             {idx === 0 && <MovieLogContnent data={Array.from({ length: 4 })} />}
-            {idx === 1 && <LineReviewContent data={reviews} />}
+            {idx === 1 && <LineReviewContent />}
             {idx === 2 && <LikeMovieContent data={likeMovies} />}
           </SwiperSlide>
 
