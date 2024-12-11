@@ -1,5 +1,6 @@
-import { useState, ChangeEvent, KeyboardEvent } from "react";
+import { useState, ChangeEvent, KeyboardEvent, useRef } from "react";
 import { useNavigate } from "react-router-dom"; // navigate를 위해 추가
+import axios from "axios";
 import MovieSearch from "@assets/icons/movie_search.svg?react";
 import DelButton from "@assets/icons/delete.svg?react";
 import BackPost from "@assets/icons/back_post.svg?react";
@@ -28,7 +29,6 @@ import {
   activeButtonStyle,
   shareButton,
   searchContainer,
-  searchBoxExpanded,
   deleteIcon,
   backButton,
   movieInfo,
@@ -85,13 +85,15 @@ export default function SocialPost() {
     null | (typeof mockMovies)[0]
   >(null);
   const [reviewText, setReviewText] = useState<string>("");
-  const [selectedSpoiler, setSelectedSpoiler] = useState<string>("");
+  const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
   const [activeIndex, setActiveIndex] = useState<number>(-1); // 활성화된 항목 인덱스
+  const [fileUrl, setFileUrl] = useState<string>(""); // 파일 URL 저장
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // 파일 입력 Ref
 
   const navigate = useNavigate();
 
   const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
-    setSelectedMovieData(movie); // 선택한 영화 설정
+    setSelectedMovieData(movie);
     setSearchTerm(movie.title);
     setFilteredMovies([]);
     setIsModalOpen(false);
@@ -105,7 +107,6 @@ export default function SocialPost() {
         movie.title.toLowerCase().includes(value.toLowerCase())
       );
       setFilteredMovies(results);
-      setActiveIndex(-1); // 입력 변경 시 인덱스 초기화
     } else {
       setFilteredMovies([]);
     }
@@ -154,18 +155,52 @@ export default function SocialPost() {
     setIsBackModalOpen(true);
   };
 
-  const highlightMatch = (text: string, query: string) => {
-    const regex = new RegExp(`(${query})`, "gi");
-    const parts = text.split(regex);
-    return parts.map((part, index) =>
-      part.toLowerCase() === query.toLowerCase() ? (
-        <span key={index} css={highlightedText}>
-          {part}
-        </span>
-      ) : (
-        part
-      )
-    );
+  const handleFileChange = () => {
+    if (fileInputRef.current?.files?.[0]) {
+      const file = fileInputRef.current.files[0];
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        if (fileReader.result) {
+          setFileUrl(fileReader.result.toString());
+        }
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
+
+  const handleShareClick = async () => {
+    if (!selectedMovieData || !reviewText.trim()) {
+      alert("영화와 리뷰 내용을 입력해주세요.");
+      return;
+    }
+
+    const payload = {
+      boardContext: reviewText,
+      movieId: selectedMovieData.title, // 실제 영화 ID로 수정 필요
+      contents: fileUrl
+        ? [{ contentUrl: fileUrl, type: "PHOTO" }] // 예시로 PHOTO 고정
+        : [],
+      isSpoiler: selectedSpoiler === "있음",
+    };
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log("게시글 생성 성공:", response.data);
+      alert("게시글이 성공적으로 생성되었습니다.");
+      navigate("/");
+    } catch (error) {
+      console.error("게시글 생성 중 오류 발생:", error);
+      alert("게시글 생성에 실패했습니다.");
+    }
   };
 
   return (
@@ -174,9 +209,7 @@ export default function SocialPost() {
 
       {isBackModalOpen && (
         <>
-          {/* 화면 어두워지는 오버레이 */}
           <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
-          {/* 모달 컨테이너 */}
           <div css={modalContainer}>
             <Modal
               message="공유하지 않고 화면을 나가면 작성 중인 리뷰가 삭제될 수 있습니다. 나가시겠습니까?"
@@ -241,7 +274,7 @@ export default function SocialPost() {
                     ]}
                     onClick={() => handleMovieSelect(movie)}
                   >
-                    {highlightMatch(movie.title, searchTerm)}
+                    {movie.title}
                   </div>
                 ))}
               </div>
@@ -252,6 +285,12 @@ export default function SocialPost() {
 
       <div css={postContainer}>
         <FileInput type="media" />
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
       </div>
 
       <div css={reviewSection}>
@@ -294,7 +333,7 @@ export default function SocialPost() {
       </div>
 
       <div css={shareButton}>
-        <Button btnType="Active" label="공유" />
+        <Button btnType="Active" label="공유" onClick={handleShareClick} />
       </div>
     </div>
   );

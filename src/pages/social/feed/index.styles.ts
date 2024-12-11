@@ -20,7 +20,6 @@ export const feedContainer = css`
   width: 100%;
   padding: 16px 0;
   border: none;
-  margin-bottom: 32px;
 `;
 
 export const feedItem = css`
@@ -93,6 +92,7 @@ export const reactionsContainer = css`
   align-items: center;
   padding: 16px 0;
   justify-content: space-between;
+  margin-bottom: 32px;
 `;
 
 export const reactionsSection = css`

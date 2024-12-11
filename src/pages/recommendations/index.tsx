@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { MovieItem } from "@stories/movie-item";
 import {
   containerStyle,
   headerStyle,
@@ -10,19 +9,22 @@ import {
   highlightStyle,
   subtitleStyle,
   movieContainerStyle,
-  movieWrapperStyle,
+  movieGridStyle,
   headerWrapperStyle,
 } from "./index.styles";
 import SEO from "@components/seo";
+import { MovieItem } from "@stories/movie-item";
 
 interface Movie {
   movieId: number;
   title: string;
   posterUrl: string;
+  totalRating: number;
 }
 
 export default function MovieRecommendationPage() {
   const username = "최우진";
+  const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
   const navigate = useNavigate();
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -39,13 +41,11 @@ export default function MovieRecommendationPage() {
         }
       );
 
-      console.log("받아온 영화 추천 데이터:", response.data);
-
-      // 데이터 매핑
       const movieData = response.data.data.map((movie: Movie) => ({
         movieId: movie.movieId,
         title: movie.title,
-        posterUrl: movie.posterUrl,
+        posterUrl: `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`,
+        totalRating: movie.totalRating,
       }));
 
       setMovies(movieData);
@@ -60,16 +60,11 @@ export default function MovieRecommendationPage() {
     fetchRecommendedMovies();
   }, [fetchRecommendedMovies]);
 
-  const handleMovieClick = (id: number) => {
-    navigate(`/movie/${id}`);
-  };
-
   return (
     <>
       <SEO
         title="PICKY: RECOMMENDATION"
         description="사용자님에게 추천하는 PICKY 영화 목록들을 확인해보세요"
-        url="http://location:5173/recommendation"
       />
 
       <div css={containerStyle}>
@@ -85,34 +80,33 @@ export default function MovieRecommendationPage() {
             </h2>
           </header>
         </div>
-
-        {error && (
-          <div style={{ color: "red", textAlign: "center", marginTop: "20px" }}>
-            {error}
-          </div>
-        )}
-
         {/* 영화 리스트 */}
-        {!error && movies.length > 0 && (
-          <div css={movieContainerStyle}>
-            <div css={movieWrapperStyle}>
+        <div css={movieContainerStyle}>
+          {error ? (
+            <div style={{ color: "red", textAlign: "center" }}>{error}</div>
+          ) : movies.length === 0 ? (
+            <p>추천할 영화가 없습니다. 나중에 다시 시도해주세요.</p>
+          ) : (
+            <div css={movieGridStyle}>
               {movies.map((movie) => (
                 <div
                   key={movie.movieId}
-                  onClick={() => handleMovieClick(movie.movieId)}
+                  onClick={() => navigate(`/movie/${movie.movieId}`)}
                   style={{ cursor: "pointer" }}
                 >
                   <MovieItem
                     type="rate"
                     src={movie.posterUrl}
                     title={movie.title}
+                    rate={movie.totalRating}
                     name={movie.title}
+                    style={{ width: "90px" }}
                   />
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   );
