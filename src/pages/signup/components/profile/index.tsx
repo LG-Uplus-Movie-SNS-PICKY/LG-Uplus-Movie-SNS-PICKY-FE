@@ -29,24 +29,47 @@ export default function InputProfile() {
 
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    e.target.value = "";
+    e.target.value = ""; // 파일 선택 초기화
+  
     if (file) {
-      if (file.size > 5 * 1024 * 1024) {
-        showToastMessage("파일 크기는 5MB를 초과할 수 없습니다.");
-        return;
-      }
-      const imageUrl = URL.createObjectURL(file);
-      setUserInfo((prev) => ({ ...prev, profileImage: imageUrl }));
-      setInputData((prev) => ({ ...prev, profileImage: imageUrl }));
+      const formData = new FormData();
+      formData.append("profile", file); // FormData에 파일 추가
+  
+      const imageUrl = URL.createObjectURL(file); // 미리보기 URL 생성
+      setUserInfo((prev) => {
+        const updatedUserInfo = { ...prev, profileImagePreview: imageUrl }; // 업데이트된 userInfo
+        console.log("Updated userInfo:", updatedUserInfo); // 로그 추가
+        return updatedUserInfo;
+      });
+      setInputData((prev) => {
+        const updatedInputData = {
+          ...prev,
+          profileImageData: formData, // FormData 저장
+          profileImagePreview: imageUrl, // 미리보기 URL 저장
+        };
+        console.log("Updated inputData:", updatedInputData); // 로그 추가
+        return updatedInputData;
+      });
       showToastMessage("이미지가 성공적으로 업로드되었습니다.");
-      return () => URL.revokeObjectURL(imageUrl);
     }
   };
-
+  
   const setDefaultImage = () => {
-    if (userInfo.profileImage !== defaultUserImage) {
-      setUserInfo((prev) => ({ ...prev, profileImage: defaultUserImage }));
-      setInputData((prev) => ({ ...prev, profileImage: defaultUserImage }));
+    if (userInfo.profileImagePreview !== defaultUserImage) {
+      setUserInfo((prev) => {
+        const updatedUserInfo = { ...prev, profileImagePreview: defaultUserImage }; // 업데이트된 userInfo
+        console.log("Default userInfo set:", updatedUserInfo); // 로그 추가
+        return updatedUserInfo;
+      });
+      setInputData((prev) => {
+        const updatedInputData = {
+          ...prev,
+          profileImageData: null, // FormData 초기화
+          profileImagePreview: defaultUserImage, // 기본 이미지 URL 설정
+        };
+        console.log("Default inputData set:", updatedInputData); // 로그 추가
+        return updatedInputData;
+      });
       showToastMessage("기본 이미지가 설정되었습니다.");
     } else {
       showToastMessage("이미 기본 이미지가 설정되어 있습니다.");
@@ -59,9 +82,9 @@ export default function InputProfile() {
       <Text.FocusedMenu $isFocused={isFocused}>프로필 이미지</Text.FocusedMenu>
       {toastMessage && <Toast message={toastMessage} />}
       <div css={imageContainer}>
-        {userInfo.profileImage ? (
+        {userInfo.profileImagePreview ? (
           <img
-            src={userInfo.profileImage}
+            src={userInfo.profileImagePreview}
             alt="프로필 미리보기"
             width={240}
             height={240}
@@ -85,7 +108,9 @@ export default function InputProfile() {
           defaultImageText,
           {
             visibility:
-              userInfo.profileImage === defaultUserImage ? "hidden" : "visible",
+              userInfo.profileImagePreview === defaultUserImage
+                ? "hidden"
+                : "visible",
           },
         ]}
         onClick={setDefaultImage}
