@@ -8,8 +8,8 @@ import {
 } from "../../api/constants";
 import { BtnGoogle, BtnKakao, BtnNaver } from "../../assets/svg";
 import Picky_main_Logo from "@assets/icons/picky_main_logo.svg?react";
-import {GapContainer, StyledText } from "./index.styles"
-import { Block, Text,  } from "../../styles/ui";
+import { GapContainer, StyledText } from "./index.styles";
+import { Block, Text } from "../../styles/ui";
 import SEO from "@components/seo";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
@@ -37,7 +37,7 @@ export default function Login() {
       const data = await axios
         .patch(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-          { id: 6 },
+          { id: 7 },
           {
             headers: {
               Authorization: "1",
@@ -49,20 +49,19 @@ export default function Login() {
       sessionStorage.setItem("user", JSON.stringify(data)); // 세션 스토리지에 저장
       setIsLoginState({
         isLoginState: true,
-        isLoginUserAmdin: data.isAuthUser,
+        isAuthUser: data.isAuthUser,
         isLoginInfo: data,
       });
       // console.log(data);
 
       navigate("/");
     } catch (error) {
-      console.error("로그인 중 에러 발생:", error); 
+      console.error("로그인 중 에러 발생:", error);
       console.warn(
         "에러, headers 값 줬는지 혹은 body의 id 값이 1 ~ 7인지 확인"
       );
     }
   };
-
 
   return (
     <>
@@ -86,7 +85,7 @@ export default function Login() {
 
         <Block.FlexBox
           css={css`
-          /* border-top: 36px; */
+            /* border-top: 36px; */
             flex-direction: column;
             align-items: center;
             ${GapContainer}
