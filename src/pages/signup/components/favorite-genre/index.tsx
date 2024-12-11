@@ -58,8 +58,9 @@ const MovieGenreSelector = () => {
           </span>
         </div>
         <div css={genreGrid}>
-        <GenreButtons
+          <GenreButtons
             onClick={toggleGenre}
+            selectedGenres={inputData.favoriteGenres}
           />
         </div>
       </div>
@@ -67,8 +68,7 @@ const MovieGenreSelector = () => {
         <div
           css={Warning}
           style={{ visibility: isValid ? "hidden" : "visible" }}
-        >
-        </div>
+        ></div>
       </div>
     </div>
   );
