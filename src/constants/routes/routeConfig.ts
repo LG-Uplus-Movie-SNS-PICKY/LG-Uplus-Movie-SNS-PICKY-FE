@@ -1,4 +1,4 @@
-interface RouteConfigTypes {
+export interface RouteConfigTypes {
   path: string;
   header?: "basic" | "login" | "main" | "title";
   label?: string;

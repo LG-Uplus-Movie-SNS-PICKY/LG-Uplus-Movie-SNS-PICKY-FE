@@ -35,7 +35,6 @@ function Layout({ children }: LayoutProps): JSX.Element {
         config.path === matchPath(config.path, location.pathname)?.pattern.path
     );
 
-    console.log(config);
     setHeaderTypes(config?.header || "");
     setHeaderLabel(config?.label || "");
 
