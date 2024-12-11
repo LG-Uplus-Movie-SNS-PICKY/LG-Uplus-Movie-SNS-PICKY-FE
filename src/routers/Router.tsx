@@ -27,6 +27,7 @@ import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
 import NotFoundPage from "@pages/not-found";
+import DomainGoogle from "@pages/google";
 
 function Router() {
   return (
@@ -41,17 +42,19 @@ function Router() {
             {/* 공개 라우트 */}
             <Route path="/" element={<Home />} />
 
+            <Route path="/domain" element={<DomainGoogle />} />
+
             {/* 비로그인 사용자 라우트 */}
             <Route path="/auth/sign-in" element={<Login />} />
             <Route
               path="/auth/sign-in/oauth2/naver/callback"
               element={<CallbackNaver />}
             />
-             <Route
+            <Route
               path="/auth/sign-in/oauth2/google/callback"
               element={<CallbackGoogle />}
             />
-             <Route
+            <Route
               path="/auth/sign-in/oauth2/kakao/callback"
               element={<CallbackKakao />}
             />
@@ -66,8 +69,10 @@ function Router() {
             <Route path="/user/:nickname/edit" element={<Edit />} />
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
-            <Route path="/movie-log" element={<Feed />} />
-            <Route path="/movie-log/detail" element={<Comment />} />
+            <Route path="/movie-log" element={<Feed />}>
+              <Route path="/movie-log/:id" element={<Feed />} />
+            </Route>
+            <Route path="/movie-log/detail/:boardId" element={<Comment />} />
             <Route path="/movie-log/add" element={<Post />} />
             {/* <Route path="/movie-log/edit" element={<EditFeed />} /> */}
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   banner,
@@ -56,6 +56,8 @@ interface BoardContent {
 }
 
 export default function SocialFeed() {
+  const param = useParams();
+
   const [boardData, setBoardData] = useState<BoardContent[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
@@ -68,7 +70,13 @@ export default function SocialFeed() {
 
   // API 호출
   useEffect(() => {
-    const fetchData = async () => {
+    const { id } = param;
+
+    const fetchMovieData = async () => {
+      console.log("Hekllo");
+    };
+
+    const fetchAllData = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`,
@@ -79,13 +87,12 @@ export default function SocialFeed() {
           }
         );
         setBoardData(response.data.data || []);
-        console.log(response.data);
       } catch (error) {
-        console.error("API 호출 중 에러 발생:", error);
+        console.error("API 호출 중 오류 발생:", error);
       }
     };
 
-    fetchData();
+    id ? fetchMovieData() : fetchAllData();
   }, []);
 
   const calculateTimeAgo = (createdDate: string) => {
@@ -101,25 +108,27 @@ export default function SocialFeed() {
 
   const toggleLike = async (boardId: number) => {
     try {
-      const response = await axios.post(
+      // API 요청: 좋아요 상태 변경
+      await axios.post(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/likes`,
         null,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer`,
           },
         }
       );
 
+      // 좋아요 상태 업데이트
       setBoardData((prevData) =>
         prevData.map((board) =>
           board.boardId === boardId
             ? {
                 ...board,
                 likesCount: board.isLike
-                  ? board.likesCount - 1
-                  : board.likesCount + 1,
-                isLike: !board.isLike,
+                  ? board.likesCount - 1 // 이미 눌려있다면 좋아요 감소
+                  : board.likesCount + 1, // 안 눌려있다면 좋아요 증가
+                isLike: !board.isLike, // 좋아요 상태 토글
               }
             : board
         )
@@ -224,14 +233,22 @@ export default function SocialFeed() {
                     contentSection,
                     board.isSpoiler && !isSpoilerRevealed && blurredContent,
                   ]}
-                  onClick={() => navigate(`/movie-log/detail?${board.boardId}`)}
+                  onClick={() =>
+                    navigate(`/movie-log/detail/${board.boardId}`, {
+                      state: board,
+                    })
+                  }
                 >
                   {board.context}
                 </div>
 
                 <div
                   css={carouselWrapper}
-                  onClick={() => navigate(`/movie-log/detail?${board.boardId}`)}
+                  onClick={() =>
+                    navigate(`/movie-log/detail/${board.boardId}`, {
+                      state: board,
+                    })
+                  }
                 >
                   <div
                     css={[
@@ -273,7 +290,9 @@ export default function SocialFeed() {
                     </span>
                     <span
                       onClick={() =>
-                        navigate(`/movie-log/detail?${board.boardId}`)
+                        navigate(`/movie-log/detail/${board.boardId}`, {
+                          state: board,
+                        })
                       }
                     >
                       <CommentFeed />
