@@ -40,10 +40,13 @@ export default function Signup() {
     () => [
       { components: [<InputUserName key="name" />], requiredFields: ["name"] },
       {
+        components: [<InputFavoriteGenre key="favoriteGenres" />],
+        requiredFields: ["favoriteGenres"],
+      },
+      {
         components: [<InputBirthDate key="birthDate" />],
         requiredFields: ["birthDate"],
       },
-
       {
         components: [<InputGender key="gender" />],
         requiredFields: ["gender"],
@@ -59,10 +62,6 @@ export default function Signup() {
       {
         components: [<InputConsentForm key="consent" />],
         requiredFields: ["consentAll", "consentAge"],
-      },
-      {
-        components: [<InputFavoriteGenre key="favoriteGenres" />],
-        requiredFields: ["favoriteGenres"],
       },
       {
         components: [<InputFavoriteMovie key="favoriteMovie" />],
