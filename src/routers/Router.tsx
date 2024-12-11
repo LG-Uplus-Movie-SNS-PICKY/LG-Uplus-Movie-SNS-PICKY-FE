@@ -16,17 +16,23 @@ import AdminLayout from "./AdminLayout";
 import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import My from "@pages/my";
+import Edit from "@pages/edit";
 import Recommendations from "@pages/recommendations";
-import Callback from "@pages/login/oauth";
+import CallbackNaver from "@pages/login/naver/oauth";
+import CallbackGoogle from "@pages/login/google/oauth";
+import CallbackKakao from "@pages/login/kakao/oauth";
 import Post from "@pages/social/post";
 import { HelmetProvider } from "react-helmet-async";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
 import NotFoundPage from "@pages/not-found";
+
 import { useEffect } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoginState } from "@recoil/atoms/isLoginState";
+import DomainGoogle from "@pages/google";
+
 
 function Router() {
   const isLoginValue = useRecoilValue(isLoginState);
@@ -52,11 +58,21 @@ function Router() {
             {/* 공개 라우트 */}
             <Route path="/" element={<Home />} />
 
+            <Route path="/domain" element={<DomainGoogle />} />
+
             {/* 비로그인 사용자 라우트 */}
             <Route path="/auth/sign-in" element={<Login />} />
             <Route
-              path="/auth/sign-in/oauth2/callback"
-              element={<Callback />}
+              path="/auth/sign-in/oauth2/naver/callback"
+              element={<CallbackNaver />}
+            />
+            <Route
+              path="/auth/sign-in/oauth2/google/callback"
+              element={<CallbackGoogle />}
+            />
+            <Route
+              path="/auth/sign-in/oauth2/kakao/callback"
+              element={<CallbackKakao />}
             />
             <Route path="/auth/sign-up" element={<Signup />} />
 
@@ -66,11 +82,13 @@ function Router() {
 
             {/* 로그인 사용자 - User 관련 라우트 */}
             <Route path="/user/:nickname" element={<My />} />
-            {/* <Route path="/user/:nickname/edit" element={<Edit />} /> */}
+            <Route path="/user/:nickname/edit" element={<Edit />} />
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
-            <Route path="/movie-log" element={<Feed />} />
-            <Route path="/movie-log/detail" element={<Comment />} />
+            <Route path="/movie-log" element={<Feed />}>
+              <Route path="/movie-log/:id" element={<Feed />} />
+            </Route>
+            <Route path="/movie-log/detail/:boardId" element={<Comment />} />
             <Route path="/movie-log/add" element={<Post />} />
             {/* <Route path="/movie-log/edit" element={<EditFeed />} /> */}
 

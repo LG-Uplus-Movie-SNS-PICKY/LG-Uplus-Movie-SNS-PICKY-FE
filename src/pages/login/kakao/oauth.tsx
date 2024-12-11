@@ -21,7 +21,7 @@ const LoginCallback: React.FC = () => {
     // 소셜 로그인 API 요청
     axios
       // .get(`http://api.picky-movie.com/api/v1/oauth/naver/user`, {
-        .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
+        .get(`https://api.picky-movie.com/api/v1/oauth/kakao/user`, {
         params: { code, state },
       })
       .then((response) => {
@@ -48,7 +48,7 @@ const LoginCallback: React.FC = () => {
 
         // 회원가입 여부 확인 후 페이지 이동
         if (isRegistrationDone) {
-          navigate("/auth/sign-in");
+          navigate("/");
         } else {
           navigate("/auth/sign-up");
         }

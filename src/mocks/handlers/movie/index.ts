@@ -235,7 +235,11 @@ const movieHandlers: HttpHandler[] = [
       const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
 
       // 권환이 없을 경우 403 에러 발생
-      if (!authorization || isEmpty(userInfo) || !movieId) {
+      if (
+        !authorization ||
+        isEmpty(userInfo) ||
+        !movieId
+      ) {
         return HttpResponse.json(
           {
             message:
@@ -316,6 +320,7 @@ const movieHandlers: HttpHandler[] = [
           { status: 400, statusText: "Invalid Movie ID" }
         );
       }
+
       // response data 구성
       return HttpResponse.json(
         {

@@ -14,6 +14,7 @@ import boardContents from "@constants/json/board/board_contents.json";
 const isLogin = false;
 
 function Main() {
+
   useEffect(() => {
     const fetch = async () => {
       const data = await axios

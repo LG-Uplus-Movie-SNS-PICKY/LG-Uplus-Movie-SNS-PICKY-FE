@@ -160,8 +160,9 @@ export const ScoreBar = styled.div<{ percentage: number }>`
     display: block;
     height: 100%;
     width: ${props => `${props.percentage}%`};
-    background-color: ${props => props.percentage < 50 ? '#F6A6A8' : '#FC4C4E'};  // 채워질 색을 조건에 따라 변경
+    background-color: rgba(252, 8, 74, ${props => props.percentage / 100}); /* 퍼센트에 따라 투명도 설정 */
     border-radius: 8px;  // 채워진 바의 라운드 적용
+    transition: opacity 0.3s ease;  // 투명도 변화 시 애니메이션 효과 적용
   }
 `;
 
@@ -172,37 +173,6 @@ export const PercentageText = styled.div`
   text-align: right;
   align-items: center;
   width: 28px;
-`;
-
-// export const ScoreBarContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 10px;
-// `;
-
-// export const ScoreBar = styled.div<{ percentage: number }>`
-//   height: 20px;
-//   width: ${props => props.percentage}%;
-//   background-color: #007BFF;
-//   border-radius: 5px;
-// `;
-
-// export const ScorePercentage = styled.span`
-//   font-size: 12px;
-// `;
-
-export const GenderStats = styled.div`
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-`;
-
-export const GenderStat = styled.div`
-  font-size: 14px;
-`;
-
-export const CircleChart = styled.div`
-  // 여기에 실제 차트 라이브러리 또는 SVG 로직 추가
 `;
 
 export const PercentageWrapper = styled.div`

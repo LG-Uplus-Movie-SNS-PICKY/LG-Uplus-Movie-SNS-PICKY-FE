@@ -89,7 +89,7 @@ const reviewHandler: HttpHandler[] = [
     }
   ),
 
-  // 특정 댓글 수정 API Mocking Object
+  // 특정 한줄평 수정 API Mocking Object
   http.patch(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:lineReviewId`,
     async ({ params, request }) => {
