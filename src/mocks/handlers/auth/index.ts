@@ -47,7 +47,30 @@ const authHandler: HttpHandler[] = [
         );
       }
 
-      return HttpResponse.json({ ...userInfo }, { status: 200 });
+      const data = {
+        oAuth2Token: {
+          access_token: "string",
+          refresh_token: "string",
+          token_type: "string",
+          expires_in: "string",
+        },
+        localJwtDto: {
+          accessToken: userInfo.user_id,
+        },
+        isRegistrationDone: true,
+        user: {
+          name: userInfo.user_name,
+          nickname: userInfo.user_nickname,
+          profile_url: userInfo.user_profile_url,
+          birthdate: userInfo.user_birthdate,
+          gender: userInfo.user_gender,
+          nationality: userInfo.user_nationality,
+          genres: [],
+          role: userInfo.user_role,
+        },
+      };
+
+      return HttpResponse.json({ ...data }, { status: 200 });
     }
   ),
 
@@ -89,7 +112,7 @@ const authHandler: HttpHandler[] = [
       return HttpResponse.json(
         {
           message:
-            findUser.user_nickname !== loginUser.user_nickname
+            findUser.user_nickname !== loginUser.user.nickname
               ? "OUTER_USER"
               : "USER",
         },

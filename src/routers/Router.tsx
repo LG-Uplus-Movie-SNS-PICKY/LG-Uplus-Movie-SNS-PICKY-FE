@@ -27,9 +27,25 @@ import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
 import NotFoundPage from "@pages/not-found";
+
+import { useEffect } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoginState } from "@recoil/atoms/isLoginState";
 import DomainGoogle from "@pages/google";
 
+
 function Router() {
+  const isLoginValue = useRecoilValue(isLoginState);
+  const setIsLoginState = useSetRecoilState(isLoginState);
+
+  useEffect(() => {
+    const user = sessionStorage.getItem("user");
+
+    if (user) {
+      setIsLoginState(true);
+    }
+  }, [setIsLoginState]);
+
   return (
     <HelmetProvider>
       <BrowserRouter

@@ -16,14 +16,15 @@ const isLogin = false;
 function Main() {
 
   useEffect(() => {
-    // sessionStorage.setItem("user", JSON.stringify({ id: 1, name: "asd" }));
     const fetch = async () => {
       const data = await axios
         .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereviewlike`,
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
           {
-            lineReviewId: 3,
-            preference: "LIKE",
+            boardContext: "string",
+            movieId: 1,
+            contents: [],
+            isSpoiler: true,
           },
           {
             headers: { Authorization: "1" },
