@@ -30,13 +30,13 @@ interface EditReviewModalProps {
 }
 
 const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
-    const [spoiler, setSpoiler] = useState<boolean | null>(null);
+    // const [spoiler, setSpoiler] = useState<boolean | null>(null);
     const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
-    const [initialContext, setInitialContext] = useState(review.line_review_content); // 초기 감상평 값
-    const [initialSpoiler, setInitialSpoiler] = useState<boolean | null>(null); // 초기 스포일러 여부
+    const [initialContext, setInitialContext] = useState(review.context); // 초기 감상평 값
+    const [initialIsSpoiler, setInitialIsSpoiler] = useState(review.isSpoiler || false); // 초기 스포일러 여부
 
-    const [context, setContext] = useState(review.line_review_content);
-    const [isSpoiler, setIsSpoiler] = useState(review.is_spoiler || false);
+    const [context, setContext] = useState(review.context);
+    const [isSpoiler, setIsSpoiler] = useState(review.isSpoiler || false);
 
     const handleSave = async () => {
         if (!context.trim()) {
@@ -46,17 +46,17 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
 
         try {
             const { data } = await axios.patch(
-                `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${review.line_review_id}`,
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${review.id}`,
                 {
                     context,
                     isSpoiler,
                 },
                 {
-                    headers: { Authorization: "Bearer token" },
+                    headers: { Authorization: "123" },
                 }
             );
 
-            onSave({ ...review, line_review_content: context, is_spoiler: isSpoiler });
+            onSave({ ...review, context: context, isSpoiler: isSpoiler });
             showToast("수정이 완료되었습니다.", "up");
         } catch (err) {
             showToast("수정 중 오류가 발생했습니다.", "down");
@@ -73,7 +73,16 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
     };
 
     const hasChanges = () => {
-        return context !== initialContext || spoiler !== initialSpoiler;
+        return context !== initialContext || isSpoiler !== initialIsSpoiler;
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // 기본 Enter 키 동작 방지
+            if (hasChanges()) {
+                handleSave();
+            }
+        }
     };
 
     return (
@@ -87,7 +96,7 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
                             key={index}
                             onClick={handleStarClick} // 별점 클릭 시 메시지 표시
                             // active={index < Math.round(rating)} // 활성화된 별의 수 표시
-                            active={index < review.line_review_rating} // 현재 리뷰의 별점에 따라 색상 표시
+                            active={index < review.rating} // 현재 리뷰의 별점에 따라 색상 표시
                         >
                             ★
                         </Star>
@@ -97,10 +106,10 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
             <SpoilerContainer>
                 <Text>감상평에 스포일러가 포함되어 있나요?</Text>
                 <YesNoButtonContainer>
-                    <YesNoButton onClick={() => setSpoiler(true)} active={spoiler === true}>
+                    <YesNoButton onClick={() => setIsSpoiler(true)} active={isSpoiler === true}>
                         있음
                     </YesNoButton>
-                    <YesNoButton onClick={() => setSpoiler(false)} active={spoiler === false}>
+                    <YesNoButton onClick={() => setIsSpoiler(false)} active={isSpoiler === false}>
                         없음
                     </YesNoButton>
                 </YesNoButtonContainer>
@@ -110,6 +119,7 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
                     <ReviewInput
                         value={context}
                         onChange={(e) => setContext(e.target.value)}
+                        onKeyDown={handleKeyDown}
                         placeholder="한줄평을 작성해주세요."
                     />
                     <EditButton

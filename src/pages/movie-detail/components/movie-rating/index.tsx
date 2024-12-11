@@ -139,7 +139,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
                     비하인드
                 </IconContainer>
             </TabBarContainer>
-            {showBehindModal && <BehindModal onClose={() => setShowBehindModal(false)} />}
+            {showBehindModal && (<BehindModal onClose={() => setShowBehindModal(false)} />)}
         </RatingContainer>
     );
 };

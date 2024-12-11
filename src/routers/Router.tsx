@@ -27,7 +27,7 @@ import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import NotificationPage from "@pages/notification";
 import NotFoundPage from "@pages/not-found";
-
+import PostModify from "@pages/social/modify";
 import { useEffect } from "react";
 
 import { useSetRecoilState } from "recoil";
@@ -94,6 +94,7 @@ function Router() {
             </Route>
             <Route path="/movie-log/detail/:boardId" element={<Comment />} />
             <Route path="/movie-log/add" element={<Post />} />
+            <Route path="/movie-log/edit/:boardId" element={<PostModify />} />
             {/* <Route path="/movie-log/edit" element={<EditFeed />} /> */}
 
             {/* 로그인 사용자 - 이외 라우트 */}

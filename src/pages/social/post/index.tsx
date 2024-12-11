@@ -92,6 +92,12 @@ export default function SocialPost() {
 
   const navigate = useNavigate();
 
+  const isButtonActive =
+    !!selectedMovieData &&
+    !!reviewText.trim() &&
+    selectedSpoiler !== "null" &&
+    !!fileUrl;
+
   const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
     setSelectedMovieData(movie);
     setSearchTerm(movie.title);
@@ -169,14 +175,14 @@ export default function SocialPost() {
   };
 
   const handleShareClick = async () => {
-    if (!selectedMovieData || !reviewText.trim()) {
-      alert("영화와 리뷰 내용을 입력해주세요.");
+    if (!isButtonActive) {
+      alert("모든 필드를 작성해주세요.");
       return;
     }
 
     const payload = {
       boardContext: reviewText,
-      movieId: selectedMovieData.title, // 실제 영화 ID로 수정 필요
+      movieId: selectedMovieData!.title, // 실제 영화 ID로 수정 필요
       contents: fileUrl
         ? [{ contentUrl: fileUrl, type: "PHOTO" }] // 예시로 PHOTO 고정
         : [],
@@ -189,7 +195,7 @@ export default function SocialPost() {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
             "Content-Type": "application/json",
           },
         }
@@ -235,8 +241,8 @@ export default function SocialPost() {
             <p>{selectedMovieData.country}</p>
           </div>
           <div css={movieGenres}>
-            {selectedMovieData.genres.map((genre, index) => (
-              <span key={index}>{genre}</span>
+            {selectedMovieData.genres.map((genre) => (
+              <span key={genre}>{genre}</span>
             ))}
           </div>
         </div>
@@ -333,7 +339,12 @@ export default function SocialPost() {
       </div>
 
       <div css={shareButton}>
-        <Button btnType="Active" label="공유" onClick={handleShareClick} />
+        <Button
+          primary={isButtonActive}
+          btnType="Active"
+          label="공유"
+          onClick={handleShareClick}
+        />
       </div>
     </div>
   );

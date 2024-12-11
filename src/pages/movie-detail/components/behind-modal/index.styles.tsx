@@ -106,24 +106,26 @@ export const OstPlayist = styled.div`
 
 export const OstContainer = styled.div`
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     gap: 4px;
     width: 100%;
+    cursor: pointer;
     /* overflow-y: auto; */
 `;
 
 export const OstInfoContainer = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 4px;
-    padding: 4px;
-    border-bottom: 0.5px solid #D9D9D9;
-    flex: 1;
-    width: 100%;
-    height: 56px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: 4px;
+  border-bottom: 0.5px solid #D9D9D9;
+  flex: 1;
+  min-width: 0; /* 텍스트 잘림 처리를 위해 필수 */
+  width: 100%;
+  height: 56px;
 `;
 
 // OST 앨범 커버
@@ -137,6 +139,10 @@ export const OstImage = styled.img`
 export const OstTitle = styled.span`
   font-size: 16px;
   font-weight: 400;
+  white-space: nowrap; /* 한 줄로 표시 */
+  overflow: hidden; /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis; /* ... 처리 */
+  width: 100%; /* 부모 컨테이너 너비 기준으로 동작 */
 `;
 
 // OST 아티스트
@@ -144,4 +150,8 @@ export const OstArtist = styled.span`
   font-size: 16px;
   font-weight: 400;
   color: #9d9d9d;
+  white-space: nowrap; /* 한 줄로 표시 */
+  overflow: hidden; /* 넘치는 내용 숨기기 */
+  text-overflow: ellipsis; /* ... 처리 */
+  width: 100%; /* 부모 컨테이너 너비 기준으로 동작 */
 `;  

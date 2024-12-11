@@ -15,7 +15,7 @@ import { useParams } from "react-router-dom";
 
 interface MovieTypes {
   [key: string]: unknown;
-  movie_id: number;
+  movieId: number;
   movie_title: string;
   movie_poster_src: string;
 }
@@ -23,18 +23,19 @@ interface MovieTypes {
 interface WriterTypes {
   [key: string]: unknown;
   writer_id: number;
-  writer_nickname: string;
+  writerNickname: string;
 }
 
 export interface LineReviewData {
   [key: string]: unknown;
-  line_review_id: number;
-  line_review_rating: number;
-  line_review_content: string;
+  id: number;
+  rating: number;
+  context: string;
   movie: MovieTypes;
-  line_review_like: number;
-  line_review_hate: number;
+  likes: number;
+  dislikes: number;
   writer: WriterTypes;
+  isSpoiler: boolean;
   created_at: string;
 }
 
@@ -92,6 +93,8 @@ function LineReviewContent() {
           }
         );
         setReviews(data.content || []);
+        
+        console.log("data");
         console.log(data);
       } catch (err) {
         setError("한줄평 데이터를 불러오는 중 오류가 발생했습니다.");
@@ -179,7 +182,7 @@ function LineReviewContent() {
       {reviews.length === 0 && <EmptyLineReview />}
       {reviews.length > 0 &&
         reviews.map((review) => (
-          <div key={review.line_review_id} css={styles.reviewCard()}>
+          <div key={review.id} css={styles.reviewCard()}>
             {/* 영화 포스터 이미지 */}
             <div className="poster">
               {review.movie?.movie_poster_src ? (
@@ -195,12 +198,12 @@ function LineReviewContent() {
             {/* 리뷰 정보 */}
             <div css={styles.reviewInfo()}>
               {/* 사용자가 남긴 평점 */}
-              {renderStars(review.line_review_rating)}
+              {renderStars(review.rating)}
 
               {/* 한줄평 정보 */}
               <div className="line-review-info">
                 <div>한줄평</div>
-                <p>{review.line_review_content}</p>
+                <p>{review.context}</p>
               </div>
 
               {/* 영화 | 등록 날짜  */}
@@ -214,11 +217,11 @@ function LineReviewContent() {
               <div className="reaction-info">
                 <div className="reaction-buttons">
                   <ThumbsUpSvg />
-                  <span>{review.line_review_like}</span>
+                  <span>{review.likes}</span>
                 </div>
                 <div className="reaction-buttons">
                   <ThumbsDownSvg />
-                  <span>{review.line_review_hate}</span>
+                  <span>{review.dislikes}</span>
                 </div>
               </div>
             </div>
@@ -233,7 +236,7 @@ function LineReviewContent() {
               </div>
               <div
                 css={styles.reviewDeleteBtn()}
-                onClick={() => handleDeleteClick(review.line_review_id)}
+                onClick={() => handleDeleteClick(review.id)}
               >
                 삭제
               </div>
