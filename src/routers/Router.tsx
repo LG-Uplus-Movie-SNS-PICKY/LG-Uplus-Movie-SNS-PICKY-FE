@@ -34,6 +34,7 @@ import { useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { isEmpty } from "lodash";
 import DomainGoogle from "@pages/google";
+import ProtectedRoute from "./ProtectedRoute";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -44,7 +45,7 @@ function Router() {
     if (!isEmpty(user)) {
       setIsLoginState({
         isLoginState: true,
-        isAuthUser: user.isRegistrationDone,
+        isAuthUser: user.isAuthUser,
         isLoginInfo: user,
       });
     }
@@ -60,50 +61,181 @@ function Router() {
         <Layout>
           <Routes>
             {/* 공개 라우트 */}
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute role="common">
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/domain" element={<DomainGoogle />} />
 
             {/* 비로그인 사용자 라우트 */}
-            <Route path="/auth/sign-in" element={<Login />} />
+            <Route
+              path="/auth/sign-in"
+              element={
+                <ProtectedRoute role="guest">
+                  <Login />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/auth/sign-in/oauth2/naver/callback"
-              element={<CallbackNaver />}
+              element={
+                <ProtectedRoute role="guest">
+                  <CallbackNaver />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/auth/sign-in/oauth2/google/callback"
-              element={<CallbackGoogle />}
+              element={
+                <ProtectedRoute role="guest">
+                  <CallbackGoogle />
+                </ProtectedRoute>
+              }
             />
             <Route
               path="/auth/sign-in/oauth2/kakao/callback"
-              element={<CallbackKakao />}
+              element={
+                <ProtectedRoute role="guest">
+                  <CallbackKakao />
+                </ProtectedRoute>
+              }
             />
-            <Route path="/auth/sign-up" element={<Signup />} />
+            <Route
+              path="/auth/sign-up"
+              element={
+                <ProtectedRoute role="guest">
+                  <Signup />
+                </ProtectedRoute>
+              }
+            />
 
             {/* 로그인 사용자 - Movie 관련 라우트 (영화 상세) */}
-            <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/movie/:id/review" element={<MovieReviews />} />
+            <Route
+              path="/movie/:id"
+              element={
+                <ProtectedRoute role="user">
+                  <MovieDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movie/:id/review"
+              element={
+                <ProtectedRoute role="user">
+                  <MovieReviews />
+                </ProtectedRoute>
+              }
+            />
 
             {/* 로그인 사용자 - User 관련 라우트 */}
-            <Route path="/user/:nickname" element={<My />} />
-            <Route path="/user/:nickname/edit" element={<Edit />} />
+            <Route
+              path="/user/:nickname"
+              element={
+                <ProtectedRoute role="user">
+                  <My />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/user/:nickname/edit"
+              element={
+                <ProtectedRoute role="user">
+                  <Edit />
+                </ProtectedRoute>
+              }
+            />
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
-            <Route path="/movie-log" element={<Feed />} />
-            <Route path="/movie-log/detail/:boardId" element={<Comment />} />
-            <Route path="/movie-log/add" element={<Post />} />
-            <Route path="/movie-log/edit/:boardId" element={<PostModify />} />
+            <Route
+              path="/movie-log"
+              element={
+                <ProtectedRoute role="user">
+                  <Feed />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movie-log/detail/:boardId"
+              element={
+                <ProtectedRoute role="user">
+                  <Comment />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movie-log/add"
+              element={
+                <ProtectedRoute role="user">
+                  <Post />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/movie-log/edit/:boardId"
+              element={
+                <ProtectedRoute role="user">
+                  <PostModify />
+                </ProtectedRoute>
+              }
+            />
             {/* <Route path="/movie-log/edit" element={<EditFeed />} /> */}
 
             {/* 로그인 사용자 - 이외 라우트 */}
-            <Route path="/picky" element={<PickyPage />} />
-            <Route path="/genre/:genreId" element={<PickyGenreDetailPage />} />
-            <Route path="/notification" element={<NotificationPage />} />
-            <Route path="/recommendation" element={<Recommendations />} />
-            <Route path="/search" element={<Search />} />
+            <Route
+              path="/picky"
+              element={
+                <ProtectedRoute role="user">
+                  <PickyPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/genre/:genreId"
+              element={
+                <ProtectedRoute role="user">
+                  <PickyGenreDetailPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/notification"
+              element={
+                <ProtectedRoute role="user">
+                  <NotificationPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/recommendation"
+              element={
+                <ProtectedRoute role="user">
+                  <Recommendations />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <ProtectedRoute role="user">
+                  <Search />
+                </ProtectedRoute>
+              }
+            />
 
             {/* 관리자 전용 라우트 */}
-            <Route path="/admin/*" element={<AdminLayout />} />
+            <Route
+              path="/admin/*"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            />
 
             {/* 에러 페이지 */}
             <Route path="/*" element={<NotFoundPage />} />
