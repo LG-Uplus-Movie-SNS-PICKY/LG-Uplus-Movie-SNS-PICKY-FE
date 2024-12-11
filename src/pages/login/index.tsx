@@ -6,7 +6,8 @@ import {
   KAKAO_LOGIN_URL,
   NAVER_LOGIN_URL,
 } from "../../api/constants";
-import { BtnGoogle, BtnKakao, BtnNaver, PickyLogo } from "../../assets/svg";
+import { BtnGoogle, BtnKakao, BtnNaver } from "../../assets/svg";
+import Picky_main_Logo from "@assets/icons/picky_main_logo.svg?react";
 import {GapContainer, StyledText } from "./index.styles"
 import { Block, Text,  } from "../../styles/ui";
 import SEO from "@components/seo";
@@ -73,12 +74,13 @@ export default function Login() {
 
         <Block.FlexBox
           css={css`
+          /* border-top: 36px; */
             flex-direction: column;
             align-items: center;
             ${GapContainer}
           `}
         >
-          <PickyLogo width={231} height={83} />
+          <Picky_main_Logo width={300} height={100} />
           <div css={StyledText}>⚡️간편로그인으로 3초만에 빠르게 회원가입!</div>
         </Block.FlexBox>
 
