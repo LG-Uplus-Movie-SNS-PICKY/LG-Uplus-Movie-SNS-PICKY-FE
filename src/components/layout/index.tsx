@@ -13,11 +13,7 @@ import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { routeConfig } from "@constants/routes/routeConfig";
-
-const isLoginTestValue = {
-  state: false,
-  role: "user",
-};
+import { HeaderProps } from "@type/navigation";
 
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
@@ -25,22 +21,25 @@ function Layout({ children }: LayoutProps): JSX.Element {
 
   const isLoginInfo = useRecoilValue(isLogin);
 
-  const [showHeader, setShowHeader] = useState("");
+  const [headerTypes, setHeaderTypes] =
+    useState<HeaderProps["headerType"]>("login");
+  const [headerLabel, setHeaderLabel] = useState("");
+
   const [showGlobalNavbar, setShowGlobalNavbar] = useState(false);
   const [isDefaultMargin, setIsDefaultMargin] = useState("0");
 
+  // 현재 경로에 맞는 Header와 Navbar의 타입 정의
   useEffect(() => {
-    if (isLoginInfo.isLoginState) {
-      const config = routeConfig.find(
-        (config) =>
-          config.path ===
-          matchPath(config.path, location.pathname)?.pattern.path
-      );
+    const config = routeConfig.find(
+      (config) =>
+        config.path === matchPath(config.path, location.pathname)?.pattern.path
+    );
 
-      setShowHeader(config?.header || "");
-      setShowGlobalNavbar(config?.gnb || false);
-      setIsDefaultMargin(config?.margin || "0");
-    }
+    setHeaderTypes(config?.header || "");
+    setHeaderLabel(config?.label || "");
+
+    setShowGlobalNavbar(config?.gnb || false);
+    setIsDefaultMargin(config?.margin || "0");
   }, [isLoginInfo, location]);
 
   return (
@@ -52,7 +51,8 @@ function Layout({ children }: LayoutProps): JSX.Element {
         height="100vh"
       >
         <GlobalHeader
-          show={showHeader}
+          headerType={headerTypes}
+          label={headerLabel}
           location={location}
           navigate={navigate}
         />

@@ -32,6 +32,7 @@ export default function ProfileEditPage() {
     birthdate: "",
     gender: "",
     nationality: "",
+    email: "",
     movieId: [],
     genreId: [],
   });
@@ -43,8 +44,9 @@ export default function ProfileEditPage() {
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-  const accessToken = sessionStorage.getItem("accessToken");
-
+  // const accessToken = sessionStorage.getItem("accessToken");
+  const accessToken =
+    "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM5MTYyMDksImV4cCI6MTczNDAwMjYwOX0.wn19JoiX4HNJG21bl_VK8fzW_lSRfKLDCg1c_5zLAeU";
   const showToast = (message: string) => {
     setToastMessage(message);
   };
@@ -69,6 +71,7 @@ export default function ProfileEditPage() {
           birthdate: data.birthdate,
           gender: data.gender === "MALE" ? "남자" : "여자",
           nationality: data.nationality === "DOMESTIC" ? "내국인" : "외국인",
+          email: data.email,
           movieId: data.movieId || [],
           genreId: data.genreId || [],
         });
@@ -153,10 +156,10 @@ export default function ProfileEditPage() {
       const file = e.target.files[0];
 
       // 파일 크기 제한: 5MB
-      if (file.size > 5 * 1024 * 1024) {
-        setImageError("이미지 크기는 5MB를 초과할 수 없습니다.");
-        return;
-      }
+      // if (file.size > 5 * 1024 * 1024) {
+      //   setImageError("이미지 크기는 5MB를 초과할 수 없습니다.");
+      //   return;
+      // }
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -210,6 +213,7 @@ export default function ProfileEditPage() {
         nationalityMap[userData.nationality as keyof typeof nationalityMap] ||
         userData.nationality,
       movieId: userData.movieId || [],
+      email: userData.email,
       genreId: userData.genreId || [],
     };
 
@@ -310,7 +314,6 @@ export default function ProfileEditPage() {
             onChange={handleImageUpload}
           />
         </div>
-
         <div css={profileWrapper}>
           <div css={inputRowStyle}>
             <label css={inputLabelStyle}>닉네임</label>
@@ -332,7 +335,6 @@ export default function ProfileEditPage() {
               </span>
             </div>
           </div>
-
           <div css={inputRowStyle}>
             <label css={labelStyle}>이름</label>
             <input
@@ -342,7 +344,15 @@ export default function ProfileEditPage() {
               css={readonlyInputStyle}
             />
           </div>
-
+          <div css={inputRowStyle}>
+            <label css={labelStyle}>이메일</label>
+            <input
+              type="text"
+              value={userData.email}
+              readOnly
+              css={readonlyInputStyle}
+            />
+          </div>
           <div css={inputRowStyle}>
             <label css={labelStyle}>생년월일</label>
             <input
@@ -352,22 +362,11 @@ export default function ProfileEditPage() {
               css={readonlyInputStyle}
             />
           </div>
-
           <div css={inputRowStyle}>
             <label css={labelStyle}>성별</label>
             <input
               type="text"
               value={userData.gender}
-              readOnly
-              css={readonlyInputStyle}
-            />
-          </div>
-
-          <div css={inputRowStyle}>
-            <label css={labelStyle}>국적</label>
-            <input
-              type="text"
-              value={userData.nationality}
               readOnly
               css={readonlyInputStyle}
             />

@@ -73,7 +73,7 @@ const posterDummySrc =
 function RecommendMovieSlider() {
   return (
     <Swiper
-      slidesPerView={"auto"}
+      slidesPerView={1.3}
       spaceBetween={30}
       centeredSlides={true}
       modules={[Autoplay]}
