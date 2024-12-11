@@ -89,9 +89,7 @@ function Router() {
             <Route path="/user/:nickname/edit" element={<Edit />} />
 
             {/* 로그인 사용자 - Movie Log 관련 라우트 */}
-            <Route path="/movie-log" element={<Feed />}>
-              <Route path="/movie-log/:id" element={<Feed />} />
-            </Route>
+            <Route path="/movie-log" element={<Feed />} />
             <Route path="/movie-log/detail/:boardId" element={<Comment />} />
             <Route path="/movie-log/add" element={<Post />} />
             <Route path="/movie-log/edit/:boardId" element={<PostModify />} />

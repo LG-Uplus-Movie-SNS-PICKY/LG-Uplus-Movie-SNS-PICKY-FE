@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   banner,
@@ -56,7 +56,7 @@ interface BoardContent {
 }
 
 export default function SocialFeed() {
-  const param = useParams();
+  const location = useLocation();
 
   const [boardData, setBoardData] = useState<BoardContent[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -70,7 +70,8 @@ export default function SocialFeed() {
 
   // API 호출
   useEffect(() => {
-    const { id } = param;
+    const url = new URLSearchParams(location.search);
+    const id = url.get("movieId");
 
     const fetchMovieData = async () => {
       console.log("Hello");
