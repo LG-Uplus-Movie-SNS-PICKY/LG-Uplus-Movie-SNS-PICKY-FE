@@ -45,3 +45,72 @@ export const validateWeightWhole = (whole: string) => {
 export const validateWeightDecimal = (decimal: string) => {
     return /^\d{0,2}$/.test(decimal);
 };
+
+export const validateAge = (birthDateStr: string): boolean => {
+    const [year, month, day] = birthDateStr.split("-").map(Number);
+    const today = new Date();
+    const birthDate = new Date(year, month - 1, day);
+  
+    const hasHadBirthday =
+      today.getMonth() > birthDate.getMonth() ||
+      (today.getMonth() === birthDate.getMonth() &&
+        today.getDate() >= birthDate.getDate());
+  
+    let age = today.getFullYear() - birthDate.getFullYear();
+    if (!hasHadBirthday) {
+      age -= 1;
+    }
+  
+    return age >= 14;
+  };
+  
+  export const validateName = (name: string): boolean => {
+    return typeof name === "string" && name.length >= 2 && name.length <= 10;
+  };
+  
+  export const validateProfileImage = (profileImage: string): boolean => {
+    return typeof profileImage === "string" && profileImage.trim() !== "";
+  };
+  
+  export const validateNicknames = (isNicknameValid: boolean): boolean => {
+    return isNicknameValid;
+  };
+  
+  export const validateFavoriteGenres = (genres: number[]): boolean => {
+    return Array.isArray(genres) && genres.length > 2 && genres.length < 6;
+  };
+  
+  export const validateFavoriteMovies = (movies: number[]): boolean => {
+    return Array.isArray(movies) && movies.length >= 5 && movies.length <= 15;
+  };
+  
+  export const validateConsent = (consent: boolean): boolean => {
+    return consent === true;
+  };
+  
+  export const validateField = (
+    field: string,
+    value: string | number[] | boolean,
+    extra?: { isNicknameValid?: boolean }
+  ): boolean => {
+    switch (field) {
+      case "name":
+        return validateName(value as string);
+      case "profileImage":
+        return validateProfileImage(value as string);
+      case "nickname":
+        return validateNicknames(extra?.isNicknameValid || false);
+      case "birthDate":
+        return validateAge(value as string);
+      case "favoriteGenres":
+        return validateFavoriteGenres(value as number[]);
+      case "favoriteMovie":
+        return validateFavoriteMovies(value as number[]);
+      case "consentAll":
+      case "consentAge":
+        return validateConsent(value as boolean);
+      default:
+        return !!value?.toString().trim();
+    }
+  };
+  

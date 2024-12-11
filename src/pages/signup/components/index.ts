@@ -1,0 +1,9 @@
+export { default as InputUserName } from "./user-name";
+export { default as InputBirthDate } from "./birth-date";
+export { default as InputNickname } from "./nick-name";
+export { default as InputGender } from "./gender";
+export { default as InputNationality } from "./nationality";
+export { default as InputConsentForm } from "./consent-form";
+export { default as InputProfile } from "./profile";
+export { default as InputFavoriteGenre } from "./favorite-genre";
+export { default as InputFavoriteMovie } from "./favorite-movie";

@@ -9,7 +9,6 @@ export const userState = atom({
     profileImage: "",
     favoriteGenres: [],
     favoriteMovie: [],
-    // email: "",
     gender: "",
     nationality: "",
     kakao_id: "",
@@ -21,7 +20,6 @@ export const userState = atom({
 // 입력 데이터 상태
 export interface IInputData {
   name: string;
-  // email: string;
   nickname: string;
   birthDate: string;
   gender: string;
@@ -37,7 +35,6 @@ export const inputState = atom<IInputData>({
   key: "inputState",
   default: {
     name: "",
-    // email: "",
     nickname: "",
     birthDate: "",
     gender: "",

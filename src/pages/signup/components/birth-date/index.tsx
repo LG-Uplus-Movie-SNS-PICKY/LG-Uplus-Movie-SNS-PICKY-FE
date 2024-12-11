@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
-import { validateAge } from "../../utils/index";
+import { validateAge } from "../../../../util/validator";
 import {
   birthDateContainer,
   pickerContainer,
