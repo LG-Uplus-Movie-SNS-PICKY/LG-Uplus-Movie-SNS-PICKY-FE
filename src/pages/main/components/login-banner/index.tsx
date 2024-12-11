@@ -9,7 +9,10 @@ function LoginBanner(): JSX.Element {
   const navigate = useNavigate();
 
   return (
-    <div css={styles.bannerContainer()} onClick={() => navigate("/login")}>
+    <div
+      css={styles.bannerContainer()}
+      onClick={() => navigate("/auth/sign-in")}
+    >
       <div className="box">
         <h3>
           어떤 작품

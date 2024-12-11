@@ -10,10 +10,13 @@ import axios from "axios";
 import board from "@constants/json/board/board.json";
 import boardComments from "@constants/json/board/board_comments.json";
 import boardContents from "@constants/json/board/board_contents.json";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
-const isLogin = false;
+// const isLogin = false;
 
 function Main() {
+  const isLoginState = useRecoilValue(isLogin);
 
   useEffect(() => {
     const fetch = async () => {
@@ -34,7 +37,7 @@ function Main() {
       console.log(data);
     };
     fetch();
-  });
+  }, []);
 
   return (
     <>
@@ -44,10 +47,10 @@ function Main() {
       />
 
       {/* Slider or Banner Section */}
-      {isLogin ? <RecommendMovieSlider /> : <LoginBanner />}
+      {isLoginState.isLoginState ? <RecommendMovieSlider /> : <LoginBanner />}
 
       {/* Famous Movies Section */}
-      <FamousMovie isLogin={isLogin} />
+      <FamousMovie isLogin={isLoginState.isLoginState} />
 
       {/* Genre Movie Section */}
       <GenresMovie />

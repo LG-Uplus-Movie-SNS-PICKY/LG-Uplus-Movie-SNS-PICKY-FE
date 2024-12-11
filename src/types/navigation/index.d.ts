@@ -5,6 +5,13 @@ type IsLoginUser = {
   role: string;
 };
 
+export interface HeaderProps {
+  headerType: string;
+  label?: string;
+  location: Location;
+  navigate: NavigateFunction;
+}
+
 export interface NaviationProps {
   show: boolean | string;
   location: Location;
