@@ -44,7 +44,7 @@ function Router() {
     if (!isEmpty(user)) {
       setIsLoginState({
         isLoginState: true,
-        isLoginUserAmdin: user.isRegistrationDone,
+        isAuthUser: user.isRegistrationDone,
         isLoginInfo: user,
       });
     }

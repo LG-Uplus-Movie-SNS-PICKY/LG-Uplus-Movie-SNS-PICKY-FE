@@ -1,11 +1,13 @@
+import { routeConfig } from "@constants/routes/routeConfig";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { NavigaterBar as Navbar } from "@stories/navigater-bar";
 import { NaviationProps } from "@type/navigation";
 import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
+import { matchPath } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
-function GlobalNavigatorBar({ location, navigate }: NaviationProps) {
+function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
   const isLoginState = useRecoilValue(isLogin);
   const [activeTab, setActiveTab] = useState("");
 
@@ -74,11 +76,8 @@ function GlobalNavigatorBar({ location, navigate }: NaviationProps) {
     setActiveTab(currentActiveTab);
   }, [location]);
 
-  // if (!isLoginTestValue.state || isLoginTestValue.role === "admin") {
-  //   return null;
-  // }
-
-  if (!isLoginState.isLoginState || isLoginState.isLoginUserAmdin) return null;
+  if (!isLoginState.isLoginState || !isLoginState.isAuthUser || !show)
+    return null;
 
   return <Navbar state={activeTab} onClick={handleChangeTab} />;
 }

@@ -5,7 +5,7 @@ export const isLogin = atom({
   key: "isLoginState",
   default: {
     isLoginState: false,
-    isLoginUserAmdin: false,
+    isAuthUser: false,
     isLoginInfo: {},
   },
 });
