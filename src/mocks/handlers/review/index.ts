@@ -5,7 +5,7 @@ import user from "@constants/json/user.json";
 import lineReview from "@constants/json/line-review/lineReviews.json";
 import lineReviewLikes from "@constants/json/line-review/lineReviewLikes.json";
 
-import { isEmpty } from "lodash";
+import { isEmpty, reverse } from "lodash";
 
 interface ReviewLikeBodyTypes {
   lineReviewId: number;
@@ -89,7 +89,7 @@ const reviewHandler: HttpHandler[] = [
     }
   ),
 
-  // 특정 댓글 수정 API Mocking Object
+  // 특정 한줄평 수정 API Mocking Object
   http.patch(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:lineReviewId`,
     async ({ params, request }) => {
@@ -185,20 +185,39 @@ const reviewHandler: HttpHandler[] = [
         Number(url.searchParams.get("lastCreatedAt")) || null;
 
       // 현재 사용자가 작성한 한줄평 조회
-      let filterLineReview = lineReview.filter(
-        (review) => review.user_id === userInfo?.user_id
-      );
+      let filterLineReview = lineReview
+        .filter((review) => review.user_id === userInfo?.user_id)
+        .map((review) => ({
+          id: review.line_review_id,
+          writerNickname: review.writer_nickname,
+          userId: review.user_id,
+          movieId: review.movie_id,
+          rating: review.line_review_rating,
+          context: review.line_review_content,
+          isSpoiler: review.is_spoiler,
+          likes: lineReviewLikes.filter(
+            (like) =>
+              like.preference === "Like" &&
+              like.line_review_id === review.line_review_id
+          ).length,
+          dislikes: lineReviewLikes.filter(
+            (like) =>
+              like.preference === "DISLIKE" &&
+              like.line_review_id === review.line_review_id
+          ).length,
+          createdAt: review.created_at,
+        }));
 
       // 커서 기반 필터링(lastCreatedAt을 통해서 해당 날짜 이후 데이터 필터링)
       if (lastCreatedAt && lastReviewId) {
         filterLineReview = filterLineReview.filter((review) => {
-          if (new Date(review.created_at) < new Date(lastCreatedAt)) {
+          if (new Date(review.createdAt) < new Date(lastCreatedAt)) {
             return true;
           } else if (
-            new Date(review.created_at).getTime() ===
+            new Date(review.createdAt).getTime() ===
             new Date(lastCreatedAt).getTime()
           ) {
-            return review.line_review_id < lastReviewId;
+            return review.id < lastReviewId;
           }
 
           return false;
@@ -209,7 +228,7 @@ const reviewHandler: HttpHandler[] = [
       const paginatedReviews = filterLineReview
         .sort(
           (a, b) =>
-            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
         .slice(0, size);
 
@@ -221,10 +240,9 @@ const reviewHandler: HttpHandler[] = [
             paginatedReviews.length > 0
               ? {
                   lastCreatedAt:
-                    paginatedReviews[paginatedReviews.length - 1].created_at,
+                    paginatedReviews[paginatedReviews.length - 1].createdAt,
                   lastReviewId:
-                    paginatedReviews[paginatedReviews.length - 1]
-                      .line_review_id,
+                    paginatedReviews[paginatedReviews.length - 1].id,
                 }
               : null,
           numberOfElements: paginatedReviews.length,
@@ -263,7 +281,7 @@ const reviewHandler: HttpHandler[] = [
       const review = lineReview.find(
         (review) =>
           review.line_review_id === Number(lineReviewId) &&
-          review.user_id === userInfo?.user_id
+          review.user_id === userInfo?.localJwtDto.accessToken
       );
       if (isEmpty(review)) {
         // 삭제하려는 한줄평 정보가 없을 경우
@@ -315,7 +333,7 @@ const reviewHandler: HttpHandler[] = [
       );
 
       // #1. 한줄평이 현재 로그인한 사용자가 자기 글에 좋아요 또는 싫어요를 누르는 경우 -> 승인 X
-      if (reviewInfo?.user_id === userInfo.user_id) {
+      if (reviewInfo?.user_id === userInfo.localJwtDto.accessToken) {
         return HttpResponse.json(
           {
             message:
@@ -330,7 +348,7 @@ const reviewHandler: HttpHandler[] = [
       const reviewLikeInfo = lineReviewLikes.find(
         (like) =>
           like.line_review_id === body.lineReviewId &&
-          like.user_id === userInfo.user_id
+          like.user_id === userInfo.localJwtDto.accessToken
       );
 
       // #2. 사용자가 해당 한줄평에 평가를 남기지 않았을 경우 -> 평가 추가
@@ -340,7 +358,7 @@ const reviewHandler: HttpHandler[] = [
           line_review_id: body.lineReviewId,
           line_review_like_id: lineReviewLikes.length + 1,
           preference: body.preference,
-          user_id: userInfo.user_id,
+          user_id: userInfo.localJwtDto.accessToken,
         });
 
         // 이후 성공 응답을 반환한다.

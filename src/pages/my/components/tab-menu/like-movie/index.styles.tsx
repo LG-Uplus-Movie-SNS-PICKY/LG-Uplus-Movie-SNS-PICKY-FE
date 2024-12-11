@@ -7,10 +7,10 @@ export default {
 
       display: grid;
       grid-template-columns: repeat(3, 1fr); // 한 열에 3개의 아이템
-      grid-template-rows: repeat(3, 1fr); // 한 행에 4개의 아이템
+      /* grid-template-rows: repeat(3, 1fr); // 한 행에 4개의 아이템 */
 
       gap: 3px;
-      height: 100%;
+      /* height: 100%; */
 
       &.centered {
         display: flex;
@@ -31,7 +31,8 @@ export default {
       position: relative;
 
       width: 100%;
-      border-radius: 4px;
+      height: 187.28px;
+      border-radius: 2px;
 
       overflow: hidden;
       cursor: pointer;

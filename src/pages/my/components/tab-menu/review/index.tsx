@@ -8,8 +8,10 @@ import { Modal } from "@stories/modal";
 import { Toast } from "@stories/toast";
 import EditReviewModal from "../edit-review-modal";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 interface MovieTypes {
   [key: string]: unknown;
@@ -36,10 +38,6 @@ export interface LineReviewData {
   created_at: string;
 }
 
-interface LineReviewContentProps {
-  data: LineReviewData[];
-}
-
 // 사용자가 한줄평을 하나도 등록하지 않았을 경우
 function EmptyLineReview() {
   return (
@@ -62,11 +60,48 @@ const formatDate = (dateString: string) => {
   });
 };
 
-function LineReviewContent({ data }: LineReviewContentProps) {
+function LineReviewContent() {
   const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 모달 상태 관리
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 관리
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null); // 선택된 리뷰 ID 관리
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
+
+  const { nickname } = useParams<{ nickname: string }>();
+  const [reviews, setReviews] = useState<LineReviewData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 관리
+  const [selectedReview, setSelectedReview] = useState<LineReviewData | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchLineReviews = async () => {
+      if (!nickname) {
+        setError("닉네임이 제공되지 않았습니다.");
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${nickname}`,
+          {
+            headers: { Authorization: "123" },
+            params: { size: 10 },
+          }
+        );
+        setReviews(data.content || []);
+        console.log(data);
+      } catch (err) {
+        setError("한줄평 데이터를 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLineReviews();
+  }, [nickname]);
 
   const showToast = (message: string, direction: "none" | "up" | "down"): Promise<void> => {
     return new Promise((resolve) => {
@@ -78,14 +113,14 @@ function LineReviewContent({ data }: LineReviewContentProps) {
     });
   };
 
-  const handleEditClick = (reviewId: number) => {
-    setSelectedReviewId(reviewId);
-    setIsEditModalOpen(true); // 수정 모달 열기
+  const openEditModal = (review: LineReviewData) => {
+    setSelectedReview(review);
+    setIsEditModalOpen(true);
   };
 
-  const handleEditModalClose = () => {
-    setIsEditModalOpen(false); // 수정 모달 닫기
-    setSelectedReviewId(null);
+  const closeEditModal = () => {
+    setSelectedReview(null);
+    setIsEditModalOpen(false);
   };
 
   const handleDeleteClick = (reviewId: number) => {
@@ -99,10 +134,29 @@ function LineReviewContent({ data }: LineReviewContentProps) {
   };
 
   const confirmDelete = async () => {
-    console.log(`Delete review with ID: ${selectedReviewId}`);
-    // 삭제 로직 추가 (예: API 호출)
-    await showToast("한줄평 삭제가 완료되었습니다.", "up");
-    handleModalClose();
+    if (!selectedReviewId) return;
+
+    try {
+      // DELETE API 호출
+      const { data } = await axios.delete(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${selectedReviewId}`,
+        {
+          headers: { Authorization: "Bearer token" },
+        }
+      );
+
+      // 삭제 성공 시 리뷰 목록에서 제거
+      setReviews((prev) =>
+        prev.filter((review) => review.line_review_id !== selectedReviewId)
+      );
+
+      await showToast("한줄평 삭제가 완료되었습니다.", "up");
+    } catch (err) {
+      console.error("한줄평 삭제 중 오류 발생", err);
+      await showToast("한줄평 삭제에 실패했습니다.", "down");
+    } finally {
+      handleModalClose();
+    }
   };
 
   const renderStars = (rating: number) => {
@@ -117,67 +171,69 @@ function LineReviewContent({ data }: LineReviewContentProps) {
     );
   };
 
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
-    <div css={styles.container()} className={data.length ? "" : "centered"}>
-      {data.length === 0 && <EmptyLineReview />}
-      {data.length > 0 &&
-        data.map((data, idx) => (
-          <div key={data.line_review_id} css={styles.reviewCard()}>
+    <div css={styles.container()} className={reviews.length ? "" : "centered"}>
+      {reviews.length === 0 && <EmptyLineReview />}
+      {reviews.length > 0 &&
+        reviews.map((review) => (
+          <div key={review.line_review_id} css={styles.reviewCard()}>
             {/* 영화 포스터 이미지 */}
             <div className="poster">
-              <img
-                src={data.movie.movie_poster_src}
-                alt={data.movie.movie_title}
-              />
+              {review.movie?.movie_poster_src ? (
+                <img
+                  src={review.movie.movie_poster_src}
+                  alt={review.movie.movie_title || "제목 없음"}
+                />
+              ) : (
+                <div>포스터 없음</div>
+              )}
             </div>
 
             {/* 리뷰 정보 */}
             <div css={styles.reviewInfo()}>
               {/* 사용자가 남긴 평점 */}
-              {renderStars(data.line_review_rating)}
+              {renderStars(review.line_review_rating)}
 
               {/* 한줄평 정보 */}
               <div className="line-review-info">
-                <div>관람평</div>
-                <p>{data.line_review_content}</p>
+                <div>한줄평</div>
+                <p>{review.line_review_content}</p>
               </div>
 
               {/* 영화 | 등록 날짜  */}
               <div className="sub-info">
-                <span>{data.movie.movie_title}</span>
+                <span>{review.movie?.movie_title || "제목 없음"}</span>
                 <div className="round" />
-                <span>{formatDate(data.created_at)}</span>
+                <span>{formatDate(review.created_at)}</span>
               </div>
 
               {/* 한줄평 좋아요, 싫어요 개수 */}
               <div className="reaction-info">
                 <div className="reaction-buttons">
                   <ThumbsUpSvg />
-                  <span>{data.line_review_like}</span>
+                  <span>{review.line_review_like}</span>
                 </div>
                 <div className="reaction-buttons">
                   <ThumbsDownSvg />
-                  <span>{data.line_review_hate}</span>
+                  <span>{review.line_review_hate}</span>
                 </div>
               </div>
             </div>
-
-            {/* 삭제 버튼 */}
-            {/* <div css={styles.reviewDeleteBtn()}>
-              <DeleteCircle />
-            </div> */}
 
             {/* 수정 & 삭제 버튼 */}
             <div css={styles.reviewBtnContainer()}>
               <div
                 css={styles.reviewEditBtn()}
-                onClick={() => handleEditClick(data.line_review_id)}
+                onClick={() => openEditModal(review)}
               >
                 수정
               </div>
               <div
                 css={styles.reviewDeleteBtn()}
-                onClick={() => handleDeleteClick(data.line_review_id)}
+                onClick={() => handleDeleteClick(review.line_review_id)}
               >
                 삭제
               </div>
@@ -205,20 +261,30 @@ function LineReviewContent({ data }: LineReviewContentProps) {
         ReactDOM.createPortal(
           <div
             css={styles.modalContainer()}
-            onClick={handleEditModalClose} // 모달 바깥 클릭 시 닫기
+            onClick={closeEditModal} // 모달 바깥 클릭 시 닫기
           >
             <div
               css={styles.modalContent()}
               onClick={(e) => e.stopPropagation()} // 내부 클릭 시 닫히지 않도록 이벤트 전파 중단
             >
-              <EditReviewModal
-                reviewId={selectedReviewId}
-                onClose={handleEditModalClose}
-                onSave={(updatedReview) => {
-                  showToast("한줄평 수정이 완료되었습니다.", "up");
-                  handleEditModalClose();
-                }}
-              />
+              {selectedReview && (
+                <EditReviewModal
+                  review={selectedReview} // 선택된 리뷰 데이터 전달
+                  onClose={closeEditModal} // 모달 닫기 핸들러
+                  onSave={(updatedReview) => {
+                    // 저장 후 부모 상태 업데이트
+                    setReviews((prev) =>
+                      prev.map((review) =>
+                        review.line_review_id === updatedReview.line_review_id
+                          ? updatedReview
+                          : review
+                      )
+                    );
+                    showToast("한줄평 수정이 완료되었습니다.", "up");
+                    closeEditModal();
+                  }}
+                />
+              )}
             </div>
           </div>,
           document.body

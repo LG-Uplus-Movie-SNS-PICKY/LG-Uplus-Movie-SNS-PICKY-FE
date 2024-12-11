@@ -1,7 +1,6 @@
 // pages/MovieDetail/components/MovieInfo/index.styles.tsx
 import styled from '@emotion/styled';
 import { css, SerializedStyles } from '@emotion/react';
-// import AdBanner from '../../../../assets/images/movie_detail_ad_banner.png';
 import adBanner from "@assets/images/adBanner.jpg"
 
 export const MovieInfoContainer = styled.div`

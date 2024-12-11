@@ -12,9 +12,12 @@ import {GapContainer, StyledText } from "./index.styles"
 import { Block, Text,  } from "../../styles/ui";
 import SEO from "@components/seo";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { isLoginState } from "@recoil/atoms/isLoginState";
 
 export default function Login() {
   const navigate = useNavigate();
+  const setIsLoginState = useSetRecoilState(isLoginState);
 
   const handleKakaoLoginClick = () => {
     console.log("Kakao Login Clicked");
@@ -29,28 +32,31 @@ export default function Login() {
     window.location.href = `${NAVER_LOGIN_URL}`;
   };
 
-  const socialLoginClick = async () => {
-    const data = await axios
-      .patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        { id: 7 },
-        {
-          headers: {
-            Authorization: "1",
-          },
-        }
-      )
-      .then((res) => res.data);
+  const socialLoginClikc = async () => {
+    try {
+      const data = await axios
+        .patch(
+          `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+          { id: 6 },
+          {
+            headers: {
+              Authorization: "1",
+            },
+          }
+        )
+        .then((res) => res.data);
 
-    if (!data) {
+      sessionStorage.setItem("user", JSON.stringify(data));
+      setIsLoginState(true);
+      navigate("/");
+    } catch (error) {
+      console.error("로그인 중 에러 발생:", error); 
       console.warn(
         "에러, headers 값 줬는지 혹은 body의 id 값이 1 ~ 7인지 확인"
       );
     }
-
-    sessionStorage.setItem("user", JSON.stringify(data));
-    navigate("/");
   };
+
 
   return (
     <>
@@ -107,7 +113,7 @@ export default function Login() {
           />
         </Block.FlexBox>
 
-        <button onClick={socialLoginClick} style={{ cursor: "pointer" }}>
+        <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
           Local Login Btn
         </button>
       </Block.FlexBox>
