@@ -135,35 +135,46 @@ export default function Signup() {
       showToast(steps[step]?.fieldMessages?.[0] || "조건을 충족해주세요.");
       return;
     }
-
-    const payload = {
-      name: inputData.name,
-      nickname: inputData.nickname,
-      birthdate: inputData.birthDate,
-      gender: inputData.gender,
-      profile: inputData.profileImageData,
-      nationality: inputData.nationality,
-      movieId: inputData.favoriteMovie || [],
-      genreId: inputData.favoriteGenres || [],
-    };
-
+  
     try {
       const accessToken = sessionStorage.getItem("accessToken");
       if (!accessToken) {
         throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
       }
-
+  
+      // FormData 생성
+      const formData = new FormData();
+  
+      // JSON 데이터를 FormData로 추가
+      const jsonPayload = {
+        name: inputData.name,
+        nickname: inputData.nickname,
+        birthdate: inputData.birthDate,
+        gender: inputData.gender,
+        nationality: inputData.nationality,
+        movieId: inputData.favoriteMovie || [],
+        genreId: inputData.favoriteGenres || [],
+      };
+  
+      formData.append("json", JSON.stringify(jsonPayload));
+  
+      // 이미지를 FormData에 추가 (파일이 존재할 경우)
+      if (inputData.profileImageData) {
+        formData.append("profile", inputData.profileImageData.get("profile") as File);
+      }
+  
+      // API 요청
       const response = await axios.patch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        payload,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
+  
       console.log("회원가입 성공:", response.data);
-
       showToast("회원가입이 완료되었습니다!");
       navigate("/");
     } catch (error) {
@@ -171,7 +182,6 @@ export default function Signup() {
       showToast("회원가입 요청 중 오류가 발생했습니다.");
     }
   }, [isStepValid, inputData, navigate, showToast, step, steps]);
-
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === "Enter" && !toastMessage) {
