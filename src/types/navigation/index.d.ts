@@ -8,5 +8,4 @@ type IsLoginUser = {
 export interface NaviationProps {
   location: Location;
   navigate: NavigateFunction;
-  isLoginTestValue: IsLoginUser;
 }

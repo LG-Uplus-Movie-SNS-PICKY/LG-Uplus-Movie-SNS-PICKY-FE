@@ -87,7 +87,7 @@ const movieHandlers: HttpHandler[] = [
       if (
         !authorization ||
         isEmpty(userInfo) ||
-        userInfo.user_role !== "Admin"
+        userInfo.user.role !== "Admin"
       ) {
         return HttpResponse.json(
           {
@@ -235,15 +235,11 @@ const movieHandlers: HttpHandler[] = [
       const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
 
       // 권환이 없을 경우 403 에러 발생
-      if (
-        !authorization ||
-        isEmpty(userInfo) ||
-        userInfo.user_role !== "Admin"
-      ) {
+      if (!authorization || isEmpty(userInfo) || !movieId) {
         return HttpResponse.json(
           {
             message:
-              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 또는 어드민 계정인지 확인해주세요.",
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 또는 Movie Id를 넘겨주는지 확인해주세요.",
           },
           { status: 403 }
         );
@@ -251,7 +247,8 @@ const movieHandlers: HttpHandler[] = [
 
       const movieLikeInfo = movieLikes.find(
         (like) =>
-          like.movie_id === Number(movieId) && like.user_id === userInfo.user_id
+          like.movie_id === Number(movieId) &&
+          like.user_id === userInfo.localJwtDto.accessToken
       );
 
       // 사용자가 해당 영화를 좋아요를 누르지 않은 경우
@@ -259,7 +256,7 @@ const movieHandlers: HttpHandler[] = [
         // 권환이 있을 경우 좋아요를 개수를 카운팅 시킨다.
         movieLikes.push({
           movie_like_id: movieLikes.length + 1,
-          user_id: userInfo.user_id,
+          user_id: userInfo.localJwtDto.accessToken,
           movie_id: Number(movieId),
         });
 
@@ -272,7 +269,7 @@ const movieHandlers: HttpHandler[] = [
         for (let i = 0; i < movieLikes.length; i++) {
           if (
             movieLikes[i].movie_id === Number(movieId) &&
-            movieLikes[i].user_id === userInfo.user_id
+            movieLikes[i].user_id === userInfo.localJwtDto.accessToken
           ) {
             movieLikes.splice(i, 1);
           }
@@ -404,7 +401,7 @@ const movieHandlers: HttpHandler[] = [
           like: !isEmpty(
             movieLikes
               .filter((like) => like.movie_id === movieInfo.movie_id)
-              .find((like) => like.user_id === userInfo.user_id)
+              .find((like) => like.user_id === userInfo.localJwtDto.accessToken)
           ),
         },
         { status: 200 }
@@ -463,7 +460,7 @@ const movieHandlers: HttpHandler[] = [
 
       // 해당 사용자가 등록한 장르 확인
       const preference = genrePreferences.filter(
-        (preference) => preference.user_id === userInfo.user_id
+        (preference) => preference.user_id === userInfo.localJwtDto.accessToken
       );
 
       const recommendMovies = movies

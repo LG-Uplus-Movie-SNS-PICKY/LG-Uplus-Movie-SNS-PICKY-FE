@@ -34,10 +34,10 @@ const headerConfig: HeaderConfigType = {
     type: isLogin ? "main" : "login",
   }),
 
-  // 회원가입 페이지
-  // "/signup": () => ({
-  //   type: "basic",
-  // }),
+  //회원가입 페이지
+  "/auth/sign-up": () => ({
+    type: "basic",
+  }),
 
   // 무비로그 페이지
   "/movie-log": () => ({
@@ -85,7 +85,7 @@ export function useHeaderConfig(
     ? [
         <AddCircle
           className="active-icon-btn"
-          onClick={() => navigate && navigate("/add-feed")}
+          onClick={() => navigate && navigate("/movie-log/add")}
         />,
         <Notification
           className="active-icon-btn"
@@ -98,7 +98,7 @@ export function useHeaderConfig(
       ]
     : [
         <div
-          onClick={() => navigate && navigate("/login")}
+          onClick={() => navigate && navigate("/auth/sign-in")}
           className="login-action-btn"
         >
           <UesrLogo />

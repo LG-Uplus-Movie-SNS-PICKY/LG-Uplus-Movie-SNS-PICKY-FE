@@ -75,9 +75,9 @@ const boardHandlers: HttpHandler[] = [
         board_id: board.length + 1,
         board_context: body.boardContext,
         movie_id: body.movieId,
-        user_id: user.id,
+        user_id: user.localJwtDto.accessToken,
         is_spoiler: body.isSpoiler,
-        writer_nickname: user.nickname,
+        writer_nickname: user.user.nickname,
         is_deleted: false,
         createdDate: new Date().toISOString(),
         updatedDate: new Date().toISOString(),
@@ -272,7 +272,7 @@ const boardHandlers: HttpHandler[] = [
           contents: contents,
           movieId: movieInfo?.movie_id,
           movieTitle: movieInfo?.movie_title,
-          isLike: loginUser.user_id === userInfo?.user_id,
+          isLike: loginUser.localJwtDto.accessToken === userInfo?.user_id,
         };
       });
 
@@ -351,7 +351,7 @@ const boardHandlers: HttpHandler[] = [
             contents: contents,
             movieId: movieId,
             movieTitle: movieInfo?.movie_title,
-            isLike: loginUser.user_id === userInfo?.user_id,
+            isLike: loginUser.localJwtDto.accessToken === userInfo?.user_id,
           };
         });
 
@@ -456,7 +456,8 @@ const boardHandlers: HttpHandler[] = [
 
       const boardLikeInfo = boardLike.find(
         (like) =>
-          like.board_id === Number(boardId) && like.user_id === userInfo.user_id
+          like.board_id === Number(boardId) &&
+          like.user_id === userInfo.localJwtDto.accessToken
       );
 
       // 사용자가 해당 게시물에 좋아요를 누르지 않은 경우
@@ -464,7 +465,7 @@ const boardHandlers: HttpHandler[] = [
         boardLike.push({
           board_id: Number(boardId),
           board_like_id: boardLike.length + 1,
-          user_id: userInfo.user_id,
+          user_id: userInfo.localJwtDto.accessToken,
         });
 
         return HttpResponse.json(
@@ -478,7 +479,7 @@ const boardHandlers: HttpHandler[] = [
         for (let i = 0; i < boardLike.length; i++) {
           if (
             boardLike[i].board_id === Number(boardId) &&
-            boardLike[i].user_id === userInfo.user_id
+            boardLike[i].user_id === userInfo.localJwtDto.accessToken
           ) {
             boardLike.splice(i, 1);
           }
@@ -493,62 +494,6 @@ const boardHandlers: HttpHandler[] = [
       }
     }
   ),
-
-  // 무비로그 좋아요 취소 API(Mocking Object)
-  // http.delete(
-  //   `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/like`,
-  //   async ({ params, request }) => {
-  //     const authorization = request.headers.get("Authorization");
-  //     const { boardId } = params;
-
-  //     const url = new URL(request.url);
-
-  //     const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
-
-  //     // 권환이 없을 경우 403 에러 발생
-  //     if (!authorization || !boardId || isEmpty(userInfo)) {
-  //       return HttpResponse.json(
-  //         {
-  //           message:
-  //             "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Path Validation에 boardId를 추가했는지 또는 로그인 했는지 확인해주세요.",
-  //         },
-  //         { status: 403 }
-  //       );
-  //     }
-  //     const likeId = Number(url.searchParams.get("likeId"));
-
-  //     // 존재하지 않는 좋아요일 경우
-  //     const like = boardLike.find(
-  //       (like) =>
-  //         like.board_id === Number(boardId) && like.board_like_id === likeId
-  //     );
-
-  //     if (isEmpty(like)) {
-  //       return HttpResponse.json(
-  //         {
-  //           message: "유효하지 않은 댓글 ID입니다.",
-  //           errorCode: "ERR_INVALID_BOARD_COMMENT_ID",
-  //         },
-  //         { status: 400, statusText: "Invalid Board Comment ID" }
-  //       );
-  //     }
-
-  //     // 존재하는 코멘트일 경우
-  //     for (let i = 0; i < boardLike.length; i++) {
-  //       if (boardLike[i].board_like_id === likeId) {
-  //         boardLike.splice(i, 1); // board는 import이기 때문에 할당이 안되므로 원본 배열의 값을 수정한다.
-  //         break;
-  //       }
-  //     }
-
-  //     return HttpResponse.json(
-  //       {
-  //         message: "REQUEST_FRONT_SUCCESS",
-  //       },
-  //       { status: 200 }
-  //     );
-  //   }
-  // ),
 
   // 특정 게시물 댓글 생성 API(Mocking Object)
   http.post(
@@ -592,8 +537,8 @@ const boardHandlers: HttpHandler[] = [
         board_id: writerBoardComment.board_id,
         commend_id: boardComment.length + 1,
         comment_context: content,
-        user_id: userInfo.user_id,
-        writer_nickname: userInfo.user_nickname,
+        user_id: userInfo.localJwtDto.accessToken,
+        writer_nickname: userInfo.user.nickname,
         createdDate: new Date().toISOString(),
         updatedDate: new Date().toISOString(),
       });
@@ -664,7 +609,9 @@ const boardHandlers: HttpHandler[] = [
           data: response,
           nextPage:
             end <
-            board.filter((item) => item.user_id === userInfo?.user_id).length
+            board.filter(
+              (item) => item.user_id === userInfo?.localJwtDto.accessToken
+            ).length
               ? page + 1
               : null,
         },
