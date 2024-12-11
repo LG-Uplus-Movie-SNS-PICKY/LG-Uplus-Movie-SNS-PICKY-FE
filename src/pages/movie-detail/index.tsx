@@ -180,9 +180,9 @@ function MovieDetail(props: MovieDetailProps) {
             .map((movieGenre: any) => {
               // genresSelector에서 가져온 전체 장르와 매칭
               const genreInfo = genres.find(
-                (genre: any) => genre.genre_id === movieGenre.genre_id
+                (genre: any) => genre.genreId === movieGenre.genre_id
               );
-              return genreInfo ? genreInfo.genre_name : null;
+              return genreInfo ? genreInfo.name : null;
             })
             .filter(Boolean) // 유효한 값만 필터링
             .join("/")} // 장르 이름을 /로 연결
@@ -228,9 +228,9 @@ function MovieDetail(props: MovieDetailProps) {
             .map((movieGenre: any) => {
               // genresSelector에서 가져온 전체 장르와 매칭
               const genreInfo = genres.find(
-                (genre: any) => genre.genre_id === movieGenre.genre_id
+                (genre: any) => genre.genreId === movieGenre.genre_id
               );
-              return genreInfo ? genreInfo.genre_name : null;
+              return genreInfo ? genreInfo.name : null;
             })
             .filter(Boolean) // 유효한 값만 필터링
             .join("/")} // 장르 이름을 /로 연결
