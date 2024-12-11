@@ -82,7 +82,7 @@ export default function SocialFeed() {
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
             },
           }
         );
@@ -165,7 +165,7 @@ export default function SocialFeed() {
         }`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
           },
         }
       );
