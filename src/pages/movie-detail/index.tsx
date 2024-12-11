@@ -69,30 +69,6 @@ function MovieDetail(props: MovieDetailProps) {
     navigate(`/movie/${id}/review`); // movieId 변수를 사용
   };
 
-  // useEffect(() => {
-  //   // API 호출
-  //   const fetchMovieData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`,
-  //         {
-  //           headers: { Authorization: "123" },
-  //         }
-  //       ).then(res => res.data);
-
-  //       console.log(response)
-
-  //       setMovieData(response.movie_info); // API에서 반환된 데이터에 맞게 설정
-  //       setLoading(false);
-  //     } catch (err: any) {
-  //       setError(err.response?.message || "Failed to fetch movie data");
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchMovieData();
-  // }, [id]);
-
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
@@ -109,8 +85,9 @@ function MovieDetail(props: MovieDetailProps) {
         const sortedDirectingCrew = response.movie_info.credits.directingCrew.sort(
           (a: any, b: any) => a.id - b.id
         );
-
-        console.log(response); // API 응답 데이터 확인 move_info에 데이터가 있는지 확인
+        
+        console.log("movie_info")
+        console.log(response); // API 응답 데이터 확인 (movie_info)
 
         // `like` 상태 가져오기
         setLikeActive(response.like || false); // response.like 값 설정 (true/false)

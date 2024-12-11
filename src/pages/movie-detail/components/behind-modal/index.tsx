@@ -34,7 +34,7 @@ interface OST {
     cover: string;
 }
 
-const YOUTUBE_API_KEY = 'YOUR_YOUTUBE_API_KEY'; // Replace with your YouTube Data API Key
+const YOUTUBE_API_KEY = 'AIzaSyDb5ViShQWptvuz5_IGmCZV0p2IvAEuhKk'; // YouTube Data API Key 넣기
 
 const dummyData = {
     youtubePlaylists: [
@@ -66,15 +66,20 @@ const dummyData = {
 
 const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const { id } = useParams<{ id: string }>(); // useParams로 movieId 가져오기
-    const [ostList, setOstList] = useState<OST[]>([]);
-    const [isYTReady, setIsYTReady] = useState(false);
+    // const [ostList, setOstList] = useState<OST[]>([]);
     const playlist = dummyData.youtubePlaylists[0]; // 첫 번째 플레이리스트 사용
     const videoIds = playlist.videoIds; // videoIds를 가져옴
     const [ostVideos, setOstVideos] = useState<any[]>([]);
     const [ostPlaylistId, setOstPlaylistId] = useState<string | null>(null);
 
+    const [isYTReady, setIsYTReady] = useState(false);
+
+     // YouTube Data API Key 확인
+    console.log("YouTube Data API Key (전역):", YOUTUBE_API_KEY);
+
     // 영화 ID로 OST Playlist ID 가져오기
     useEffect(() => {
+        console.log("useEffect 실행됨 (OST Playlist ID 요청)");
         const fetchOstPlaylistId = async () => {
             try {
                 const response = await axios.get(
@@ -82,8 +87,9 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                     { headers: { Authorization: "123" } }
                 );
 
-                const playlistId = response.data.ost; // OST Playlist ID
-                setOstPlaylistId(playlistId);
+                const ostPlaylistId = response.data.ost; // OST Playlist ID
+                setOstPlaylistId(ostPlaylistId);
+                console.log("OST Playlist ID:", ostPlaylistId); // 확인용 로그
             } catch (error) {
                 console.error("OST Playlist ID 가져오기 실패", error);
             }
@@ -92,11 +98,15 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
         fetchOstPlaylistId();
     }, [id]);
 
-    // YouTube API를 통해 OST 플레이리스트 정보 가져오기
+    // OST Playlist ID를 이용해 YouTube 데이터 가져오기
     useEffect(() => {
-        const fetchOstVideos = async () => {
-            if (!ostPlaylistId) return;
+        console.log("useEffect 실행됨 (OST 동영상 데이터 요청)", ostPlaylistId);
+        if (!ostPlaylistId) {
+            console.warn("OST Playlist ID가 없습니다.");
+            return;
+        }
 
+        const fetchOstVideos = async () => {
             try {
                 const response = await axios.get(
                     `https://www.googleapis.com/youtube/v3/playlistItems`,
@@ -104,15 +114,20 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                         params: {
                             part: "snippet",
                             playlistId: ostPlaylistId,
-                            key: "YOUR_YOUTUBE_API_KEY",
-                            maxResults: 10, // 필요한 개수만큼 설정
+                            key: YOUTUBE_API_KEY,
+                            maxResults: 10,
                         },
                     }
                 );
 
-                setOstVideos(response.data.items || []); // 재생목록 동영상 데이터 저장
-            } catch (err) {
-                console.error("OST 동영상 데이터 불러오기 실패", err);
+                if (response.data.items) {
+                    console.log("OST 동영상 데이터:", response.data.items); // 확인용 로그
+                    setOstVideos(response.data.items);
+                } else {
+                    console.warn("OST 동영상 데이터를 찾을 수 없습니다.");
+                }
+            } catch (error: any) {
+                console.error("OST 데이터 요청 중 오류 발생:", error.response?.data || error.message);
             }
         };
 
@@ -154,15 +169,6 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
 
     }, []);
 
-    // // 동영상 제목에서 아티스트와 제목 추출
-    // const extractArtistAndTitle = (title: string) => {
-    //     const parts = title.split(" - ");
-    //     return {
-    //         artist: parts[0] || "Unknown Artist",
-    //         songTitle: parts[1] || "Unknown Title",
-    //     };
-    // };
-
     return (
         <ModalContainer onClick={onClose}>
             <ContentContainer onClick={e => e.stopPropagation()}>
@@ -190,10 +196,10 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                             const extractArtistAndTitle = (title: string) => {
                                 const parts = title.split(" - ");
                                 return {
-                                    artist: parts[0]?.trim() || "아티스트 알 수 없음",
-                                    songTitle: parts[1]?.trim() || "제목 알 수 없음",
+                                  artist: parts[0]?.trim() || "아티스트 알 수 없음",
+                                  songTitle: parts[1]?.trim() || "제목 알 수 없음",
                                 };
-                            };
+                              };
 
                             const { artist, songTitle } = extractArtistAndTitle(video.snippet.title);
 
