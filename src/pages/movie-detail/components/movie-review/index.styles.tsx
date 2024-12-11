@@ -116,3 +116,8 @@ export const ThumbsButton = styled.div<{ active?: boolean }>`
   font-weight: ${props => props.active ? '600' : '400'};
   border: ${props => props.active ? '1px solid #FF084A' : '1px solid #D9D9D9'};
 `;
+
+export const ToastContainer = styled.div`
+  display: flex;
+  z-index: 10000;
+`;
