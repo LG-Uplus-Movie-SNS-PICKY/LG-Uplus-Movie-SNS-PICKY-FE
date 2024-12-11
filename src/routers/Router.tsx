@@ -35,6 +35,7 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 import { isEmpty } from "lodash";
 import DomainGoogle from "@pages/google";
 import ProtectedRoute from "./ProtectedRoute";
+import AdminRouter from "./AdminRouter";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -69,8 +70,6 @@ function Router() {
                 </ProtectedRoute>
               }
             />
-
-            <Route path="/domain" element={<DomainGoogle />} />
 
             {/* 비로그인 사용자 라우트 */}
             <Route
@@ -228,17 +227,22 @@ function Router() {
             />
 
             {/* 관리자 전용 라우트 */}
-            <Route
+            {/* <Route
               path="/admin/*"
               element={
                 <ProtectedRoute role="admin">
                   <AdminLayout />
                 </ProtectedRoute>
               }
-            />
+            /> */}
+
+            <Route path="/admin/*" element={<AdminRouter />} />
 
             {/* 에러 페이지 */}
             <Route path="/*" element={<NotFoundPage />} />
+
+            {/* 도메인 */}
+            <Route path="/domain" element={<DomainGoogle />} />
           </Routes>
         </Layout>
       </BrowserRouter>
