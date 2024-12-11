@@ -2,9 +2,17 @@ import GlobalHeader from "@components/header";
 import { Flex as MainLayout } from "./index.styles";
 import { Flex as Wrapper } from "./index.styles";
 import { LayoutProps } from "./type";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  matchPath,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import GlobalNavigatorBar from "@components/navbar";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { routeConfig } from "@constants/routes/routeConfig";
 
 const isLoginTestValue = {
   state: false,
@@ -14,7 +22,26 @@ const isLoginTestValue = {
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 주소 가져오기
-  const [isDefaultMargin, setIsDefaultMargin] = useState("60px 0");
+
+  const isLoginInfo = useRecoilValue(isLogin);
+
+  const [showHeader, setShowHeader] = useState("");
+  const [showGlobalNavbar, setShowGlobalNavbar] = useState(false);
+  const [isDefaultMargin, setIsDefaultMargin] = useState("0");
+
+  useEffect(() => {
+    if (isLoginInfo.isLoginState) {
+      const config = routeConfig.find(
+        (config) =>
+          config.path ===
+          matchPath(config.path, location.pathname)?.pattern.path
+      );
+
+      setShowHeader(config?.header || "");
+      setShowGlobalNavbar(config?.gnb || false);
+      setIsDefaultMargin(config?.margin || "0");
+    }
+  }, [isLoginInfo, location]);
 
   return (
     <>
@@ -24,7 +51,11 @@ function Layout({ children }: LayoutProps): JSX.Element {
         align="center"
         height="100vh"
       >
-        <GlobalHeader location={location} navigate={navigate} />
+        <GlobalHeader
+          show={showHeader}
+          location={location}
+          navigate={navigate}
+        />
 
         <Wrapper
           overflowY={"auto"}
@@ -35,11 +66,14 @@ function Layout({ children }: LayoutProps): JSX.Element {
           // padding="16px"
           height="100vh"
         >
-          <div style={{ marginTop: "60px" }}></div>
           {children}
         </Wrapper>
 
-        <GlobalNavigatorBar location={location} navigate={navigate} />
+        <GlobalNavigatorBar
+          show={showGlobalNavbar}
+          location={location}
+          navigate={navigate}
+        />
       </MainLayout>
     </>
   );

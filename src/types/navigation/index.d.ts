@@ -6,6 +6,7 @@ type IsLoginUser = {
 };
 
 export interface NaviationProps {
+  show: boolean | string;
   location: Location;
   navigate: NavigateFunction;
 }

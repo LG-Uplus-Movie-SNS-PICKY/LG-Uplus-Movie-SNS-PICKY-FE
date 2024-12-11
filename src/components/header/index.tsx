@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 // 전역에서 사용할 Header 컴포넌트
 function GlobalHeader({
+  show,
   location,
   navigate,
 }: // isLoginTestValue,
