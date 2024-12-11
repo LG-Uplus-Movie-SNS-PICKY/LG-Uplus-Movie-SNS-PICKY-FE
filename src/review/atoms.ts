@@ -6,7 +6,7 @@ export const userState = atom({
   default: {
     username: "",
     nickname: "",
-    profileImage: "",
+    profileImagePreview: null as string | null,
     favoriteGenres: [],
     favoriteMovie: [],
     gender: "",
@@ -14,7 +14,7 @@ export const userState = atom({
     kakao_id: "",
     google_id: "",
     naver_id: "",
-  }
+  },
 });
 
 // 입력 데이터 상태
@@ -26,7 +26,8 @@ export interface IInputData {
   nationality: string;
   consentAll: boolean;
   consentAge: boolean;
-  profileImage: string; 
+  profileImageData: FormData | null;
+  profileImagePreview: string | null; 
   favoriteGenres: number[];
   favoriteMovie: number[];
 }
@@ -41,7 +42,8 @@ export const inputState = atom<IInputData>({
     nationality: "",
     consentAll: false,
     consentAge: false,
-    profileImage: "",
+    profileImageData: null,
+    profileImagePreview: null,
     favoriteGenres: [],
     favoriteMovie: [],
   },

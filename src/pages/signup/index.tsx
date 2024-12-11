@@ -95,8 +95,19 @@ export default function Signup() {
   const isStepValid = useCallback(() => {
     const requiredFields = steps[step].requiredFields;
     return requiredFields.every((field) => {
-      const value = inputData[field as keyof typeof inputData];
-      return validateField(field, value, { isNicknameValid });
+      let value = inputData[field as keyof typeof inputData];
+
+      // if (field === "profileImage") {
+      //   value = inputData.profileImagePreview || "";
+      // }
+      if (value === null || value instanceof FormData) {
+        value = "";
+      }
+
+      return validateField(field, value, {
+        isNicknameValid,
+        profileImagePreview: inputData.profileImagePreview,
+      });
     });
   }, [steps, step, inputData, isNicknameValid]);
 
@@ -128,9 +139,9 @@ export default function Signup() {
     const payload = {
       name: inputData.name,
       nickname: inputData.nickname,
-      profile_url: inputData.profileImage,
       birthdate: inputData.birthDate,
       gender: inputData.gender,
+      profile: inputData.profileImageData,
       nationality: inputData.nationality,
       movieId: inputData.favoriteMovie || [],
       genreId: inputData.favoriteGenres || [],
