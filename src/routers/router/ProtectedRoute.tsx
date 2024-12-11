@@ -1,5 +1,6 @@
 import { Navigate, useNavigate } from "react-router-dom";
-import useAuthorizaion from "@recoil/selectors/useAuthorization";
+import { useAuthorizaion } from "@recoil/selectors/useAuthorization";
+import Loading from "@components/loading";
 
 interface ProtectedRouteProps {
   role: string;
@@ -7,10 +8,15 @@ interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({ role, children }: ProtectedRouteProps) {
-  const { accessCommonPage, accessGuestPage, accessUserPage, accessAdminPage } =
+  const { accessGuestPage, accessUserPage, accessAdminPage } =
     useAuthorizaion();
 
-  // 비로그인 사용자만 접근할 수 있는 페이지 권환 관리
+  // 로딩 중 상태를 확인
+  if (accessGuestPage && !accessUserPage && !accessAdminPage) {
+    return null;
+  }
+
+  // 로그인 사용자만 접근할 수 있는 페이지 권환 관리
   if (role === "guest" && !accessGuestPage) {
     return <Navigate to="/" />;
   }

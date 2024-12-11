@@ -1,15 +1,19 @@
-import { routeConfig } from "@constants/routes/routeConfig";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { NavigaterBar as Navbar } from "@stories/navigater-bar";
 import { NaviationProps } from "@type/navigation";
-import { isEmpty } from "lodash";
 import { useEffect, useState } from "react";
-import { matchPath } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 
+// let count = 1;
 function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
   const isLoginState = useRecoilValue(isLogin);
   const [activeTab, setActiveTab] = useState("");
+
+  // console.log("outer " + count);
+  // console.log("isLoginState: " + isLoginState.isLoginState);
+  // console.log("isAuthUser: " + isLoginState.isAuthUser);
+  // console.log("show: " + show);
+  // console.log("\n");
 
   // Navbar 선택 시 해당 페이지로 이동
   const handleChangeTab = (name: string) => {
@@ -55,9 +59,8 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
       // /user/ 경로 접근
       if (pathname.match(/^\/user\/[^/]+$/)) {
         const pathNickname = pathname.split("/")[2];
-        const currentUser = JSON.parse(
-          sessionStorage.getItem("user") || "{}"
-        )?.user_nickname;
+        const currentUser = JSON.parse(sessionStorage.getItem("user") || "{}")
+          .user.nickname;
 
         // 접근한 사용자 프로필 경로와 로그인한 사용자와 같을 경우
         if (pathNickname === currentUser) {
@@ -76,8 +79,14 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
     setActiveTab(currentActiveTab);
   }, [location]);
 
-  if (!isLoginState.isLoginState || !isLoginState.isAuthUser || !show)
+  if (!isLoginState.isLoginState || isLoginState.isAuthUser || !show) {
+    // console.log("inner " + count++);
+    // console.log("isLoginState: " + !isLoginState.isLoginState);
+    // console.log("isAuthUser: " + isLoginState.isAuthUser);
+    // console.log("show: " + !show);
+    // console.log("\n");
     return null;
+  }
 
   return <Navbar state={activeTab} onClick={handleChangeTab} />;
 }

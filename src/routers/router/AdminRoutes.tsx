@@ -22,7 +22,7 @@ import MovieGenreOpertionPage from "@pages/admin/operation/movie/genres";
 import MoviesOpertionPage from "@pages/admin/operation/movie/movies";
 import MoviePlaylistOpertionPage from "@pages/admin/operation/movie/playlists";
 
-function AdminRouter() {
+function AdminRoutes() {
   const { listItemData: data } = useDashboardData();
 
   return (
@@ -100,4 +100,4 @@ function AdminRouter() {
   );
 }
 
-export default AdminRouter;
+export default AdminRoutes;
