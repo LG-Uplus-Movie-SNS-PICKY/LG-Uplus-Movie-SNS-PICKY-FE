@@ -82,22 +82,22 @@ export default function SocialFeed() {
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
+              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
             },
           }
         );
 
-        // 데이터가 배열인지 확인하고 설정
-        const fetchedData = response.data.data;
-        if (Array.isArray(fetchedData)) {
-          setBoardData(fetchedData);
+        // content 배열 추출
+        const fetchedData = response.data;
+        if (fetchedData && Array.isArray(fetchedData.content)) {
+          setBoardData(fetchedData.content); // content 배열 설정
         } else {
-          console.error("API 응답이 배열이 아닙니다:", fetchedData);
-          setBoardData([]);
+          console.error("API 응답이 예상한 구조가 아닙니다:", fetchedData);
+          setBoardData([]); // content가 없을 경우 빈 배열로 초기화
         }
       } catch (error) {
         console.error("API 호출 중 오류 발생:", error);
-        setBoardData([]); // 오류 시 기본값으로 빈 배열 설정
+        setBoardData([]); // API 오류 시 빈 배열 설정
       }
     };
 

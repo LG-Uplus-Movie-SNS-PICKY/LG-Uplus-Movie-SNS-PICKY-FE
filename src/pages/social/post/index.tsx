@@ -195,7 +195,7 @@ export default function SocialPost() {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
             "Content-Type": "application/json",
           },
         }
