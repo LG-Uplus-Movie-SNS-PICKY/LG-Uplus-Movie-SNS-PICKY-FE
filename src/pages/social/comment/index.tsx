@@ -105,7 +105,7 @@ export default function FeedComment() {
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/comments`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
             },
           }
         );
@@ -140,7 +140,7 @@ export default function FeedComment() {
         { content: comment },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
             "Content-Type": "application/json",
           },
         }
@@ -183,7 +183,7 @@ export default function FeedComment() {
         {
           params: { commentId: selectedCommentId },
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
           },
         }
       );

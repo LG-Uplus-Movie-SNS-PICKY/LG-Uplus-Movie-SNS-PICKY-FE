@@ -44,8 +44,9 @@ export default function ProfileEditPage() {
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-  const accessToken = sessionStorage.getItem("accessToken");
-
+  // const accessToken = sessionStorage.getItem("accessToken");
+  const accessToken =
+    "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM5MTYyMDksImV4cCI6MTczNDAwMjYwOX0.wn19JoiX4HNJG21bl_VK8fzW_lSRfKLDCg1c_5zLAeU";
   const showToast = (message: string) => {
     setToastMessage(message);
   };
