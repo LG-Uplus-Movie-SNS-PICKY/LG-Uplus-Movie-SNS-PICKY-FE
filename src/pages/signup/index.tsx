@@ -47,14 +47,21 @@ export default function Signup() {
         fieldMessages: ["이름을 올바르게 입력해주세요."],
       },
       {
-        components: [<InputGender key="gender" />],
-        requiredFields: ["gender"],
-        fieldMessages: ["성별을 선택해주세요."],
+        components: [
+          <InputNickname key="nickname" onValidChange={setIsNicknameValid} />,
+        ],
+        requiredFields: ["nickname"],
+        fieldMessages: ["닉네임을 올바르게 입력해주세요."],
       },
       {
         components: [<InputBirthDate key="birthDate" />],
         requiredFields: ["birthDate"],
         fieldMessages: ["생년월일을 올바르게 입력해주세요."],
+      },
+      {
+        components: [<InputGender key="gender" />],
+        requiredFields: ["gender"],
+        fieldMessages: ["성별을 선택해주세요."],
       },
       {
         components: [<InputNationality key="nationality" />],
@@ -67,11 +74,6 @@ export default function Signup() {
         fieldMessages: ["프로필 이미지를 선택해주세요."],
       },
       {
-        components: [<InputConsentForm key="consent" />],
-        requiredFields: ["consentAll", "consentAge"],
-        fieldMessages: ["필수 약관에 동의해주세요."],
-      },
-      {
         components: [<InputFavoriteGenre key="favoriteGenres" />],
         requiredFields: ["favoriteGenres"],
         fieldMessages: ["최소 3개, 최대 5개의 장르를 선택해주세요."],
@@ -82,11 +84,9 @@ export default function Signup() {
         fieldMessages: ["최소 5개, 최대 15개의 영화를 선택해주세요."],
       },
       {
-        components: [
-          <InputNickname key="nickname" onValidChange={setIsNicknameValid} />,
-        ],
-        requiredFields: ["nickname"],
-        fieldMessages: ["닉네임을 올바르게 입력해주세요."],
+        components: [<InputConsentForm key="consent" />],
+        requiredFields: ["consentAll", "consentAge"],
+        fieldMessages: ["필수 약관에 동의해주세요."],
       },
     ],
     []
@@ -189,7 +189,7 @@ export default function Signup() {
             <div css={progressStyle(((step + 1) / steps.length) * 100)} />
           </div>
           {step > 0 && (
-            <button css={backButtonStyle} onClick={handleBackStep}> 
+            <button css={backButtonStyle} onClick={handleBackStep}>
               <BackButtonIcon width="16px" height="16px" />
               <p>뒤로</p>
             </button>
