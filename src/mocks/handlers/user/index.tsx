@@ -5,7 +5,15 @@ import genres from "@constants/json/genres/genres.json";
 const userHandler: HttpHandler[] = [
   // 장르의 종류를 가져오는 모킹 API
   http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/user/genres`, () => {
-    return HttpResponse.json({ data: genres }, { status: 200 });
+    return HttpResponse.json(
+      {
+        data: genres.map((genre) => ({
+          genreId: genre.genre_id,
+          name: genre.genre_name,
+        })),
+      },
+      { status: 200 }
+    );
   }),
 ];
 
