@@ -436,12 +436,16 @@ const boardHandlers: HttpHandler[] = [
 
   // 무비로그 좋아요 API(Mocking Object)
   http.post(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/like`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/likes`,
     async ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
 
       const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+
+      console.log(authorization);
+      console.log(boardId);
+      console.log(userInfo);
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || !boardId || isEmpty(userInfo)) {
@@ -552,7 +556,7 @@ const boardHandlers: HttpHandler[] = [
 
   // 특정 게시물 댓글 생성 API(Mocking Object)
   http.post(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/coments`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/comment`,
     async ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
@@ -609,7 +613,7 @@ const boardHandlers: HttpHandler[] = [
 
   // 특정 게시물 댓글 조회 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/coments`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/comments`,
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
@@ -675,7 +679,7 @@ const boardHandlers: HttpHandler[] = [
 
   // 특정 댓글 삭제 API(Mocking Object)
   http.delete(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/coments`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/:boardId/comments`,
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
