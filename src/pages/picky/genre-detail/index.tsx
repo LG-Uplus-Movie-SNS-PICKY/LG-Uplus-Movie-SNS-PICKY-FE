@@ -18,7 +18,7 @@ function PickyGenreDetailPage() {
 
   const genres = loadable.contents.data;
   const currentGenre: GenreDataType = genres.find(
-    (genre: GenreDataType) => genre.genre_id === Number(genreId)
+    (genre: GenreDataType) => genre.genreId === Number(genreId)
   );
 
   return (
@@ -31,7 +31,7 @@ function PickyGenreDetailPage() {
 
       {/* 장르 타이틀 출력 */}
       <div css={styles.title()}>
-        <h3>{currentGenre.genre_name}</h3>
+        <h3>{currentGenre.genreId}</h3>
       </div>
 
       {/* 장르에 해당하는 영화 데이터 출력 */}

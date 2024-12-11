@@ -5,6 +5,8 @@ import { LayoutProps } from "./type";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import GlobalNavigatorBar from "@components/navbar";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
 const isLoginTestValue = {
   state: false,
@@ -14,7 +16,14 @@ const isLoginTestValue = {
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
   const location = useLocation(); // 현재 주소 가져오기
-  const [isDefaultMargin, setIsDefaultMargin] = useState("60px 0");
+
+  const isLoginInfo = useRecoilValue(isLogin);
+  // const [isDefaultMargin, setIsDefaultMargin] = useState("60px 0");
+
+  useEffect(() => {
+    console.log(isLoginInfo);
+    // if(isLogin)
+  }, [isLoginInfo]);
 
   return (
     <>
@@ -30,7 +39,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
           overflowY={"auto"}
           direction="column"
           justify="flex-start"
-          margin={isDefaultMargin}
+          margin={location.pathname}
           // backgroundColor={isLoginTestValue.role === "admin" ? "#ffffff" : ""}
           // padding="16px"
           height="100vh"
