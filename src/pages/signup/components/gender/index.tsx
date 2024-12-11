@@ -26,16 +26,16 @@ export default function InputGender() {
       </div>
       <div css={genderContainer}>
         <button
-          css={genderButton(inputData.gender === "male")}
-          onClick={() => handleGenderSelect("male")}
+          css={genderButton(inputData.gender === "MALE")}
+          onClick={() => handleGenderSelect("MALE")}
           onFocus={handleFocus}
           onBlur={handleBlur}
         >
           남자
         </button>
         <button
-          css={genderButton(inputData.gender === "female")}
-          onClick={() => handleGenderSelect("female")}
+          css={genderButton(inputData.gender === "FEMALE")}
+          onClick={() => handleGenderSelect("FEMALE")}
           onFocus={handleFocus}
           onBlur={handleBlur}
         >

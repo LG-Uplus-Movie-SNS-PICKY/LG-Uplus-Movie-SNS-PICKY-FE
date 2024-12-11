@@ -1,39 +1,16 @@
-import styled from "styled-components";
-// import { useNavigate } from "react-router-dom";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
+import { useNavigate } from "react-router-dom";
 import {
   GOOGLE_LOGIN_URL,
   KAKAO_LOGIN_URL,
   NAVER_LOGIN_URL,
 } from "../../api/constants";
 import { BtnGoogle, BtnKakao, BtnNaver, PickyLogo } from "../../assets/svg";
-
-import { Block, Text } from "../../styles/ui";
+import {GapContainer, StyledText } from "./index.styles"
+import { Block, Text,  } from "../../styles/ui";
 import SEO from "@components/seo";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-
-const StyledText = styled.div`
-  display: flex;
-  padding: 8px 12px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50px;
-  border: 0.5px solid #f8f8f8;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
-
-  color: #5e5e5e;
-  text-align: center;
-
-  font-family: Pretendard;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-`;
-
-const GapContainer = styled(Block.FlexBox)`
-  gap: 106px; /* 로고와 StyledText 사이의 간격 설정 */
-`;
 
 export default function Login() {
   const navigate = useNavigate();
@@ -51,7 +28,7 @@ export default function Login() {
     window.location.href = `${NAVER_LOGIN_URL}`;
   };
 
-  const socialLoginClikc = async () => {
+  const socialLoginClick = async () => {
     const data = await axios
       .patch(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
@@ -82,39 +59,53 @@ export default function Login() {
       />
 
       <Block.FlexBox
-        $width="100%"
-        $height="100vh"
-        $direction="column"
-        $alignItems="center"
-        $justifyContent="center"
-        $gap="34px"
+        css={css`
+          width: 100%;
+          height: 100vh;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 34px;
+        `}
       >
         <Text.TitleMenu100>영화인 필수!</Text.TitleMenu100>
         <Text.TitleMenu300>영화 리뷰 1등 플랫폼</Text.TitleMenu300>
 
-        <GapContainer $direction="column" $alignItems="center">
+        <Block.FlexBox
+          css={css`
+            flex-direction: column;
+            align-items: center;
+            ${GapContainer}
+          `}
+        >
           <PickyLogo width={231} height={83} />
-          <StyledText>⚡️간편로그인으로 3초만에 빠르게 회원가입!</StyledText>
-        </GapContainer>
-        <Block.FlexBox $justifyContent="center" $gap="50px">
+          <div css={StyledText}>⚡️간편로그인으로 3초만에 빠르게 회원가입!</div>
+        </Block.FlexBox>
+
+        <Block.FlexBox
+          css={css`
+            justify-content: center;
+            gap: 50px;
+          `}
+        >
           <BtnKakao
             onClick={handleKakaoLoginClick}
             width={46}
-            cursor="pointer"
+            style={{ cursor: "pointer" }}
           />
           <BtnNaver
             onClick={handleNaverLoginClick}
             width={46}
-            cursor="pointer"
+            style={{ cursor: "pointer" }}
           />
           <BtnGoogle
             onClick={handleGoogleLoginClick}
             width={46}
-            cursor="pointer"
+            style={{ cursor: "pointer" }}
           />
         </Block.FlexBox>
 
-        <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
+        <button onClick={socialLoginClick} style={{ cursor: "pointer" }}>
           Local Login Btn
         </button>
       </Block.FlexBox>
