@@ -93,7 +93,7 @@ function LineReviewContent() {
           }
         );
         setReviews(data.content || []);
-        
+
         console.log("data");
         console.log(data);
       } catch (err) {
@@ -183,7 +183,7 @@ function LineReviewContent() {
       {reviews.length > 0 &&
         reviews.map((review) => (
           <div key={review.id} css={styles.reviewCard()}>
-            {/* 영화 포스터 이미지 */}
+            {/* 영화 포스터 이미지
             <div className="poster">
               {review.movie?.movie_poster_src ? (
                 <img
@@ -193,7 +193,13 @@ function LineReviewContent() {
               ) : (
                 <div>포스터 없음</div>
               )}
-            </div>
+            </div> */}
+
+            {/* 영화 포스터 이미지 */}
+            <div
+              className="poster"
+              style={{ backgroundColor: "#D9D9D9", width: "60px", height: "100%" }}
+            ></div>
 
             {/* 리뷰 정보 */}
             <div css={styles.reviewInfo()}>
