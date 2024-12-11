@@ -91,7 +91,7 @@ export const requiredBadge = css`
 
 export const genreGrid = css`
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
   width: 100%;
@@ -102,13 +102,13 @@ export const genreButton = ($isSelected: boolean) => css`
   align-items: center;
   justify-content: center;
   padding: 8px 12px;
-  border: ${$isSelected ? "0.5px solid #000000" : "0.5px solid #f1f1f1"};
   border-radius: 4px;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  border: ${$isSelected ? "0.5px solid #000000" : "0.5px solid #f1f1f1"};
   background-color: ${$isSelected ? "#000000" : "#ffffff"};
   color: ${$isSelected ? "#ffffff" : "#5e5e5e"};
-  font-weight: 400;
   font-size: ${$isSelected ? "12px" : "12px"};
+  font-weight: 400;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   white-space: nowrap;
