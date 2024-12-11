@@ -12,7 +12,6 @@ import Login from "@pages/login";
 import Signup from "@pages/signup";
 import Search from "@pages/search";
 import Layout from "@components/layout";
-import AdminLayout from "./AdminLayout";
 import MovieDetail from "@pages/movie-detail";
 import MovieReviews from "@pages/movie-detail/reviews";
 import My from "@pages/my";
@@ -34,8 +33,10 @@ import { useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { isEmpty } from "lodash";
 import DomainGoogle from "@pages/google";
-import ProtectedRoute from "./ProtectedRoute";
-import AdminRouter from "./AdminRouter";
+import ProtectedRoute from "./router/ProtectedRoute";
+
+// Routes Import
+import AdminRouter from "./router/AdminRouter";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -225,16 +226,6 @@ function Router() {
                 </ProtectedRoute>
               }
             />
-
-            {/* 관리자 전용 라우트 */}
-            {/* <Route
-              path="/admin/*"
-              element={
-                <ProtectedRoute role="admin">
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            /> */}
 
             <Route path="/admin/*" element={<AdminRouter />} />
 
