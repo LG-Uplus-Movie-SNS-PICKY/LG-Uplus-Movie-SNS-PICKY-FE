@@ -12,11 +12,11 @@ export const userState = atom({
     email: "",
     profileUrl:"",
     profileImagePreview: null as string | null,
-    // favoriteGenres: [],
-    // favoriteMovie: [],
-    // kakao_id: "",
-    // google_id: "",
-    // naver_id: "",
+    favoriteGenres: [],
+    favoriteMovie: [],
+    kakao_id: "",
+    google_id: "",
+    naver_id: "",
   },
 });
 
