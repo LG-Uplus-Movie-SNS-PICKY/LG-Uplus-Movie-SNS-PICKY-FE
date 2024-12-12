@@ -65,23 +65,6 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
               />
             </SwiperSlide>
           ))}
-        {/* {Array.isArray(data.data) &&
-          data.data.length > 0 &&
-          data.data.map((movie: TopMovieDataTypes) => (
-            <SwiperSlide key={movie.movieId}>
-              <MovieItem
-                type={isLogin ? "all" : "rate"}
-                src={movie.posterUrl}
-                title={movie.title}
-                name={movie.title}
-                rate={movie.totalRating}
-                like={movie.likes}
-                // comment={movie.comment}
-                isLoading={isLoading}
-                onClick={() => navigate(`/movie/${movie.movieId}`)}
-              />
-            </SwiperSlide>
-          ))} */}
       </Swiper>
     </div>
   );
