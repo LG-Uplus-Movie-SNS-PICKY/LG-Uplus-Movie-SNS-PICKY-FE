@@ -78,7 +78,7 @@ const LoginCallback: React.FC = () => {
             );
 
             
-            cookies.remove("user");
+            // cookies.remove("user");
             
             console.log(userResponse.data);
             
@@ -113,6 +113,9 @@ const LoginCallback: React.FC = () => {
           } else {
             // 유저 정보가 등록되지 않았을 경우
             // console.error("User API error:", );
+
+            console.log(JSON.parse(cookies.get('user') || "{}"));
+
             setToastMessage("등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다.");
             setTimeout(() => navigate("/auth/sign-up"), 2000);
           }
