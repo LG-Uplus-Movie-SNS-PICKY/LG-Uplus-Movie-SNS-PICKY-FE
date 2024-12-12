@@ -7,5 +7,6 @@ export const isLogin = atom({
     isLoginState: false,
     isAuthUser: false,
     isLoginInfo: {},
+    isLoading: true,
   },
 });
