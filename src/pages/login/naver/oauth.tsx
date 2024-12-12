@@ -21,7 +21,6 @@ const LoginCallback: React.FC = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
-    const cookies = new Cookies();
 
     if (!code || !state) {
       setToastMessage("잘못된 로그인 요청입니다. 다시 시도해주세요.");
@@ -97,7 +96,6 @@ const LoginCallback: React.FC = () => {
             // Cookie에 저장할 새로운 정보
             const newUserData = {
               ...currentUserCookie,
-              isAuthUser: role === "ADMIN",
               user: {
                 birthdate: userResponse.data.birthdate,
                 name: userResponse.data.name,
