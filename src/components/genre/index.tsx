@@ -35,6 +35,7 @@ function GenreButtons({
           label={genre.name}
           emoji={genre.name}
           btnType="Rectangle"
+          selected={selectedGenres.includes(genre.genreId)}
           onClick={() => onClick(genre.genreId)}
         />
       );

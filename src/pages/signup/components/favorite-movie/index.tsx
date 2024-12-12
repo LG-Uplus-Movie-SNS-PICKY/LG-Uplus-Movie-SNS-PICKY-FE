@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRecoilState } from "recoil";
-import axios from "axios";
 import { inputState } from "../../../../review/atoms";
 import { ArrowLeft, ArrowRight, Checked } from "../../../../assets/svg";
 import {
@@ -27,6 +26,7 @@ import {
   movieTitle,
   selectedCount,
 } from "./index.styles";
+import { fetchMoviesByGenre } from "@api/user";
 
 const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
 
@@ -48,22 +48,24 @@ const InputFavoriteMovie: React.FC = () => {
 
     try {
       console.log("보내는 장르 ID 값:", inputData.favoriteGenres);
-      const accessToken = sessionStorage.getItem("accessToken");
-      console.log("보내는 장르 ID:", accessToken);
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/movies-by-genres`,
-        {
-          genreIds: inputData.favoriteGenres,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const data = await fetchMoviesByGenre(inputData.favoriteGenres);
+      // const accessToken = sessionStorage.getItem("accessToken");
+      // console.log("보내는 장르 ID:", accessToken);
 
-      console.log("받아온 영화 데이터:", response.data);
+      // const response = await axios.post(
+      //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user/movies-by-genres`,
+      //   {
+      //     genreIds: inputData.favoriteGenres,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   }
+      // );
+
+      console.log("받아온 영화 데이터:", data);
 
       // 응답 데이터의 타입 정의
       type Movie = {
@@ -73,9 +75,9 @@ const InputFavoriteMovie: React.FC = () => {
       };
 
       // 데이터가 배열인지 확인하고 타입 적용
-      const moviesData: Movie[] = Array.isArray(response.data)
-        ? response.data
-        : response.data.data || [];
+      const moviesData: Movie[] = Array.isArray(data)
+        ? data
+        : data.data || [];
 
       // 이미지 URL 앞에 TMDB_IMAGE_PREFIX 추가
       const processedMovies = moviesData.map((movie: Movie) => ({
