@@ -50,7 +50,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
         }}
         css={styles.swiperContainer()}
       >
-        {!isLoading &&
+        {!Array.isArray(data.data) &&
           data.data.length > 0 &&
           data.data.map((movie: TopMovieDataTypes) => (
             <SwiperSlide key={movie.movieId}>

@@ -14,6 +14,7 @@ import SEO from "@components/seo";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
+import { Cookies } from "react-cookie";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ export default function Login() {
 
   const socialLoginClikc = async () => {
     try {
+      const cookies = new Cookies();
+      
       const data = await axios
         .patch(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
@@ -46,7 +49,9 @@ export default function Login() {
         )
         .then((res) => res.data);
 
-      sessionStorage.setItem("user", JSON.stringify(data));
+      cookies.set('user', JSON.stringify(data));
+
+      // sessionStorage.setItem("user", JSON.stringify(data));
       setIsLoginState({
         isLoginState: true,
         isAuthUser: data.isAuthUser,

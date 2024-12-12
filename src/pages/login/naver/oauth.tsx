@@ -65,7 +65,7 @@ const LoginCallback: React.FC = () => {
           // }), 7);
 
           if (isRegistrationDone) {
-            const currentUserCookie = JSON.parse(cookies.get("user"));
+            const currentUserCookie = cookies.get("user");
             console.log(currentUserCookie)
 
             const userResponse = await axios.get(
