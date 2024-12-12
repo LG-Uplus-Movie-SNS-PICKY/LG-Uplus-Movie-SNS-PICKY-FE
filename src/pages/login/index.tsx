@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+// import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import {
   GOOGLE_LOGIN_URL,
@@ -8,7 +8,7 @@ import {
 } from "../../api/constants";
 import { BtnGoogle, BtnKakao, BtnNaver } from "../../assets/svg";
 import Picky_main_Logo from "@assets/icons/picky_main_logo.svg?react";
-import { GapContainer, StyledText } from "./index.styles";
+import { StyledText } from "./index.styles";
 import { Block, Text } from "../../styles/ui";
 import SEO from "@components/seo";
 import axios from "axios";

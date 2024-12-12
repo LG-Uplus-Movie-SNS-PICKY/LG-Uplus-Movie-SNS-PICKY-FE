@@ -7,6 +7,8 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { nickNameContainer, textWrapper } from "./index.styles";
 import { debounce } from "lodash";
+import { Cookies } from "react-cookie";
+import { fetchNicknameValidation } from "@api/user";
 
 interface InputNicknameProps {
   onValidChange: (isValid: boolean) => void;
@@ -24,32 +26,22 @@ export default function InputNickname({ onValidChange }: InputNicknameProps) {
   };
 
   const checkNicknameAvailability = async (nickname: string) => {
+
     try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      console.log(accessToken);
+      const data = await fetchNicknameValidation(nickname);
 
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
-        {
-          params: {
-            nickname,
-          },
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      console.log("API 응답:", data);
 
-      console.log("API 응답:", response.data);
-
-      if (!response.data.data.isValid) {
+      if(!data.data.isValid) {
         setNicknameError("이미 사용 중인 닉네임입니다.");
         setIsNicknameValid(false);
       } else {
         setNicknameError("사용이 가능한 닉네임입니다.");
         setIsNicknameValid(true);
       }
-    } catch (error) {
+
+
+    } catch(error) {
       console.error("API 요청 중 오류 발생:", error);
       setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
       setIsNicknameValid(false);
