@@ -14,7 +14,8 @@ import SEO from "@components/seo";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
+import { setCookie } from "@util/cookie";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -35,8 +36,6 @@ export default function Login() {
 
   const socialLoginClikc = async () => {
     try {
-      const cookies = new Cookies();
-      
       const data = await axios
         .patch(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
@@ -49,7 +48,12 @@ export default function Login() {
         )
         .then((res) => res.data);
 
-      cookies.set('user', JSON.stringify(data));
+      setCookie("user", data, {
+        path: "/", // 모든 경로에서 접근 가능
+        maxAge: 60 * 60 * 24, // 1일 (초 단위)
+        sameSite: "strict", // 보안 설정
+        secure: false, // HTTPS 필요 여부 (개발 시 false)
+      });
 
       // sessionStorage.setItem("user", JSON.stringify(data));
       setIsLoginState({

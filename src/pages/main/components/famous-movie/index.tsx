@@ -23,9 +23,9 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
   const { data, isLoading } = useTopMovieQuery();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
 
   return (
     <div css={styles.famousContainer()}>
@@ -50,7 +50,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
         }}
         css={styles.swiperContainer()}
       >
-        {!Array.isArray(data.data) &&
+        {/* {Array.isArray(data.data) &&
           data.data.length > 0 &&
           data.data.map((movie: TopMovieDataTypes) => (
             <SwiperSlide key={movie.movieId}>
@@ -66,7 +66,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
                 onClick={() => navigate(`/movie/${movie.movieId}`)}
               />
             </SwiperSlide>
-          ))}
+          ))} */}
       </Swiper>
     </div>
   );
