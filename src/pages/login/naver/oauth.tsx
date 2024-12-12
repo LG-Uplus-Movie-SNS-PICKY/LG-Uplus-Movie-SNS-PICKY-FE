@@ -5,6 +5,17 @@ import { useSetRecoilState } from "recoil";
 import { userState } from "../../../review/atoms";
 import { Toast } from "@stories/toast";
 
+// 쿠키 설정 함수
+function setCookie(name: string, value: string, days?: number) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    expires = `; expires=${date.toUTCString()}`;
+  }
+  document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/`;
+}
+
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userState);
@@ -23,7 +34,6 @@ const LoginCallback: React.FC = () => {
 
     setIsLoading(true);
 
-    // 소셜 로그인 API 요청
     axios
       .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
         params: { code, state },
@@ -37,17 +47,14 @@ const LoginCallback: React.FC = () => {
           oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
-          // 토큰을 세션에 저장
-          sessionStorage.setItem("access_token", oAuth2Token.access_token);
-          sessionStorage.setItem("refresh_token", oAuth2Token.refresh_token);
-          sessionStorage.setItem("token_type", oAuth2Token.token_type);
-          sessionStorage.setItem("expires_in", oAuth2Token.expires_in);
-          sessionStorage.setItem("accessToken", localJwtDto.accessToken);
-          sessionStorage.setItem(
-            "isRegistrationDone",
-            JSON.stringify(isRegistrationDone)
-          );
-          sessionStorage.setItem("role", role);
+          // 쿠키에 토큰 저장
+          setCookie("access_token", oAuth2Token.access_token, 7);
+          setCookie("refresh_token", oAuth2Token.refresh_token, 7);
+          setCookie("token_type", oAuth2Token.token_type, 7);
+          setCookie("expires_in", oAuth2Token.expires_in, 7);
+          setCookie("accessToken", localJwtDto.accessToken, 7);
+          setCookie("isRegistrationDone", JSON.stringify(isRegistrationDone), 7);
+          setCookie("role", role, 7);
 
           if (role === "ADMIN") {
             setToastMessage("관리자로 로그인되었습니다!");
@@ -55,7 +62,6 @@ const LoginCallback: React.FC = () => {
             return;
           }
 
-          // 사용자 정보 가져오기
           try {
             const userResponse = await axios.get(
               `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
@@ -69,7 +75,9 @@ const LoginCallback: React.FC = () => {
             if (userResponse.status === 200) {
               const userData = userResponse.data;
 
-              // Recoil 전역 상태 업데이트
+              // 쿠키에 사용자 정보 저장
+              setCookie("user", JSON.stringify(userData), 7);
+
               setUserState({
                 name: userData.name,
                 nickname: userData.nickname,

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+// import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import {
   GOOGLE_LOGIN_URL,
@@ -8,7 +8,7 @@ import {
 } from "../../api/constants";
 import { BtnGoogle, BtnKakao, BtnNaver } from "../../assets/svg";
 import Picky_main_Logo from "@assets/icons/picky_main_logo.svg?react";
-import { GapContainer, StyledText } from "./index.styles";
+import { StyledText } from "./index.styles";
 import { Block, Text } from "../../styles/ui";
 import SEO from "@components/seo";
 import axios from "axios";
@@ -46,7 +46,7 @@ export default function Login() {
         )
         .then((res) => res.data);
 
-      sessionStorage.setItem("user", JSON.stringify(data)); // 세션 스토리지에 저장
+      sessionStorage.setItem("user", JSON.stringify(data));
       setIsLoginState({
         isLoginState: true,
         isAuthUser: data.isAuthUser,
