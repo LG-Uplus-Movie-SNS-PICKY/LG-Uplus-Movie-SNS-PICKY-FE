@@ -72,36 +72,22 @@ export default function Login() {
       />
 
       <Block.FlexBox
-        css={css`
-          width: 100%;
-          height: 100vh;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 34px;
-        `}
+        $width="100%"
+        $height="100vh"
+        $direction="column"
+        $alignItems="center"
+        $justifyContent="center"
+        $gap="34px"
       >
         <Text.TitleMenu100>영화인 필수!</Text.TitleMenu100>
         <Text.TitleMenu300>영화 리뷰 1등 플랫폼</Text.TitleMenu300>
 
-        <Block.FlexBox
-          css={css`
-            /* border-top: 36px; */
-            flex-direction: column;
-            align-items: center;
-            ${GapContainer}
-          `}
-        >
+        <Block.FlexBox $direction="column" $alignItems="center" $gap="108px">
           <Picky_main_Logo width={300} height={100} />
           <div css={StyledText}>⚡️간편로그인으로 3초만에 빠르게 회원가입!</div>
         </Block.FlexBox>
 
-        <Block.FlexBox
-          css={css`
-            justify-content: center;
-            gap: 50px;
-          `}
-        >
+        <Block.FlexBox $justifyContent="center" $gap="50px">
           <BtnKakao
             onClick={handleKakaoLoginClick}
             width={46}
