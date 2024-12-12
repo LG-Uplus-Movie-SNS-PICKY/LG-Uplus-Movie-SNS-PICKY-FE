@@ -55,14 +55,12 @@ export default function Login() {
         secure: false, // HTTPS 필요 여부 (개발 시 false)
       });
 
-      // sessionStorage.setItem("user", JSON.stringify(data));
       setIsLoginState({
         isLoginState: true,
         isAuthUser: data.isAuthUser,
         isLoginInfo: data,
         isLoading: false,
       });
-      // console.log(data);
 
       navigate("/");
     } catch (error) {
