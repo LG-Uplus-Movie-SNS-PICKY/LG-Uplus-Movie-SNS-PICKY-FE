@@ -30,8 +30,13 @@ export async function fetchMoviesByGenre(favoriteGenres: number[]) {
 export async function fetchSignUpUser(formData: FormData) {
   const { data } = await apiClient.patch(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-    formData
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
   );
-  
+
   return data;
 }
