@@ -6,6 +6,7 @@ import { userState } from "../../../review/atoms";
 import { Toast } from "@stories/toast";
 import { Cookies } from "react-cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
+import { getCookie, setCookie } from "@util/cookie";
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -45,23 +46,32 @@ const LoginCallback: React.FC = () => {
         ) {
           // 소셜 로그인을 위한 oAuth2Token, localJwtDTO, 회원가입 여부(isRegisterationDone)을 일단 쿠키에 저장한다.
           // -> 이유: 비로그인 사용자가 개인 정보를 입력할 때 localJwtDTO를 통해서 닉네임, 장르 선택, 영화 GET / POST를 위한 Headers으로 사용이 되어야 하기 때문
-          cookies.set(
+          // cookies.set(
+          //   "user",
+          //   JSON.stringify({
+          //     oAuth2Token,
+          //     localJwtDto,
+          //     isRegistrationDone,
+          //   })
+          // );
+
+          setCookie(
             "user",
             JSON.stringify({
               oAuth2Token,
               localJwtDto,
               isRegistrationDone,
-            })
+            }),
+            {
+              path: "/", // 모든 경로에서 접근 가능
+              maxAge: 60 * 60 * 24, // 1일 (초 단위)
+              sameSite: "strict", // 보안 설정
+              secure: false, // HTTPS 필요 여부 (개발 시 false)
+            }
           );
 
-          // setCookie('user', JSON.stringify({
-          //   oAuth2Token,
-          //   localJwtDto,
-          //   isRegistrationDone,
-          // }), 7);
-
           if (isRegistrationDone) {
-            const currentUserCookie = cookies.get("user");
+            const currentUserCookie = getCookie("user");
             console.log(currentUserCookie);
 
             const userResponse = await axios.get(
@@ -72,8 +82,6 @@ const LoginCallback: React.FC = () => {
                 },
               }
             );
-
-            // cookies.remove("user");
 
             console.log(userResponse.data);
 
@@ -92,7 +100,13 @@ const LoginCallback: React.FC = () => {
             };
 
             // 로그인 사용자의 쿠키 값을 설정
-            cookies.set("user", JSON.stringify(newUserData));
+            // cookies.set("user", JSON.stringify(newUserData));
+            setCookie("user", JSON.stringify(newUserData), {
+              path: "/", // 모든 경로에서 접근 가능
+              maxAge: 60 * 60 * 24, // 1일 (초 단위)
+              sameSite: "strict", // 보안 설정
+              secure: false, // HTTPS 필요 여부 (개발 시 false)
+            });
 
             // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
             setIsLoginState({
@@ -108,7 +122,7 @@ const LoginCallback: React.FC = () => {
             // 유저 정보가 등록되지 않았을 경우
             // console.error("User API error:", );
 
-            console.log(cookies.get("user"));
+            console.log(getCookie("user"));
             // console.log(JSON.parse(cookies.get('user') || "{}"));
 
             setToastMessage(
