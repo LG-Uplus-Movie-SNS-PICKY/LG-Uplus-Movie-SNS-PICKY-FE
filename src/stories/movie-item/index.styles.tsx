@@ -9,6 +9,7 @@ export default {
       flex-direction: column;
 
       gap: 4px;
+      cursor: pointer;
 
       .movie-title {
         font-size: 12px;
@@ -19,8 +20,8 @@ export default {
 
   movieItemThumbnail(isActive: boolean): SerializedStyles {
     return css`
-      max-width: 90px;
-      max-height: 128px;
+      width: 90px;
+      height: 128px;
       display: flex;
 
       overflow: hidden;
@@ -29,7 +30,7 @@ export default {
       isolation: isolate;
 
       position: relative;
-      /* background-color: black; */
+      background-color: #262626;
 
       ${isActive &&
       `
@@ -61,6 +62,18 @@ export default {
           width: 100%;
           display: block;
         }
+      }
+
+      & > .alt {
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        color: #b3b3b3;
+        font-size: 14px;
+        font-weight: 600;
       }
     `;
   },
