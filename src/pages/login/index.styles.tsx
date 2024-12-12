@@ -2,7 +2,7 @@ import { css } from "@emotion/react";
 
 export const StyledText = css`
   display: flex;
-  padding: 8px 12px;
+  padding: 4px 8px;
   justify-content: center;
   align-items: center;
   border-radius: 50px;
@@ -22,7 +22,6 @@ export const StyledText = css`
 // export const GapContainer = css`
 //   gap: 12px;
 // `;
-
 
 // export const StyledText = css`
 //   display: flex;
