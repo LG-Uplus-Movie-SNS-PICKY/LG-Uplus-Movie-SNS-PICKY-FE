@@ -74,6 +74,7 @@ const LoginCallback: React.FC = () => {
               oAuth2Token,
               localJwtDto,
               isRegistrationDone,
+              isAuthUser: role === "ADMIN",
             }),
             {
               path: "/", // 모든 경로에서 접근 가능
@@ -93,23 +94,7 @@ const LoginCallback: React.FC = () => {
             // User GET API 모듈로 분리
             const userResponse = await fetchGetUserInfo();
 
-            // const userResponse = await axios.get(
-            //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-            //   {
-            //     headers: {
-            //       Authorization: `Bearer ${currentUserCookie.localJwtDto.accessToken}`,
-            //     },
-            //   }
-            // ).then(res => res.data);
-
-            console.log("User Resposne");
-            console.log(userResponse);
-            console.log();
-
-            console.log("User Resposne Data");
-            console.log(userResponse.data);
-            console.log();
-
+            // Cookie에 저장할 새로운 정보
             const newUserData = {
               ...currentUserCookie,
               isAuthUser: role === "ADMIN",
