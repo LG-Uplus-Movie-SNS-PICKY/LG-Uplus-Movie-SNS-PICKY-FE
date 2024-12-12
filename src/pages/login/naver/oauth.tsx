@@ -78,6 +78,7 @@ const LoginCallback: React.FC = () => {
                 nationality: userData.nationality,
                 email: userData.email,
                 profileUrl: userData.profileUrl,
+                profileImagePreview: userData.profileImagePreview,
               });
 
               setToastMessage("로그인에 성공했습니다!");

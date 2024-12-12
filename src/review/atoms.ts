@@ -11,7 +11,7 @@ export const userState = atom({
     nationality: "",
     email: "",
     profileUrl:"",
-    // profileImagePreview: null as string | null,
+    profileImagePreview: null as string | null,
     // favoriteGenres: [],
     // favoriteMovie: [],
     // kakao_id: "",

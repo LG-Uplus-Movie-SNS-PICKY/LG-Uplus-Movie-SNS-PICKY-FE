@@ -31,10 +31,10 @@ export default function InputUserName() {
   };
 
   useEffect(() => {
-    if (userInfo.username && inputData.name === "") {
-      setInputData((prev) => ({ ...prev, name: userInfo.username }));
+    if (userInfo.name && inputData.name === "") {
+      setInputData((prev) => ({ ...prev, name: userInfo.name }));
     }
-  }, [userInfo.username, inputData.name, setInputData]);
+  }, [userInfo.name, inputData.name, setInputData]);
 
   return (
     <>
@@ -44,7 +44,7 @@ export default function InputUserName() {
           <Text.FocusedMenu $isFocused={isFocused}>이름</Text.FocusedMenu>
         </div>
         <Input.InfoBox
-          value={userInfo.username}
+          value={userInfo.name}
           placeholder="이름을 입력해주세요"
           onFocus={handleFocus}
           onBlur={handleBlur}
