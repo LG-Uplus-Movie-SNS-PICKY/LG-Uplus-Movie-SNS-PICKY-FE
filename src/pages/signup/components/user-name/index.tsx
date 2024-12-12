@@ -26,7 +26,7 @@ export default function InputUserName() {
     setIsValid(isValidName);
 
     const sanitizedData = newData.replace(/\d/g, "");
-    setUserInfo((prev) => ({ ...prev, username: sanitizedData }));
+    setUserInfo((prev) => ({ ...prev, name: sanitizedData }));
     setInputData((prev) => ({ ...prev, name: sanitizedData }));
   };
 
