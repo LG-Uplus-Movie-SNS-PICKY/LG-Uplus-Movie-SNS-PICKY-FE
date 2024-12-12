@@ -13,27 +13,6 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 function Main() {
   const isLoginState = useRecoilValue(isLogin);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const data = await axios
-        .post(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
-          {
-            boardContext: "string",
-            movieId: 1,
-            contents: [],
-            isSpoiler: true,
-          },
-          {
-            headers: { Authorization: "1" },
-          }
-        )
-        .then((res) => res.data);
-      console.log(data);
-    };
-    fetch();
-  }, []);
-
   return (
     <>
       <SEO

@@ -18,6 +18,8 @@ export interface MovieItemProps {
   state?: string;
   name: string;
   style?: React.CSSProperties;
+  isLoading?: boolean;
+  isError?: boolean;
 }
 
 interface RateComponentProps {
@@ -68,15 +70,18 @@ export function MovieItem({
   comment = 0,
   state = "abouttime",
   name,
-  style
+  style,
+  isLoading,
 }: MovieItemProps): JSX.Element {
+  if (isLoading) return <></>;
 
   return (
     <div css={styles.movieItemContainer()} style={style}>
       {/* 영화 썸네일 이미지 */}
       <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
         {type === "basic" && state === name ? <Checked /> : null}
-        <LazyLoadImage src={src} alt={name} effect="blur" />
+        <LazyLoadImage src={src} effect={"blur"} />
+        {isLoading && <span className="alt">{name}</span>}
       </div>
 
       {/* 영화 제목 */}

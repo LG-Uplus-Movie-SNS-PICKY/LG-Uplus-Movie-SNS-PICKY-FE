@@ -11,12 +11,20 @@ import styles from "./index.styles";
 import { MovieItem } from "@stories/movie-item";
 
 import bestMovies from "@pages/main/constants";
+import { useTopMovieQuery } from "@hooks/movie";
+import { useEffect } from "react";
 
 interface FamousMovieProps {
   isLogin: boolean;
 }
 
 function FamousMovie({ isLogin }: FamousMovieProps) {
+  const { data, isLoading } = useTopMovieQuery();
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   return (
     <div css={styles.famousContainer()}>
       {/* Title */}
@@ -41,7 +49,24 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
         }}
         css={styles.swiperContainer()}
       >
-        {bestMovies.length > 0 &&
+        {!isLoading &&
+          data.data.length > 0 &&
+          data.data.map((movie) => (
+            <SwiperSlide key={movie.movieId}>
+              <MovieItem
+                type={isLogin ? "all" : "rate"}
+                src={movie.posterUrl}
+                title={movie.title}
+                name={movie.title}
+                rate={movie.totalRating}
+                like={movie.likes}
+                // comment={movie.comment}
+                isLoading={isLoading}
+              />
+            </SwiperSlide>
+          ))}
+
+        {/* {bestMovies.length > 0 &&
           bestMovies.map((movie, idx) => {
             return (
               <SwiperSlide key={idx}>
@@ -53,10 +78,11 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
                   rate={movie.rate}
                   like={movie.like}
                   comment={movie.comment}
+                  isLoading={isLoading}
                 />
               </SwiperSlide>
             );
-          })}
+          })} */}
       </Swiper>
     </div>
   );
