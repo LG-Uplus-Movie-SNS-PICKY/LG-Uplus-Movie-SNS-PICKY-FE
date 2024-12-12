@@ -65,16 +65,19 @@ const LoginCallback: React.FC = () => {
           // }), 7);
 
           if (isRegistrationDone) {
+            const currentUserCookie = JSON.parse(cookies.get("user"));
+            console.log(currentUserCookie)
+
             const userResponse = await axios.get(
               `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
               {
                 headers: {
-                  Authorization: `Bearer ${localJwtDto.accessToken}`,
+                  Authorization: `Bearer ${currentUserCookie.localJwtDto.accessToken}`,
                 },
               }
             );
 
-            const currentUserCookie = cookies.get("user");
+            
             cookies.remove("user");
             
             console.log(userResponse.data);
