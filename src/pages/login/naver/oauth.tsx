@@ -107,13 +107,13 @@ const LoginCallback: React.FC = () => {
               ...currentUserCookie,
               isAuthUser: role === "ADMIN",
               user: {
-                birthdate: userResponse.data.birthdate,
-                name: userResponse.data.name,
-                nickname: userResponse.data.nickname,
-                gender: userResponse.data.gender,
-                nationality: userResponse.data.nationality,
-                email: userResponse.data.email,
-                profileUrl: userResponse.data.profileUrl,
+                birthdate: userResponse.data.data.birthdate,
+                name: userResponse.data.data.name,
+                nickname: userResponse.data.data.nickname,
+                gender: userResponse.data.data.gender,
+                nationality: userResponse.data.data.nationality,
+                email: userResponse.data.data.email,
+                profileUrl: userResponse.data.data.profileUrl,
               },
             };
 
