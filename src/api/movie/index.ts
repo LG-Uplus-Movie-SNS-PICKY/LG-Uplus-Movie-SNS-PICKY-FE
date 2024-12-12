@@ -2,7 +2,7 @@ import apiClient from "@api";
 
 // Top 10 Movie 조회 GET
 export async function fetchTopMovie() {
-  const { data } = await apiClient.get("/best/movie");
+  const { data } = await apiClient.get("/movie/top10");
   return data;
 }
 

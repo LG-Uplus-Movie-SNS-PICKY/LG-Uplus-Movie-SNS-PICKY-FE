@@ -361,6 +361,29 @@ const movieHandlers: HttpHandler[] = [
     }
   ),
 
+  // 영화 Top 10 조회 API(Mocking Object)
+  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/top10`, ({}) => {
+    const bestMovies = movies
+      .map((movie) => {
+        const movieLike = movieLikes.filter(
+          (like) => like.movie_id === movie.movie_id
+        ).length;
+
+        return {
+          movieId: movie.movie_id,
+          title: movie.movie_title,
+          likes: movieLike,
+          posterUrl: movie.movie_poster_url,
+          backdropUrl: movie.movie_backdrop_url,
+          totalRating: calculateTotalRating(movieLike),
+        };
+      })
+      .sort((a, b) => b.totalRating - a.totalRating)
+      .slice(0, 10);
+
+    return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
+  }),
+
   // 영화 상세 정보 조회 API(Mocking Object)
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/:movieId`,
@@ -495,29 +518,6 @@ const movieHandlers: HttpHandler[] = [
 
   //   }
   // ),
-
-  // 영화 Top 10 조회 API(Mocking Object)
-  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/best/movie`, ({}) => {
-    const bestMovies = movies
-      .map((movie) => {
-        const movieLike = movieLikes.filter(
-          (like) => like.movie_id === movie.movie_id
-        ).length;
-
-        return {
-          movieId: movie.movie_id,
-          title: movie.movie_title,
-          likes: movieLike,
-          posterUrl: movie.movie_poster_url,
-          backdropUrl: movie.movie_backdrop_url,
-          totalRating: calculateTotalRating(movieLike),
-        };
-      })
-      .sort((a, b) => b.totalRating - a.totalRating)
-      .slice(0, 10);
-
-    return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
-  }),
 
   // 장르별 영화 조회 API(Mocking Object)
   http.get(
