@@ -18,6 +18,9 @@ export interface MovieItemProps {
   state?: string;
   name: string;
   style?: React.CSSProperties;
+  isLoading?: boolean;
+  isError?: boolean;
+  onClick?: (movieId?: number) => void;
 }
 
 interface RateComponentProps {
@@ -35,7 +38,7 @@ function RateComponent({ rate }: RateComponentProps): JSX.Element {
     <div css={styles.movieItemRate()}>
       <span>평점</span>
       <Star width="12px" />
-      <span>{rate}</span>
+      <span>{rate.toFixed(1)}</span>
     </div>
   );
 }
@@ -68,19 +71,27 @@ export function MovieItem({
   comment = 0,
   state = "abouttime",
   name,
-  style
+  style,
+  isLoading,
+  onClick,
 }: MovieItemProps): JSX.Element {
+  if (isLoading) return <></>;
 
   return (
-    <div css={styles.movieItemContainer()} style={style}>
+    <div
+      css={styles.movieItemContainer()}
+      style={style}
+      onClick={() => onClick && onClick()}
+    >
       {/* 영화 썸네일 이미지 */}
       <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
         {type === "basic" && state === name ? <Checked /> : null}
-        <LazyLoadImage src={src} alt={name} effect="blur" />
+        <LazyLoadImage src={src} effect={"blur"} />
+        {isLoading && <span className="alt">{title}</span>}
       </div>
 
       {/* 영화 제목 */}
-      <span className="movie-title">{title}</span>
+      {/* <span className="movie-title">{title}</span> */}
 
       {/* Type === "rate" : 별점만 보여주기 */}
       {type !== "basic" && <RateComponent rate={rate} />}
