@@ -7,7 +7,6 @@ import { Toast } from "@stories/toast";
 import { Cookies } from "react-cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
 
-
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
   const setUserState = useSetRecoilState(userState);
@@ -29,13 +28,11 @@ const LoginCallback: React.FC = () => {
 
     setIsLoading(true);
 
-
     axios
       .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
       .then(async (response) => {
-
         // 소셜 로그인 서비스에서 정보를 제대로 전달 받았을 경우
 
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
@@ -54,8 +51,7 @@ const LoginCallback: React.FC = () => {
               oAuth2Token,
               localJwtDto,
               isRegistrationDone,
-            }),
-            { maxAge: 360000 }
+            })
           );
 
           // setCookie('user', JSON.stringify({
@@ -66,7 +62,7 @@ const LoginCallback: React.FC = () => {
 
           if (isRegistrationDone) {
             const currentUserCookie = cookies.get("user");
-            console.log(currentUserCookie)
+            console.log(currentUserCookie);
 
             const userResponse = await axios.get(
               `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
@@ -77,11 +73,10 @@ const LoginCallback: React.FC = () => {
               }
             );
 
-            
             // cookies.remove("user");
-            
+
             console.log(userResponse.data);
-            
+
             const newUserData = {
               ...currentUserCookie,
               isAuthUser: role === "ADMIN",
@@ -95,9 +90,9 @@ const LoginCallback: React.FC = () => {
                 profileUrl: userResponse.data.profileUrl,
               },
             };
-            
+
             // 로그인 사용자의 쿠키 값을 설정
-            cookies.set("user", JSON.stringify(newUserData), { maxAge: 7 });
+            cookies.set("user", JSON.stringify(newUserData));
 
             // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
             setIsLoginState({
@@ -109,15 +104,16 @@ const LoginCallback: React.FC = () => {
 
             setToastMessage("로그인에 성공했습니다!");
             setTimeout(() => navigate("/"), 2000);
-
           } else {
             // 유저 정보가 등록되지 않았을 경우
             // console.error("User API error:", );
 
-            console.log(cookies.get('user'));
+            console.log(cookies.get("user"));
             // console.log(JSON.parse(cookies.get('user') || "{}"));
 
-            setToastMessage("등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다.");
+            setToastMessage(
+              "등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다."
+            );
             setTimeout(() => navigate("/auth/sign-up"), 2000);
           }
 
@@ -133,7 +129,6 @@ const LoginCallback: React.FC = () => {
 
           //   if (userResponse.status === 200) {
           //     const userData = userResponse.data;
-
 
           //     setUserState({
           //       name: userData.name,
@@ -159,7 +154,6 @@ const LoginCallback: React.FC = () => {
         }
       })
       .catch((error) => {
-
         // 소셜 로그인 서비스에서 제대로 된 정보를 받지 못했을 경우
 
         console.error("Social login API error:", error);
@@ -169,7 +163,6 @@ const LoginCallback: React.FC = () => {
         setToastMessage(errorMessage);
       })
       .finally(() => {
-
         // 성공, 실패에 상관없이 무조건 한 번은 실행되는 코드
 
         setIsLoading(false);
