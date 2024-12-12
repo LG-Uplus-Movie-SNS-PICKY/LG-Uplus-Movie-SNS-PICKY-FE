@@ -4,17 +4,9 @@ import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../../../review/atoms";
 import { Toast } from "@stories/toast";
+import { Cookies } from "react-cookie";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
-// 쿠키 설정 함수
-function setCookie(name: string, value: string, days?: number) {
-  let expires = "";
-  if (days) {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = `; expires=${date.toUTCString()}`;
-  }
-  document.cookie = `${name}=${encodeURIComponent(value)}${expires}; path=/`;
-}
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -22,10 +14,13 @@ const LoginCallback: React.FC = () => {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const setIsLoginState = useSetRecoilState(isLogin);
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
+    const cookies = new Cookies();
 
     if (!code || !state) {
       setToastMessage("잘못된 로그인 요청입니다. 다시 시도해주세요.");
@@ -34,11 +29,15 @@ const LoginCallback: React.FC = () => {
 
     setIsLoading(true);
 
+
     axios
       .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
       .then(async (response) => {
+
+        // 소셜 로그인 서비스에서 정보를 제대로 전달 받았을 경우
+
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
           response.data.data;
 
@@ -47,22 +46,25 @@ const LoginCallback: React.FC = () => {
           oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
-          // 쿠키에 토큰 저장
-          setCookie("access_token", oAuth2Token.access_token, 7);
-          setCookie("refresh_token", oAuth2Token.refresh_token, 7);
-          setCookie("token_type", oAuth2Token.token_type, 7);
-          setCookie("expires_in", oAuth2Token.expires_in, 7);
-          setCookie("accessToken", localJwtDto.accessToken, 7);
-          setCookie("isRegistrationDone", JSON.stringify(isRegistrationDone), 7);
-          setCookie("role", role, 7);
+          // 소셜 로그인을 위한 oAuth2Token, localJwtDTO, 회원가입 여부(isRegisterationDone)을 일단 쿠키에 저장한다.
+          // -> 이유: 비로그인 사용자가 개인 정보를 입력할 때 localJwtDTO를 통해서 닉네임, 장르 선택, 영화 GET / POST를 위한 Headers으로 사용이 되어야 하기 때문
+          cookies.set(
+            "user",
+            JSON.stringify({
+              oAuth2Token,
+              localJwtDto,
+              isRegistrationDone,
+            }),
+            { maxAge: 7 }
+          );
 
-          if (role === "ADMIN") {
-            setToastMessage("관리자로 로그인되었습니다!");
-            setTimeout(() => navigate("/admin"), 2000);
-            return;
-          }
+          // setCookie('user', JSON.stringify({
+          //   oAuth2Token,
+          //   localJwtDto,
+          //   isRegistrationDone,
+          // }), 7);
 
-          try {
+          if (isRegistrationDone) {
             const userResponse = await axios.get(
               `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
               {
@@ -72,45 +74,100 @@ const LoginCallback: React.FC = () => {
               }
             );
 
-            if (userResponse.status === 200) {
-              const userData = userResponse.data;
+            const currentUserCookie = cookies.get("user");
+            cookies.remove("user");
+            
+            console.log(userResponse.data);
+            
+            const newUserData = {
+              ...currentUserCookie,
+              isAuthUser: role === "ADMIN",
+              user: {
+                birthdate: userResponse.data.birthdate,
+                name: userResponse.data.name,
+                nickname: userResponse.data.nickname,
+                gender: userResponse.data.gender,
+                nationality: userResponse.data.nationality,
+                email: userResponse.data.email,
+                profileUrl: userResponse.data.profileUrl,
+              },
+            };
+            
+            // 로그인 사용자의 쿠키 값을 설정
+            cookies.set("user", JSON.stringify(newUserData), { maxAge: 7 });
 
-              // 쿠키에 사용자 정보 저장
-              setCookie("user", JSON.stringify(userData), 7);
+            // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
+            setIsLoginState({
+              isLoginState: true, // 로그인이 된 상태
+              isAuthUser: newUserData.isAuthUser,
+              isLoginInfo: newUserData.user,
+              isLoading: false,
+            });
 
-              setUserState({
-                name: userData.name,
-                nickname: userData.nickname,
-                birthdate: userData.birthdate,
-                gender: userData.gender,
-                nationality: userData.nationality,
-                email: userData.email,
-                profileUrl: userData.profileUrl,
-                profileImagePreview: userData.profileImagePreview,
-              });
+            setToastMessage("로그인에 성공했습니다!");
+            setTimeout(() => navigate("/"), 2000);
 
-              setToastMessage("로그인에 성공했습니다!");
-              setTimeout(() => navigate("/"), 2000);
-            }
-          } catch (error) {
-            console.error("User API error:", error);
-            setToastMessage("사용자 정보를 가져오는 중 오류가 발생했습니다.");
+          } else {
+            // 유저 정보가 등록되지 않았을 경우
+            // console.error("User API error:", );
+            setToastMessage("등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다.");
             setTimeout(() => navigate("/auth/sign-up"), 2000);
           }
+
+          // try {
+          //   const userResponse = await axios.get(
+          //     `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+          //     {
+          //       headers: {
+          //         Authorization: `Bearer ${localJwtDto.accessToken}`,
+          //       },
+          //     }
+          //   );
+
+          //   if (userResponse.status === 200) {
+          //     const userData = userResponse.data;
+
+
+          //     setUserState({
+          //       name: userData.name,
+          //       nickname: userData.nickname,
+          //       birthdate: userData.birthdate,
+          //       gender: userData.gender,
+          //       nationality: userData.nationality,
+          //       email: userData.email,
+          //       profileUrl: userData.profileUrl,
+          //       profileImagePreview: userData.profileImagePreview,
+          //     });
+
+          //     setToastMessage("로그인에 성공했습니다!");
+          //     setTimeout(() => navigate("/"), 2000);
+          //   }
+          // } catch (error) {
+          //   console.error("User API error:", error);
+          //   setToastMessage("사용자 정보를 가져오는 중 오류가 발생했습니다.");
+          //   setTimeout(() => navigate("/auth/sign-up"), 2000);
+          // }
         } else {
           setToastMessage("로그인 처리 중 문제가 발생했습니다.");
         }
       })
       .catch((error) => {
+
+        // 소셜 로그인 서비스에서 제대로 된 정보를 받지 못했을 경우
+
         console.error("Social login API error:", error);
         const errorMessage =
-          error.response?.data?.message || "로그인 처리 중 문제가 발생했습니다.";
+          error.response?.data?.message ||
+          "로그인 처리 중 문제가 발생했습니다.";
         setToastMessage(errorMessage);
       })
       .finally(() => {
+
+        // 성공, 실패에 상관없이 무조건 한 번은 실행되는 코드
+
         setIsLoading(false);
       });
-  }, [navigate, setUserState]);
+  }, [navigate, setUserState, setIsLoginState]);
 
   return (
     <div>
