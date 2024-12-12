@@ -45,7 +45,6 @@ export default function ProfileEditPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
   const accessToken = sessionStorage.getItem("accessToken");
-
   const showToast = (message: string) => {
     setToastMessage(message);
   };

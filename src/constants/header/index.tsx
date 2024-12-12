@@ -10,63 +10,17 @@ import Search from "@assets/icons/search.svg?react";
 import UesrLogo from "@assets/icons/user_circle.svg?react";
 
 // Header Config 함수 타입 지정
-type HeaderConfigFunction = (
-  isLogin?: boolean,
-  navigate?: NavigateFunction
-) => HeaderConfigReturn;
+// type HeaderConfigFunction = (
+//   isLogin?: boolean,
+//   navigate?: NavigateFunction
+// ) => HeaderConfigReturn;
 
 // Header Config 반환값 지정
-interface HeaderConfigReturn {
-  type?: "basic" | "login" | "main" | "title";
-  label?: string | undefined;
-  buttons?: Array<ReactNode> | undefined;
-}
+// interface HeaderConfigReturn {
+//   buttons?: Array<ReactNode> | undefined;
+// }
 
-// Header Config 타입 지정
-interface HeaderConfigType {
-  // 프로퍼티의 key는 문자열, value는 화살표 함수(HeaderConfigFunction)
-  [path: string]: HeaderConfigFunction;
-}
-
-const headerConfig: HeaderConfigType = {
-  "/": (isLogin) => ({
-    // 메인페이지
-    type: isLogin ? "main" : "login",
-  }),
-
-  //회원가입 페이지
-  "/auth/sign-up": () => ({
-    type: "basic",
-  }),
-
-  // 무비로그 페이지
-  "/movie-log": () => ({
-    type: "main",
-  }),
-
-  // 마이 페이지
-  "/my-page": () => ({
-    type: "main",
-  }),
-
-  "/feed-list": () => ({
-    type: "main",
-  }),
-
-  "/comment": () => ({
-    type: "title",
-  }),
-
-  // 알림 페이지
-  "/notification": () => ({ type: "title", label: "알림" }),
-
-  "/wishlist": () => ({ type: "main" }),
-
-  // 추천 페이지
-  "/recommend": () => ({ type: "main" }),
-
-  "/admin": () => ({ type: "basic" }),
-};
+export type HeaderConfigReturn = Array<ReactNode> | undefined;
 
 /*
 
@@ -76,7 +30,6 @@ const headerConfig: HeaderConfigType = {
 */
 
 export function useHeaderConfig(
-  path: string,
   isLogin: boolean,
   navigate: NavigateFunction
 ): HeaderConfigReturn {
@@ -106,9 +59,6 @@ export function useHeaderConfig(
         </div>,
       ];
 
-  // 객체 타입 정의
-  const config = headerConfig[path];
-
   // 객체 반환
-  return config ? { ...config(isLogin), buttons } : {};
+  return buttons;
 }

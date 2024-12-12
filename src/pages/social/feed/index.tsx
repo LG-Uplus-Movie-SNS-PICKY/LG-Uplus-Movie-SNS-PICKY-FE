@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import {
   banner,
@@ -56,7 +56,7 @@ interface BoardContent {
 }
 
 export default function SocialFeed() {
-  const param = useParams();
+  const location = useLocation();
 
   const [boardData, setBoardData] = useState<BoardContent[]>([]);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -70,10 +70,11 @@ export default function SocialFeed() {
 
   // API 호출
   useEffect(() => {
-    const { id } = param;
+    const url = new URLSearchParams(location.search);
+    const id = url.get("movieId");
 
     const fetchMovieData = async () => {
-      console.log("Hekllo");
+      console.log("Hello");
     };
 
     const fetchAllData = async () => {
@@ -82,13 +83,22 @@ export default function SocialFeed() {
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/all`,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
+              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`,
             },
           }
         );
-        setBoardData(response.data.data || []);
+
+        // content 배열 추출
+        const fetchedData = response.data;
+        if (fetchedData && Array.isArray(fetchedData.content)) {
+          setBoardData(fetchedData.content); // content 배열 설정
+        } else {
+          console.error("API 응답이 예상한 구조가 아닙니다:", fetchedData);
+          setBoardData([]); // content가 없을 경우 빈 배열로 초기화
+        }
       } catch (error) {
         console.error("API 호출 중 오류 발생:", error);
+        setBoardData([]); // API 오류 시 빈 배열 설정
       }
     };
 
@@ -201,114 +211,117 @@ export default function SocialFeed() {
       <div css={wrapper}>
         <div css={banner}></div>
         <div css={feedContainer}>
-          {boardData.map((board) => {
-            const isSpoilerRevealed = revealedSpoilers.includes(board.boardId);
-            return (
-              <div key={board.boardId}>
-                <div css={feedItem}>
-                  <div css={infoSection}>
-                    <div css={profileSection}>
-                      <img
-                        src={board.writerProfileUrl || "/default-profile.png"}
-                        alt="프로필"
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                        }}
-                      />
+          {Array.isArray(boardData) &&
+            boardData.map((board) => {
+              const isSpoilerRevealed = revealedSpoilers.includes(
+                board.boardId
+              );
+              return (
+                <div key={board.boardId}>
+                  <div css={feedItem}>
+                    <div css={infoSection}>
+                      <div css={profileSection}>
+                        <img
+                          src={board.writerProfileUrl || "/default-profile.png"}
+                          alt="프로필"
+                          style={{
+                            width: "40px",
+                            height: "40px",
+                            borderRadius: "50%",
+                          }}
+                        />
+                      </div>
+                      <div css={textSection}>
+                        {board.writerNickname}
+                        <span css={movieTitle}>{board.movieTitle}</span>
+                      </div>
                     </div>
-                    <div css={textSection}>
-                      {board.writerNickname}
-                      <span css={movieTitle}>{board.movieTitle}</span>
+                    <div css={timeSection}>
+                      {calculateTimeAgo(board.createdDate)}
                     </div>
                   </div>
-                  <div css={timeSection}>
-                    {calculateTimeAgo(board.createdDate)}
-                  </div>
-                </div>
 
-                <div
-                  css={[
-                    contentSection,
-                    board.isSpoiler && !isSpoilerRevealed && blurredContent,
-                  ]}
-                  onClick={() =>
-                    navigate(`/movie-log/detail/${board.boardId}`, {
-                      state: board,
-                    })
-                  }
-                >
-                  {board.context}
-                </div>
-
-                <div
-                  css={carouselWrapper}
-                  onClick={() =>
-                    navigate(`/movie-log/detail/${board.boardId}`, {
-                      state: board,
-                    })
-                  }
-                >
                   <div
                     css={[
-                      carouselSection,
-                      board.isSpoiler && !isSpoilerRevealed && blurredImage,
+                      contentSection,
+                      board.isSpoiler && !isSpoilerRevealed && blurredContent,
                     ]}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (board.isSpoiler && !isSpoilerRevealed)
-                        revealSpoiler(board.boardId);
-                    }}
+                    onClick={() =>
+                      navigate(`/movie-log/detail/${board.boardId}`, {
+                        state: board,
+                      })
+                    }
                   >
-                    {/* <MovieLog
+                    {board.context}
+                  </div>
+
+                  <div
+                    css={carouselWrapper}
+                    onClick={() =>
+                      navigate(`/movie-log/detail/${board.boardId}`, {
+                        state: board,
+                      })
+                    }
+                  >
+                    <div
+                      css={[
+                        carouselSection,
+                        board.isSpoiler && !isSpoilerRevealed && blurredImage,
+                      ]}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (board.isSpoiler && !isSpoilerRevealed)
+                          revealSpoiler(board.boardId);
+                      }}
+                    >
+                      {/* <MovieLog
                       boardContent={board.contents.map((content) => ({
                         ...content,
                         board_content_type: content.board_content_type,
                       }))}
                     /> */}
-                    <div
-                      style={{
-                        width: "360px",
-                        height: "360px",
-                        background: "gray",
-                      }}
-                    ></div>
-                  </div>
-                  {board.isSpoiler && !isSpoilerRevealed && (
-                    <div css={spoilerText}>
-                      🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+                      <div
+                        style={{
+                          width: "360px",
+                          height: "360px",
+                          background: "gray",
+                        }}
+                      ></div>
                     </div>
-                  )}
-                </div>
+                    {board.isSpoiler && !isSpoilerRevealed && (
+                      <div css={spoilerText}>
+                        🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+                      </div>
+                    )}
+                  </div>
 
-                <div css={reactionsContainer}>
-                  <div css={reactionsSection}>
-                    <span onClick={() => toggleLike(board.boardId)}>
-                      {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
-                      <span>{board.likesCount}</span>
-                    </span>
-                    <span
-                      onClick={() =>
-                        navigate(`/movie-log/detail/${board.boardId}`, {
-                          state: board,
-                        })
-                      }
+                  <div css={reactionsContainer}>
+                    <div css={reactionsSection}>
+                      <span onClick={() => toggleLike(board.boardId)}>
+                        {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
+                        <span>{board.likesCount}</span>
+                      </span>
+                      <span
+                        onClick={() =>
+                          navigate(`/movie-log/detail/${board.boardId}`, {
+                            state: board,
+                          })
+                        }
+                      >
+                        <CommentFeed />
+                        <span>{board.commentsCount}</span>
+                      </span>
+                    </div>
+                    <div
+                      css={moreOptions}
+                      onClick={() => handleOptionsModal(board)}
                     >
-                      <CommentFeed />
-                      <span>{board.commentsCount}</span>
-                    </span>
-                  </div>
-                  <div
-                    css={moreOptions}
-                    onClick={() => handleOptionsModal(board)}
-                  >
-                    <ReportButton />
+                      <ReportButton />
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       </div>
 
