@@ -3,7 +3,7 @@ import { isEmpty } from "lodash";
 
 // Axios 초기 설정
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URL,
+  baseURL: `${import.meta.env.VITE_SERVER_URL}/api/v1`,
   headers: {
     "Content-Type": "application/json",
   },
