@@ -175,12 +175,10 @@ export default function Signup() {
         );
       }
 
-      const data = await fetchSignUpUser(formData);
+      // 유저 정보 업데이트
+      await fetchSignUpUser(formData);
 
-      console.log("fetchSignUpUser Response Data");
-      console.log(data);
-      console.log();
-
+      // 유저 정보 가져온 후 쿠키를 업데이트 시켜서 쿠키에 유저 정보 유지
       const currentUserCookie = getCookie("user");
 
       // User GET API 모듈로 분리
@@ -200,8 +198,6 @@ export default function Signup() {
         },
       };
 
-      // 로그인 사용자의 쿠키 값을 설정
-      // cookies.set("user", JSON.stringify(newUserData));
       setCookie("user", JSON.stringify(newUserData), {
         path: "/", // 모든 경로에서 접근 가능
         maxAge: 60 * 60 * 24, // 1일 (초 단위)
