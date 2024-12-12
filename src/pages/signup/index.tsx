@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { inputState } from "../../review/atoms";
@@ -32,9 +32,12 @@ import {
 } from "./index.styles";
 import SEO from "@components/seo";
 import { Cookies } from "react-cookie";
-import { fetchSignUpUser } from "@api/user";
+import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
+import { getCookie, setCookie } from "@util/cookie";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
 export default function Signup() {
+  const setIsLoginState = useSetRecoilState(isLogin);
   const [inputData, setInputData] = useRecoilState(inputState);
   const [step, setStep] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -174,20 +177,46 @@ export default function Signup() {
 
       const data = await fetchSignUpUser(formData);
 
-      // const
+      console.log("fetchSignUpUser Response Data");
+      console.log(data);
+      console.log();
 
-      // API 요청
-      // const response = await axios.patch(
-      //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   }
-      // );
+      const currentUserCookie = getCookie("user");
 
-      // console.log("회원가입 성공:", response.data);
+      // User GET API 모듈로 분리
+      const userResponse = await fetchGetUserInfo();
+
+      // Cookie에 저장할 새로운 정보
+      const newUserData = {
+        ...currentUserCookie,
+        user: {
+          birthdate: userResponse.data.birthdate,
+          name: userResponse.data.name,
+          nickname: userResponse.data.nickname,
+          gender: userResponse.data.gender,
+          nationality: userResponse.data.nationality,
+          email: userResponse.data.email,
+          profileUrl: userResponse.data.profileUrl,
+        },
+      };
+
+      // 로그인 사용자의 쿠키 값을 설정
+      // cookies.set("user", JSON.stringify(newUserData));
+      setCookie("user", JSON.stringify(newUserData), {
+        path: "/", // 모든 경로에서 접근 가능
+        maxAge: 60 * 60 * 24, // 1일 (초 단위)
+        sameSite: "strict", // 보안 설정
+        secure: false, // HTTPS 필요 여부 (개발 시 false)
+      });
+
+      // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
+      setIsLoginState({
+        isLoginState: true, // 로그인이 된 상태
+        isAuthUser: newUserData.isAuthUser,
+        isLoginInfo: newUserData.user,
+        isLoading: false,
+      });
+
       showToast("회원가입이 완료되었습니다!");
       navigate("/");
     } catch (error) {
