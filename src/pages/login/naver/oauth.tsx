@@ -114,7 +114,8 @@ const LoginCallback: React.FC = () => {
             // 유저 정보가 등록되지 않았을 경우
             // console.error("User API error:", );
 
-            console.log(JSON.parse(cookies.get('user') || "{}"));
+            console.log(cookies.get('user'));
+            // console.log(JSON.parse(cookies.get('user') || "{}"));
 
             setToastMessage("등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다.");
             setTimeout(() => navigate("/auth/sign-up"), 2000);
