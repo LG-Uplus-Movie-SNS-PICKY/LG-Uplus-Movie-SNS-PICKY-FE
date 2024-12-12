@@ -86,7 +86,10 @@ export function MovieItem({
       {/* 영화 썸네일 이미지 */}
       <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
         {type === "basic" && state === name ? <Checked /> : null}
-        <LazyLoadImage src={src} effect={"blur"} />
+        <LazyLoadImage
+          src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${src}`}
+          effect={"blur"}
+        />
         {isLoading && <span className="alt">{title}</span>}
       </div>
 
