@@ -7,6 +7,7 @@ import { Toast } from "@stories/toast";
 import { Cookies } from "react-cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { getCookie, setCookie } from "@util/cookie";
+import { fetchGetUserInfo } from "@api/user";
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -84,16 +85,22 @@ const LoginCallback: React.FC = () => {
 
           if (isRegistrationDone) {
             const currentUserCookie = getCookie("user");
-            console.log(currentUserCookie);
 
-            const userResponse = await axios.get(
-              `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-              {
-                headers: {
-                  Authorization: `Bearer ${currentUserCookie.localJwtDto.accessToken}`,
-                },
-              }
-            );
+            console.log("Current User Cookie");
+            console.log(currentUserCookie);
+            console.log();
+
+            // User GET API 모듈로 분리
+            const userResponse = await fetchGetUserInfo();
+
+            // const userResponse = await axios.get(
+            //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+            //   {
+            //     headers: {
+            //       Authorization: `Bearer ${currentUserCookie.localJwtDto.accessToken}`,
+            //     },
+            //   }
+            // ).then(res => res.data);
 
             console.log("User Resposne");
             console.log(userResponse);
@@ -107,13 +114,13 @@ const LoginCallback: React.FC = () => {
               ...currentUserCookie,
               isAuthUser: role === "ADMIN",
               user: {
-                birthdate: userResponse.data.data.birthdate,
-                name: userResponse.data.data.name,
-                nickname: userResponse.data.data.nickname,
-                gender: userResponse.data.data.gender,
-                nationality: userResponse.data.data.nationality,
-                email: userResponse.data.data.email,
-                profileUrl: userResponse.data.data.profileUrl,
+                birthdate: userResponse.data.birthdate,
+                name: userResponse.data.name,
+                nickname: userResponse.data.nickname,
+                gender: userResponse.data.gender,
+                nationality: userResponse.data.nationality,
+                email: userResponse.data.email,
+                profileUrl: userResponse.data.profileUrl,
               },
             };
 
@@ -141,46 +148,11 @@ const LoginCallback: React.FC = () => {
             // console.error("User API error:", );
 
             // console.log(getCookie("user"));
-            // console.log(JSON.parse(cookies.get('user') || "{}"));
-
             setToastMessage(
               "등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다."
             );
-            // setTimeout(() => navigate("/auth/sign-up"), 2000);
+            setTimeout(() => navigate("/auth/sign-up"), 2000);
           }
-
-          // try {
-          //   const userResponse = await axios.get(
-          //     `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-          //     {
-          //       headers: {
-          //         Authorization: `Bearer ${localJwtDto.accessToken}`,
-          //       },
-          //     }
-          //   );
-
-          //   if (userResponse.status === 200) {
-          //     const userData = userResponse.data;
-
-          //     setUserState({
-          //       name: userData.name,
-          //       nickname: userData.nickname,
-          //       birthdate: userData.birthdate,
-          //       gender: userData.gender,
-          //       nationality: userData.nationality,
-          //       email: userData.email,
-          //       profileUrl: userData.profileUrl,
-          //       profileImagePreview: userData.profileImagePreview,
-          //     });
-
-          //     setToastMessage("로그인에 성공했습니다!");
-          //     setTimeout(() => navigate("/"), 2000);
-          //   }
-          // } catch (error) {
-          //   console.error("User API error:", error);
-          //   setToastMessage("사용자 정보를 가져오는 중 오류가 발생했습니다.");
-          //   setTimeout(() => navigate("/auth/sign-up"), 2000);
-          // }
         } else {
           setToastMessage("로그인 처리 중 문제가 발생했습니다.");
         }
