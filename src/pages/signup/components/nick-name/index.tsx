@@ -30,18 +30,24 @@ export default function InputNickname({ onValidChange }: InputNicknameProps) {
     // console.log(cookie.get('user'));
 
     try {
-      const data = fetchNicknameValidation(nickname);
+      const data = await fetchNicknameValidation(nickname);
 
       console.log("API 응답:", data);
+
+      if(!data.data.isValid) {
+        setNicknameError("이미 사용 중인 닉네임입니다.");
+        setIsNicknameValid(false);
+      } else {
+        setNicknameError("사용이 가능한 닉네임입니다.");
+        setIsNicknameValid(true);
+      }
+
+      
       // if(data) {}
 
       // if (!data.data.isValid) {
-      //   setNicknameError("이미 사용 중인 닉네임입니다.");
-      //   setIsNicknameValid(false);
-      // } else {
-      //   setNicknameError("사용이 가능한 닉네임입니다.");
-      //   setIsNicknameValid(true);
-      // }
+      
+      // } 
 
     } catch(error) {
       console.error("API 요청 중 오류 발생:", error);
