@@ -31,7 +31,7 @@ export default {
       position: relative;
 
       width: 100%;
-      height: 187.28px;
+      aspect-ratio: 1 / 1.44;
       border-radius: 2px;
 
       overflow: hidden;

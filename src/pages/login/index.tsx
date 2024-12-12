@@ -51,6 +51,7 @@ export default function Login() {
         isLoginState: true,
         isAuthUser: data.isAuthUser,
         isLoginInfo: data,
+        isLoading: false,
       });
       // console.log(data);
 

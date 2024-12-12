@@ -52,6 +52,6 @@ export const routeConfig: RouteConfigTypes[] = [
     margin: "60px 0 0 0",
   },
   { path: "/recommendation", header: "main", gnb: true, margin: "60px 0" },
-  { path: "/search", gnb: false, margin: "60px 0 0 0" },
+  { path: "/search", gnb: false, margin: "0" },
   { path: "/error", gnb: false, margin: "0" },
 ];
