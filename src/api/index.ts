@@ -16,7 +16,7 @@ apiClient.interceptors.request.use((config) => {
   // 토큰이 비워져있지 않을 경우
   if (!isEmpty(token)) {
     // Headaers 인증 정보를 accessToken으로 수정
-    config.headers.Authorization = token.localJwtDto.accessToken;
+    config.headers.Authorization = `Bearer ${token.localJwtDto.accessToken}`;
   }
 
   return config;
@@ -27,7 +27,14 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     // 공통 에러 처리 로직
-    console.error("API Error", error.response?.data || error.message);
+    if (error.response) {
+      // 서버에서 받은 응답(Response) 에러 처리
+      console.error("API Error", error.response.data || error.message);
+    } else {
+      // 네트워크 에러 또는 기타 에러
+      console.error("Network Error: " + error.message);
+    }
+
     return Promise.resolve(error);
   }
 );
