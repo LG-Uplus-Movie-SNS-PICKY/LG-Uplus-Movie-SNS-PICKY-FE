@@ -23,12 +23,13 @@ import ProtectedRoute from "./router/ProtectedRoute";
 import GuestRouter from "./router/GuestRoutes";
 import UserRoutes from "./router/UserRoutes";
 import AdminRouter from "./router/AdminRoutes";
+import { getCookie } from "@util/cookie";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
 
   useEffect(() => {
-    const user = JSON.parse(sessionStorage.getItem("user") || "{}");
+    const user = getCookie("user") || {};
 
     if (user) {
       setIsLoginState({
