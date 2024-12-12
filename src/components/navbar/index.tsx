@@ -1,6 +1,7 @@
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { NavigaterBar as Navbar } from "@stories/navigater-bar";
 import { NaviationProps } from "@type/navigation";
+import { getCookie } from "@util/cookie";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 
@@ -33,8 +34,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
         navigate("/recommendation");
         break;
       case "user":
-        const currentUser = JSON.parse(sessionStorage.getItem("user") || "{}")
-          ?.user?.nickname;
+        const currentUser = getCookie("user").user.nickname;
         navigate(`/user/${currentUser}`);
         break;
     }
@@ -42,8 +42,6 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
 
   // 현재 경로에 맞는 Navbar 활성화
   useEffect(() => {
-    // console.log(isLoginState);
-
     const { pathname } = location;
     const routeMapping: { [key: string]: string } = {
       "/": "home",
@@ -59,8 +57,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
       // /user/ 경로 접근
       if (pathname.match(/^\/user\/[^/]+$/)) {
         const pathNickname = pathname.split("/")[2];
-        const currentUser = JSON.parse(sessionStorage.getItem("user") || "{}")
-          .user.nickname;
+        const currentUser = getCookie("user").user.nickname;
 
         // 접근한 사용자 프로필 경로와 로그인한 사용자와 같을 경우
         if (pathNickname === currentUser) {
