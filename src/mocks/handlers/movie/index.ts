@@ -8,6 +8,7 @@ import filmCrew from "@constants/json/movie/filmCrew.json";
 import movieBehindVideos from "@constants/json/movie/movieBehindVideos.json";
 import platforms from "@constants/json/movie/platforms.json";
 import movieLikes from "@constants/json/movie/movieLikes.json";
+import genres from "@constants/json/genres/genres.json";
 
 import user from "@constants/json/user.json";
 import genrePreferences from "@constants/json/user/genrePreferences.json";
@@ -334,11 +335,23 @@ const movieHandlers: HttpHandler[] = [
 
               return {
                 movieId: movie.movie_id,
-                title: movie.movie_title,
-                likes: movieLike,
                 posterUrl: movie.movie_poster_url,
-                backdropUrl: movie.movie_backdrop_url,
+                title: movie.movie_title,
                 totalRating: calculateTotalRating(movieLike),
+                genres: movieAndGenres
+                  .filter((genre) => genre.movie_id === movie.movie_id)
+                  .map((filterGenre) => {
+                    return genres.find(
+                      (genre) => genre.genre_id === filterGenre.genre_id
+                    );
+                  }),
+                platforms: platforms
+                  .filter((platform) => platform.movie_id === movie.movie_id)
+                  .map((platforms) => ({
+                    platformId: platforms.platform_id,
+                    platformName: platforms.platform_name,
+                    platformUrl: platforms.platform_url,
+                  })),
               };
             }),
           ],

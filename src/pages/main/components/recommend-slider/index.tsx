@@ -9,6 +9,9 @@ import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/pagination";
+import { fetchRecommendMovie } from "@api/movie";
+import { useRecommnedMovieQuery } from "@hooks/movie";
+import { useEffect } from "react";
 
 const dummyData = [
   {
@@ -71,6 +74,14 @@ const posterDummySrc =
  * @returns
  */
 function RecommendMovieSlider() {
+  const { data, isLoading } = useRecommnedMovieQuery();
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(data);
+    }
+  }, [isLoading]);
+
   return (
     <Swiper
       slidesPerView={1.3}
