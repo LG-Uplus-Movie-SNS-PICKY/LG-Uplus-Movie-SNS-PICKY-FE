@@ -31,6 +31,8 @@ import {
   slideContent,
 } from "./index.styles";
 import SEO from "@components/seo";
+import { Cookies } from "react-cookie";
+import { fetchSignUpUser } from "@api/user";
 
 export default function Signup() {
   const [inputData, setInputData] = useRecoilState(inputState);
@@ -137,10 +139,9 @@ export default function Signup() {
     }
   
     try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      if (!accessToken) {
-        throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      }
+      // if (!accessToken) {
+      //   throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      // }
   
       // FormData 생성
       const formData = new FormData();
@@ -156,25 +157,31 @@ export default function Signup() {
         genreId: inputData.favoriteGenres || [],
       };
   
-      formData.append("json", JSON.stringify(jsonPayload));
+      // formData.append("json", JSON.stringify(jsonPayload));
+
+      // formData에 이미지를 제외한 JSON 데이터 형식의 값을 Blob 객체로 저장한다.
+      formData.append('registerUserReq', new Blob([JSON.stringify(jsonPayload)], { type: 'application/json' }));
   
       // 이미지를 FormData에 추가 (파일이 존재할 경우)
       if (inputData.profileImageData) {
         formData.append("profile", inputData.profileImageData.get("profile") as File);
       }
+
+      const data = await fetchSignUpUser(formData);
+      console.log('회원가입 성공:', data)
   
       // API 요청
-      const response = await axios.patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      // const response = await axios.patch(
+      //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+      //   formData,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //     },
+      //   }
+      // );
   
-      console.log("회원가입 성공:", response.data);
+      // console.log("회원가입 성공:", response.data);
       showToast("회원가입이 완료되었습니다!");
       navigate("/");
     } catch (error) {

@@ -25,3 +25,13 @@ export async function fetchMoviesByGenre(favoriteGenres: number[]) {
 
   return data;
 }
+
+// 사용자의 모든 정보를 보내는 PATCH API
+export async function fetchSignUpUser(formData: FormData) {
+  const { data } = await apiClient.patch(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+    formData
+  );
+  
+  return data;
+}
