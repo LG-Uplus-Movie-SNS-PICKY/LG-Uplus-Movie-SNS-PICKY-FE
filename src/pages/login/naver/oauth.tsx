@@ -1,73 +1,114 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../../../review/atoms";
+import { Toast } from "@stories/toast";
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
+  const setUserState = useSetRecoilState(userState);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    console.log("LoginCallback useEffect triggered");
-
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
-    console.log(code);
-    console.log(state);
+
     if (!code || !state) {
-      alert("잘못된 로그인 요청입니다. 다시 시도해주세요.");
+      setToastMessage("잘못된 로그인 요청입니다. 다시 시도해주세요.");
       return;
     }
 
+    setIsLoading(true);
+
     // 소셜 로그인 API 요청
     axios
-        .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
+      .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
-      .then((response) => {
-        // 응답 데이터 디버깅
-        console.log("Response data:", response.data.data);
-
-        // 토큰 및 데이터 확인
-        const { oAuth2Token, localJwtDto, isRegistrationDone } = response.data.data;
+      .then(async (response) => {
+        const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
+          response.data.data;
 
         if (
           oAuth2Token?.access_token &&
           oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
-          // sessionStorage에 저장
+          // 토큰을 세션에 저장
           sessionStorage.setItem("access_token", oAuth2Token.access_token);
           sessionStorage.setItem("refresh_token", oAuth2Token.refresh_token);
+          sessionStorage.setItem("token_type", oAuth2Token.token_type);
+          sessionStorage.setItem("expires_in", oAuth2Token.expires_in);
           sessionStorage.setItem("accessToken", localJwtDto.accessToken);
-          console.log("Tokens stored successfully.");
-        } else {
-          alert("로그인 처리 중 문제가 발생했습니다.");
-          return;
-        }
+          sessionStorage.setItem(
+            "isRegistrationDone",
+            JSON.stringify(isRegistrationDone)
+          );
+          sessionStorage.setItem("role", role);
 
-        // 회원가입 여부 확인 후 페이지 이동
-        if (isRegistrationDone) {
-          navigate("/");
+          if (role === "ADMIN") {
+            setToastMessage("관리자로 로그인되었습니다!");
+            setTimeout(() => navigate("/admin"), 2000);
+            return;
+          }
+
+          // 사용자 정보 가져오기
+          try {
+            const userResponse = await axios.get(
+              `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
+              {
+                headers: {
+                  Authorization: `Bearer ${localJwtDto.accessToken}`,
+                },
+              }
+            );
+
+            if (userResponse.status === 200) {
+              const userData = userResponse.data;
+
+              // Recoil 전역 상태 업데이트
+              setUserState({
+                name: userData.name,
+                nickname: userData.nickname,
+                birthdate: userData.birthdate,
+                gender: userData.gender,
+                nationality: userData.nationality,
+                email: userData.email,
+                profileUrl: userData.profileUrl,
+              });
+
+              setToastMessage("로그인에 성공했습니다!");
+              setTimeout(() => navigate("/"), 2000);
+            }
+          } catch (error) {
+            console.error("User API error:", error);
+            setToastMessage("사용자 정보를 가져오는 중 오류가 발생했습니다.");
+            setTimeout(() => navigate("/auth/sign-up"), 2000);
+          }
         } else {
-          navigate("/auth/sign-up");
+          setToastMessage("로그인 처리 중 문제가 발생했습니다.");
         }
       })
       .catch((error) => {
-        // 에러 처리
-        if (error.response) {
-          console.error("Error response from server:", error.response);
-          alert(`서버 오류: ${error.response.data.message}`);
-        } else if (error.request) {
-          console.error("No response received. Request details:", error.request);
-          alert("서버로부터 응답이 없습니다. 다시 시도해주세요.");
-        } else {
-          console.error("Request setup error:", error.message);
-          alert("요청 설정 중 문제가 발생했습니다. 다시 시도해주세요.");
-        }
+        console.error("Social login API error:", error);
+        const errorMessage =
+          error.response?.data?.message || "로그인 처리 중 문제가 발생했습니다.";
+        setToastMessage(errorMessage);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
-  }, [navigate]);
+  }, [navigate, setUserState]);
 
-  return <div>로그인 처리 중...</div>;
+  return (
+    <div>
+      {toastMessage && <Toast message={toastMessage} />}
+      {isLoading && <div>로그인 처리 중...</div>}
+    </div>
+  );
 };
 
 export default LoginCallback;

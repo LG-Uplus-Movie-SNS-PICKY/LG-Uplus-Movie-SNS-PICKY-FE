@@ -4,16 +4,19 @@ import { atom } from "recoil";
 export const userState = atom({
   key: "userState",
   default: {
-    username: "",
+    name: "",
     nickname: "",
-    profileImagePreview: null as string | null,
-    favoriteGenres: [],
-    favoriteMovie: [],
+    birthdate: "",
     gender: "",
     nationality: "",
-    kakao_id: "",
-    google_id: "",
-    naver_id: "",
+    email: "",
+    profileUrl:"",
+    // profileImagePreview: null as string | null,
+    // favoriteGenres: [],
+    // favoriteMovie: [],
+    // kakao_id: "",
+    // google_id: "",
+    // naver_id: "",
   },
 });
 

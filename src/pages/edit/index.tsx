@@ -28,7 +28,7 @@ export default function ProfileEditPage() {
   const [userData, setUserData] = useState({
     name: "",
     nickname: "",
-    profile_url: "",
+    profile: "",
     birthdate: "",
     gender: "",
     nationality: "",
@@ -38,7 +38,7 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState(userData.profile_url);
+  const [profileImage, setProfileImage] = useState(userData.profile);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -66,7 +66,7 @@ export default function ProfileEditPage() {
         setUserData({
           name: data.name,
           nickname: data.nickname,
-          profile_url: data.profile_url,
+          profile: data.profile_url,
           birthdate: data.birthdate,
           gender: data.gender === "MALE" ? "남자" : "여자",
           nationality: data.nationality === "DOMESTIC" ? "내국인" : "외국인",
@@ -86,6 +86,12 @@ export default function ProfileEditPage() {
   }, [accessToken]);
 
   const checkNicknameAvailability = useCallback(async (nickname: string) => {
+    if (nickname === userData.nickname) {
+      // 기존 닉네임과 동일하면 서버 요청 없이 유효 처리
+      setNicknameError(null);
+      setIsNicknameValid(true);
+      return;
+    }
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
@@ -111,7 +117,7 @@ export default function ProfileEditPage() {
       setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
       setIsNicknameValid(false);
     }
-  }, []);
+  }, [userData.nickname]);
 
   const debouncedCheckNickname = useMemo(
     () =>
@@ -122,9 +128,9 @@ export default function ProfileEditPage() {
   );
 
   useEffect(() => {
-    if (userData.nickname && userData.profile_url) {
+    if (userData.nickname && userData.profile) {
       setNickname(userData.nickname);
-      setProfileImage(userData.profile_url);
+      setProfileImage(userData.profile);
     }
   }, [userData]);
 
@@ -178,63 +184,57 @@ export default function ProfileEditPage() {
       showToast("인증 토큰이 없습니다. 다시 로그인 해주세요.");
       return;
     }
+    
     const isUnchanged =
-      nickname === userData.nickname && profileImage === userData.profile_url;
-
+      nickname === userData.nickname && profileImage === userData.profile;
+  
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
       return;
     }
-
+  
     if (nicknameError || imageError || isNicknameValid === false) {
       showToast("입력을 확인해주세요.");
       return;
     }
-
-    // 성별 및 국적 값을 변환
-    const genderMap: { 남자: string; 여자: string } = {
-      남자: "MALE",
-      여자: "FEMALE",
-    };
-    const nationalityMap: { 내국인: string; 외국인: string } = {
-      내국인: "DOMESTIC",
-      외국인: "FOREIGNER",
-    };
-
-    const payload = {
-      name: userData.name,
-      nickname: nickname,
-      profile_url: profileImage,
-      birthdate: userData.birthdate,
-      gender:
-        genderMap[userData.gender as keyof typeof genderMap] || userData.gender,
-      nationality:
-        nationalityMap[userData.nationality as keyof typeof nationalityMap] ||
-        userData.nationality,
-      movieId: userData.movieId || [],
-      email: userData.email,
-      genreId: userData.genreId || [],
-    };
-
-    console.log(payload);
-
+  
+    // FormData 생성
+    const formData = new FormData();
+    formData.append("nickname", nickname);
+    
+    if (profileImage && profileImage !== userData.profile) {
+      try {
+        // profileImage가 Blob/File 형식이 아니라 Base64 문자열일 경우 Blob으로 변환
+        const response = await fetch(profileImage);
+        if (!response.ok) {
+          throw new Error("이미지를 Blob으로 변환하는 데 실패했습니다.");
+        }
+        const blob = await response.blob();
+        formData.append("profile", blob, "profileImage.jpg");
+      } catch (error) {
+        console.error("이미지 변환 중 오류 발생:", error);
+        showToast("이미지를 업로드하는 중 문제가 발생했습니다.");
+        return; // 오류가 발생하면 더 이상 진행하지 않음
+      }
+    }
+  console.log(formData);  
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        payload,
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/mypage`,
+        formData,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
-
+  
       if (response.status === 200) {
         showToast("프로필이 성공적으로 수정되었습니다.");
         setUserData({
           ...userData,
           nickname,
-          profile_url: profileImage,
+          profile: profileImage,
         });
       } else {
         throw new Error("프로필 수정 중 문제가 발생했습니다.");
@@ -249,7 +249,7 @@ export default function ProfileEditPage() {
     if (!isSaveDisabled) return;
 
     const isUnchanged =
-      nickname === userData.nickname && profileImage === userData.profile_url;
+      nickname === userData.nickname && profileImage === userData.profile;
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
     } else if (nicknameError || imageError) {
@@ -259,7 +259,7 @@ export default function ProfileEditPage() {
 
   useEffect(() => {
     const isUnchanged =
-      nickname === userData.nickname && profileImage === userData.profile_url;
+      nickname === userData.nickname && profileImage === userData.profile;
 
     const hasError =
       !!nicknameError || !!imageError || isNicknameValid === false;
