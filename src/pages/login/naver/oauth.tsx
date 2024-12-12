@@ -39,6 +39,18 @@ const LoginCallback: React.FC = () => {
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
           response.data.data;
 
+        console.log("Response");
+        console.log(response);
+        console.log();
+
+        console.log("Response Data");
+        console.log(response.data);
+        console.log();
+
+        console.log("Response Data Data");
+        console.log(response.data.data);
+        console.log();
+
         if (
           oAuth2Token?.access_token &&
           oAuth2Token?.refresh_token &&
