@@ -10,9 +10,10 @@ import Info from "@assets/icons/info.svg?react";
 import styles from "./index.styles";
 import { MovieItem } from "@stories/movie-item";
 
-import bestMovies from "@pages/main/constants";
 import { useTopMovieQuery } from "@hooks/movie";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { TopMovieDataTypes } from "@type/api/movie";
 
 interface FamousMovieProps {
   isLogin: boolean;
@@ -20,6 +21,7 @@ interface FamousMovieProps {
 
 function FamousMovie({ isLogin }: FamousMovieProps) {
   const { data, isLoading } = useTopMovieQuery();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(data);
@@ -40,7 +42,6 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
       {/* Content - Slider */}
       <Swiper
         slidesPerView={3.8}
-        // spaceBetween={10}
         direction={"horizontal"}
         freeMode={true}
         modules={[FreeMode, Mousewheel]}
@@ -51,7 +52,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
       >
         {!isLoading &&
           data.data.length > 0 &&
-          data.data.map((movie) => (
+          data.data.map((movie: TopMovieDataTypes) => (
             <SwiperSlide key={movie.movieId}>
               <MovieItem
                 type={isLogin ? "all" : "rate"}
@@ -62,27 +63,10 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
                 like={movie.likes}
                 // comment={movie.comment}
                 isLoading={isLoading}
+                onClick={() => navigate(`/movie/${movie.movieId}`)}
               />
             </SwiperSlide>
           ))}
-
-        {/* {bestMovies.length > 0 &&
-          bestMovies.map((movie, idx) => {
-            return (
-              <SwiperSlide key={idx}>
-                <MovieItem
-                  type={isLogin ? "all" : "rate"}
-                  src={movie.src}
-                  title={movie.title}
-                  name={movie.name}
-                  rate={movie.rate}
-                  like={movie.like}
-                  comment={movie.comment}
-                  isLoading={isLoading}
-                />
-              </SwiperSlide>
-            );
-          })} */}
       </Swiper>
     </div>
   );

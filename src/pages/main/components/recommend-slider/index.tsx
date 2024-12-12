@@ -118,10 +118,10 @@ function RecommendMovieSlider() {
                   {/* OTT Servie */}
                   <div className="ott-service">
                     <div className="badge">
-                      <Netflix width={32} height={32} />
+                      <Netflix width={18} height={18} />
                     </div>
                     <div className="badge">
-                      <Watcha width={32} height={32} />
+                      <Watcha width={18} height={18} />
                     </div>
                     <div className="badge more-service">2+</div>
                   </div>

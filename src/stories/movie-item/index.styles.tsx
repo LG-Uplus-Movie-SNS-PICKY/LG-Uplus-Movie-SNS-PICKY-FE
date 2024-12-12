@@ -9,6 +9,7 @@ export default {
       flex-direction: column;
 
       gap: 4px;
+      cursor: pointer;
 
       .movie-title {
         font-size: 12px;
