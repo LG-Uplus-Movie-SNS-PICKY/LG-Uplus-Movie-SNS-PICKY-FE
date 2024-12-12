@@ -55,7 +55,7 @@ const LoginCallback: React.FC = () => {
               localJwtDto,
               isRegistrationDone,
             }),
-            { maxAge: 7 }
+            { maxAge: 360000 }
           );
 
           // setCookie('user', JSON.stringify({
