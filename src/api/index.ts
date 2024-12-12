@@ -1,3 +1,4 @@
+import { getCookie } from "@util/cookie";
 import axios, { AxiosError } from "axios";
 import { isEmpty } from "lodash";
 
@@ -11,7 +12,7 @@ const apiClient = axios.create({
 
 // Axios 요청(Request) 인터셉터(Interceptors) 정의
 apiClient.interceptors.request.use((config) => {
-  const token = JSON.parse(sessionStorage.getItem("user") || "{}");
+  const token = getCookie("user");
 
   // 토큰이 비워져있지 않을 경우
   if (!isEmpty(token)) {
@@ -27,6 +28,8 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     // 공통 에러 처리 로직
+    console.log(error);
+
     if (error.response) {
       // 서버에서 받은 응답(Response) 에러 처리
       console.error("API Error", error.response.data || error.message);

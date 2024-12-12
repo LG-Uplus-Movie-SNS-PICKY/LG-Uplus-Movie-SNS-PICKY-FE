@@ -76,11 +76,11 @@ const posterDummySrc =
 function RecommendMovieSlider() {
   const { data, isLoading } = useRecommnedMovieQuery();
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(data);
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     console.log(data);
+  //   }
+  // }, [isLoading]);
 
   return (
     <Swiper

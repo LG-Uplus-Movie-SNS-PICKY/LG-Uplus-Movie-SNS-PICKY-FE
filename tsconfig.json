@@ -19,7 +19,8 @@
       "@styles/*": ["src/styles/*"],
       "@type/*": ["src/types/*"],
       "@routers/*": ["src/routers/*"],
-      "@@components/*": ["src/components/*"]
+      "@@components/*": ["src/components/*"],
+      "@util/*": ["src/util/*"]
     },
     "typeRoots": ["./node_modules/@types"],
     "lib": ["DOM", "ESNext"],
