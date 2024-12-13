@@ -41,8 +41,8 @@ export const routeConfig: RouteConfigTypes[] = [
     path: "/genre/:genreId",
     header: "title",
     label: "",
-    gnb: false,
-    margin: "60px 0 0 0",
+    gnb: true,
+    margin: "60px 0",
   },
   {
     path: "/notification",
