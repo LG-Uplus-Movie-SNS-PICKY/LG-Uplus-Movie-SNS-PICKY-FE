@@ -58,20 +58,21 @@ export default function ProfileEditPage() {
     const fetchUserData = async () => {
       try {
         const data = await fetchGetUserInfo();
-        console.log("Fetched User Data:", data);
+        console.log("Fetched User Data:", data.data);
         setUserData({
-          name: data.name,
-          nickname: data.nickname,
-          profile: data.profile_url,
-          birthdate: data.birthdate,
-          gender: data.gender === "MALE" ? "남자" : "여자",
-          nationality: data.nationality === "DOMESTIC" ? "내국인" : "외국인",
-          email: data.email,
-          movieId: data.movieId || [],
-          genreId: data.genreId || [],
+          name: data.data.name,
+          nickname: data.data.nickname,
+          profile: data.data.profileUrl,
+          birthdate: data.data.birthdate,
+          gender: data.data.gender === "MALE" ? "남자" : "여자",
+          nationality:
+            data.data.nationality === "DOMESTIC" ? "내국인" : "외국인",
+          email: data.data.email,
+          movieId: data.data.movieId || [],
+          genreId: data.data.genreId || [],
         });
-        setNickname(data.nickname);
-        setProfileImage(data.profile_url);
+        setNickname(data.data.nickname);
+        setProfileImage(data.data.profileUrl);
       } catch (error) {
         console.error("사용자 정보를 불러오는 중 오류가 발생했습니다:", error);
         showToast("사용자 정보를 불러오는 데 실패했습니다.");
