@@ -7,6 +7,7 @@ import Checked from "@assets/icons/checked-movie.svg?react";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useState } from "react";
 
 export interface MovieItemProps {
   type: "basic" | "rate" | "all";
@@ -75,6 +76,8 @@ export function MovieItem({
   isLoading,
   onClick,
 }: MovieItemProps): JSX.Element {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div
       css={styles.movieItemContainer()}
@@ -91,12 +94,14 @@ export function MovieItem({
               : `${import.meta.env.VITE_TMDB_IMAGE_URL}${src}`
           }
           effect={"blur"}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageLoaded(false)}
         />
-        {isLoading && <span className="alt">{title}</span>}
+        {!imageLoaded && <span className="alt">{title}</span>}
       </div>
 
       {/* 영화 제목 */}
-      {/* <span className="movie-title">{title}</span> */}
+      <span className="movie-title">{title}</span>
 
       {/* Type === "rate" : 별점만 보여주기 */}
       {type !== "basic" && <RateComponent rate={rate} />}

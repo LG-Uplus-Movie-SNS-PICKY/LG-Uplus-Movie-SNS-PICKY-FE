@@ -11,8 +11,10 @@ import { useEffect, useState } from "react";
 import { useGenreMovieQuery } from "@hooks/movie";
 import Loading from "@components/loading";
 import { MovieDataTypes } from "@type/api/movie";
+import { useNavigate } from "react-router-dom";
 
 function GenresMovie() {
+  const navigate = useNavigate();
   const [selectButton, setSelectButton] = useState<number>(0);
   const { data: movie, isLoading } = useGenreMovieQuery(selectButton);
 
@@ -63,24 +65,10 @@ function GenresMovie() {
                 name={movie.title}
                 rate={movie.totalRating}
                 like={movie.likes}
+                onClick={() => navigate(`/movie/${movie.movieId}`)}
                 // comment={movie.}
               />
             ))}
-          {/* {bestMovies.length > 0 &&
-            bestMovies
-              .slice(0, 6)
-              .map((movie, idx) => (
-                <MovieItem
-                  key={idx}
-                  type="rate"
-                  src={movie.src}
-                  title={movie.title}
-                  name={movie.name}
-                  rate={movie.rate}
-                  like={movie.like}
-                  comment={movie.comment}
-                />
-              ))} */}
         </div>
       </div>
     </div>
