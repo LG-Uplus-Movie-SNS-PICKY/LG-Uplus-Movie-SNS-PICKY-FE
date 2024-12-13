@@ -18,8 +18,6 @@ export async function fetchGenreMovie(
   lastMovieId: number = 0,
   lastLikeCount: number = 0
 ) {
-  const { data } = await apiClient.get(
-    `/movie/genre?genreId=${genreId}&lastMovieId=${lastMovieId}&lastLikeCount=${lastLikeCount}`
-  );
+  const { data } = await apiClient.get(`/movie/genre?genreId=${genreId}`);
   return data;
 }
