@@ -49,7 +49,7 @@ export default {
 
         display: grid;
         /* grid-template-columns: repeat(3, 1fr); */
-        grid-template-columns: repeat(auto-fit, minmax(109.46px, 1fr));
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
 
         box-sizing: border-box;

@@ -15,11 +15,16 @@ export async function fetchRecommendMovie() {
 // 장르별 영화 조회 GET API
 export async function fetchGenreMovie(
   genreId: number,
-  lastMovieId: number = 0,
-  lastLikeCount: number = 0
+  lastMovieId: number,
+  lastLikeCount: number
 ) {
-  const { data } = await apiClient.get(
-    `/movie/genre?genreId=${genreId}&lastMovieId=${lastMovieId}d&lastLikeCount=${lastLikeCount}`
-  );
+  const params = new URLSearchParams({ genreId: genreId.toString() });
+
+  if (lastMovieId && lastLikeCount) {
+    params.append("lastMovieId", lastMovieId.toString());
+    params.append("lastLikeCount", lastLikeCount.toString());
+  }
+
+  const { data } = await apiClient.get(`/movie/genre?${params.toString()}`);
   return data;
 }

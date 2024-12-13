@@ -51,13 +51,11 @@ function PickyGenreDetailPage() {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     console.log(genreMovies);
-  //     console.log(hasNextPage);
-  //     console.log(isFetchingNextPage);
-  //   }
-  // }, [isLoading]);
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(genreMovies);
+    }
+  }, [isLoading]);
 
   return (
     <>
