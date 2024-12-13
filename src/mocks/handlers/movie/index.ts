@@ -629,7 +629,8 @@ const movieHandlers: HttpHandler[] = [
               .filter((platform) => platform.movie_id === movieInfo.movie_id)
               .reduce(
                 (prev, curr) => {
-                  const key = curr.platform_name.toLowerCase();
+                  const key =
+                    curr.platform_name.toLowerCase() as keyof typeof prev;
 
                   if (key in prev) {
                     prev[key] = true;
