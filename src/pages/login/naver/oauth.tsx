@@ -39,18 +39,6 @@ const LoginCallback: React.FC = () => {
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
           response.data.data;
 
-        console.log("Response");
-        console.log(response);
-        console.log();
-
-        console.log("Response Data");
-        console.log(response.data);
-        console.log();
-
-        console.log("Response Data Data");
-        console.log(response.data.data);
-        console.log();
-
         if (
           oAuth2Token?.access_token &&
           oAuth2Token?.refresh_token &&
@@ -85,10 +73,6 @@ const LoginCallback: React.FC = () => {
 
           if (isRegistrationDone) {
             const currentUserCookie = getCookie("user");
-
-            console.log("Current User Cookie");
-            console.log(currentUserCookie);
-            console.log();
 
             // User GET API 모듈로 분리
             const userResponse = await fetchGetUserInfo();
