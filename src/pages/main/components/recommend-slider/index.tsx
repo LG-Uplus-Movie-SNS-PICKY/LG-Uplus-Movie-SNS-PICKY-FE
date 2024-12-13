@@ -131,7 +131,7 @@ function RecommendMovieSlider() {
                 <div css={styles.movieInfoContainer()}>
                   {/* Info */}
                   <div className="movie-info">
-                    <h3>티파니에서 아침을</h3>
+                    <h3>{movie.title}</h3>
                     <div className="movie-sub-info">
                       <span className="rate">별점: ★ {movie.totalRating}</span>
                       <span className="genres">

@@ -400,8 +400,6 @@ const movieHandlers: HttpHandler[] = [
 
       const url = new URL(request.url);
       const genreId = Number(url.searchParams.get("genreId") || 0);
-      const lastMovieId = url.searchParams.get("genreId");
-      const lastLikeCount = url.searchParams.get("genreId");
 
       // Query String으로 GenreId를 보내지 않은 경우
       if (!genreId) {
@@ -441,6 +439,13 @@ const movieHandlers: HttpHandler[] = [
             totalRating: calculateTotalRating(movieLike),
           };
         });
+
+      const lastMovieId = Number(url.searchParams.get("lastMovieId")) || null;
+      const lastLikeCount = url.searchParams.get("lastLikeCount") || null;
+
+      // 커서 기반 필터링(lastLikeCount를 통해서 해당 날짜 이후 데이터 필터링)
+      if (lastLikeCount && lastMovieId) {
+      }
 
       return HttpResponse.json({ data: response }, { status: 200 });
     }
