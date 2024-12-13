@@ -40,7 +40,7 @@ const LoginCallback: React.FC = () => {
 
         if (
           oAuth2Token?.access_token &&
-          oAuth2Token?.refresh_token &&
+          // oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
           setCookie(
