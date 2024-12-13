@@ -12,6 +12,7 @@ import genres from "@constants/json/genres/genres.json";
 
 import user from "@constants/json/user.json";
 import genrePreferences from "@constants/json/user/genrePreferences.json";
+import { getCookie } from "@util/cookie";
 
 type TrailerType = string;
 type OstType = string;
@@ -82,14 +83,10 @@ const movieHandlers: HttpHandler[] = [
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie`,
     async ({ request }) => {
       const authorization = request.headers.get("Authorization");
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
 
       // 권환이 없을 경우 403 에러 발생
-      if (
-        !authorization ||
-        isEmpty(userInfo) ||
-        userInfo.user.role !== "Admin"
-      ) {
+      if (!authorization || isEmpty(userInfo) || !userInfo.isAuthUser) {
         return HttpResponse.json(
           {
             message:
@@ -233,7 +230,7 @@ const movieHandlers: HttpHandler[] = [
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { movieId } = params;
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || isEmpty(userInfo) || !movieId) {
@@ -289,7 +286,7 @@ const movieHandlers: HttpHandler[] = [
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
     ({ request }) => {
       const authorization = request.headers.get("Authorization");
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || isEmpty(userInfo)) {
@@ -391,7 +388,7 @@ const movieHandlers: HttpHandler[] = [
       const authorization = request.headers.get("Authorization");
       const { movieId } = params;
 
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || !movieId || isEmpty(userInfo)) {

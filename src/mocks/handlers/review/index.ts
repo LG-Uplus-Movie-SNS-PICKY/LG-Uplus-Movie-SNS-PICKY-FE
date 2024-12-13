@@ -5,7 +5,8 @@ import user from "@constants/json/user.json";
 import lineReview from "@constants/json/line-review/lineReviews.json";
 import lineReviewLikes from "@constants/json/line-review/lineReviewLikes.json";
 
-import { isEmpty, reverse } from "lodash";
+import { isEmpty } from "lodash";
+import { getCookie } from "@util/cookie";
 
 interface ReviewLikeBodyTypes {
   lineReviewId: number;
@@ -14,12 +15,10 @@ interface ReviewLikeBodyTypes {
 
 interface bodyTypes {
   [key: string]: unknown;
-  userId: number;
-  writerNickname: string;
   movieId: number;
   rating: number;
+  context: string;
   isSpoler: boolean;
-  content: string;
 }
 
 interface RequestBody {
@@ -34,12 +33,14 @@ const reviewHandler: HttpHandler[] = [
     async ({ request }) => {
       const body: bodyTypes = (await request.json()) as bodyTypes;
       const authorization = request.headers.get("Authorization");
+      const userInfo = getCookie("user") || {};
 
       // Body와 Authorization 보내지 않은 경우
-      if (isEmpty(body) && !authorization) {
+      if (isEmpty(body) && !authorization && isEmpty(userInfo)) {
         return HttpResponse.json(
           {
-            message: "Request body and Authorization header cannot be empty",
+            message:
+              "Request body and Authorization header cannot be empty and Please Login",
             errorCode: "ERR_EMPTY_BODY_AUTH",
           },
           { status: 400, statusText: "Bad Request" }
@@ -70,12 +71,12 @@ const reviewHandler: HttpHandler[] = [
 
       // 모든 값을 정상적으로 받았을 경우에는 데이터 추가
       response.push({
-        id: response.length,
-        userId: body.userId,
-        writerNickname: body.writerNickname,
+        id: response.length + 1,
+        userId: userInfo.localJwtDto.accessToken,
+        writerNickname: userInfo.user.nickname,
         movieId: body.movieId,
         rating: body.rating,
-        context: body.content,
+        context: body.context,
         isSpoiler: body.isSpoler,
         likes: 0,
         dislikes: 0,
@@ -263,7 +264,7 @@ const reviewHandler: HttpHandler[] = [
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { lineReviewId } = params;
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
 
       // Authorization 또는 lineReviewId 보내지 않은 경우
       if (!authorization || !lineReviewId) {
@@ -312,11 +313,11 @@ const reviewHandler: HttpHandler[] = [
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereviewlike`,
     async ({ request }) => {
       const authorization = request.headers.get("Authorization");
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
       const body = (await request.json()) as ReviewLikeBodyTypes;
 
       // Authorization 또는 lineReviewId 보내지 않은 경우
-      if (!authorization || !userInfo || isEmpty(body)) {
+      if (!authorization || isEmpty(userInfo) || isEmpty(body)) {
         return HttpResponse.json(
           {
             message:
@@ -336,8 +337,7 @@ const reviewHandler: HttpHandler[] = [
       if (reviewInfo?.user_id === userInfo.localJwtDto.accessToken) {
         return HttpResponse.json(
           {
-            message:
-              "자신이 등록한 한줄평에는 좋아요를 누를 수 없습니다.",
+            message: "자신이 등록한 한줄평에는 좋아요를 누를 수 없습니다.",
             errorCode: "ERR_SELF_LIKE_NOT_ALLOWED",
           },
           { status: 403, statusText: "Forbidden" }
