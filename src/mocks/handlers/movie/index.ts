@@ -415,7 +415,7 @@ const movieHandlers: HttpHandler[] = [
         );
       }
 
-      const response = movies
+      const content = movies
         .filter((movie) => {
           // 1. 해당 영화의 장르 리스트를 확인 후 사용자가 선택한 장르와 같은지 확인한다.
           const genre = movieAndGenres
@@ -442,7 +442,7 @@ const movieHandlers: HttpHandler[] = [
           };
         });
 
-      return HttpResponse.json({ data: response }, { status: 200 });
+      return HttpResponse.json({ data: content }, { status: 200 });
     }
   ),
 
