@@ -4,7 +4,6 @@ import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../../../review/atoms";
 import { Toast } from "@stories/toast";
-import { Cookies } from "react-cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { getCookie, setCookie } from "@util/cookie";
 import { fetchGetUserInfo } from "@api/user";
@@ -30,7 +29,7 @@ const LoginCallback: React.FC = () => {
     setIsLoading(true);
 
     axios
-      .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
+      .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
       .then(async (response) => {
@@ -44,17 +43,6 @@ const LoginCallback: React.FC = () => {
           oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
-          // 소셜 로그인을 위한 oAuth2Token, localJwtDTO, 회원가입 여부(isRegisterationDone)을 일단 쿠키에 저장한다.
-          // -> 이유: 비로그인 사용자가 개인 정보를 입력할 때 localJwtDTO를 통해서 닉네임, 장르 선택, 영화 GET / POST를 위한 Headers으로 사용이 되어야 하기 때문
-          // cookies.set(
-          //   "user",
-          //   JSON.stringify({
-          //     oAuth2Token,
-          //     localJwtDto,
-          //     isRegistrationDone,
-          //   })
-          // );
-
           setCookie(
             "user",
             JSON.stringify({

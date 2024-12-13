@@ -1,9 +1,9 @@
 import { getCookie } from "@util/cookie";
 import axios, { AxiosError } from "axios";
 import { isEmpty } from "lodash";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
 
-const cookie = new Cookies();
+// const cookie = new Cookies();
 
 // Axios 초기 설정
 const apiClient = axios.create({
