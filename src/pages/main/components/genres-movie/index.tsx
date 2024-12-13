@@ -31,11 +31,8 @@ function GenresMovie() {
   };
 
   useEffect(() => {
-    // console.log(genreMovies.data);
-
     if (!isLoading) {
-      console.log(genreMovies?.data);
-      console.log(genreMovies?.data?.content);
+      console.log(genreMovies?.pages[0].data.content);
     }
   }, [isLoading]);
 
@@ -60,8 +57,8 @@ function GenresMovie() {
         {/* Select Genre Movies */}
         <div className="select-genre">
           {isLoading && <Loading />}
-          {!isLoading && Array.isArray(genreMovies?.data?.content)
-            ? genreMovies?.data?.content
+          {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
+            ? genreMovies?.pages[0].data.content
                 .slice(0, 9)
                 .map((movie: MovieDataTypes) => (
                   <MovieItem

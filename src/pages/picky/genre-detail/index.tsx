@@ -5,12 +5,31 @@ import { GenreDataType } from "@components/genre";
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import React, { useEffect, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValueLoadable } from "recoil";
+import { useGenreMovieQuery } from "@hooks/movie";
+import Loading from "@components/loading";
+import { MovieDataTypes } from "@type/api/movie";
+import { MovieItem } from "@stories/movie-item";
+import { useInView } from "react-intersection-observer";
 
 function PickyGenreDetailPage() {
-  const [genreName, setGenreName] = useState("");
+  const navigate = useNavigate();
   const { genreId } = useParams(); // 장르 아이디 param
+
+  // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
+  const { ref: currentPageEndViewport, inView } = useInView({
+    threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+  });
+
+  const {
+    data: genreMovies,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useGenreMovieQuery(Number(genreId));
+  const [genreName, setGenreName] = useState("");
 
   const loadable = useRecoilValueLoadable(genresSelector);
 
@@ -25,6 +44,21 @@ function PickyGenreDetailPage() {
     }
   }, [loadable]);
 
+  // 뷰포트 마지막을 감지할 경우 더 가져올 데이터가 있을 경우에 플레이리스트 데이터 업데이트
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     console.log(genreMovies);
+  //     console.log(hasNextPage);
+  //     console.log(isFetchingNextPage);
+  //   }
+  // }, [isLoading]);
+
   return (
     <>
       <SEO
@@ -36,19 +70,41 @@ function PickyGenreDetailPage() {
       {/* 장르에 해당하는 영화 데이터 출력 */}
       <section css={styles.movies()}>
         <div>
-          {Array.from({ length: 10 }, (_, idx) => (
-            <React.Fragment key={idx}>
-              {/* Movie Data Mapping */}
-              <div css={styles.movieCard()}>
-                <img src="https://image.tving.com/ntgs/contents/CTC/caim/CAIM1160/ko/20240920/0520/M000289333.jpg/dims/resize/F_webp,400" />
-                <span className="alt-text">asdsda</span>
-              </div>
-            </React.Fragment>
-          ))}
+          {isLoading && <Loading />}
+          {!isLoading && Array.isArray(genreMovies?.pages[0]?.data.content)
+            ? genreMovies?.pages[0]?.data.content.map(
+                (movie: MovieDataTypes) => (
+                  <MovieItem
+                    key={movie.movieId}
+                    type="all"
+                    src={movie.posterUrl}
+                    title={movie.title}
+                    name={movie.title}
+                    rate={movie.totalRating}
+                    like={movie.likes}
+                    onClick={() => navigate(`/movie/${movie.movieId}`)}
+                  />
+                )
+              )
+            : null}
         </div>
       </section>
+
+      <div ref={currentPageEndViewport} />
     </>
   );
 }
 
 export default PickyGenreDetailPage;
+
+//{
+//   Array.from({ length: 10 }, (_, idx) => (
+//     <React.Fragment key={idx}>
+//       {/* Movie Data Mapping */}
+//       <div css={styles.movieCard()}>
+//         <img src="https://image.tving.com/ntgs/contents/CTC/caim/CAIM1160/ko/20240920/0520/M000289333.jpg/dims/resize/F_webp,400" />
+//         <span className="alt-text">asdsda</span>
+//       </div>
+//     </React.Fragment>
+//   ));
+// }

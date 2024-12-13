@@ -440,9 +440,8 @@ const movieHandlers: HttpHandler[] = [
           };
         });
 
-      const lastMovieId = Number(url.searchParams.get("lastMovieId")) || null;
-      const lastLikeCount =
-        Number(url.searchParams.get("lastLikeCount")) || null;
+      const lastMovieId = Number(url.searchParams.get("lastMovieId")) || 0;
+      const lastLikeCount = Number(url.searchParams.get("lastLikeCount")) || 0;
 
       // 커서 기반 필터링(lastLikeCount와 lastMovieId를 이용)
       if (lastLikeCount && lastMovieId) {
