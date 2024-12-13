@@ -12,8 +12,14 @@ export default {
       cursor: pointer;
 
       .movie-title {
+        max-width: 90px;
+
         font-size: 12px;
         font-weight: 400;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     `;
   },
