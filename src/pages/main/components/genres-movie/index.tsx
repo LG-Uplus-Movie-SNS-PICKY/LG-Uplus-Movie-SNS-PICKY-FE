@@ -55,20 +55,21 @@ function GenresMovie() {
         {/* Select Genre Movies */}
         <div className="select-genre">
           {isLoading && <Loading />}
-          {!isLoading &&
-            movie?.data.slice(0, 9).map((movie: MovieDataTypes) => (
-              <MovieItem
-                key={movie.movieId}
-                type="all"
-                src={movie.posterUrl}
-                title={movie.title}
-                name={movie.title}
-                rate={movie.totalRating}
-                like={movie.likes}
-                onClick={() => navigate(`/movie/${movie.movieId}`)}
-                // comment={movie.}
-              />
-            ))}
+          {!isLoading && Array.isArray(movie?.data)
+            ? movie?.data.slice(0, 9).map((movie: MovieDataTypes) => (
+                <MovieItem
+                  key={movie.movieId}
+                  type="all"
+                  src={movie.posterUrl}
+                  title={movie.title}
+                  name={movie.title}
+                  rate={movie.totalRating}
+                  like={movie.likes}
+                  onClick={() => navigate(`/movie/${movie.movieId}`)}
+                  // comment={movie.}
+                />
+              ))
+            : null}
         </div>
       </div>
     </div>
