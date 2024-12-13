@@ -75,8 +75,6 @@ export function MovieItem({
   isLoading,
   onClick,
 }: MovieItemProps): JSX.Element {
-  if (isLoading) return <></>;
-
   return (
     <div
       css={styles.movieItemContainer()}

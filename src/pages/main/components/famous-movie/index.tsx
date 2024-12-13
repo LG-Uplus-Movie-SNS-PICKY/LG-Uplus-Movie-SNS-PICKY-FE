@@ -13,7 +13,7 @@ import { MovieItem } from "@stories/movie-item";
 import { useTopMovieQuery } from "@hooks/movie";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { TopMovieDataTypes } from "@type/api/movie";
+import { MovieDataTypes } from "@type/api/movie";
 import Loading from "@components/loading";
 
 interface FamousMovieProps {
@@ -49,7 +49,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
       >
         {isLoading && <Loading />}
         {!isLoading &&
-          data.data.map((movie: TopMovieDataTypes) => (
+          data.data.map((movie: MovieDataTypes) => (
             <SwiperSlide key={movie.movieId}>
               <MovieItem
                 key={movie.movieId}

@@ -28,8 +28,9 @@ export const useRecommnedMovieQuery = () => {
 // 장르별 영화 조회 React Query - Custom Hook
 export const useGenreMovieQuery = (genreId: number) => {
   return useQuery({
-    queryKey: ["genreMovie"],
+    queryKey: ["genreMovie", genreId],
     queryFn: () => fetchGenreMovie(genreId),
+    enabled: !!genreId,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
   });
