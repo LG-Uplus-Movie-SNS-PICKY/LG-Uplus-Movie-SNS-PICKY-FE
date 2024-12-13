@@ -42,15 +42,12 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState<string | null>(
-    userData.profile
-  );
+  const [profileImage, setProfileImage] = useState(userData.profile);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-  const [isProfileImageChanged, setIsProfileImageChanged] = useState(false);
 
   const showToast = (message: string) => {
     setToastMessage(message);
@@ -138,13 +135,6 @@ export default function ProfileEditPage() {
       const reader = new FileReader();
       reader.onload = () => {
         if (typeof reader.result === "string") {
-          if (reader.result === userData.profile) {
-            // 원래 이미지와 동일하면 변경 상태를 false로 설정
-            setIsProfileImageChanged(false);
-          } else {
-            // 새 이미지가 원래 이미지와 다르면 변경 상태를 true로 설정
-            setIsProfileImageChanged(true);
-          }
           setProfileImage(reader.result);
           setImageError(null);
         } else {
@@ -157,9 +147,7 @@ export default function ProfileEditPage() {
 
   const handleSave = async () => {
     const isUnchanged =
-      nickname === userData.nickname &&
-      !isProfileImageChanged &&
-      profileImage !== null;
+      nickname === userData.nickname && profileImage === userData.profile;
 
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
@@ -173,10 +161,8 @@ export default function ProfileEditPage() {
 
     const formData = new FormData();
     formData.append("nickname", nickname);
-    formData.append("isProfileImageChanged", String(isProfileImageChanged)); // Boolean 값 추가
-    formData.append("isProfileImageReset", String(profileImage === null)); // 기본 이미지 여부 추가
 
-    if (isProfileImageChanged && profileImage !== null) {
+    if (profileImage && profileImage !== userData.profile) {
       try {
         const response = await fetch(profileImage);
         if (!response.ok)
@@ -191,15 +177,10 @@ export default function ProfileEditPage() {
     }
 
     try {
-      const data = await fetchProfileUser(formData);
+      const data = await fetchProfileUser(formData); // `fetchProfileUser` 사용
       if (data) {
         showToast("프로필이 성공적으로 수정되었습니다.");
-        setUserData({
-          ...userData,
-          nickname,
-          profile: profileImage === null ? profileIcon : profileImage,
-        });
-        setIsProfileImageChanged(false); // 상태 초기화
+        setUserData({ ...userData, nickname, profile: profileImage });
       } else {
         throw new Error("프로필 수정 중 문제가 발생했습니다.");
       }
@@ -211,7 +192,7 @@ export default function ProfileEditPage() {
 
   useEffect(() => {
     const isUnchanged =
-      nickname === userData.nickname && !isProfileImageChanged;
+      nickname === userData.nickname && profileImage === userData.profile;
 
     const hasError =
       !!nicknameError || !!imageError || isNicknameValid === false;
@@ -224,7 +205,6 @@ export default function ProfileEditPage() {
     imageError,
     isNicknameValid,
     userData,
-    isProfileImageChanged,
   ]);
 
   useEffect(() => {
@@ -264,15 +244,6 @@ export default function ProfileEditPage() {
             style={{ display: "none" }}
             onChange={handleImageUpload}
           />
-          <button
-            onClick={() => {
-              setProfileImage(null); // 기본 이미지 설정
-              setIsProfileImageChanged(true); // 이미지 변경 상태로 설정
-            }}
-            css={photoEditStyle}
-          >
-            기본 이미지로 설정
-          </button>
         </div>
         <div css={profileWrapper}>
           <div css={inputRowStyle}>
