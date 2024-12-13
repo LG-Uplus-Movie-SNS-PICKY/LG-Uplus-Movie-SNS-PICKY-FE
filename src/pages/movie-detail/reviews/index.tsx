@@ -49,7 +49,7 @@ interface ReviewResponse {
 
 const ReviewsPage = () => {
   // const accessToken = localStorage.getItem("accessToken");
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
+  const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
   // const { id: movieId } = useParams(); // 영화 ID 가져오기
   const { id } = useParams(); // URL에서 movieId 추출
   const [includeSpoilers, setIncludeSpoilers] = useState(false);

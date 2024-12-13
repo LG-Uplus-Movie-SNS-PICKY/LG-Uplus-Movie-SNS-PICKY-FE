@@ -39,8 +39,6 @@ const YOUTUBE_API_KEY = 'AIzaSyDb5ViShQWptvuz5_IGmCZV0p2IvAEuhKk'; // YouTube Da
 
 const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const { id } = useParams<{ id: string }>(); // useParams로 movieId 가져오기
-    // const [ostList, setOstList] = useState<OST[]>([]);
-    const [movieData, setMovieData] = useState<any>(null);
     const [ostVideos, setOstVideos] = useState<any[]>([]);
     const [behindVideos, setBehindVideos] = useState<string[]>([]);
     const [ostPlaylistId, setOstPlaylistId] = useState<string | null>(null);
@@ -48,7 +46,7 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const [isYTReady, setIsYTReady] = useState(false);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
     // const accessToken = localStorage.getItem("accessToken");
-    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
+    const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
 
     // YouTube Data API Key 확인
     console.log("YouTube Data API Key (전역):", YOUTUBE_API_KEY);

@@ -28,7 +28,7 @@ interface MovieRatingProps {
 
 const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
     // const accessToken = localStorage.getItem("accessToken");
-    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
+    const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
     const totalStars = 5;
 
     // 랜덤 관람자 수 생성 (100 ~ 10000)

@@ -65,7 +65,7 @@ const formatDate = (dateString: string) => {
 
 function LineReviewContent() {
   // const accessToken = localStorage.getItem("accessToken");
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
+  const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
   const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 모달 상태 관리
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null); // 선택된 리뷰 ID 관리
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
