@@ -23,11 +23,8 @@ const LoginCallback: React.FC = () => {
 
     if (!code || !state) {
       setToastMessage("잘못된 로그인 요청입니다. 다시 시도해주세요.");
-      console.log("Missing 'code' or 'state' in query params.");
       return;
     }
-
-    console.log("Starting login process with code:", code, "and state:", state);
 
     setIsLoading(true);
 
@@ -37,17 +34,15 @@ const LoginCallback: React.FC = () => {
       })
       .then(async (response) => {
         // 소셜 로그인 서비스에서 정보를 제대로 전달 받았을 경우
-        console.log("OAuth response:", response.data);
 
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
           response.data.data;
 
         if (
           oAuth2Token?.access_token &&
-          // oAuth2Token?.refresh_token &&
+          oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
-          console.log("OAuth tokens:", oAuth2Token, localJwtDto);
           setCookie(
             "user",
             JSON.stringify({
@@ -65,15 +60,10 @@ const LoginCallback: React.FC = () => {
           );
 
           if (isRegistrationDone) {
-            console.log("User is already registered.");
             const currentUserCookie = getCookie("user");
-            console.log("Current user cookie:", currentUserCookie);
 
             // User GET API 모듈로 분리
-            try {
-              const userResponse = await fetchGetUserInfo();
-              console.log("Fetched user info:", userResponse.data);
-
+            const userResponse = await fetchGetUserInfo();
 
             // Cookie에 저장할 새로운 정보
             const newUserData = {
@@ -105,17 +95,10 @@ const LoginCallback: React.FC = () => {
               isLoginInfo: newUserData.user,
               isLoading: false,
             });
-        
+
             setToastMessage("로그인에 성공했습니다!");
-          } catch (error) {
-            console.error("Error fetching user info:", error);
-            setToastMessage("사용자 정보를 가져오는 중 문제가 발생했습니다.");
-          }
             // setTimeout(() => navigate("/"), 2000);
           } else {
-
-            console.warn("User is not registered. Redirecting to sign-up page.");
-           
             // 유저 정보가 등록되지 않았을 경우
             // console.error("User API error:", );
 
@@ -126,16 +109,13 @@ const LoginCallback: React.FC = () => {
             setTimeout(() => navigate("/auth/sign-up"), 2000);
           }
         } else {
-          console.error("Invalid OAuth tokens received:", oAuth2Token, localJwtDto);
           setToastMessage("로그인 처리 중 문제가 발생했습니다.");
         }
       })
       .catch((error) => {
         // 소셜 로그인 서비스에서 제대로 된 정보를 받지 못했을 경우
-        
 
         console.error("Social login API error:", error);
-        console.error("Error response data:", error.response?.data);
         const errorMessage =
           error.response?.data?.message ||
           "로그인 처리 중 문제가 발생했습니다.";
