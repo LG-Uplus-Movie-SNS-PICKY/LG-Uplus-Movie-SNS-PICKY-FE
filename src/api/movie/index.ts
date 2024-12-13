@@ -25,9 +25,12 @@ export async function fetchGenreMovie(
     params.append("lastLikeCount", lastLikeCount.toString());
   }
 
-  console.log("Current Params:");
-  console.log(params.toString());
-
   const { data } = await apiClient.get(`/movie/genre?${params.toString()}`);
+  return data;
+}
+
+// 영화 상세 조회 GET API
+export async function fetchMovieDetail(movieId: number) {
+  const { data } = await apiClient.get(`/movie/${movieId}`);
   return data;
 }
