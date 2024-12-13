@@ -31,7 +31,7 @@ import {
   slideContent,
 } from "./index.styles";
 import SEO from "@components/seo";
-import { Cookies } from "react-cookie";
+// import { Cookies } from "react-cookie";
 import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
 import { getCookie, setCookie } from "@util/cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
@@ -42,6 +42,7 @@ export default function Signup() {
   const [step, setStep] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
   const steps = useMemo(
@@ -219,15 +220,31 @@ export default function Signup() {
       console.error("회원가입 요청 중 오류 발생:", error);
       showToast("회원가입 요청 중 오류가 발생했습니다.");
     }
-  }, [isStepValid, inputData, navigate, showToast, step, steps]);
+  }, [
+    isStepValid,
+    inputData,
+    navigate,
+    showToast,
+    step,
+    steps,
+    setIsLoginState,
+  ]);
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === "Enter" && !toastMessage) {
-        if (step === steps.length - 1) {
-          handleComplete();
+      if (event.key === "Enter" && !toastMessage && !isProcessing) {
+        setIsProcessing(true);
+
+        if (isStepValid()) {
+          if (step === steps.length - 1) {
+            handleComplete();
+          } else {
+            handleNextStep();
+          }
         } else {
-          handleNextStep();
+          showToast(steps[step]?.fieldMessages?.[0] || "조건을 충족해주세요.");
         }
+
+        setTimeout(() => setIsProcessing(false), 300);
       }
     };
 
@@ -236,7 +253,16 @@ export default function Signup() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [step, handleNextStep, handleComplete, toastMessage, steps.length]);
+  }, [
+    step,
+    handleNextStep,
+    handleComplete,
+    toastMessage,
+    isStepValid,
+    isProcessing,
+    showToast,
+    steps,
+  ]);
 
   return (
     <>

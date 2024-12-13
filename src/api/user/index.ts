@@ -42,3 +42,14 @@ export async function fetchSignUpUser(formData: FormData) {
 
   return data;
 }
+
+// 사용자 프로필 (닉네임, 프로필 사진)를 보내는 PATCH API
+export async function fetchProfileUser(formData: FormData) {
+  const { data } = await apiClient.patch("/user/mypage", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return data;
+}
