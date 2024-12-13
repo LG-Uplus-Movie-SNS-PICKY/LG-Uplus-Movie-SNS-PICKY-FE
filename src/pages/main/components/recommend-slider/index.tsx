@@ -17,62 +17,6 @@ import { RecommendMovieDataTypes } from "@type/api/movie";
 import { Swiper as SwiperCore } from "swiper";
 import { useNavigate } from "react-router-dom";
 
-const dummyData = [
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: [
-      "netflix",
-      "watcha",
-      "tving",
-      "disneyplus",
-      "coupangplay",
-      "wavve",
-    ],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha", "tving", "disneyplus", "coupangplay"],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha", "tving", "disneyplus"],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha", "tving"],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha"],
-  },
-];
-const posterDummySrc =
-  "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp";
-
 /**
  * 사용자 맞춤 영화를 보여주는 슬라이더
  * @returns
