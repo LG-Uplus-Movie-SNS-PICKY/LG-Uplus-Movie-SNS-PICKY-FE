@@ -17,15 +17,12 @@ export default {
   movies(): SerializedStyles {
     return css`
       width: 100%;
-      flex: 1;
       padding: 0 16px;
 
       display: flex;
       align-items: center;
 
       & > div {
-        width: 100%;
-
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
         gap: 4px;

@@ -31,7 +31,11 @@ export const useGenreMovieQuery = (genreId: number) => {
     queryKey: ["genreMovie", genreId],
     queryFn: ({ pageParam }) =>
       fetchGenreMovie(genreId, pageParam.lastMovidId, pageParam.lastLikeCount),
+
     getNextPageParam: (lastPage) => {
+      // console.log("lastPage");
+      // console.log(lastPage);
+
       if (!lastPage?.data?.last) {
         return {
           lastMovidId:
@@ -43,6 +47,7 @@ export const useGenreMovieQuery = (genreId: number) => {
 
       return undefined;
     },
+
     initialPageParam: { lastMovidId: 0, lastLikeCount: 0 },
     enabled: !!genreId,
     staleTime: 1000 * 60 * 10,

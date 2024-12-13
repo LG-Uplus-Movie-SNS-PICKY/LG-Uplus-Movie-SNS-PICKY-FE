@@ -13,6 +13,8 @@ import { MovieDataTypes } from "@type/api/movie";
 import { MovieItem } from "@stories/movie-item";
 import { useInView } from "react-intersection-observer";
 
+let idx = 0;
+
 function PickyGenreDetailPage() {
   const navigate = useNavigate();
   const { genreId } = useParams(); // 장르 아이디 param
@@ -47,18 +49,10 @@ function PickyGenreDetailPage() {
   // 뷰포트 마지막을 감지할 경우 더 가져올 데이터가 있을 경우에 플레이리스트 데이터 업데이트
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      console.log("Yest");
+      // console.log(genreMovies?.pages.length);
       fetchNextPage();
     }
-
-    console.log("No");
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(genreMovies);
-    }
-  }, [isLoading]);
 
   return (
     <>
@@ -72,22 +66,25 @@ function PickyGenreDetailPage() {
       <section css={styles.movies()}>
         <div>
           {isLoading && <Loading />}
-          {!isLoading && Array.isArray(genreMovies?.pages[0]?.data.content)
-            ? genreMovies?.pages[0]?.data.content.map(
-                (movie: MovieDataTypes) => (
-                  <MovieItem
-                    key={movie.movieId}
-                    type="all"
-                    src={movie.posterUrl}
-                    title={movie.title}
-                    name={movie.title}
-                    rate={movie.totalRating}
-                    like={movie.likes}
-                    onClick={() => navigate(`/movie/${movie.movieId}`)}
-                  />
-                )
-              )
-            : null}
+          {Array.isArray(genreMovies?.pages) &&
+            genreMovies?.pages.map((page, index) => (
+              <React.Fragment key={index}>
+                {/* Playlist Data JSX Element Mapping  */}
+                {Array.isArray(page?.data.content) &&
+                  page?.data.content.map((movie: MovieDataTypes) => (
+                    <MovieItem
+                      key={movie.movieId}
+                      type="all"
+                      src={movie.posterUrl}
+                      title={movie.title}
+                      name={movie.title}
+                      rate={movie.totalRating}
+                      like={movie.likes}
+                      onClick={() => navigate(`/movie/${movie.movieId}`)}
+                    />
+                  ))}
+              </React.Fragment>
+            ))}
         </div>
 
         <div ref={currentPageEndViewport} />
