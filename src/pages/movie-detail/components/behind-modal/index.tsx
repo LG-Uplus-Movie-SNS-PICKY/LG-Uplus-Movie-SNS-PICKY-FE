@@ -40,13 +40,16 @@ const YOUTUBE_API_KEY = 'AIzaSyDb5ViShQWptvuz5_IGmCZV0p2IvAEuhKk'; // YouTube Da
 const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const { id } = useParams<{ id: string }>(); // useParams로 movieId 가져오기
     // const [ostList, setOstList] = useState<OST[]>([]);
+    const [movieData, setMovieData] = useState<any>(null);
     const [ostVideos, setOstVideos] = useState<any[]>([]);
     const [behindVideos, setBehindVideos] = useState<string[]>([]);
     const [ostPlaylistId, setOstPlaylistId] = useState<string | null>(null);
     const [behindPlaylistId, setBehindPlaylistId] = useState<string | null>(null); // 비하인드 영상 Playlist ID 저장
     const [isYTReady, setIsYTReady] = useState(false);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
+    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
+
     // YouTube Data API Key 확인
     console.log("YouTube Data API Key (전역):", YOUTUBE_API_KEY);
 
@@ -58,20 +61,22 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`,
                     { headers: { Authorization: `Bearer ${accessToken}` } }
                 );
-                console.log('API 응답 데이터:', response.data);
+                console.log('영화 API 응답 데이터:', response.data);
 
-                const ostPlaylistId = response.data.ost;
-                const behindPlaylistId = response.data.movie_behind_videos?.movie_behind_video_url;
+                // OST와 비하인드 영상 ID 추출
+                const { ost, movie_behind_videos } = response.data.data || {};
 
-                if (ostPlaylistId) {
-                    setOstPlaylistId(ostPlaylistId);
-                }
+                // 콘솔에 데이터 출력
+                console.log('OST Playlist ID:', ost);
+                console.log('Behind Videos Playlist ID:', movie_behind_videos);
 
-                if (behindPlaylistId) {
-                    setBehindPlaylistId(behindPlaylistId);
-                }
+                // 상태 업데이트
+                setOstPlaylistId(ost || null);
+                setBehindPlaylistId(movie_behind_videos?.[0] || null);
             } catch (error) {
                 console.error('영화 데이터 가져오기 실패:', error);
+            } finally {
+                setIsLoading(false); // 로딩 상태 해제
             }
         };
 
@@ -182,17 +187,6 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                         <YouTubeLogoSvg />
                         <Title>비하인드 영상</Title>
                     </YoutubeLogo>
-                    {/* <YoutubeContainer>
-                        {behindVideos.length > 0 ? (
-                            behindVideos.map((videoId, index) => (
-                                <BehindContainer key={index}>
-                                    <YouTubePlayer isYTReady={isYTReady} videoId={videoId} />
-                                </BehindContainer>
-                            ))
-                        ) : (
-                            <p>비하인드 영상이 없습니다.</p>
-                        )}
-                    </YoutubeContainer> */}
                     <YoutubeContainer>
                         {isLoading ? (
                             Array.from({ length: 6 }).map((_, index) => (
@@ -213,26 +207,6 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                 </YoutubeSection>
                 <OstSection>
                     <Title>OST</Title>
-                    {/* <OstPlayist>
-                        {ostVideos.map((video, index) => {
-                            const songTitle = video.snippet.title; // 곡명
-                            const artist = video.snippet.channelTitle; // 아티스트
-                            const videoUrl = `https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`; // 유튜브 링크
-
-                            return (
-                                <OstContainer key={index} onClick={() => window.open(videoUrl, '_blank')}>
-                                    <OstImage
-                                        src={video.snippet.thumbnails.default.url}
-                                        alt={songTitle}
-                                    />
-                                    <OstInfoContainer>
-                                        <OstTitle title={songTitle}>{songTitle}</OstTitle>
-                                        <OstArtist title={artist}>{artist}</OstArtist>
-                                    </OstInfoContainer>
-                                </OstContainer>
-                            );
-                        })}
-                    </OstPlayist> */}
                     <OstPlayist>
                         {isLoading
                             ? Array.from({ length: 6 }).map((_, index) => (

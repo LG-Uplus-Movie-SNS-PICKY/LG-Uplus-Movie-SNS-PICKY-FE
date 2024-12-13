@@ -50,7 +50,7 @@ interface ReviewInteraction {
 
 const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
   // const accessToken = localStorage.getItem("accessToken");
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
   const [reviewInteractions, setReviewInteractions] = useState<ReviewInteraction[]>([]);
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
 

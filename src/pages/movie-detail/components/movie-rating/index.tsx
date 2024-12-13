@@ -28,8 +28,11 @@ interface MovieRatingProps {
 
 const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
     // const accessToken = localStorage.getItem("accessToken");
-    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
     const totalStars = 5;
+
+    // 랜덤 관람자 수 생성 (100 ~ 10000)
+    const getRandomPeopleCount = () => Math.floor(Math.random() * (10000 - 100 + 1)) + 100;
 
     // 각 별의 채워짐 단계를 계산
     const starLevels = Array.from({ length: totalStars }).map((_, index) => {
@@ -40,13 +43,10 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
         return 0; // 빈 별
     });
 
-    // const fullStars = Math.floor(rating);
-    // const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-    // const emptyStars = totalStars - fullStars - halfStar;
-
     // `initialLike`를 초기값으로 설정
     const [likeActive, setLikeActive] = useState(initialLike);
     const [showBehindModal, setShowBehindModal] = useState(false);
+    const [peopleCount, setPeopleCount] = useState<number>(getRandomPeopleCount); // 관람자 수 상태
 
     // 좋아요 상태 토글 및 API 호출
     const toggleLike = async () => {
@@ -80,7 +80,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
                 <RatingText>평점 </RatingText>
                 <StarMiniSvg />
                 <RatingText>{rating.toFixed(1)}</RatingText>
-                <PeopleText>(2000명)</PeopleText>
+                <PeopleText>({peopleCount}명)</PeopleText> {/* 랜덤 관람자 수 표시 */}
             </RatingTextContainer>
             <RatingStarContainer>
                 {starLevels.map((level, index) => (

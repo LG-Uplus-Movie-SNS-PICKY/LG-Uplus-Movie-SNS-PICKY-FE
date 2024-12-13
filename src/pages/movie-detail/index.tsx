@@ -50,7 +50,7 @@ interface Review {
 
 function MovieDetail(props: MovieDetailProps) {
   // const accessToken = localStorage.getItem("accessToken");
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
   const { id } = useParams(); // URL에서 movieId 추출
   console.log("movieId:", id); // movieId가 undefined인지 확인
   const navigate = useNavigate();
@@ -73,10 +73,6 @@ function MovieDetail(props: MovieDetailProps) {
 
   useEffect(() => {
     const fetchMovieData = async () => {
-
-      console.log(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`);
-      console.log(accessToken);
-
       try {
         const response = await axios
           .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`, {
@@ -84,34 +80,52 @@ function MovieDetail(props: MovieDetailProps) {
           })
           .then((res) => res.data);
 
-        // cast와 directingCrew 정렬
-        const sortedCast = response.movie_info.credits.cast.sort(
-          (a: any, b: any) => a.id - b.id
-        );
-        const sortedDirectingCrew = response.movie_info.credits.directingCrew.sort(
-          (a: any, b: any) => a.id - b.id
-        );
-        
-        console.log("movie_info")
-        console.log(response); // API 응답 데이터 확인 (movie_info)
+        console.log("영화 API 응답 데이터:", response); // 응답 데이터 확인
 
-        // `like` 상태 가져오기
-        setLikeActive(response.like || false); // response.like 값 설정 (true/false)
+        // API 응답 데이터 구조 검증
+        if (!response || !response.data) {
+          throw new Error("Invalid API response: Missing data");
+        }
 
-        // movieData에 정렬된 데이터 설정
+        const { movie_info, like, rating, streaming_platform } = response.data; // movie_info와 like, rating 추출
+        if (!movie_info) {
+          throw new Error("Invalid API response: Missing movie_info");
+        }
+
+        // `streaming_platform` 필터링
+        const availablePlatforms = Object.entries(streaming_platform || {})
+        .filter(([_, value]) => value === true) // 값이 true인 플랫폼만 필터링
+        .map(([key]) => key); // 키(플랫폼 이름)만 추출
+
+        // `credits` 기본값 설정
+        const credits = movie_info.credits || { cast: [], crew: [], directingCrew: [] };
+
+        // 데이터 정렬
+        const sortedCast = credits.cast?.sort((a: any, b: any) => a.id - b.id) || [];
+        const sortedDirectingCrew =
+          credits.directingCrew?.sort((a: any, b: any) => a.id - b.id) || [];
+
+        // `like` 상태와 영화 데이터 설정
+        setLikeActive(like || false);
         setMovieData({
-          ...response.movie_info,
+          ...movie_info,
           credits: {
-            ...response.movie_info.credits,
+            ...credits,
             cast: sortedCast,
             directingCrew: sortedDirectingCrew,
           },
+          rating: rating || 0,
+          availablePlatforms,
         });
 
         setLoading(false);
       } catch (err: any) {
         console.error("영화 데이터 불러오기 실패", err);
-        setError(err.response?.message || "Failed to fetch movie data");
+
+        // 에러 메시지 설정
+        const errorMessage =
+          err.response?.data?.message || err.message || "Failed to fetch movie data";
+        setError(errorMessage);
         setLoading(false);
       }
     };
@@ -181,18 +195,20 @@ function MovieDetail(props: MovieDetailProps) {
           imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
           title={movieData.original_title}
           year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
-          nation="N/A" // nation 정보가 없다면 기본값 설정
-          genre={movieData.genres
-            .map((movieGenre: any) => {
-              // genresSelector에서 가져온 전체 장르와 매칭
-              const genreInfo = genres.find(
-                (genre: any) => genre.genreId === movieGenre.genre_id
-              );
-              return genreInfo ? genreInfo.name : null;
-            })
-            .filter(Boolean) // 유효한 값만 필터링
-            .join("/")} // 장르 이름을 /로 연결
-          ott={["Netflix", "DisneyPlus", "Watcha"]}
+          // nation="N/A" // nation 정보가 없다면 기본값 설정
+          genre={
+            movieData.genres
+              .map((movieGenre: any) => {
+                // movieData.genres의 id와 genresSelector의 genreId를 매칭
+                const genreInfo = genres.find(
+                  (genre: any) => genre.genreId === movieGenre.id
+                );
+                return genreInfo ? genreInfo.name : null; // 매칭된 장르 이름 반환
+              })
+              .filter(Boolean) // 유효한 값만 필터링
+              .join("/") || "Unknown Genre" // 장르 이름을 "/"로 연결하고 기본값 설정
+          }
+          ott={movieData.availablePlatforms} // OTT 서비스 정보
         />
 
         <MovieRating
@@ -228,18 +244,20 @@ function MovieDetail(props: MovieDetailProps) {
         <Button btnType="More" label="모두 보기" onClick={handleReviewClick} />
         <MovieFooter
           year={movieData.release_date.split("-")[0]}
-          production="N/A" // 제작 정보가 없으므로 기본값 설정
-          age="N/A" // 연령 제한 정보가 없으므로 기본값 설정
-          genre={movieData.genres
-            .map((movieGenre: any) => {
-              // genresSelector에서 가져온 전체 장르와 매칭
-              const genreInfo = genres.find(
-                (genre: any) => genre.genreId === movieGenre.genre_id
-              );
-              return genreInfo ? genreInfo.name : null;
-            })
-            .filter(Boolean) // 유효한 값만 필터링
-            .join("/")} // 장르 이름을 /로 연결
+          // production="N/A" // 제작 정보가 없으므로 기본값 설정
+          // age="N/A" // 연령 제한 정보가 없으므로 기본값 설정
+          genre={
+            movieData.genres
+              .map((movieGenre: any) => {
+                // movieData.genres의 id와 genresSelector의 genreId를 매칭
+                const genreInfo = genres.find(
+                  (genre: any) => genre.genreId === movieGenre.id
+                );
+                return genreInfo ? genreInfo.name : null; // 매칭된 장르 이름 반환
+              })
+              .filter(Boolean) // 유효한 값만 필터링
+              .join("/") || "Unknown Genre" // 장르 이름을 "/"로 연결하고 기본값 설정
+          }
         />
       </MovieDetailContainer>
     </>

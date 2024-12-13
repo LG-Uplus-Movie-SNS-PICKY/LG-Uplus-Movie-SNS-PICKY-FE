@@ -82,7 +82,7 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
                     <CastCard key={idx}>
                       {/* 이미지가 없으면 배경색을 회색으로 설정 */}
                   {cast.image ? (
-                    <CastImage src={cast.image} alt={cast.name} />
+                    <CastImage src={`https://image.tmdb.org/t/p/original${cast.image}`} alt={cast.name} />
                   ) : (
                     <div
                       style={{

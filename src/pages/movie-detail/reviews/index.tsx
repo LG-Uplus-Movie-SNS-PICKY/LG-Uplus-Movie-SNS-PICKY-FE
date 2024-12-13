@@ -20,10 +20,6 @@ import {
   SpoilerToggleButton,
   LoadingContainer
 } from "./index.styles";
-import AgeAllSvg from "../../../assets/icons/age_all.svg?react";
-import Age12Svg from "../../../assets/icons/age_12.svg?react";
-import Age15Svg from "../../../assets/icons/age_15.svg?react";
-import Age19Svg from "../../../assets/icons/age_19.svg?react";
 import SpoilerToggleSvg from "@assets/icons/spoiler_toggle.svg?react";
 import SpoilerToggleActiveSvg from "@assets/icons/spoiler_toggle_active.svg?react";
 import SEO from "@components/seo";
@@ -46,48 +42,74 @@ interface Review {
   createdAt: string;
 }
 
-interface MovieInfo {
-  imageUrl: string;
-  title: string;
-  year: string;
-  age: string;
-  runtime: number;
-}
-
 interface ReviewResponse {
   data: Review[];
   nextPage?: number;
 }
 
-const fetchReviews = async ({
-  pageParam = 1,
-  sortBy,
-}: {
-  pageParam: number;
-  sortBy: string;
-}): Promise<ReviewResponse> => {
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
-  const response = await axios.get<ReviewResponse>(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
-    {
-      headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTY1NTE5LCJleHAiOjE3MzQwNTE5MTl9.0l58z2m5gbDOhBQfluWGZ8c5rJRhqZh_cAPx_8CxNWQ" },
-      params: {
-        page: pageParam,
-        limit: 10,
-        sortType: sortBy,
-      },
-    }
-  );
-  return response.data;
-};
-
 const ReviewsPage = () => {
   // const accessToken = localStorage.getItem("accessToken");
-  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
-  const { id: movieId } = useParams(); // 영화 ID 가져오기
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0MDYyMzcwLCJleHAiOjE3MzQxNDg3NzB9.2vo7JzzTxzq8rK69JBmc6lBA2zQL_Yc3GbzbGoTGBGY"
+  // const { id: movieId } = useParams(); // 영화 ID 가져오기
+  const { id } = useParams(); // URL에서 movieId 추출
   const [includeSpoilers, setIncludeSpoilers] = useState(false);
   const [sortBy, setSortBy] = useState("likes");
-  const [movieInfo, setMovieInfo] = useState<MovieInfo | null>(null);
+  // const [movieInfo, setMovieInfo] = useState<MovieInfo | null>(null);
+  const [movieData, setMovieData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // const fetchReviews = async ({
+  //   pageParam = 1,
+  //   sortBy,
+  // }: {
+  //   pageParam: number;
+  //   sortBy: string;
+  // }): Promise<ReviewResponse> => {
+  //   await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
+  //   const response = await axios.get<ReviewResponse>(
+  //     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/${id}`,
+  //     {
+  //       headers: { Authorization: `Bearer ${accessToken}` },
+  //       params: {
+  //         page: pageParam,
+  //         limit: 10,
+  //         sortType: sortBy,
+  //       },
+  //     }
+  //   );
+  //   return response.data;
+  // };
+
+  const fetchReviews = async ({
+    pageParam = 1,
+    sortBy,
+  }: {
+    pageParam: number;
+    sortBy: string;
+  }): Promise<ReviewResponse> => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/${id}`,
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+          params: {
+            page: pageParam,
+            limit: 10,
+            sortType: sortBy,
+          },
+        }
+      );
+      console.log("리뷰 API 응답 데이터:", response.data); // 응답 데이터를 콘솔에 출력
+      return {
+        data: response.data.data.content, // 리뷰 데이터
+        nextPage: response.data.data.last ? undefined : pageParam + 1, // 다음 페이지 계산
+      };
+    } catch (error) {
+      console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
+      throw error;
+    }
+  };
 
   const {
     data,
@@ -112,33 +134,42 @@ const ReviewsPage = () => {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
-    const fetchMovieInfo = async () => {
+    if (data) {
+      const allReviews = data.pages.flatMap((page) => page.data || []);
+      console.log("모든 리뷰 데이터 확인:", allReviews);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const fetchMovieData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}`,
-          {
-            headers: { Authorization: `Bearer ${accessToken}` },
-          }
-        );
-        const movieData = response.data.movie_info;
-        setMovieInfo({
-          imageUrl: movieData.backdrop_path
-            ? `https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`
-            : "",
-          title: movieData.original_title,
-          year: movieData.release_date.split("-")[0],
-          age: "12", // 임시 설정. 적절히 API에서 가져올 수 있음.
-          runtime: movieData.runtime,
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`, {
+          headers: { Authorization: `Bearer ${accessToken}` },
         });
-      } catch (error) {
-        console.error("영화 정보를 불러오는 중 오류 발생:", error);
+
+        console.log("영화 API 응답 데이터:", response.data); // 응답 확인
+
+        const movie_info = response.data?.data?.movie_info;
+        if (!movie_info) {
+          throw new Error("API 응답에서 movie_info 데이터를 찾을 수 없습니다.");
+        }
+
+        setMovieData(movie_info);
+        setLoading(false);
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error("영화 데이터 불러오기 실패:", err.message);
+          setError(err.message || "Failed to fetch movie data");
+        } else {
+          console.error("영화 데이터 불러오기 실패:", err);
+          setError("Failed to fetch movie data");
+        }
+        setLoading(false);
       }
     };
 
-    if (movieId) {
-      fetchMovieInfo();
-    }
-  }, [movieId]);
+    fetchMovieData();
+  }, [id]);
 
   const handleToggleSpoilers = () => {
     setIncludeSpoilers(!includeSpoilers);
@@ -148,9 +179,13 @@ const ReviewsPage = () => {
     data?.pages[data.pages.length - 1]?.data || []; // 현재 페이지의 데이터
   const allReviews: Review[] = data?.pages.flatMap((page) => page.data) || [];
 
-  const filteredReviews = includeSpoilers
-    ? allReviews
-    : allReviews.filter((review) => !review.isSpoiler);
+  // const filteredReviews = includeSpoilers
+  //   ? allReviews
+  //   : allReviews.filter((review) => !review.isSpoiler);
+
+  const filteredReviews = (allReviews || []).filter(
+    (review) => review && !review.isSpoiler
+  );
 
   const sortedReviews = [...filteredReviews].sort((a, b) => {
     if (sortBy === "likes") {
@@ -168,35 +203,48 @@ const ReviewsPage = () => {
     return `${hours}시간 ${mins}분`;
   };
 
-  if (!movieInfo) {
-    return 0;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!movieData) {
+    return <div>No movie data found</div>;
+  }
+
+  if (!data) {
+    return <div>데이터 없음.</div>;
   }
 
   return (
     <>
       <SEO
-        title={`${movieInfo.title}(${movieInfo.year})`}
-        description={`${movieInfo.title}(${movieInfo.year})의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
-        image={movieInfo.imageUrl}
+        title={`${movieData.original_title}(${new Date(movieData.release_date).getFullYear()})`}
+        description={`${movieData.original_title}의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
+        image={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
         url={`http://localhost:5173/${location.pathname}`}
       />
 
       <div style={{ width: "100%" }}>
         <MovieReviewContainer>
           <MovieHeader />
-          <MovieReviewsPoster imageUrl={movieInfo.imageUrl || ""} />
+          <MovieReviewsPoster imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`} />
           <InfoContainer>
-            <Title>{movieInfo.title}</Title>
+            <Title>{movieData.original_title}</Title>
             <DetailContainer>
-              <DetailText>{movieInfo.year}</DetailText>
-              {movieInfo.age === "all" && <AgeAllSvg />}
+              <DetailText>{new Date(movieData.release_date).getFullYear()}</DetailText>
+              |
+              {/* {movieInfo.age === "all" && <AgeAllSvg />}
               {movieInfo.age === "12" && <Age12Svg />}
               {movieInfo.age === "15" && <Age15Svg />}
-              {movieInfo.age === "19" && <Age19Svg />}
-              <DetailText>{formatRuntime(movieInfo.runtime)}</DetailText>
+              {movieInfo.age === "19" && <Age19Svg />} */}
+              <DetailText>{formatRuntime(movieData.runtime)}</DetailText>
             </DetailContainer>
           </InfoContainer>
-          <ReviewGraph reviews={allReviews} />
+          {/* <ReviewGraph reviews={allReviews} /> */}
           <ReviewRegist refetch={refetch} />
           <ReviewsWrapper>
             <FilterContainer>
