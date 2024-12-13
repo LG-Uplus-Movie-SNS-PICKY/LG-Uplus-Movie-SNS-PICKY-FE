@@ -49,7 +49,9 @@ function PickyGenreDetailPage() {
   // 뷰포트 마지막을 감지할 경우 더 가져올 데이터가 있을 경우에 플레이리스트 데이터 업데이트
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
-      // console.log(genreMovies?.pages.length);
+      console.log("Genre Movies");
+      console.log(genreMovies?.pages.length);
+      console.log(genreMovies?.pages);
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
