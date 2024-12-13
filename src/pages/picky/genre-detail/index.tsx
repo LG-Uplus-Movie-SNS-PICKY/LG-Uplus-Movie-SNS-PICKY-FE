@@ -14,15 +14,6 @@ function PickyGenreDetailPage() {
 
   const loadable = useRecoilValueLoadable(genresSelector);
 
-  // // 전역 상태로 관리되고 있는 장르와 일치하는 텍스트를 가져온다.
-  // if (loadable.state === "loading") return <></>;
-  // if (loadable.state === "hasError") return <></>;
-
-  // const genres = loadable.contents.data;
-  // const currentGenre: GenreDataType = genres.find(
-  //   (genre: GenreDataType) => genre.genreId === Number(genreId)
-  // );
-
   // SEO을 위한 장르 이름 추출 useEffect()
   useEffect(() => {
     if (loadable.state === "hasValue") {
@@ -41,11 +32,6 @@ function PickyGenreDetailPage() {
         description="사용자님이 원하는 장르의 영화를 찾아보세요"
         url={`/genres/${genreId}`}
       />
-
-      {/* 장르 타이틀 출력 */}
-      {/* <div css={styles.title()}>
-        <h3>{currentGenre.genreId}</h3>
-      </div> */}
 
       {/* 장르에 해당하는 영화 데이터 출력 */}
       <section css={styles.movies()}>
