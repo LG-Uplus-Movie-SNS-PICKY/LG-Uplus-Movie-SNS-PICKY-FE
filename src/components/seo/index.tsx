@@ -15,6 +15,9 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
       ? "http://localhost:5173"
       : "https://www.picky-movie.com";
 
+  console.log(defaultURL + url);
+  console.log(image);
+
   return (
     <Helmet>
       {/* 기본 SEO Meta Data */}
