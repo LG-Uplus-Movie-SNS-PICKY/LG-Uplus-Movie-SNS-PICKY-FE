@@ -35,7 +35,7 @@ function Router() {
       setIsLoginState({
         isLoginState: !isEmpty(user),
         isAuthUser: user.isAuthUser,
-        isLoginInfo: user,
+        isLoginInfo: user.user,
         isLoading: false,
       });
     }
@@ -70,7 +70,7 @@ function Router() {
             <Route path="/admin/*" element={<AdminRouter />} />
 
             {/* 도메인 */}
-            <Route path="/domain" element={<DomainGoogle />} />
+            <Route path="/google626ac0bef2281c75.html" element={<DomainGoogle />} />
           </Routes>
         </Layout>
       </BrowserRouter>

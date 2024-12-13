@@ -14,6 +14,11 @@ import {
 } from "./index.styles";
 import SEO from "@components/seo";
 import { MovieItem } from "@stories/movie-item";
+import { useRecommnedMovieQuery } from "@hooks/movie";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import Loading from "@components/loading";
+import { RecommendMovieDataTypes } from "@type/api/movie";
 
 interface Movie {
   movieId: number;
@@ -23,42 +28,13 @@ interface Movie {
 }
 
 export default function MovieRecommendationPage() {
-  const username = "최우진";
-  const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
+  // const username = "최우진";
+  // const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
+
+  const { data, isLoading } = useRecommnedMovieQuery();
+  const { isLoginInfo } = useRecoilValue(isLogin);
+
   const navigate = useNavigate();
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const accessToken = sessionStorage.getItem("accessToken");
-
-  const fetchRecommendedMovies = useCallback(async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/recommend`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      const movieData = response.data.data.map((movie: Movie) => ({
-        movieId: movie.movieId,
-        title: movie.title,
-        posterUrl: `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`,
-        totalRating: movie.totalRating,
-      }));
-
-      setMovies(movieData);
-      setError(null);
-    } catch (err) {
-      console.error("영화 추천 데이터를 가져오는 중 오류 발생:", err);
-      setError("영화 추천 데이터를 불러오는 데 문제가 발생했습니다.");
-    }
-  }, [accessToken]);
-
-  useEffect(() => {
-    fetchRecommendedMovies();
-  }, [fetchRecommendedMovies]);
 
   return (
     <>
@@ -76,31 +52,30 @@ export default function MovieRecommendationPage() {
               맞춤형 AI 영화 추천
             </h1>
             <h2 css={subtitleStyle}>
-              <b>{username}</b>님이 선호하는 장르의 작품들
+              <b>{isLoginInfo.nickname}</b>님이 선호하는 장르의 작품들
             </h2>
           </header>
         </div>
+
         {/* 영화 리스트 */}
         <div css={movieContainerStyle}>
-          {error ? (
-            <div style={{ color: "red", textAlign: "center" }}>{error}</div>
-          ) : movies.length === 0 ? (
+          {isLoading && <Loading />}
+          {!isLoading && data.data.length === 0 ? (
             <p>추천할 영화가 없습니다. 나중에 다시 시도해주세요.</p>
           ) : (
             <div css={movieGridStyle}>
-              {movies.map((movie) => (
+              {data?.data.map((movie: RecommendMovieDataTypes) => (
                 <div
                   key={movie.movieId}
                   onClick={() => navigate(`/movie/${movie.movieId}`)}
                   style={{ cursor: "pointer" }}
                 >
                   <MovieItem
-                    type="rate"
+                    type="basic"
                     src={movie.posterUrl}
                     title={movie.title}
                     rate={movie.totalRating}
                     name={movie.title}
-                    style={{ width: "90px" }}
                   />
                 </div>
               ))}

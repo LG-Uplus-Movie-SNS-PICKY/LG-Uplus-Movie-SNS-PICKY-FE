@@ -61,6 +61,9 @@ function Layout({ children }: LayoutProps): JSX.Element {
         }
 
         break;
+
+      default:
+        setIsDefaultMargin(config?.margin || "0");
     }
   }, [isLoginInfo, location, loadable]);
 

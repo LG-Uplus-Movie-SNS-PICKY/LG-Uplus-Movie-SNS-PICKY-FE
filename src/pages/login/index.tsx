@@ -58,7 +58,7 @@ export default function Login() {
       setIsLoginState({
         isLoginState: true,
         isAuthUser: data.isAuthUser,
-        isLoginInfo: data,
+        isLoginInfo: data.user,
         isLoading: false,
       });
 
