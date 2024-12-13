@@ -3,7 +3,7 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   movieItemContainer(): SerializedStyles {
     return css`
-      width: fit-content;
+      width: 100%;
 
       display: flex;
       flex-direction: column;
@@ -12,7 +12,7 @@ export default {
       cursor: pointer;
 
       .movie-title {
-        max-width: 90px;
+        max-width: calc(100% - 5px);
 
         font-size: 12px;
         font-weight: 400;
@@ -26,8 +26,8 @@ export default {
 
   movieItemThumbnail(isActive: boolean): SerializedStyles {
     return css`
-      width: 90px;
-      height: 128px;
+      width: 100%;
+      aspect-ratio: 1 / 1.44;
       display: flex;
 
       overflow: hidden;
@@ -66,6 +66,8 @@ export default {
 
         & img {
           width: 100%;
+          /* height: 100%; */
+          object-fit: cover;
           display: block;
         }
       }

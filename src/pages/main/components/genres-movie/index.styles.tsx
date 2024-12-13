@@ -47,10 +47,18 @@ export default {
       & > .select-genre {
         width: 100%;
 
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        display: grid;
+        /* grid-template-columns: repeat(3, 1fr); */
+        grid-template-columns: repeat(auto-fit, minmax(109.46px, 1fr));
         gap: 12px;
+
+        box-sizing: border-box;
+        overflow: hidden;
+
+        /* display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between; */
+        /* gap: 12px; */
       }
 
       margin-bottom: 24px;
