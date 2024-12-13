@@ -18,7 +18,11 @@ function Main() {
       />
 
       {/* Slider or Banner Section */}
-      {isLoginState.isLoginState ? <RecommendMovieSlider /> : <LoginBanner />}
+      {process.env.NODE_ENV !== "development" || !isLoginState.isLoginState ? (
+        <LoginBanner />
+      ) : (
+        <RecommendMovieSlider />
+      )}
 
       {/* Famous Movies Section */}
       <FamousMovie isLogin={isLoginState.isLoginState} />
