@@ -5,7 +5,7 @@ import user from "@constants/json/user.json";
 import lineReview from "@constants/json/line-review/lineReviews.json";
 import lineReviewLikes from "@constants/json/line-review/lineReviewLikes.json";
 
-import { isEmpty } from "lodash";
+import { first, isEmpty, size } from "lodash";
 import { getCookie } from "@util/cookie";
 
 interface ReviewLikeBodyTypes {
@@ -132,24 +132,82 @@ const reviewHandler: HttpHandler[] = [
           { status: 400, statusText: "MOVIE_ID_MISSING" }
         );
 
-      // JSON으로 구성된 파일 중 Movie Id에 맞는 값만 필터 시킨다.
-      const review = lineReview.filter(
-        (review) => review.movie_id === Number(movieId)
-      );
+      // Movie Id에 맞는 Review 데이터만 필터 시킨다.
+      let filterLineReview = lineReview
+        .filter((review) => review.movie_id === Number(movieId))
+        .map((review) => ({
+          context: review.line_review_content,
+          createdAt: new Date(review.created_at).toISOString(),
+          dislikes: 0,
+          id: review.line_review_id,
+          isSpoiler: review.is_spoiler,
+          likes: 0,
+          movieId: review.movie_id,
+          rating: review.line_review_rating,
+          userId: review.user_id,
+          writerNickname: review.writer_nickname,
+        }));
 
       const url = new URL(request.url);
 
-      const page = Number(url.searchParams.get("page") || 1);
-      const limit = Number(url.searchParams.get("limit") || 10);
+      const lastReviewId = Number(url.searchParams.get("lastReviewId")) || 0;
+      const lastCreatedAt = url.searchParams.get("lastCreatedAt") || "";
 
-      // offset 방식의 데이터 조회 기법
-      const start = (page - 1) * limit;
-      const end = start + limit;
+      // 커서 기반 필터링(lastCreatedAt을 통해서 해당 날짜 이후 데이터 필터링)
+      if (lastCreatedAt && lastReviewId) {
+        filterLineReview = filterLineReview.filter((review) => {
+          if (new Date(review.createdAt) < new Date(lastCreatedAt)) {
+            return true;
+          } else if (
+            new Date(review.createdAt).getTime() ===
+            new Date(lastCreatedAt).getTime()
+          ) {
+            return review.id < lastReviewId;
+          }
+
+          return false;
+        });
+      }
+
+      // 최신순으로 내림차순 정렬
+      const paginatedReviews = filterLineReview
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+        .slice(0, 10);
 
       return HttpResponse.json(
         {
-          data: review.slice(start, end),
-          nextPage: end < review.length ? page + 1 : null,
+          code: 200,
+          data: {
+            size: 10,
+            content: paginatedReviews,
+            empty: paginatedReviews.length === 0,
+            first: !lastCreatedAt && !lastReviewId,
+            last: paginatedReviews.length < 10,
+            number: 0,
+            numberOfElements: paginatedReviews.length,
+            pageable: {
+              offset: 0,
+              pageNumber: 0,
+              pageSize: 10,
+              paged: true,
+              sort: {
+                empty: true,
+                sorted: false,
+                unsorted: true,
+              },
+              unpaged: false,
+            },
+            sort: {
+              empty: true,
+              sorted: false,
+              unsorted: true,
+            },
+          },
+          message: "요청이 성공적으로 처리되었습니다.",
+          sucess: true,
         },
         { status: 200 }
       );

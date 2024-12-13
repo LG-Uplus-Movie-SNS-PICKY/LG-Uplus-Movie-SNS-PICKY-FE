@@ -22,6 +22,7 @@ import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import { useMovieDetailQuery } from "@hooks/movie";
 import { fetchLineReviewMovie } from "@api/linereview";
+import { useLineReviewMovieQuery } from "@hooks/review";
 
 interface MovieDetailProps {
   imageUrl?: string;
@@ -56,6 +57,8 @@ function MovieDetail(props: MovieDetailProps) {
   const { id } = useParams(); // URL에서 movieId 추출
   const { data: movieDetail, isLoading: movieDetailIsLoading } =
     useMovieDetailQuery(Number(id));
+  const { data: lineReviews, isLoading: lineReviewsIsLoading } =
+    useLineReviewMovieQuery(Number(id));
 
   const navigate = useNavigate();
 
@@ -122,67 +125,24 @@ function MovieDetail(props: MovieDetailProps) {
   }, [movieDetailIsLoading]);
 
   useEffect(() => {
-    const fetch = async () => {
-      const response = await fetchLineReviewMovie(Number(id));
-      console.log(response);
-    };
+    if (!lineReviewsIsLoading) {
+      // console.log("API 응답 데이터:", lineReviews?.pages[0].data);
+      const allReviews = lineReviews?.pages[0].data.content as Review[];
+      // console.log("전체 리뷰 데이터:", allReviews);
 
-    fetch();
-  }, []);
+      // 전체 리뷰 개수를 allReviews의 길이로 설정
+      setTotalReviews(allReviews.length);
 
-  // useEffect(() => {
-  //   const fetchReviews = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/${id}`,
-  //         {
-  //           headers: { Authorization: `Bearer ${accessToken}` },
-  //           params: { page: 1, limit: 100 }, // 충분한 데이터를 가져옴
-  //         }
-  //       );
+      const topLikedReviews = allReviews
+        .filter((review: Review) => !review.isSpoiler) // 스포일러 제외
+        .sort((a: Review, b: Review) => b.likes - a.likes) // 공감순 정렬
+        .slice(0, 3); // 상위 3개 가져오기
 
-  //       console.log("API 응답 데이터:", response.data);
+      // console.log("공감순 상위 3개 리뷰:", topLikedReviews);
 
-  //       const allReviews = response.data.data as Review[];
-  //       console.log("전체 리뷰 데이터:", allReviews);
-
-  //       // 전체 리뷰 개수를 allReviews의 길이로 설정
-  //       setTotalReviews(allReviews.length);
-
-  //       const topLikedReviews = allReviews
-  //         .filter((review: Review) => !review.isSpoiler) // 스포일러 제외
-  //         .sort((a: Review, b: Review) => b.likes - a.likes) // 공감순 정렬
-  //         .slice(0, 3); // 상위 3개 가져오기
-
-  //       console.log("공감순 상위 3개 리뷰:", topLikedReviews);
-
-  //       setReviews(topLikedReviews); // 공감순 상위 3개 리뷰 설정
-  //     } catch (err) {
-  //       console.error("Failed to fetch reviews", err);
-  //     }
-  //   };
-
-  //   fetchReviews();
-  // }, [id]);
-
-  // useEffect(() => {
-  //   const fetchMovieData = async () => {
-  //     try {
-
-  //       setLoading(false);
-  //     } catch (err: any) {
-  //       console.error("영화 데이터 불러오기 실패", err);
-
-  //       // 에러 메시지 설정
-  //       const errorMessage =
-  //         err.response?.data?.message || err.message || "Failed to fetch movie data";
-  //       setError(errorMessage);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchMovieData();
-  // }, [id]);
+      setReviews(topLikedReviews); // 공감순 상위 3개 리뷰 설정
+    }
+  }, [lineReviewsIsLoading]);
 
   // if (loading) {
   //   return <div>Loading...</div>;
@@ -196,18 +156,108 @@ function MovieDetail(props: MovieDetailProps) {
   //   return <div>No movie data found</div>;
   // }
 
+  useEffect(() => {
+    console.log(movieData);
+  }, [movieData]);
+
   return (
-    <>
-      <SEO
-        title="a"
-        // title={`${movieData.original_title}(${
-        //   movieData.release_date.split("-")[0]
-        // })`}
-        // description={movieData.overview}
-        // image={movieData.poster_path}
-        // url={`http://localhost:5173/${location.pathname}`}
-      />
-    </>
+    movieData && (
+      <>
+        <SEO
+          title={`${movieData.original_title}(${
+            movieData.release_date.split("-")[0]
+          })`}
+          description={movieData.overview}
+          image={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
+            movieData.poster_path
+          }`}
+          url={location.pathname}
+        />
+
+        <MovieDetailContainer>
+          <MovieHeader />
+          <MoviePoster
+            imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+              movieData.backdrop_path
+            }`}
+            title={movieData.original_title}
+            year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
+            // nation="N/A" // nation 정보가 없다면 기본값 설정
+            genre={
+              movieData.genres
+                .map((movieGenre: any) => {
+                  // movieData.genres의 id와 genresSelector의 genreId를 매칭
+                  const genreInfo = genres.find(
+                    (genre: any) => genre.genreId === movieGenre.id
+                  );
+                  return genreInfo ? genreInfo.name : null; // 매칭된 장르 이름 반환
+                })
+                .filter(Boolean) // 유효한 값만 필터링
+                .join("/") || "Unknown Genre" // 장르 이름을 "/"로 연결하고 기본값 설정
+            }
+            ott={movieData.availablePlatforms} // OTT 서비스 정보
+          />
+
+          <MovieRating
+            rating={movieData.rating || 0}
+            initialLike={likeActive} // movie_info에서 가져온 초기 좋아요 상태
+            movieId={movieData.id} // 영화 ID
+          />
+
+          <MovieInfo
+            content={movieData.overview}
+            castData={[
+              // 감독 정보를 먼저 추가
+              ...movieData.credits.directingCrew.map((crew: any) => ({
+                name: crew.original_name,
+                role: crew.job,
+                image: crew.profile_path,
+              })),
+              // 그다음 배우 정보 추가
+              ...movieData.credits.cast.map((actor: any) => ({
+                name: actor.original_name,
+                role: actor.character,
+                image: actor.profile_path,
+              })),
+            ]}
+          />
+
+          <ReviewHeader>
+            <Title>관람평</Title>
+            <ReviewCountContainer>
+              <ReviewCount>{totalReviews}</ReviewCount>{" "}
+              {/* 전체 리뷰 개수 출력 */}
+              <PlusSvg />
+            </ReviewCountContainer>
+          </ReviewHeader>
+
+          <MovieReview reviews={reviews} />
+          <Button
+            btnType="More"
+            label="모두 보기"
+            onClick={handleReviewClick}
+          />
+
+          <MovieFooter
+            year={movieData.release_date.split("-")[0]}
+            // production="N/A" // 제작 정보가 없으므로 기본값 설정
+            // age="N/A" // 연령 제한 정보가 없으므로 기본값 설정
+            genre={
+              movieData.genres
+                .map((movieGenre: any) => {
+                  // movieData.genres의 id와 genresSelector의 genreId를 매칭
+                  const genreInfo = genres.find(
+                    (genre: any) => genre.genreId === movieGenre.id
+                  );
+                  return genreInfo ? genreInfo.name : null; // 매칭된 장르 이름 반환
+                })
+                .filter(Boolean) // 유효한 값만 필터링
+                .join("/") || "Unknown Genre" // 장르 이름을 "/"로 연결하고 기본값 설정
+            }
+          />
+        </MovieDetailContainer>
+      </>
+    )
   );
 }
 
