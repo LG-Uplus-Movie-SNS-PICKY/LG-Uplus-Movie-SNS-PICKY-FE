@@ -56,6 +56,7 @@ export const useGenreMovieQuery = (genreId: number) => {
   });
 };
 
+// 영화 상세 조회 React Query - Custom Hook
 export const useMovieDetailQuery = (movieId: number) => {
   return useQuery({
     queryKey: ["movieDetail", movieId],

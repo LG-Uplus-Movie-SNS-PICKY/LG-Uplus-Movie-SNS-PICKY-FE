@@ -133,8 +133,8 @@ const reviewHandler: HttpHandler[] = [
         );
 
       // JSON으로 구성된 파일 중 Movie Id에 맞는 값만 필터 시킨다.
-      const review = response.filter(
-        (data) => data.movieId === Number(movieId)
+      const review = lineReview.filter(
+        (review) => review.movie_id === Number(movieId)
       );
 
       const url = new URL(request.url);
