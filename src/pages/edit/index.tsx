@@ -42,7 +42,7 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState(userData.profile);
+  const [profileImage, setProfileImage] = useState<string>(userData.profile || "");
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -145,24 +145,32 @@ export default function ProfileEditPage() {
     }
   };
 
+  const handleSetDefaultImage = () => {
+    setProfileImage("");
+    showToast("기본 이미지로 설정되었습니다.");
+  };
+
   const handleSave = async () => {
     const isUnchanged =
       nickname === userData.nickname && profileImage === userData.profile;
-
+  
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
       return;
     }
-
+  
     if (nicknameError || imageError || isNicknameValid === false) {
       showToast("입력을 확인해주세요.");
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("nickname", nickname);
-
-    if (profileImage && profileImage !== userData.profile) {
+  
+    // 기본 이미지 설정
+    if (profileImage === null) {
+      formData.append("profile", "null"); // 문자열 "null"로 추가
+    } else if (profileImage !== userData.profile) {
       try {
         const response = await fetch(profileImage);
         if (!response.ok)
@@ -175,7 +183,7 @@ export default function ProfileEditPage() {
         return;
       }
     }
-
+  
     try {
       const data = await fetchProfileUser(formData); // `fetchProfileUser` 사용
       if (data) {
@@ -235,6 +243,9 @@ export default function ProfileEditPage() {
             />
             <label htmlFor="profileImageInput" css={photoEditWrapper}>
               <p css={photoEditStyle}>사진수정</p>
+              <button onClick={handleSetDefaultImage}>
+                기본 이미지로 설정
+              </button>
             </label>
           </div>
           <input
