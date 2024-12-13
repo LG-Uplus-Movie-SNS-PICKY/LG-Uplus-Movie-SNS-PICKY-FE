@@ -27,15 +27,14 @@ function GenresMovie() {
 
   // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
   const GenreOnClick = (movieId: number) => {
-    console.log(movieId);
     setSelectButton(movieId);
   };
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(genreMovies?.pages[0].data.content);
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     console.log(genreMovies?.pages[0].data.content);
+  //   }
+  // }, [isLoading]);
 
   return (
     <div css={styles.genreContainer()}>
@@ -56,7 +55,7 @@ function GenresMovie() {
         </div>
 
         {/* Select Genre Movies */}
-        {/* <div className="select-genre">
+        <div className="select-genre">
           {isLoading && <Loading />}
           {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
             ? genreMovies?.pages[0].data.content
@@ -74,7 +73,7 @@ function GenresMovie() {
                   />
                 ))
             : null}
-        </div> */}
+        </div>
       </div>
     </div>
   );
