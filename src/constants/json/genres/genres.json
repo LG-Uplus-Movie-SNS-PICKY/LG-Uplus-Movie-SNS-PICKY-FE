@@ -4,20 +4,13 @@
   { "genre_id": 35, "genre_name": "코미디" },
   { "genre_id": 18, "genre_name": "드라마" },
   { "genre_id": 80, "genre_name": "범죄" },
-  {
-    "genre_id": 99,
-    "genre_name": "다큐멘터리"
-  },
-  {
-    "genre_id": 16,
-    "genre_name": "애니메이션"
-  },
+  { "genre_id": 99, "genre_name": "다큐멘터리"},
+  { "genre_id": 16, "genre_name": "애니메이션"},
   { "genre_id": 10402, "genre_name": "음악" },
   { "genre_id": 53, "genre_name": "스릴러" },
   { "genre_id": 27, "genre_name": "호러" },
   { "genre_id": 878, "genre_name": "SF" },
   { "genre_id": 12, "genre_name": "판타지" },
-
   { "genre_id": 14, "genre_name": "모험" },
   { "genre_id": 10751, "genre_name": "가족" },
   { "genre_id": 36, "genre_name": "역사" },
