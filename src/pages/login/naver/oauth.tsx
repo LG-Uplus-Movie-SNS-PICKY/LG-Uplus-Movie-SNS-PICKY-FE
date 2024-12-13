@@ -6,6 +6,8 @@ import { userState } from "../../../review/atoms";
 import { Toast } from "@stories/toast";
 import { Cookies } from "react-cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
+import { getCookie, setCookie } from "@util/cookie";
+import { fetchGetUserInfo } from "@api/user";
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +21,6 @@ const LoginCallback: React.FC = () => {
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
-    const cookies = new Cookies();
 
     if (!code || !state) {
       setToastMessage("잘못된 로그인 요청입니다. 다시 시도해주세요.");
@@ -38,6 +39,18 @@ const LoginCallback: React.FC = () => {
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
           response.data.data;
 
+        console.log("Response");
+        console.log(response);
+        console.log();
+
+        console.log("Response Data");
+        console.log(response.data);
+        console.log();
+
+        console.log("Response Data Data");
+        console.log(response.data.data);
+        console.log();
+
         if (
           oAuth2Token?.access_token &&
           oAuth2Token?.refresh_token &&
@@ -45,41 +58,44 @@ const LoginCallback: React.FC = () => {
         ) {
           // 소셜 로그인을 위한 oAuth2Token, localJwtDTO, 회원가입 여부(isRegisterationDone)을 일단 쿠키에 저장한다.
           // -> 이유: 비로그인 사용자가 개인 정보를 입력할 때 localJwtDTO를 통해서 닉네임, 장르 선택, 영화 GET / POST를 위한 Headers으로 사용이 되어야 하기 때문
-          cookies.set(
+          // cookies.set(
+          //   "user",
+          //   JSON.stringify({
+          //     oAuth2Token,
+          //     localJwtDto,
+          //     isRegistrationDone,
+          //   })
+          // );
+
+          setCookie(
             "user",
             JSON.stringify({
               oAuth2Token,
               localJwtDto,
               isRegistrationDone,
-            })
+              isAuthUser: role === "ADMIN",
+            }),
+            {
+              path: "/", // 모든 경로에서 접근 가능
+              maxAge: 60 * 60 * 24, // 1일 (초 단위)
+              sameSite: "strict", // 보안 설정
+              secure: false, // HTTPS 필요 여부 (개발 시 false)
+            }
           );
 
-          // setCookie('user', JSON.stringify({
-          //   oAuth2Token,
-          //   localJwtDto,
-          //   isRegistrationDone,
-          // }), 7);
-
           if (isRegistrationDone) {
-            const currentUserCookie = cookies.get("user");
+            const currentUserCookie = getCookie("user");
+
+            console.log("Current User Cookie");
             console.log(currentUserCookie);
+            console.log();
 
-            const userResponse = await axios.get(
-              `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-              {
-                headers: {
-                  Authorization: `Bearer ${currentUserCookie.localJwtDto.accessToken}`,
-                },
-              }
-            );
+            // User GET API 모듈로 분리
+            const userResponse = await fetchGetUserInfo();
 
-            // cookies.remove("user");
-
-            console.log(userResponse.data);
-
+            // Cookie에 저장할 새로운 정보
             const newUserData = {
               ...currentUserCookie,
-              isAuthUser: role === "ADMIN",
               user: {
                 birthdate: userResponse.data.birthdate,
                 name: userResponse.data.name,
@@ -92,7 +108,13 @@ const LoginCallback: React.FC = () => {
             };
 
             // 로그인 사용자의 쿠키 값을 설정
-            cookies.set("user", JSON.stringify(newUserData));
+            // cookies.set("user", JSON.stringify(newUserData));
+            setCookie("user", JSON.stringify(newUserData), {
+              path: "/", // 모든 경로에서 접근 가능
+              maxAge: 60 * 60 * 24, // 1일 (초 단위)
+              sameSite: "strict", // 보안 설정
+              secure: false, // HTTPS 필요 여부 (개발 시 false)
+            });
 
             // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
             setIsLoginState({
@@ -103,52 +125,17 @@ const LoginCallback: React.FC = () => {
             });
 
             setToastMessage("로그인에 성공했습니다!");
-            setTimeout(() => navigate("/"), 2000);
+            // setTimeout(() => navigate("/"), 2000);
           } else {
             // 유저 정보가 등록되지 않았을 경우
             // console.error("User API error:", );
 
-            console.log(cookies.get("user"));
-            // console.log(JSON.parse(cookies.get('user') || "{}"));
-
+            // console.log(getCookie("user"));
             setToastMessage(
               "등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다."
             );
             setTimeout(() => navigate("/auth/sign-up"), 2000);
           }
-
-          // try {
-          //   const userResponse = await axios.get(
-          //     `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-          //     {
-          //       headers: {
-          //         Authorization: `Bearer ${localJwtDto.accessToken}`,
-          //       },
-          //     }
-          //   );
-
-          //   if (userResponse.status === 200) {
-          //     const userData = userResponse.data;
-
-          //     setUserState({
-          //       name: userData.name,
-          //       nickname: userData.nickname,
-          //       birthdate: userData.birthdate,
-          //       gender: userData.gender,
-          //       nationality: userData.nationality,
-          //       email: userData.email,
-          //       profileUrl: userData.profileUrl,
-          //       profileImagePreview: userData.profileImagePreview,
-          //     });
-
-          //     setToastMessage("로그인에 성공했습니다!");
-          //     setTimeout(() => navigate("/"), 2000);
-          //   }
-          // } catch (error) {
-          //   console.error("User API error:", error);
-          //   setToastMessage("사용자 정보를 가져오는 중 오류가 발생했습니다.");
-          //   setTimeout(() => navigate("/auth/sign-up"), 2000);
-          // }
         } else {
           setToastMessage("로그인 처리 중 문제가 발생했습니다.");
         }

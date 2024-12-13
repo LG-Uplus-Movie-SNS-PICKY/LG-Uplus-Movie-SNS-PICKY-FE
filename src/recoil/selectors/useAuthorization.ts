@@ -1,6 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import React from "react";
+import { getCookie } from "@util/cookie";
 
 // 사용자 권한에 따른 페이지 접근 권환 관리
 export function useAuthorizaion() {
@@ -18,12 +19,12 @@ export const useSyncLoginState = () => {
   const setLoginState = useSetRecoilState(isLogin);
 
   React.useEffect(() => {
-    const sessionData = JSON.parse(sessionStorage.getItem("authData") || "{}");
-    if (sessionData) {
+    const user = getCookie("user") || {};
+    if (user) {
       setLoginState({
-        isLoginState: !!sessionData.oAuth2Token?.access_token,
-        isAuthUser: sessionData.isAuthUser,
-        isLoginInfo: sessionData.user || {},
+        isLoginState: !!user.oAuth2Token?.access_token,
+        isAuthUser: user.isAuthUser,
+        isLoginInfo: user.user || {},
         isLoading: false,
       });
     }

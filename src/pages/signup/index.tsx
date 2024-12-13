@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { inputState } from "../../review/atoms";
@@ -32,9 +32,12 @@ import {
 } from "./index.styles";
 import SEO from "@components/seo";
 import { Cookies } from "react-cookie";
-import { fetchSignUpUser } from "@api/user";
+import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
+import { getCookie, setCookie } from "@util/cookie";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
 export default function Signup() {
+  const setIsLoginState = useSetRecoilState(isLogin);
   const [inputData, setInputData] = useRecoilState(inputState);
   const [step, setStep] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -137,15 +140,15 @@ export default function Signup() {
       showToast(steps[step]?.fieldMessages?.[0] || "조건을 충족해주세요.");
       return;
     }
-  
+
     try {
       // if (!accessToken) {
       //   throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
       // }
-  
+
       // FormData 생성
       const formData = new FormData();
-  
+
       // JSON 데이터를 FormData로 추가
       const jsonPayload = {
         name: inputData.name,
@@ -156,32 +159,64 @@ export default function Signup() {
         movieId: inputData.favoriteMovie || [],
         genreId: inputData.favoriteGenres || [],
       };
-  
-      // formData.append("json", JSON.stringify(jsonPayload));
 
       // formData에 이미지를 제외한 JSON 데이터 형식의 값을 Blob 객체로 저장한다.
-      formData.append('registerUserReq', new Blob([JSON.stringify(jsonPayload)], { type: 'application/json' }));
-  
+      formData.append(
+        "registerUserReq",
+        new Blob([JSON.stringify(jsonPayload)], { type: "application/json" })
+      );
+      console.log(jsonPayload);
+
       // 이미지를 FormData에 추가 (파일이 존재할 경우)
       if (inputData.profileImageData) {
-        formData.append("profile", inputData.profileImageData.get("profile") as File);
+        formData.append(
+          "profile",
+          inputData.profileImageData.get("profile") as File
+        );
       }
 
       const data = await fetchSignUpUser(formData);
-      console.log('회원가입 성공:', data)
-  
-      // API 요청
-      // const response = await axios.patch(
-      //   `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //     },
-      //   }
-      // );
-  
-      // console.log("회원가입 성공:", response.data);
+
+      console.log("fetchSignUpUser Response Data");
+      console.log(data);
+      console.log();
+
+      const currentUserCookie = getCookie("user");
+
+      // User GET API 모듈로 분리
+      const userResponse = await fetchGetUserInfo();
+
+      // Cookie에 저장할 새로운 정보
+      const newUserData = {
+        ...currentUserCookie,
+        user: {
+          birthdate: userResponse.data.birthdate,
+          name: userResponse.data.name,
+          nickname: userResponse.data.nickname,
+          gender: userResponse.data.gender,
+          nationality: userResponse.data.nationality,
+          email: userResponse.data.email,
+          profileUrl: userResponse.data.profileUrl,
+        },
+      };
+
+      // 로그인 사용자의 쿠키 값을 설정
+      // cookies.set("user", JSON.stringify(newUserData));
+      setCookie("user", JSON.stringify(newUserData), {
+        path: "/", // 모든 경로에서 접근 가능
+        maxAge: 60 * 60 * 24, // 1일 (초 단위)
+        sameSite: "strict", // 보안 설정
+        secure: false, // HTTPS 필요 여부 (개발 시 false)
+      });
+
+      // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
+      setIsLoginState({
+        isLoginState: true, // 로그인이 된 상태
+        isAuthUser: newUserData.isAuthUser,
+        isLoginInfo: newUserData.user,
+        isLoading: false,
+      });
+
       showToast("회원가입이 완료되었습니다!");
       navigate("/");
     } catch (error) {

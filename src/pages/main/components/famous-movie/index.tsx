@@ -14,6 +14,7 @@ import { useTopMovieQuery } from "@hooks/movie";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TopMovieDataTypes } from "@type/api/movie";
+import Loading from "@components/loading";
 
 interface FamousMovieProps {
   isLogin: boolean;
@@ -22,10 +23,6 @@ interface FamousMovieProps {
 function FamousMovie({ isLogin }: FamousMovieProps) {
   const { data, isLoading } = useTopMovieQuery();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <div css={styles.famousContainer()}>
@@ -50,11 +47,12 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
         }}
         css={styles.swiperContainer()}
       >
-        {!Array.isArray(data.data) &&
-          data.data.length > 0 &&
+        {isLoading && <Loading />}
+        {!isLoading &&
           data.data.map((movie: TopMovieDataTypes) => (
             <SwiperSlide key={movie.movieId}>
               <MovieItem
+                key={movie.movieId}
                 type={isLogin ? "all" : "rate"}
                 src={movie.posterUrl}
                 title={movie.title}
