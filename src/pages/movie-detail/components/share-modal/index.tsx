@@ -48,3 +48,5 @@ interface ShareModalProps {
 };
 
 export default ShareModal;
+
+//나는 최좌진.

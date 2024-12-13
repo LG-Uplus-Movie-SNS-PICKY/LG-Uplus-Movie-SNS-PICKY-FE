@@ -49,6 +49,8 @@ interface ReviewInteraction {
 }
 
 const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
+  // const accessToken = localStorage.getItem("accessToken");
+  const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
   const [reviewInteractions, setReviewInteractions] = useState<ReviewInteraction[]>([]);
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
 
@@ -92,7 +94,7 @@ const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
           preference,
         },
         {
-          headers: { Authorization: "123" }, // 올바른 토큰 사용
+          headers: { Authorization: `Bearer ${accessToken}`}, // 올바른 토큰 사용
         }
       );
   

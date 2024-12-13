@@ -27,7 +27,12 @@ interface MovieRatingProps {
 }
 
 const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
+    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
     const totalStars = 5;
+
+    // 랜덤 관람자 수 생성 (100 ~ 10000)
+    const getRandomPeopleCount = () => Math.floor(Math.random() * (10000 - 100 + 1)) + 100;
 
     // 각 별의 채워짐 단계를 계산
     const starLevels = Array.from({ length: totalStars }).map((_, index) => {
@@ -38,13 +43,10 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
         return 0; // 빈 별
     });
 
-    // const fullStars = Math.floor(rating);
-    // const halfStar = rating % 1 >= 0.5 ? 1 : 0;
-    // const emptyStars = totalStars - fullStars - halfStar;
-
     // `initialLike`를 초기값으로 설정
     const [likeActive, setLikeActive] = useState(initialLike);
     const [showBehindModal, setShowBehindModal] = useState(false);
+    const [peopleCount, setPeopleCount] = useState<number>(getRandomPeopleCount); // 관람자 수 상태
 
     // 좋아요 상태 토글 및 API 호출
     const toggleLike = async () => {
@@ -53,7 +55,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
                 `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
                 {}, // POST 요청이므로 빈 body
                 {
-                    headers: { Authorization: "123" },
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 }
             );
 
@@ -72,53 +74,13 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
         }
     };
 
-
-
-    // // 좋아요 상태 확인 및 초기화
-    // useEffect(() => {
-    //     const fetchLikeStatus = async () => {
-    //         try {
-    //             const response = await axios.get(
-    //                 `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
-    //                 {
-    //                     headers: { Authorization: "Bearer token" },
-    //                 }
-    //             );
-    //             console.log("현재 좋아요 상태:", response.data.liked);
-    //             setLikeActive(response.data.liked);
-    //         } catch (err) {
-    //             console.error("좋아요 상태 조회 실패", err);
-    //         }
-    //     };
-
-    //     fetchLikeStatus();
-    // }, [movieId]);
-
-    // // 좋아요 상태 토글
-    // const toggleLike = async () => {
-    //     try {
-    //       const response = await axios.post(
-    //         `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
-    //         {},
-    //         {
-    //           headers: { Authorization: "Bearer token" }, // Authorization 헤더 추가
-    //         }
-    //       );
-
-    //       console.log(response.data.message); // 성공 메시지 출력
-    //       setLikeActive(!likeActive); // 좋아요 상태 반전
-    //     } catch (error) {
-    //       console.error("좋아요 상태 변경 실패", error);
-    //     }
-    //   };
-
     return (
         <RatingContainer>
             <RatingTextContainer>
                 <RatingText>평점 </RatingText>
                 <StarMiniSvg />
                 <RatingText>{rating.toFixed(1)}</RatingText>
-                <PeopleText>(2000명)</PeopleText>
+                <PeopleText>({peopleCount}명)</PeopleText> {/* 랜덤 관람자 수 표시 */}
             </RatingTextContainer>
             <RatingStarContainer>
                 {starLevels.map((level, index) => (

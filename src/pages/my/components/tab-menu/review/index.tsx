@@ -1,4 +1,4 @@
-import styles, { Star, StarContainer, StarRating } from "./index.styles";
+import styles, { Star, StarContainer, StarRating, LoadingContainer } from "./index.styles";
 import EmptyReview from "@assets/icons/my-page/empty-review.svg?react";
 
 import ThumbsUpSvg from "@assets/icons/thumbs_up_mini.svg?react";
@@ -7,11 +7,13 @@ import ThumbsDownSvg from "@assets/icons/thumbs_down_mini.svg?react";
 import { Modal } from "@stories/modal";
 import { Toast } from "@stories/toast";
 import EditReviewModal from "../edit-review-modal";
+import Loading from "@components/loading";
 
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useInView } from "react-intersection-observer";
 
 interface MovieTypes {
   [key: string]: unknown;
@@ -62,6 +64,8 @@ const formatDate = (dateString: string) => {
 };
 
 function LineReviewContent() {
+  // const accessToken = localStorage.getItem("accessToken");
+  const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
   const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 모달 상태 관리
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null); // 선택된 리뷰 ID 관리
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
@@ -88,7 +92,7 @@ function LineReviewContent() {
         const { data } = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${nickname}`,
           {
-            headers: { Authorization: "123" },
+            headers: { Authorization: `Bearer ${accessToken}` },
             params: { size: 10 },
           }
         );
@@ -144,7 +148,7 @@ function LineReviewContent() {
       const { data } = await axios.delete(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${selectedReviewId}`,
         {
-          headers: { Authorization: "Bearer token" },
+          headers: { Authorization: `Bearer ${accessToken}` },
         }
       );
 
@@ -174,7 +178,13 @@ function LineReviewContent() {
     );
   };
 
-  if (isLoading) return <div>로딩 중...</div>;
+  if (isLoading) {
+    return (
+      <LoadingContainer>
+        <Loading />
+      </LoadingContainer>
+    );
+  }
   if (error) return <div>{error}</div>;
 
   return (

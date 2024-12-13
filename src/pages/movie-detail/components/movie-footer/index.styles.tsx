@@ -10,6 +10,7 @@ export const FooterContainer = styled.div`
   border-bottom: 1px solid #D9D9D9;
   padding: 28px 0;
   width: 100%;
+  margin-bottom: 60px;
 `;
 
 export const FooterItem = styled.div`
