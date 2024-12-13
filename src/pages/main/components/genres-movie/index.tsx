@@ -56,7 +56,7 @@ function GenresMovie() {
         </div>
 
         {/* Select Genre Movies */}
-        {/* <div className="select-genre">
+        <div className="select-genre">
           {isLoading && <Loading />}
           {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
             ? genreMovies?.pages[0].data.content
@@ -74,7 +74,7 @@ function GenresMovie() {
                   />
                 ))
             : null}
-        </div> */}
+        </div>
       </div>
     </div>
   );
