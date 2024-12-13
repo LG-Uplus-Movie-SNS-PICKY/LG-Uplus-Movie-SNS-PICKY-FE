@@ -43,6 +43,7 @@ export default {
       position: relative;
 
       width: 320px;
+      cursor: pointer;
       /* min-height: fit-content; */
 
       display: flex;

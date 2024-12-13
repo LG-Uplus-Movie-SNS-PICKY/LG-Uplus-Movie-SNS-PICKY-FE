@@ -182,8 +182,7 @@ const reviewHandler: HttpHandler[] = [
       const url = new URL(request.url);
       const size = Number(url.searchParams.get("size")) || 10; // 데이터를 보내줄 개수 (기본값: 10개)
       const lastReviewId = Number(url.searchParams.get("lastReviewId")) || null;
-      const lastCreatedAt =
-        Number(url.searchParams.get("lastCreatedAt")) || null;
+      const lastCreatedAt = url.searchParams.get("lastCreatedAt") || null;
 
       // 현재 사용자가 작성한 한줄평 조회
       let filterLineReview = lineReview
