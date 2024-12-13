@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import { first, isEmpty, size } from "lodash";
 import { http, HttpHandler, HttpResponse } from "msw";
 
 import movies from "@constants/json/movie/movie.json";
@@ -413,7 +413,7 @@ const movieHandlers: HttpHandler[] = [
         );
       }
 
-      const response = movies
+      let filteredMovies = movies
         .filter((movie) => {
           // 1. 해당 영화의 장르 리스트를 확인 후 사용자가 선택한 장르와 같은지 확인한다.
           const genre = movieAndGenres
@@ -441,13 +441,65 @@ const movieHandlers: HttpHandler[] = [
         });
 
       const lastMovieId = Number(url.searchParams.get("lastMovieId")) || null;
-      const lastLikeCount = url.searchParams.get("lastLikeCount") || null;
+      const lastLikeCount =
+        Number(url.searchParams.get("lastLikeCount")) || null;
 
-      // 커서 기반 필터링(lastLikeCount를 통해서 해당 날짜 이후 데이터 필터링)
+      // 커서 기반 필터링(lastLikeCount와 lastMovieId를 이용)
       if (lastLikeCount && lastMovieId) {
+        filteredMovies = filteredMovies.filter((movie) => {
+          if (movie.likes < lastLikeCount) {
+            return true;
+          } else if (movie.likes === lastLikeCount) {
+            return movie.movieId < lastMovieId;
+          }
+          return false;
+        });
       }
 
-      return HttpResponse.json({ data: response }, { status: 200 });
+      // 필터링 된 영화 데이터를 좋아요 순으로 정렬 시킨다.
+      filteredMovies.sort((a, b) => {
+        // 좋아요 개수가 같을 경우 movieId 기준으로 내림차순
+        if (a.likes === b.likes) {
+          return b.movieId - a.movieId;
+        }
+
+        // 좋아요 개수가 다를 경우 좋아요 개수로 내림차순
+        return b.likes - a.likes;
+      });
+
+      return HttpResponse.json(
+        {
+          code: 200,
+          data: {
+            size: 10,
+            content: filteredMovies.slice(0, 10),
+            sort: {
+              empty: true,
+              sorted: true,
+              unsorted: true,
+            },
+            pageable: {
+              offset: 0,
+              sort: {
+                empty: true,
+                sorted: true,
+                unsorted: true,
+              },
+              paged: true,
+              pageNumber: 0,
+              pageSize: 0,
+              unpaged: true,
+            },
+            numberOfElements: filteredMovies.length,
+            first: !lastLikeCount && !lastMovieId,
+            last: filteredMovies.length < 10,
+            empty: filteredMovies.length === 0,
+          },
+          message: "요청이 성공적으로 처리되었습니다.",
+          success: true,
+        },
+        { status: 200 }
+      );
     }
   ),
 
