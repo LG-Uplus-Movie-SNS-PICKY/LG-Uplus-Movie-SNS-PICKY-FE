@@ -63,7 +63,9 @@ const LoginCallback: React.FC = () => {
             const currentUserCookie = getCookie("user");
 
             // User GET API 모듈로 분리
+            try {
             const userResponse = await fetchGetUserInfo();
+            console.log("Fetched User Info:", userResponse); 
 
             // Cookie에 저장할 새로운 정보
             const newUserData = {
@@ -78,7 +80,7 @@ const LoginCallback: React.FC = () => {
                 profileUrl: userResponse.data.profileUrl,
               },
             };
-
+            console.log("newuserData Info:", newUserData); 
             // 로그인 사용자의 쿠키 값을 설정
             // cookies.set("user", JSON.stringify(newUserData));
             setCookie("user", JSON.stringify(newUserData), {
@@ -97,6 +99,10 @@ const LoginCallback: React.FC = () => {
             });
 
             setToastMessage("로그인에 성공했습니다!");
+          } catch (error) {
+            console.error("User info fetching error:", error);
+            setToastMessage("사용자 정보를 가져오는 중 문제가 발생했습니다.");
+          }
             // setTimeout(() => navigate("/"), 2000);
           } else {
             // 유저 정보가 등록되지 않았을 경우
