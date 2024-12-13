@@ -15,6 +15,7 @@ import { useEffect, useRef } from "react";
 import Loading from "@components/loading";
 import { RecommendMovieDataTypes } from "@type/api/movie";
 import { Swiper as SwiperCore } from "swiper";
+import { useNavigate } from "react-router-dom";
 
 const dummyData = [
   {
@@ -79,6 +80,7 @@ const posterDummySrc =
 function RecommendMovieSlider() {
   const { data, isLoading } = useRecommnedMovieQuery();
   const swiperRef = useRef<SwiperCore | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading && data.data.length > 0) {
@@ -106,7 +108,10 @@ function RecommendMovieSlider() {
       {!isLoading &&
         data.data.map((movie: RecommendMovieDataTypes) => (
           <SwiperSlide key={movie.movieId}>
-            <div css={styles.sliderItem(movie.posterUrl)}>
+            <div
+              css={styles.sliderItem(movie.posterUrl)}
+              onClick={() => navigate(`/movie/${movie.movieId}`)}
+            >
               {/* Background Image */}
               <div className="background" />
 
