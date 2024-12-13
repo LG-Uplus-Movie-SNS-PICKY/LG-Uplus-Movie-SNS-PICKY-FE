@@ -55,6 +55,21 @@ export const photoEditStyle = css`
   font-size: 16px;
   font-weight: 600;
   text-align: center;
+
+  button {
+    margin-top: 8px;
+    background-color: #ff084a;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #e00640;
+  }
 `;
 
 export const inputWrapperStyle = css`
