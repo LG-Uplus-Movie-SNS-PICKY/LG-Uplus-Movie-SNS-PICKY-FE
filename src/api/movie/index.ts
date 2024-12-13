@@ -25,6 +25,9 @@ export async function fetchGenreMovie(
     params.append("lastLikeCount", lastLikeCount.toString());
   }
 
+  console.log("Current Params:");
+  console.log(params.toString());
+
   const { data } = await apiClient.get(`/movie/genre?${params.toString()}`);
   return data;
 }
