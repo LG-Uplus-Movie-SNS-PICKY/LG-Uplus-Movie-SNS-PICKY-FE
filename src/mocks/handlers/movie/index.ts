@@ -539,90 +539,124 @@ const movieHandlers: HttpHandler[] = [
       // response data 구성
       return HttpResponse.json(
         {
-          // 영화 정보
-          movie_info: {
-            id: movieInfo.movie_id,
-            original_title: movieInfo.movie_title,
-            release_date: movieInfo.movie_release_data,
-            poster_path: movieInfo.movie_poster_url,
-            overview: movieInfo.movie_plot,
-            runtime: movieInfo.movie_running_time,
-            rating: movieInfo.movie_total_rating,
+          code: 200,
+          data: {
+            // 영화 정보
+            movie_info: {
+              id: movieInfo.movie_id,
+              original_title: movieInfo.movie_title,
+              release_date: new Date(
+                movieInfo.movie_release_data
+              ).toISOString(),
+              poster_path: movieInfo.movie_poster_url,
+              overview: movieInfo.movie_plot,
+              runtime: movieInfo.movie_running_time,
+              // rating: movieInfo.movie_total_rating,
 
-            // 장르 정보 필터링
-            genres: [
-              ...movieAndGenres.filter((genre) => {
-                if (genre.movie_id === movieInfo.movie_id) {
-                  return {
-                    id: genre.genre_id,
-                  };
-                }
-              }),
+              // 장르 정보 필터링
+              genres: [
+                ...movieAndGenres
+                  .filter((genre) => {
+                    if (genre.movie_id === movieInfo.movie_id) {
+                      return true;
+                    }
+
+                    return false;
+                  })
+                  .map((genre) => ({ id: genre.genre_id })),
+              ],
+
+              // 배우 or 제작진 필터링
+              credits: {
+                // 배우 정보
+                cast: [
+                  ...movieCrews
+                    .filter(
+                      (crew) =>
+                        crew.movie_id === movieInfo.movie_id &&
+                        crew.movie_crew_position === "Actor"
+                    )
+                    .map((crew) => {
+                      const actorInfo = filmCrew.find(
+                        (actor) => actor.film_crew_id === crew.film_crew_id
+                      );
+
+                      return {
+                        id: actorInfo?.film_crew_id,
+                        character: crew.movie_crew_role,
+                        original_name: actorInfo?.film_crew_name,
+                        profile_path: actorInfo?.film_crew_profile_url,
+                      };
+                    }),
+                ],
+                crew: [],
+                // 감독 정보
+                directingCrew: [
+                  ...movieCrews
+                    .filter(
+                      (crew) =>
+                        crew.movie_id === movieInfo.movie_id &&
+                        crew.movie_crew_position === "Director"
+                    )
+                    .map((crew) => {
+                      const directingCrewInfo = filmCrew.find(
+                        (directing) =>
+                          directing.film_crew_id === crew.film_crew_id
+                      );
+
+                      return {
+                        id: directingCrewInfo?.film_crew_id,
+                        job: crew.movie_crew_role,
+                        original_name: directingCrewInfo?.film_crew_name,
+                        profile_path: directingCrewInfo?.film_crew_profile_url,
+                      };
+                    }),
+                ],
+              },
+
+              backdrop_path: movieInfo.movie_backdrop_url,
+            },
+            trailer: movieInfo.movie_trailer_url,
+            ost: movieInfo.movie_ost_url,
+            // rating: movieInfo.movie_total_rating,
+            movie_behind_videos: [
+              movieBehindVideos.find(
+                (video) => video.movie_id === movieInfo.movie_id
+              )?.movie_behind_video_url,
             ],
 
-            // 배우 or 제작진 필터링
-            credits: {
-              // 배우 정보
-              cast: [
-                ...movieCrews
-                  .filter(
-                    (crew) =>
-                      crew.movie_id === movieInfo.movie_id &&
-                      crew.movie_crew_position === "Actor"
-                  )
-                  .map((crew) => {
-                    const actorInfo = filmCrew.find(
-                      (actor) => actor.film_crew_id === crew.film_crew_id
-                    );
+            streaming_platform: platforms
+              .filter((platform) => platform.movie_id === movieInfo.movie_id)
+              .reduce(
+                (prev, curr) => {
+                  const key =
+                    curr.platform_name.toLowerCase() as keyof typeof prev;
 
-                    return {
-                      id: actorInfo?.film_crew_id,
-                      character: crew.movie_crew_role,
-                      original_name: actorInfo?.film_crew_name,
-                      profile_path: actorInfo?.film_crew_profile_url,
-                    };
-                  }),
-              ],
-              crew: [],
-              // 감독 정보
-              directingCrew: [
-                ...movieCrews
-                  .filter(
-                    (crew) =>
-                      crew.movie_id === movieInfo.movie_id &&
-                      crew.movie_crew_position === "Director"
-                  )
-                  .map((crew) => {
-                    const directingCrewInfo = filmCrew.find(
-                      (directing) =>
-                        directing.film_crew_id === crew.film_crew_id
-                    );
+                  if (key in prev) {
+                    prev[key] = true;
+                  }
 
-                    return {
-                      id: directingCrewInfo?.film_crew_id,
-                      job: crew.movie_crew_role,
-                      original_name: directingCrewInfo?.film_crew_name,
-                      profile_path: directingCrewInfo?.film_crew_profile_url,
-                    };
-                  }),
-              ],
-            },
-
-            backdrop_path: movieInfo.movie_backdrop_url,
+                  return prev;
+                },
+                {
+                  coupang: false,
+                  disney: false,
+                  netflix: false,
+                  tving: false,
+                  watcha: false,
+                  wave: false,
+                }
+              ),
+            like: !isEmpty(
+              movieLikes
+                .filter((like) => like.movie_id === movieInfo.movie_id)
+                .find(
+                  (like) => like.user_id === userInfo.localJwtDto.accessToken
+                )
+            ),
           },
-          trailer: movieInfo.movie_trailer_url,
-          ost: movieInfo.movie_ost_url,
-          movie_behind_videos: movieBehindVideos.find(
-            (video) => video.movie_id === movieInfo.movie_id
-          ),
-          platforms: platforms.filter(
-            (platform) => platform.movie_id === movieInfo.movie_id
-          ),
-          like: !isEmpty(
-            movieLikes
-              .filter((like) => like.movie_id === movieInfo.movie_id)
-              .find((like) => like.user_id === userInfo.localJwtDto.accessToken)
-          ),
+          message: "요청이 성공적으로 처리되었습니다.",
+          success: true,
         },
         { status: 200 }
       );

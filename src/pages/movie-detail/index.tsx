@@ -21,6 +21,7 @@ import SEO from "@components/seo";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import { useMovieDetailQuery } from "@hooks/movie";
+import { fetchLineReviewMovie } from "@api/linereview";
 
 interface MovieDetailProps {
   imageUrl?: string;
@@ -53,7 +54,8 @@ function MovieDetail(props: MovieDetailProps) {
   // const accessToken = localStorage.getItem("accessToken");
   // const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
   const { id } = useParams(); // URL에서 movieId 추출
-  const { data: movieDetail, isLoading } = useMovieDetailQuery(Number(id));
+  const { data: movieDetail, isLoading: movieDetailIsLoading } =
+    useMovieDetailQuery(Number(id));
 
   const navigate = useNavigate();
 
@@ -74,72 +76,59 @@ function MovieDetail(props: MovieDetailProps) {
   };
 
   useEffect(() => {
-    if (!isLoading) {
-      console.log(movieDetail);
+    if (!movieDetailIsLoading) {
+      // API 응답 데이터 구조 검증
+      if (!movieDetail.data) {
+        throw new Error("Invalid API response: Missing data");
+      }
+
+      const { movie_info, like, rating, streaming_platform } = movieDetail.data;
+
+      if (!movie_info) {
+        throw new Error("Invalid API response: Missing movie_info");
+      }
+
+      // `streaming_platform` 필터링
+      const availablePlatforms = Object.entries(streaming_platform || {})
+        .filter(([_, value]) => value === true) // 값이 true인 플랫폼만 필터링
+        .map(([key]) => key); // 키(플랫폼 이름)만 추출
+
+      // `credits` 기본값 설정
+      const credits = movie_info.credits || {
+        cast: [],
+        crew: [],
+        directingCrew: [],
+      };
+
+      // 데이터 정렬
+      const sortedCast =
+        credits.cast?.sort((a: any, b: any) => a.id - b.id) || [];
+      const sortedDirectingCrew =
+        credits.directingCrew?.sort((a: any, b: any) => a.id - b.id) || [];
+
+      // `like` 상태와 영화 데이터 설정
+      setLikeActive(like || false);
+      setMovieData({
+        ...movie_info,
+        credits: {
+          ...credits,
+          cast: sortedCast,
+          directingCrew: sortedDirectingCrew,
+        },
+        rating: rating || 0,
+        availablePlatforms,
+      });
     }
-  }, [isLoading]);
+  }, [movieDetailIsLoading]);
 
-  // useEffect(() => {
-  //   const fetchMovieData = async () => {
-  //     try {
-  //       const response = await axios
-  //         .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`, {
-  //           headers: { Authorization: `Bearer ${accessToken}` },
-  //         })
-  //         .then((res) => res.data);
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await fetchLineReviewMovie(Number(id));
+      console.log(response);
+    };
 
-  //       console.log("영화 API 응답 데이터:", response); // 응답 데이터 확인
-
-  //       // API 응답 데이터 구조 검증
-  //       if (!response || !response.data) {
-  //         throw new Error("Invalid API response: Missing data");
-  //       }
-
-  //       const { movie_info, like, rating, streaming_platform } = response.data; // movie_info와 like, rating 추출
-  //       if (!movie_info) {
-  //         throw new Error("Invalid API response: Missing movie_info");
-  //       }
-
-  //       // `streaming_platform` 필터링
-  //       const availablePlatforms = Object.entries(streaming_platform || {})
-  //       .filter(([_, value]) => value === true) // 값이 true인 플랫폼만 필터링
-  //       .map(([key]) => key); // 키(플랫폼 이름)만 추출
-
-  //       // `credits` 기본값 설정
-  //       const credits = movie_info.credits || { cast: [], crew: [], directingCrew: [] };
-
-  //       // 데이터 정렬
-  //       const sortedCast = credits.cast?.sort((a: any, b: any) => a.id - b.id) || [];
-  //       const sortedDirectingCrew =
-  //         credits.directingCrew?.sort((a: any, b: any) => a.id - b.id) || [];
-
-  //       // `like` 상태와 영화 데이터 설정
-  //       setLikeActive(like || false);
-  //       setMovieData({
-  //         ...movie_info,
-  //         credits: {
-  //           ...credits,
-  //           cast: sortedCast,
-  //           directingCrew: sortedDirectingCrew,
-  //         },
-  //         rating: rating || 0,
-  //         availablePlatforms,
-  //       });
-
-  //       setLoading(false);
-  //     } catch (err: any) {
-  //       console.error("영화 데이터 불러오기 실패", err);
-
-  //       // 에러 메시지 설정
-  //       const errorMessage =
-  //         err.response?.data?.message || err.message || "Failed to fetch movie data";
-  //       setError(errorMessage);
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchMovieData();
-  // }, [id]);
+    fetch();
+  }, []);
 
   // useEffect(() => {
   //   const fetchReviews = async () => {
@@ -174,6 +163,25 @@ function MovieDetail(props: MovieDetailProps) {
   //   };
 
   //   fetchReviews();
+  // }, [id]);
+
+  // useEffect(() => {
+  //   const fetchMovieData = async () => {
+  //     try {
+
+  //       setLoading(false);
+  //     } catch (err: any) {
+  //       console.error("영화 데이터 불러오기 실패", err);
+
+  //       // 에러 메시지 설정
+  //       const errorMessage =
+  //         err.response?.data?.message || err.message || "Failed to fetch movie data";
+  //       setError(errorMessage);
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchMovieData();
   // }, [id]);
 
   // if (loading) {
