@@ -3,7 +3,7 @@ import DisneyPlus from "@assets/icons/disneyplus.svg?react";
 import Watcha from "@assets/icons/watcha.svg?react";
 import styles from "./index.styles";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
 
 import "swiper/css";
@@ -11,7 +11,10 @@ import "swiper/css/autoplay";
 import "swiper/css/pagination";
 import { fetchRecommendMovie } from "@api/movie";
 import { useRecommnedMovieQuery } from "@hooks/movie";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import Loading from "@components/loading";
+import { RecommendMovieDataTypes } from "@type/api/movie";
+import { Swiper as SwiperCore } from "swiper";
 
 const dummyData = [
   {
@@ -75,15 +78,18 @@ const posterDummySrc =
  */
 function RecommendMovieSlider() {
   const { data, isLoading } = useRecommnedMovieQuery();
+  const swiperRef = useRef<SwiperCore | null>(null);
 
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     console.log(data);
-  //   }
-  // }, [isLoading]);
+  useEffect(() => {
+    if (!isLoading && data.data.length > 0) {
+      swiperRef.current?.update();
+      swiperRef.current?.slideTo(1);
+    }
+  }, [isLoading, data]);
 
   return (
     <Swiper
+      onSwiper={(swipper) => (swiperRef.current = swipper)}
       slidesPerView={1.3}
       spaceBetween={30}
       centeredSlides={true}
@@ -96,10 +102,11 @@ function RecommendMovieSlider() {
       }}
       css={styles.swiperContainer()}
     >
-      {dummyData.length > 0 &&
-        dummyData.map((data, idx) => (
-          <SwiperSlide key={idx}>
-            <div css={styles.sliderItem(data.poster)}>
+      {isLoading && <Loading />}
+      {!isLoading &&
+        data.data.map((movie: RecommendMovieDataTypes) => (
+          <SwiperSlide key={movie.movieId}>
+            <div css={styles.sliderItem(movie.posterUrl)}>
               {/* Background Image */}
               <div className="background" />
 
@@ -112,7 +119,7 @@ function RecommendMovieSlider() {
 
                 {/* Movie Poster Section */}
                 <div css={styles.moviePosterContainer()}>
-                  <img src={data.poster} alt="image" />
+                  <img src={movie.posterUrl} alt="image" />
                 </div>
 
                 {/* Movie Info Section */}
@@ -121,8 +128,12 @@ function RecommendMovieSlider() {
                   <div className="movie-info">
                     <h3>티파니에서 아침을</h3>
                     <div className="movie-sub-info">
-                      <span className="rate">별점: ★ {data.rate}</span>
-                      <span className="genres">{data.genres.join(", ")}</span>
+                      <span className="rate">별점: ★ {movie.totalRating}</span>
+                      <span className="genres">
+                        {movie.genres
+                          .map((genre) => genre.genre_name)
+                          .join(", ")}
+                      </span>
                     </div>
                   </div>
 

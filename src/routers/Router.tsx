@@ -35,7 +35,7 @@ function Router() {
       setIsLoginState({
         isLoginState: !isEmpty(user),
         isAuthUser: user.isAuthUser,
-        isLoginInfo: user,
+        isLoginInfo: user.user,
         isLoading: false,
       });
     }
