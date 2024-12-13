@@ -7,3 +7,25 @@ export interface TopMovieDataTypes {
   totalRating: number;
   likes: number;
 }
+
+// 추천 영화 데이터 타입 정의
+export interface RecommendMovieDataTypes {
+  [key: string]: unknown;
+  movieId: number;
+  genres: GenresMovieDataTypes[];
+  platforms: PlatformDataTypes[];
+  posterUrl: string;
+  title: string;
+  totalRating: number;
+}
+
+export interface GenresMovieDataTypes {
+  genre_id: number;
+  genre_name: string;
+}
+
+export interface PlatformDataTypes {
+  platformId: number;
+  platformName: string;
+  platformUrl: string;
+}
