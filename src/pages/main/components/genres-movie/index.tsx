@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 function GenresMovie() {
   const navigate = useNavigate();
   const [selectButton, setSelectButton] = useState<number>(0);
-  const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
+  // const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
 
   // 장르 버튼 최초 로드 시에 초기값 설정
   const handleInitialGenre = (movieId: number) => {
@@ -30,11 +30,11 @@ function GenresMovie() {
     setSelectButton(movieId);
   };
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(genreMovies?.pages[0].data.content);
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     console.log(genreMovies?.pages[0].data.content);
+  //   }
+  // }, [isLoading]);
 
   return (
     <div css={styles.genreContainer()}>
@@ -55,7 +55,7 @@ function GenresMovie() {
         </div>
 
         {/* Select Genre Movies */}
-        <div className="select-genre">
+        {/* <div className="select-genre">
           {isLoading && <Loading />}
           {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
             ? genreMovies?.pages[0].data.content
@@ -73,7 +73,7 @@ function GenresMovie() {
                   />
                 ))
             : null}
-        </div>
+        </div> */}
       </div>
     </div>
   );
