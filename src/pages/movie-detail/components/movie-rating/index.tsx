@@ -27,6 +27,8 @@ interface MovieRatingProps {
 }
 
 const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
+    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
     const totalStars = 5;
 
     // 각 별의 채워짐 단계를 계산
@@ -53,7 +55,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
                 `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
                 {}, // POST 요청이므로 빈 body
                 {
-                    headers: { Authorization: "123" },
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 }
             );
 
@@ -71,46 +73,6 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
             }
         }
     };
-
-
-
-    // // 좋아요 상태 확인 및 초기화
-    // useEffect(() => {
-    //     const fetchLikeStatus = async () => {
-    //         try {
-    //             const response = await axios.get(
-    //                 `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
-    //                 {
-    //                     headers: { Authorization: "Bearer token" },
-    //                 }
-    //             );
-    //             console.log("현재 좋아요 상태:", response.data.liked);
-    //             setLikeActive(response.data.liked);
-    //         } catch (err) {
-    //             console.error("좋아요 상태 조회 실패", err);
-    //         }
-    //     };
-
-    //     fetchLikeStatus();
-    // }, [movieId]);
-
-    // // 좋아요 상태 토글
-    // const toggleLike = async () => {
-    //     try {
-    //       const response = await axios.post(
-    //         `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
-    //         {},
-    //         {
-    //           headers: { Authorization: "Bearer token" }, // Authorization 헤더 추가
-    //         }
-    //       );
-
-    //       console.log(response.data.message); // 성공 메시지 출력
-    //       setLikeActive(!likeActive); // 좋아요 상태 반전
-    //     } catch (error) {
-    //       console.error("좋아요 상태 변경 실패", error);
-    //     }
-    //   };
 
     return (
         <RatingContainer>

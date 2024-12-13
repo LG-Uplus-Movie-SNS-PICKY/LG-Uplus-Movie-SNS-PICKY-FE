@@ -1,7 +1,7 @@
 // pages/MovieDetail/components/MoviePoster/index.tsx
 import {
     PosterContainer,
-    PosterImage,
+    // PosterImage,
     MovieInfoContainer,
     InfoTextWrapper,
     Title,
@@ -13,6 +13,9 @@ import {
     Ott,
     OttContainer,
 } from './index.styles';
+
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 // OTT 서비스 URL 매핑 객체
 const ottLogos: { [key: string]: string } = {
@@ -53,7 +56,8 @@ const MoviePoster = ({ imageUrl, title, year, nation, genre, ott }: MoviePosterP
 
     return (
         <PosterContainer>
-            <PosterImage src={imageUrl} />
+            {/* <PosterImage src={imageUrl} /> */}
+            <LazyLoadImage src={imageUrl} effect={"blur"} />
             <MovieInfoContainer>
                 <InfoTextWrapper>
                     <Title>{title}</Title>

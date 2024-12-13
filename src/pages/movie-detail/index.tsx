@@ -49,6 +49,8 @@ interface Review {
 }
 
 function MovieDetail(props: MovieDetailProps) {
+  // const accessToken = localStorage.getItem("accessToken");
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
   const { id } = useParams(); // URL에서 movieId 추출
   console.log("movieId:", id); // movieId가 undefined인지 확인
   const navigate = useNavigate();
@@ -71,10 +73,14 @@ function MovieDetail(props: MovieDetailProps) {
 
   useEffect(() => {
     const fetchMovieData = async () => {
+
+      console.log(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`);
+      console.log(accessToken);
+
       try {
         const response = await axios
           .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`, {
-            headers: { Authorization: "123" },
+            headers: { Authorization: `Bearer ${accessToken}` },
           })
           .then((res) => res.data);
 
@@ -119,7 +125,7 @@ function MovieDetail(props: MovieDetailProps) {
         const response = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/${id}`,
           {
-            headers: { Authorization: "123" },
+            headers: { Authorization: `Bearer ${accessToken}` },
             params: { page: 1, limit: 100 }, // 충분한 데이터를 가져옴
           }
         );

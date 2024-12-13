@@ -23,6 +23,8 @@ import {
 import { Toast } from '@stories/toast'
 
 const ReviewRegist = ({ refetch }: { refetch: () => void }) => {
+    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTY1NTE5LCJleHAiOjE3MzQwNTE5MTl9.0l58z2m5gbDOhBQfluWGZ8c5rJRhqZh_cAPx_8CxNWQ"
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
     const [spoiler, setSpoiler] = useState<boolean | null>(null);
@@ -78,7 +80,7 @@ const ReviewRegist = ({ refetch }: { refetch: () => void }) => {
             reviewData,
             {
               headers: {
-                Authorization: "123", // 테스트용 토큰
+                Authorization: `Bearer ${accessToken}`, // 토큰
               },
             }
           );

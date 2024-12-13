@@ -6,16 +6,31 @@ export const PosterContainer = styled.div`
   width: 100%;
   height: 340px;
   overflow: hidden;
+
+    & > span.lazy-load-image-background  {
+        width: 100%;
+        height: 100%;
+        display: block;
+
+        & > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: 25% 25%;
+            opacity: 0.8;
+        }
+    }
+
 `;
 
-export const PosterImage = styled.img`
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: 25% 25%;
-  opacity: 0.8;
-`;
+// export const PosterImage = styled.img`
+//   width: 100%;
+//   height: 100%;
+//   display: block;
+//   object-fit: cover;
+//   object-position: 25% 25%;
+//   opacity: 0.8;
+// `;
 
 export const MovieInfoContainer = styled.div`
     position: absolute;

@@ -1,6 +1,5 @@
 // src/components/youtube-player.tsx
 import React, { useEffect, useRef } from 'react';
-
 interface YouTubePlayerProps {
     isYTReady: boolean;
     videoId: string;

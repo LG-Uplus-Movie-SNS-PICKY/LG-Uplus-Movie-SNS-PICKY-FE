@@ -26,6 +26,7 @@ declare global {
       start?: number;
       widget_referrer?: string;
       index?: number;  // 'index' 속성 추가
+      
     }
 
     interface PlayerOptions {
@@ -33,6 +34,18 @@ declare global {
       width: string;
       videoId?: string;
       playerVars: PlayerVars;
+      events?: { // 'events' 속성 추가
+        onReady?: () => void;
+        onStateChange?: (event: OnStateChangeEvent) => void;
+        onPlaybackQualityChange?: (event: any) => void;
+        onPlaybackRateChange?: (event: any) => void;
+        onError?: (event: any) => void;
+        onApiChange?: () => void;
+      };
+    }
+
+    interface OnStateChangeEvent {
+      data: number; // YouTube player state (e.g., 1 for playing, 2 for paused)
     }
 
     class Player {

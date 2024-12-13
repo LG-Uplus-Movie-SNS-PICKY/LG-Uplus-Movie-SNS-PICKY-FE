@@ -18,6 +18,7 @@ import {
   SpoilerToggleContainer,
   SpoilerToggleText,
   SpoilerToggleButton,
+  LoadingContainer
 } from "./index.styles";
 import AgeAllSvg from "../../../assets/icons/age_all.svg?react";
 import Age12Svg from "../../../assets/icons/age_12.svg?react";
@@ -30,6 +31,7 @@ import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
+import Loading from "@components/loading";
 
 interface Review {
   id: number;
@@ -64,11 +66,11 @@ const fetchReviews = async ({
   pageParam: number;
   sortBy: string;
 }): Promise<ReviewResponse> => {
-  // await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
   const response = await axios.get<ReviewResponse>(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/1`,
     {
-      headers: { Authorization: "123" },
+      headers: { Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTY1NTE5LCJleHAiOjE3MzQwNTE5MTl9.0l58z2m5gbDOhBQfluWGZ8c5rJRhqZh_cAPx_8CxNWQ" },
       params: {
         page: pageParam,
         limit: 10,
@@ -80,6 +82,8 @@ const fetchReviews = async ({
 };
 
 const ReviewsPage = () => {
+  // const accessToken = localStorage.getItem("accessToken");
+  const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
   const { id: movieId } = useParams(); // 영화 ID 가져오기
   const [includeSpoilers, setIncludeSpoilers] = useState(false);
   const [sortBy, setSortBy] = useState("likes");
@@ -91,6 +95,7 @@ const ReviewsPage = () => {
     hasNextPage,
     isFetchingNextPage,
     refetch,
+    isLoading,
   } = useInfiniteQuery({
     queryKey: ["reviews", { sortBy, includeSpoilers }],
     queryFn: ({ pageParam = 1 }) => fetchReviews({ pageParam, sortBy }),
@@ -105,14 +110,14 @@ const ReviewsPage = () => {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
-  
+
   useEffect(() => {
     const fetchMovieInfo = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}`,
           {
-            headers: { Authorization: "123" },
+            headers: { Authorization: `Bearer ${accessToken}` },
           }
         );
         const movieData = response.data.movie_info;
@@ -164,7 +169,7 @@ const ReviewsPage = () => {
   };
 
   if (!movieInfo) {
-    return <div>Loading...</div>;
+    return 0;
   }
 
   return (
@@ -220,12 +225,38 @@ const ReviewsPage = () => {
                 </SpoilerToggleButton>
               </SpoilerToggleContainer>
             </FilterContainer>
-            <MovieReview
-              reviews={sortedReviews || []} // 공감순 or 최신순으로 정렬된 리뷰 전달
-              lastReviewRef={ref}
-            />
-            {isFetchingNextPage && <div>로딩 중...</div>}
-            {!hasNextPage && <div>더 이상 데이터가 없습니다.</div>}
+
+            {/* 로딩 상태 관리 */}
+            {isLoading ? (
+              <LoadingContainer>
+                <Loading />
+              </LoadingContainer>
+            ) : (
+              <>
+                <MovieReview reviews={sortedReviews || []} lastReviewRef={ref} />
+
+                {/* 추가 데이터 로딩 중 */}
+                {isFetchingNextPage && (
+                  <LoadingContainer>
+                    <Loading />
+                  </LoadingContainer>
+                )}
+
+                {/* 모든 데이터 로드 완료 시 메시지 */}
+                {!hasNextPage && sortedReviews.length > 0 && (
+                  <div
+                    style={{
+                      fontSize: "16px",
+                      textAlign: "center",
+                      fontWeight: "600",
+                      margin: "16px",
+                    }}
+                  >
+                    마지막 리뷰입니다.
+                  </div>
+                )}
+              </>
+            )}
           </ReviewsWrapper>
         </MovieReviewContainer>
       </div>

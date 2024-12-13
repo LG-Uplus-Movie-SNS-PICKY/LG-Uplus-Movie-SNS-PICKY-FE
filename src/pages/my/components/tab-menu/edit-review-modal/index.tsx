@@ -30,7 +30,8 @@ interface EditReviewModalProps {
 }
 
 const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
-    // const [spoiler, setSpoiler] = useState<boolean | null>(null);
+    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTY1NTE5LCJleHAiOjE3MzQwNTE5MTl9.0l58z2m5gbDOhBQfluWGZ8c5rJRhqZh_cAPx_8CxNWQ"
     const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
     const [initialContext, setInitialContext] = useState(review.context); // 초기 감상평 값
     const [initialIsSpoiler, setInitialIsSpoiler] = useState(review.isSpoiler || false); // 초기 스포일러 여부
@@ -52,7 +53,7 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
                     isSpoiler,
                 },
                 {
-                    headers: { Authorization: "123" },
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 }
             );
 

@@ -1,6 +1,7 @@
 // pages/movie-detail/components/behind-modal/index.tsx
 import React, { useEffect, useState } from 'react';
 import YouTubePlayer from '@components/youtube-player';
+import { Skeleton, SkeletonImage, SkeletonTitle, SkeletonArtist } from '../skeleton';
 import axios from 'axios';
 import {
     ModalContainer,
@@ -44,7 +45,8 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const [ostPlaylistId, setOstPlaylistId] = useState<string | null>(null);
     const [behindPlaylistId, setBehindPlaylistId] = useState<string | null>(null); // 비하인드 영상 Playlist ID 저장
     const [isYTReady, setIsYTReady] = useState(false);
-
+    const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTkxNzQ2LCJleHAiOjE3MzQwNzgxNDZ9.roZDLyA2pNpNwcvqap2gBFRPlrwQoQ6JAI5cysxKNSY"
     // YouTube Data API Key 확인
     console.log("YouTube Data API Key (전역):", YOUTUBE_API_KEY);
 
@@ -54,7 +56,7 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
             try {
                 const response = await axios.get(
                     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`,
-                    { headers: { Authorization: '123' } }
+                    { headers: { Authorization: `Bearer ${accessToken}` } }
                 );
                 console.log('API 응답 데이터:', response.data);
 
@@ -82,6 +84,7 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
 
         const fetchBehindVideos = async () => {
             try {
+                setIsLoading(true); // 로딩 시작
                 const response = await axios.get(
                     `https://www.googleapis.com/youtube/v3/playlistItems`,
                     {
@@ -103,6 +106,8 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                 setBehindVideos(videoIds); // 상태에 저장
             } catch (error) {
                 console.error('비하인드 영상 가져오기 실패:', error);
+            } finally {
+                setIsLoading(false); // 로딩 종료
             }
         };
 
@@ -166,42 +171,6 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
             .catch((err) => console.error(err));
     }, []);
 
-
-    // // YouTube Player 컴포넌트 (비하인드 영상)
-    // useEffect(() => {
-    //     function loadScript(src: string): Promise<void> {
-    //         return new Promise(async (resolve, reject) => {
-    //             const existingScript = document.querySelector(`script[src="${src}"]`);
-    //             if (existingScript) {
-    //                 // Script already exists, no need to load again
-    //                 await resolve();
-    //                 return;
-    //             }
-    //             const script = document.createElement('script');
-    //             script.src = src;
-    //             script.onload = async () => await resolve();
-    //             script.onerror = async () => await reject(new Error(`Failed to load script: ${src}`));
-    //             document.head.appendChild(script);
-    //         });
-    //     }
-
-    //     function initializePlayer() {
-    //         if (window.YT && window.YT.Player) {
-    //             setIsYTReady(true);
-    //         } else {
-    //             // Register API ready callback
-    //             window.onYouTubeIframeAPIReady = () => {
-    //                 setIsYTReady(true);
-    //             };
-    //         }
-    //     }
-
-    //     loadScript('https://www.youtube.com/iframe_api')
-    //         .then(() => initializePlayer())
-    //         .catch((err) => console.error(err));
-
-    // }, []);
-
     return (
         <ModalContainer onClick={onClose}>
             <ContentContainer onClick={e => e.stopPropagation()}>
@@ -213,8 +182,25 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                         <YouTubeLogoSvg />
                         <Title>비하인드 영상</Title>
                     </YoutubeLogo>
-                    <YoutubeContainer>
+                    {/* <YoutubeContainer>
                         {behindVideos.length > 0 ? (
+                            behindVideos.map((videoId, index) => (
+                                <BehindContainer key={index}>
+                                    <YouTubePlayer isYTReady={isYTReady} videoId={videoId} />
+                                </BehindContainer>
+                            ))
+                        ) : (
+                            <p>비하인드 영상이 없습니다.</p>
+                        )}
+                    </YoutubeContainer> */}
+                    <YoutubeContainer>
+                        {isLoading ? (
+                            Array.from({ length: 6 }).map((_, index) => (
+                                <BehindContainer key={index}>
+                                    <Skeleton /> {/* Skeleton 자리 고정 */}
+                                </BehindContainer>
+                            ))
+                        ) : behindVideos.length > 0 ? (
                             behindVideos.map((videoId, index) => (
                                 <BehindContainer key={index}>
                                     <YouTubePlayer isYTReady={isYTReady} videoId={videoId} />
@@ -227,7 +213,7 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                 </YoutubeSection>
                 <OstSection>
                     <Title>OST</Title>
-                    <OstPlayist>
+                    {/* <OstPlayist>
                         {ostVideos.map((video, index) => {
                             const songTitle = video.snippet.title; // 곡명
                             const artist = video.snippet.channelTitle; // 아티스트
@@ -246,6 +232,40 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
                                 </OstContainer>
                             );
                         })}
+                    </OstPlayist> */}
+                    <OstPlayist>
+                        {isLoading
+                            ? Array.from({ length: 6 }).map((_, index) => (
+                                <OstContainer key={index}>
+                                    {/* 이미지 Skeleton */}
+                                    <SkeletonImage />
+                                    {/* 제목 및 아티스트 Skeleton */}
+                                    <OstInfoContainer>
+                                        <SkeletonTitle />
+                                        <SkeletonArtist />
+                                    </OstInfoContainer>
+                                </OstContainer>
+                            ))
+                            : ostVideos.map((video, index) => {
+                                const songTitle = video.snippet.title; // 곡명
+                                const artist = video.snippet.channelTitle; // 아티스트
+                                const videoUrl = `https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`; // 유튜브 링크
+
+                                return (
+                                    <OstContainer key={index} onClick={() => window.open(videoUrl, '_blank')}>
+                                        {/* 이미지 */}
+                                        <OstImage
+                                            src={video.snippet.thumbnails.default.url}
+                                            alt={songTitle}
+                                        />
+                                        {/* 제목 및 아티스트 */}
+                                        <OstInfoContainer>
+                                            <OstTitle title={songTitle}>{songTitle}</OstTitle>
+                                            <OstArtist title={artist}>{artist}</OstArtist>
+                                        </OstInfoContainer>
+                                    </OstContainer>
+                                );
+                            })}
                     </OstPlayist>
                 </OstSection>
             </ContentContainer>
