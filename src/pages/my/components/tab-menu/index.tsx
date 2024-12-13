@@ -154,6 +154,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
       {/* Swiper - Content Section */}
       <Swiper
         spaceBetween={10}
+        autoHeight={true}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => handleSlide(swiper.activeIndex)}
         slidesPerView={1}

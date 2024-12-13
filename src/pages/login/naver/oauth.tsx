@@ -1,73 +1,139 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../../../review/atoms";
+import { Toast } from "@stories/toast";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { getCookie, setCookie } from "@util/cookie";
+import { fetchGetUserInfo } from "@api/user";
 
 const LoginCallback: React.FC = () => {
   const navigate = useNavigate();
+  const setUserState = useSetRecoilState(userState);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setIsLoginState = useSetRecoilState(isLogin);
 
   useEffect(() => {
-    console.log("LoginCallback useEffect triggered");
-
     const queryParams = new URLSearchParams(window.location.search);
     const code = queryParams.get("code");
     const state = queryParams.get("state");
-    console.log(code);
-    console.log(state);
+
     if (!code || !state) {
-      alert("잘못된 로그인 요청입니다. 다시 시도해주세요.");
+      setToastMessage("잘못된 로그인 요청입니다. 다시 시도해주세요.");
       return;
     }
 
-    // 소셜 로그인 API 요청
+    setIsLoading(true);
+
     axios
-        .get(`https://api.picky-movie.com/api/v1/oauth/naver/user`, {
+      .get(`${import.meta.env.VITE_SERVER_URL}/api/v1/oauth/naver/user`, {
         params: { code, state },
       })
-      .then((response) => {
-        // 응답 데이터 디버깅
-        console.log("Response data:", response.data.data);
+      .then(async (response) => {
+        // 소셜 로그인 서비스에서 정보를 제대로 전달 받았을 경우
 
-        // 토큰 및 데이터 확인
-        const { oAuth2Token, localJwtDto, isRegistrationDone } = response.data.data;
+        const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
+          response.data.data;
 
         if (
           oAuth2Token?.access_token &&
           oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
-          // sessionStorage에 저장
-          sessionStorage.setItem("access_token", oAuth2Token.access_token);
-          sessionStorage.setItem("refresh_token", oAuth2Token.refresh_token);
-          sessionStorage.setItem("accessToken", localJwtDto.accessToken);
-          console.log("Tokens stored successfully.");
-        } else {
-          alert("로그인 처리 중 문제가 발생했습니다.");
-          return;
-        }
+          setCookie(
+            "user",
+            JSON.stringify({
+              oAuth2Token,
+              localJwtDto,
+              isRegistrationDone,
+              isAuthUser: role === "ADMIN",
+            }),
+            {
+              path: "/", // 모든 경로에서 접근 가능
+              maxAge: 60 * 60 * 24, // 1일 (초 단위)
+              sameSite: "strict", // 보안 설정
+              secure: false, // HTTPS 필요 여부 (개발 시 false)
+            }
+          );
 
-        // 회원가입 여부 확인 후 페이지 이동
-        if (isRegistrationDone) {
-          navigate("/");
+          if (isRegistrationDone) {
+            const currentUserCookie = getCookie("user");
+
+            // User GET API 모듈로 분리
+            const userResponse = await fetchGetUserInfo();
+
+            // Cookie에 저장할 새로운 정보
+            const newUserData = {
+              ...currentUserCookie,
+              user: {
+                birthdate: userResponse.data.birthdate,
+                name: userResponse.data.name,
+                nickname: userResponse.data.nickname,
+                gender: userResponse.data.gender,
+                nationality: userResponse.data.nationality,
+                email: userResponse.data.email,
+                profileUrl: userResponse.data.profileUrl,
+              },
+            };
+
+            // 로그인 사용자의 쿠키 값을 설정
+            // cookies.set("user", JSON.stringify(newUserData));
+            setCookie("user", JSON.stringify(newUserData), {
+              path: "/", // 모든 경로에서 접근 가능
+              maxAge: 60 * 60 * 24, // 1일 (초 단위)
+              sameSite: "strict", // 보안 설정
+              secure: false, // HTTPS 필요 여부 (개발 시 false)
+            });
+
+            // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
+            setIsLoginState({
+              isLoginState: true, // 로그인이 된 상태
+              isAuthUser: newUserData.isAuthUser,
+              isLoginInfo: newUserData.user,
+              isLoading: false,
+            });
+
+            setToastMessage("로그인에 성공했습니다!");
+            // setTimeout(() => navigate("/"), 2000);
+          } else {
+            // 유저 정보가 등록되지 않았을 경우
+            // console.error("User API error:", );
+
+            // console.log(getCookie("user"));
+            setToastMessage(
+              "등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다."
+            );
+            setTimeout(() => navigate("/auth/sign-up"), 2000);
+          }
         } else {
-          navigate("/auth/sign-up");
+          setToastMessage("로그인 처리 중 문제가 발생했습니다.");
         }
       })
       .catch((error) => {
-        // 에러 처리
-        if (error.response) {
-          console.error("Error response from server:", error.response);
-          alert(`서버 오류: ${error.response.data.message}`);
-        } else if (error.request) {
-          console.error("No response received. Request details:", error.request);
-          alert("서버로부터 응답이 없습니다. 다시 시도해주세요.");
-        } else {
-          console.error("Request setup error:", error.message);
-          alert("요청 설정 중 문제가 발생했습니다. 다시 시도해주세요.");
-        }
-      });
-  }, [navigate]);
+        // 소셜 로그인 서비스에서 제대로 된 정보를 받지 못했을 경우
 
-  return <div>로그인 처리 중...</div>;
+        console.error("Social login API error:", error);
+        const errorMessage =
+          error.response?.data?.message ||
+          "로그인 처리 중 문제가 발생했습니다.";
+        setToastMessage(errorMessage);
+      })
+      .finally(() => {
+        // 성공, 실패에 상관없이 무조건 한 번은 실행되는 코드
+
+        setIsLoading(false);
+      });
+  }, [navigate, setUserState, setIsLoginState]);
+
+  return (
+    <div>
+      {toastMessage && <Toast message={toastMessage} />}
+      {isLoading && <div>로그인 처리 중...</div>}
+    </div>
+  );
 };
 
 export default LoginCallback;

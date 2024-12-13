@@ -9,6 +9,9 @@ import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/pagination";
+import { fetchRecommendMovie } from "@api/movie";
+import { useRecommnedMovieQuery } from "@hooks/movie";
+import { useEffect } from "react";
 
 const dummyData = [
   {
@@ -71,6 +74,14 @@ const posterDummySrc =
  * @returns
  */
 function RecommendMovieSlider() {
+  const { data, isLoading } = useRecommnedMovieQuery();
+
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     console.log(data);
+  //   }
+  // }, [isLoading]);
+
   return (
     <Swiper
       slidesPerView={1.3}
@@ -118,10 +129,10 @@ function RecommendMovieSlider() {
                   {/* OTT Servie */}
                   <div className="ott-service">
                     <div className="badge">
-                      <Netflix width={32} height={32} />
+                      <Netflix width={18} height={18} />
                     </div>
                     <div className="badge">
-                      <Watcha width={32} height={32} />
+                      <Watcha width={18} height={18} />
                     </div>
                     <div className="badge more-service">2+</div>
                   </div>

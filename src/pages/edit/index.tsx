@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useCallback, useMemo } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useMemo } from "react";
 import { debounce } from "lodash";
 import profileIcon from "@assets/icons/profile.svg";
 import {
@@ -23,12 +22,17 @@ import {
 } from "./index.styles";
 import SEO from "@components/seo";
 import { Toast } from "@stories/toast";
+import {
+  fetchGetUserInfo,
+  fetchProfileUser,
+  fetchNicknameValidation,
+} from "@api/user"; // API 호출 모듈
 
 export default function ProfileEditPage() {
   const [userData, setUserData] = useState({
     name: "",
     nickname: "",
-    profile_url: "",
+    profile: "",
     birthdate: "",
     gender: "",
     nationality: "",
@@ -38,36 +42,27 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState(userData.profile_url);
+  const [profileImage, setProfileImage] = useState(userData.profile);
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
-  // const accessToken = sessionStorage.getItem("accessToken");
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Nywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzM5MTYyMDksImV4cCI6MTczNDAwMjYwOX0.wn19JoiX4HNJG21bl_VK8fzW_lSRfKLDCg1c_5zLAeU";
+
   const showToast = (message: string) => {
     setToastMessage(message);
   };
 
+  // 사용자 정보를 가져오는 API 호출
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        const data = response.data.data;
-        console.log(data);
+        const data = await fetchGetUserInfo();
+        console.log("Fetched User Data:", data);
         setUserData({
           name: data.name,
           nickname: data.nickname,
-          profile_url: data.profile_url,
+          profile: data.profile_url,
           birthdate: data.birthdate,
           gender: data.gender === "MALE" ? "남자" : "여자",
           nationality: data.nationality === "DOMESTIC" ? "내국인" : "외국인",
@@ -84,57 +79,39 @@ export default function ProfileEditPage() {
     };
 
     fetchUserData();
-  }, [accessToken]);
-
-  const checkNicknameAvailability = useCallback(async (nickname: string) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user/nickname-validation`,
-        {
-          params: {
-            nickname,
-          },
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.data.data.isValid) {
-        setNicknameError("이미 사용 중인 닉네임입니다.");
-        setIsNicknameValid(false);
-      } else {
-        setNicknameError(null);
-        setIsNicknameValid(true);
-      }
-    } catch (error) {
-      console.error("API 요청 중 오류 발생:", error);
-      setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
-      setIsNicknameValid(false);
-    }
   }, []);
 
   const debouncedCheckNickname = useMemo(
     () =>
-      debounce((nickname: string) => {
-        checkNicknameAvailability(nickname);
-      }, 100),
-    [checkNicknameAvailability]
-  );
+      debounce(async (nickname: string) => {
+        if (nickname === userData.nickname) {
+          setNicknameError(null);
+          setIsNicknameValid(true);
+          return;
+        }
 
-  useEffect(() => {
-    if (userData.nickname && userData.profile_url) {
-      setNickname(userData.nickname);
-      setProfileImage(userData.profile_url);
-    }
-  }, [userData]);
+        try {
+          const response = await fetchNicknameValidation(nickname);
+          if (!response.data.isValid) {
+            setNicknameError("이미 사용 중인 닉네임입니다.");
+            setIsNicknameValid(false);
+          } else {
+            setNicknameError(null);
+            setIsNicknameValid(true);
+          }
+        } catch (error) {
+          console.error("닉네임 확인 중 오류 발생:", error);
+          setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+          setIsNicknameValid(false);
+        }
+      }, 300),
+    [userData.nickname]
+  );
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (value.length > 10) {
-      return;
-    }
+    if (value.length > 10) return;
 
     setNickname(value);
 
@@ -154,13 +131,6 @@ export default function ProfileEditPage() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-
-      // 파일 크기 제한: 5MB
-      // if (file.size > 5 * 1024 * 1024) {
-      //   setImageError("이미지 크기는 5MB를 초과할 수 없습니다.");
-      //   return;
-      // }
-
       const reader = new FileReader();
       reader.onload = () => {
         if (typeof reader.result === "string") {
@@ -175,12 +145,8 @@ export default function ProfileEditPage() {
   };
 
   const handleSave = async () => {
-    if (!accessToken) {
-      showToast("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      return;
-    }
     const isUnchanged =
-      nickname === userData.nickname && profileImage === userData.profile_url;
+      nickname === userData.nickname && profileImage === userData.profile;
 
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
@@ -192,51 +158,28 @@ export default function ProfileEditPage() {
       return;
     }
 
-    // 성별 및 국적 값을 변환
-    const genderMap: { 남자: string; 여자: string } = {
-      남자: "MALE",
-      여자: "FEMALE",
-    };
-    const nationalityMap: { 내국인: string; 외국인: string } = {
-      내국인: "DOMESTIC",
-      외국인: "FOREIGNER",
-    };
+    const formData = new FormData();
+    formData.append("nickname", nickname);
 
-    const payload = {
-      name: userData.name,
-      nickname: nickname,
-      profile_url: profileImage,
-      birthdate: userData.birthdate,
-      gender:
-        genderMap[userData.gender as keyof typeof genderMap] || userData.gender,
-      nationality:
-        nationalityMap[userData.nationality as keyof typeof nationalityMap] ||
-        userData.nationality,
-      movieId: userData.movieId || [],
-      email: userData.email,
-      genreId: userData.genreId || [],
-    };
-
-    console.log(payload);
+    if (profileImage && profileImage !== userData.profile) {
+      try {
+        const response = await fetch(profileImage);
+        if (!response.ok)
+          throw new Error("이미지를 Blob으로 변환하는 데 실패했습니다.");
+        const blob = await response.blob();
+        formData.append("profile", blob, "profileImage.jpg");
+      } catch (error) {
+        console.error("이미지 변환 중 오류 발생:", error);
+        showToast("이미지를 업로드하는 중 문제가 발생했습니다.");
+        return;
+      }
+    }
 
     try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (response.status === 200) {
+      const data = await fetchProfileUser(formData); // `fetchProfileUser` 사용
+      if (data) {
         showToast("프로필이 성공적으로 수정되었습니다.");
-        setUserData({
-          ...userData,
-          nickname,
-          profile_url: profileImage,
-        });
+        setUserData({ ...userData, nickname, profile: profileImage });
       } else {
         throw new Error("프로필 수정 중 문제가 발생했습니다.");
       }
@@ -246,21 +189,9 @@ export default function ProfileEditPage() {
     }
   };
 
-  const handleDisabledClick = () => {
-    if (!isSaveDisabled) return;
-
-    const isUnchanged =
-      nickname === userData.nickname && profileImage === userData.profile_url;
-    if (isUnchanged) {
-      showToast("변경 사항이 없습니다.");
-    } else if (nicknameError || imageError) {
-      showToast("닉네임의 요구사항을 따라주세요.");
-    }
-  };
-
   useEffect(() => {
     const isUnchanged =
-      nickname === userData.nickname && profileImage === userData.profile_url;
+      nickname === userData.nickname && profileImage === userData.profile;
 
     const hasError =
       !!nicknameError || !!imageError || isNicknameValid === false;
@@ -280,7 +211,6 @@ export default function ProfileEditPage() {
       const timer = setTimeout(() => {
         setToastMessage(null);
       }, 2000);
-
       return () => clearTimeout(timer);
     }
   }, [toastMessage]);
@@ -374,7 +304,11 @@ export default function ProfileEditPage() {
         </div>
         <div css={buttonWrapper}>
           <button
-            onClick={isSaveDisabled ? handleDisabledClick : handleSave}
+            onClick={
+              isSaveDisabled
+                ? () => showToast("수정할 내용이 없습니다.")
+                : handleSave
+            }
             css={saveButtonStyle}
             style={{
               backgroundColor: isSaveDisabled ? "#d9d9d9" : "#ff084a",

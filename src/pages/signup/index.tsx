@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { inputState } from "../../review/atoms";
@@ -31,12 +31,18 @@ import {
   slideContent,
 } from "./index.styles";
 import SEO from "@components/seo";
+// import { Cookies } from "react-cookie";
+import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
+import { getCookie, setCookie } from "@util/cookie";
+import { isLogin } from "@recoil/atoms/isLoginState";
 
 export default function Signup() {
+  const setIsLoginState = useSetRecoilState(isLogin);
   const [inputData, setInputData] = useRecoilState(inputState);
   const [step, setStep] = useState(0);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
   const steps = useMemo(
@@ -135,16 +141,15 @@ export default function Signup() {
       showToast(steps[step]?.fieldMessages?.[0] || "조건을 충족해주세요.");
       return;
     }
-  
+
     try {
-      const accessToken = sessionStorage.getItem("accessToken");
-      if (!accessToken) {
-        throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
-      }
-  
+      // if (!accessToken) {
+      //   throw new Error("인증 토큰이 없습니다. 다시 로그인 해주세요.");
+      // }
+
       // FormData 생성
       const formData = new FormData();
-  
+
       // JSON 데이터를 FormData로 추가
       const jsonPayload = {
         name: inputData.name,
@@ -155,41 +160,91 @@ export default function Signup() {
         movieId: inputData.favoriteMovie || [],
         genreId: inputData.favoriteGenres || [],
       };
-  
-      formData.append("json", JSON.stringify(jsonPayload));
-  
+
+      // formData에 이미지를 제외한 JSON 데이터 형식의 값을 Blob 객체로 저장한다.
+      formData.append(
+        "registerUserReq",
+        new Blob([JSON.stringify(jsonPayload)], { type: "application/json" })
+      );
+      console.log(jsonPayload);
+
       // 이미지를 FormData에 추가 (파일이 존재할 경우)
       if (inputData.profileImageData) {
-        formData.append("profile", inputData.profileImageData.get("profile") as File);
+        formData.append(
+          "profile",
+          inputData.profileImageData.get("profile") as File
+        );
       }
-  
-      // API 요청
-      const response = await axios.patch(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-  
-      console.log("회원가입 성공:", response.data);
+
+      // 유저 정보 업데이트
+      await fetchSignUpUser(formData);
+
+      // 유저 정보 가져온 후 쿠키를 업데이트 시켜서 쿠키에 유저 정보 유지
+      const currentUserCookie = getCookie("user");
+
+      // User GET API 모듈로 분리
+      const userResponse = await fetchGetUserInfo();
+
+      // Cookie에 저장할 새로운 정보
+      const newUserData = {
+        ...currentUserCookie,
+        user: {
+          birthdate: userResponse.data.birthdate,
+          name: userResponse.data.name,
+          nickname: userResponse.data.nickname,
+          gender: userResponse.data.gender,
+          nationality: userResponse.data.nationality,
+          email: userResponse.data.email,
+          profileUrl: userResponse.data.profileUrl,
+        },
+      };
+
+      setCookie("user", JSON.stringify(newUserData), {
+        path: "/", // 모든 경로에서 접근 가능
+        maxAge: 60 * 60 * 24, // 1일 (초 단위)
+        sameSite: "strict", // 보안 설정
+        secure: false, // HTTPS 필요 여부 (개발 시 false)
+      });
+
+      // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
+      setIsLoginState({
+        isLoginState: true, // 로그인이 된 상태
+        isAuthUser: newUserData.isAuthUser,
+        isLoginInfo: newUserData.user,
+        isLoading: false,
+      });
+
       showToast("회원가입이 완료되었습니다!");
       navigate("/");
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
       showToast("회원가입 요청 중 오류가 발생했습니다.");
     }
-  }, [isStepValid, inputData, navigate, showToast, step, steps]);
+  }, [
+    isStepValid,
+    inputData,
+    navigate,
+    showToast,
+    step,
+    steps,
+    setIsLoginState,
+  ]);
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === "Enter" && !toastMessage) {
-        if (step === steps.length - 1) {
-          handleComplete();
+      if (event.key === "Enter" && !toastMessage && !isProcessing) {
+        setIsProcessing(true);
+
+        if (isStepValid()) {
+          if (step === steps.length - 1) {
+            handleComplete();
+          } else {
+            handleNextStep();
+          }
         } else {
-          handleNextStep();
+          showToast(steps[step]?.fieldMessages?.[0] || "조건을 충족해주세요.");
         }
+
+        setTimeout(() => setIsProcessing(false), 300);
       }
     };
 
@@ -198,7 +253,16 @@ export default function Signup() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [step, handleNextStep, handleComplete, toastMessage, steps.length]);
+  }, [
+    step,
+    handleNextStep,
+    handleComplete,
+    toastMessage,
+    isStepValid,
+    isProcessing,
+    showToast,
+    steps,
+  ]);
 
   return (
     <>

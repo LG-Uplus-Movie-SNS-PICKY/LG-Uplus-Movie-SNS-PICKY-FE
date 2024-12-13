@@ -8,6 +8,7 @@ import boardContent from "@constants/json/board/board_contents.json";
 import boardLike from "@constants/json/board/board_likes.json";
 
 import { isEmpty } from "lodash";
+import { getCookie } from "@util/cookie";
 
 interface MovieLogContentsTypes {
   contentUrl: "string";
@@ -56,9 +57,9 @@ const boardHandlers: HttpHandler[] = [
       }
 
       // 사용자가 로그인하지 않은 경우
-      const userString = sessionStorage.getItem("user");
+      const userString = getCookie("user") || {};
 
-      if (!userString) {
+      if (isEmpty(userString)) {
         return HttpResponse.json(
           {
             message: "로그인이 필요합니다. 로그인 후 다시 시도해주세요.",
@@ -68,16 +69,14 @@ const boardHandlers: HttpHandler[] = [
         );
       }
 
-      const user = JSON.parse(userString);
-
       // 게시물 등록
       board.push({
         board_id: board.length + 1,
         board_context: body.boardContext,
         movie_id: body.movieId,
-        user_id: user.localJwtDto.accessToken,
+        user_id: userString.localJwtDto.accessToken,
         is_spoiler: body.isSpoiler,
-        writer_nickname: user.user.nickname,
+        writer_nickname: userString.user.nickname,
         is_deleted: false,
         createdDate: new Date().toISOString(),
         updatedDate: new Date().toISOString(),
@@ -228,7 +227,7 @@ const boardHandlers: HttpHandler[] = [
       }
 
       const url = new URL(request.url);
-      const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const loginUser = getCookie("user") || {};
 
       // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
       const page = Number(url.searchParams.get("page") || 1);
@@ -304,7 +303,7 @@ const boardHandlers: HttpHandler[] = [
       }
 
       const url = new URL(request.url);
-      const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const loginUser = getCookie("user") || {};
 
       // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
       const page = Number(url.searchParams.get("page") || 1);
@@ -441,11 +440,7 @@ const boardHandlers: HttpHandler[] = [
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
 
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
-
-      console.log(authorization);
-      console.log(boardId);
-      console.log(userInfo);
+      const userInfo = getCookie("user") || {};
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || !boardId || isEmpty(userInfo)) {
@@ -506,7 +501,7 @@ const boardHandlers: HttpHandler[] = [
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
 
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
       const { content } = (await request.json()) as { content: string };
 
       // 권환이 없을 경우 403 에러 발생
@@ -563,7 +558,7 @@ const boardHandlers: HttpHandler[] = [
       const authorization = request.headers.get("Authorization");
       const { boardId } = params;
 
-      const userInfo = JSON.parse(sessionStorage.getItem("user") || "{}");
+      const userInfo = getCookie("user") || {};
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || !boardId || isEmpty(userInfo)) {

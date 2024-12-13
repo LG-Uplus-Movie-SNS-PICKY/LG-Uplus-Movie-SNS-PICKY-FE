@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { css } from "@emotion/react";
+// import { css } from "@emotion/react";
 import { useNavigate } from "react-router-dom";
 import {
   GOOGLE_LOGIN_URL,
@@ -8,12 +8,14 @@ import {
 } from "../../api/constants";
 import { BtnGoogle, BtnKakao, BtnNaver } from "../../assets/svg";
 import Picky_main_Logo from "@assets/icons/picky_main_logo.svg?react";
-import { GapContainer, StyledText } from "./index.styles";
+import { StyledText } from "./index.styles";
 import { Block, Text } from "../../styles/ui";
 import SEO from "@components/seo";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
+// import { Cookies } from "react-cookie";
+import { setCookie } from "@util/cookie";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -46,13 +48,19 @@ export default function Login() {
         )
         .then((res) => res.data);
 
-      sessionStorage.setItem("user", JSON.stringify(data)); // 세션 스토리지에 저장
+      setCookie("user", data, {
+        path: "/", // 모든 경로에서 접근 가능
+        maxAge: 60 * 60 * 24, // 1일 (초 단위)
+        sameSite: "strict", // 보안 설정
+        secure: false, // HTTPS 필요 여부 (개발 시 false)
+      });
+
       setIsLoginState({
         isLoginState: true,
         isAuthUser: data.isAuthUser,
         isLoginInfo: data,
+        isLoading: false,
       });
-      // console.log(data);
 
       navigate("/");
     } catch (error) {
@@ -71,36 +79,22 @@ export default function Login() {
       />
 
       <Block.FlexBox
-        css={css`
-          width: 100%;
-          height: 100vh;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 34px;
-        `}
+        $width="100%"
+        $height="100vh"
+        $direction="column"
+        $alignItems="center"
+        $justifyContent="center"
+        $gap="34px"
       >
         <Text.TitleMenu100>영화인 필수!</Text.TitleMenu100>
         <Text.TitleMenu300>영화 리뷰 1등 플랫폼</Text.TitleMenu300>
 
-        <Block.FlexBox
-          css={css`
-            /* border-top: 36px; */
-            flex-direction: column;
-            align-items: center;
-            ${GapContainer}
-          `}
-        >
+        <Block.FlexBox $direction="column" $alignItems="center" $gap="108px">
           <Picky_main_Logo width={300} height={100} />
           <div css={StyledText}>⚡️간편로그인으로 3초만에 빠르게 회원가입!</div>
         </Block.FlexBox>
 
-        <Block.FlexBox
-          css={css`
-            justify-content: center;
-            gap: 50px;
-          `}
-        >
+        <Block.FlexBox $justifyContent="center" $gap="50px">
           <BtnKakao
             onClick={handleKakaoLoginClick}
             width={46}

@@ -159,16 +159,21 @@ export default {
 
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 4px;
 
         & > .badge {
-          width: 32px;
-          height: 32px;
+          width: 24px;
+          height: 24px;
           box-sizing: border-box;
           background-color: #000;
           border-radius: 50%;
 
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
           color: #fff;
+          font-size: 12px;
           font-weight: 600;
         }
 
