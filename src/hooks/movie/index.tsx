@@ -3,6 +3,7 @@ import {
   fetchTopMovie,
   fetchRecommendMovie,
   fetchGenreMovie,
+  fetchMovieDetail,
 } from "@api/movie";
 
 // Top 10 Movie 조회 React Query - Custom Hook
@@ -52,5 +53,14 @@ export const useGenreMovieQuery = (genreId: number) => {
     enabled: !!genreId,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
+  });
+};
+
+export const useMovieDetailQuery = (movieId: number) => {
+  return useQuery({
+    queryKey: ["movieDetail", movieId],
+    queryFn: () => fetchMovieDetail(movieId),
+    staleTime: 1000 * 60 * 30, // 추천 데이터 목록은 30분간 신선도 유지
+    gcTime: 1000 * 60 * 60, // 추천 데이터 데이터 캐싱 시간은 1시간으로 유지
   });
 };
