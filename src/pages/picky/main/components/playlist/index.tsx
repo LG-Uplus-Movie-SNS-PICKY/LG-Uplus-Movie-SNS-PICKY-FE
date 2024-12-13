@@ -83,7 +83,7 @@ function PlayListSection() {
                   <h3>{list.movie_playlist_title}</h3>
                   {/* Playlist Items Slider Mapping */}
                   <Swiper
-                    slidesPerView={"auto"}
+                    slidesPerView={3.8}
                     spaceBetween={10}
                     direction={"horizontal"}
                     freeMode={true}

@@ -27,7 +27,7 @@ export default {
   movieItemThumbnail(isActive: boolean): SerializedStyles {
     return css`
       width: 100%;
-      aspect-ratio: 1 / 1.44;
+      /* aspect-ratio: 1 / 1.44; */
       display: flex;
 
       overflow: hidden;
