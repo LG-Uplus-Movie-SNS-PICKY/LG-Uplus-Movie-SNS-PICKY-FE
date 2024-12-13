@@ -26,6 +26,8 @@ import {
   wrapper,
   slideDesign,
   backWrapper,
+  currentPage,
+  totalPage,
   backButtonStyle,
   slideWrapper,
   slideContent,
@@ -273,12 +275,25 @@ export default function Signup() {
           <div css={progressBarContainer}>
             <div css={progressStyle(((step + 1) / steps.length) * 100)} />
           </div>
-          {step > 0 && (
-            <button css={backButtonStyle} onClick={handleBackStep}>
-              <BackButtonIcon width="16px" height="16px" />
-              <p>뒤로</p>
-            </button>
-          )}
+          <div css={currentPage}>
+            {step > 0 && (
+              <button css={backButtonStyle} onClick={handleBackStep}>
+                <BackButtonIcon width="16px" height="16px" />
+                <p>뒤로</p>
+              </button>
+            )}
+            <div
+              css={totalPage}
+              // style={{
+              //   marginLeft: "auto",
+              //   marginRight: "12px", // 오른쪽 여백 추가
+              //   fontSize: "16px",
+              //   color: "#ff084a",
+              // }}
+            >
+              {step + 1}/{steps.length}
+            </div>
+          </div>
         </div>
 
         <div css={slideWrapper}>

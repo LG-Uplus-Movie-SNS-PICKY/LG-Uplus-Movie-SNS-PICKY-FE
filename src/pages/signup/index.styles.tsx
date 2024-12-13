@@ -22,7 +22,8 @@ export const backWrapper = css`
 export const progressBarContainer = css`
   width: 100%;
   height: 8px;
-  background-color: #f3f3f3;
+  /* background-color: #f3f3f3; */
+  background-color: #d9d9d9;
 
   @media (max-width: 76px) {
     height: 8px;
@@ -112,4 +113,18 @@ export const slideDesign = css`
   width: 100%;
   height: 100%;
   align-content: center;
+`;
+
+export const currentPage = css`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+`;
+
+export const totalPage = css`
+  margin-left: auto;
+  margin-right: 12px;
+  font-size: 16px;
+  color: #ff084a;
 `;
