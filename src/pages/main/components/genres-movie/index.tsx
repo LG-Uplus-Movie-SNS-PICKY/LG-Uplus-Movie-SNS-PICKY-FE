@@ -8,12 +8,22 @@ import { MovieItem } from "@stories/movie-item";
 import Emoji from "@pages/signup/components/emoji";
 import GenreButtons from "@components/genre";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function GenresMovie() {
   const navigate = useNavigate();
+  const [selectButton, setSelectButton] = useState<number>(0);
 
+  // 장르 버튼 최초 로드 시에 초기값 설정
+  const handleInitialGenre = (movieId: number) => {
+    if (!selectButton) {
+      setSelectButton(movieId);
+    }
+  };
+
+  // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
   const GenreOnClick = (id: number) => {
-    navigate(`/genre/${id}`);
+    setSelectButton(id);
   };
 
   return (
@@ -27,7 +37,11 @@ function GenresMovie() {
 
         {/* Genres Button */}
         <div className="genres">
-          <GenreButtons onClick={GenreOnClick} />
+          <GenreButtons
+            onClick={GenreOnClick}
+            selectedGenres={selectButton}
+            onInitialGenre={handleInitialGenre}
+          />
         </div>
 
         {/* Select Genre Movies */}
