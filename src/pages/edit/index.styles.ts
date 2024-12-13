@@ -57,6 +57,12 @@ export const photoEditStyle = css`
   text-align: center;
 `;
 
+export const defaultPhotoEditStyle = css`
+  font-size: 12px;
+  color: #000;
+  text-align: center;
+`;
+
 export const inputWrapperStyle = css`
   display: flex;
   flex-direction: column;

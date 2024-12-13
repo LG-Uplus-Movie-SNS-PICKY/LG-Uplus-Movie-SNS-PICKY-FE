@@ -9,6 +9,7 @@ import {
   profileImageStyle,
   labelStyle,
   photoEditStyle,
+  defaultPhotoEditStyle,
   inputRowStyle,
   inputWrapperStyle,
   inputLabelStyle,
@@ -238,14 +239,14 @@ export default function ProfileEditPage() {
 
         <div css={profileImageContainerStyle}>
           <div css={profileWrapper}>
-            <p onClick={handleSetDefaultImage} css={photoEditStyle}>
-              기본 이미지로 설정
-            </p>
             <img
               src={profileImage || profileIcon}
               alt="프로필 이미지"
               css={profileImageStyle}
             />
+            <p onClick={handleSetDefaultImage} css={defaultPhotoEditStyle}>
+              기본 이미지로 설정
+            </p>
             <label htmlFor="profileImageInput" css={photoEditWrapper}>
               <p css={photoEditStyle}>사진수정</p>
             </label>
