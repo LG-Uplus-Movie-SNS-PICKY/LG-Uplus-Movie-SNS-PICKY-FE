@@ -58,6 +58,7 @@ export default function ProfileEditPage() {
     const fetchUserData = async () => {
       try {
         const data = await fetchGetUserInfo();
+        console.log("Fetched User Data:", data);
         setUserData({
           name: data.name,
           nickname: data.nickname,
