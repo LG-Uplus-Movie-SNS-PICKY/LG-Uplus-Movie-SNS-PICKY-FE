@@ -1,29 +1,31 @@
 // pages/MovieDetail/components/MovieFooter/index.tsx
 import React from 'react';
 import { FooterContainer, FooterItem, FooterTitle, FooterContent } from './index.styles';
+import PickyMiniSvg from '@assets/icons/picky_mini.svg?react';
 
 interface MovieFooterProps {
     year: string;
-    production: string;
-    age: string;
+    // production: string;
+    // age: string;
     genre: string;
 }
 
-const MovieFooter = ({ year, production, age, genre }: MovieFooterProps) => {
+// const MovieFooter = ({ year, production, age, genre }: MovieFooterProps) => {
+  const MovieFooter = ({ year, genre }: MovieFooterProps) => {
   return (
     <FooterContainer>
       <FooterItem>
         <FooterTitle>제작 연도</FooterTitle>
         <FooterContent>{year}</FooterContent>
       </FooterItem>
-      <FooterItem>
+      {/* <FooterItem>
         <FooterTitle>제작사</FooterTitle>
         <FooterContent>{production}</FooterContent>
       </FooterItem>
       <FooterItem>
         <FooterTitle>연령 등급</FooterTitle>
         <FooterContent>{age}세</FooterContent>
-      </FooterItem>
+      </FooterItem> */}
       <FooterItem>
         <FooterTitle>장르</FooterTitle>
         <FooterContent>{genre}</FooterContent>

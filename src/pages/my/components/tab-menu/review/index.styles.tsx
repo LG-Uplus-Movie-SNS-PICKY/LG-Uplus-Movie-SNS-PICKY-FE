@@ -245,3 +245,12 @@ export default {
     `;
   }
 };
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 150px;
+  margin: 0 auto;
+`;

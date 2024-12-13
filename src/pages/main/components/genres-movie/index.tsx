@@ -7,14 +7,32 @@ import bestMovies from "@pages/main/constants";
 import { MovieItem } from "@stories/movie-item";
 import Emoji from "@pages/signup/components/emoji";
 import GenreButtons from "@components/genre";
+import { useEffect, useState } from "react";
+import { useGenreMovieQuery } from "@hooks/movie";
+import Loading from "@components/loading";
+import { MovieDataTypes } from "@type/api/movie";
 import { useNavigate } from "react-router-dom";
 
 function GenresMovie() {
   const navigate = useNavigate();
+  const [selectButton, setSelectButton] = useState<number>(0);
+  const { data: movie, isLoading } = useGenreMovieQuery(selectButton);
 
-  const GenreOnClick = (id: number) => {
-    navigate(`/genre/${id}`);
+  // 장르 버튼 최초 로드 시에 초기값 설정
+  const handleInitialGenre = (movieId: number) => {
+    if (!selectButton) {
+      setSelectButton(movieId);
+    }
   };
+
+  // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
+  const GenreOnClick = (movieId: number) => {
+    setSelectButton(movieId);
+  };
+
+  useEffect(() => {
+    console.log(movie);
+  }, [movie]);
 
   return (
     <div css={styles.genreContainer()}>
@@ -27,26 +45,31 @@ function GenresMovie() {
 
         {/* Genres Button */}
         <div className="genres">
-          <GenreButtons onClick={GenreOnClick} />
+          <GenreButtons
+            onClick={GenreOnClick}
+            selectedGenres={selectButton}
+            onInitialGenre={handleInitialGenre}
+          />
         </div>
 
         {/* Select Genre Movies */}
         <div className="select-genre">
-          {bestMovies.length > 0 &&
-            bestMovies
-              .slice(0, 6)
-              .map((movie, idx) => (
+          {isLoading && <Loading />}
+          {!isLoading && Array.isArray(movie?.data)
+            ? movie?.data.slice(0, 9).map((movie: MovieDataTypes) => (
                 <MovieItem
-                  key={idx}
-                  type="rate"
-                  src={movie.src}
+                  key={movie.movieId}
+                  type="all"
+                  src={movie.posterUrl}
                   title={movie.title}
-                  name={movie.name}
-                  rate={movie.rate}
-                  like={movie.like}
-                  comment={movie.comment}
+                  name={movie.title}
+                  rate={movie.totalRating}
+                  like={movie.likes}
+                  onClick={() => navigate(`/movie/${movie.movieId}`)}
+                  // comment={movie.}
                 />
-              ))}
+              ))
+            : null}
         </div>
       </div>
     </div>
