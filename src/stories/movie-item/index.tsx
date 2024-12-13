@@ -108,7 +108,6 @@ export function MovieItem({
 
       {/* Type === "all" 별점 + 댓글 수 + 좋아요 수 보여주기 */}
       {type === "all" && <InfoComponent like={like} comment={comment} />}
-      <div></div>
     </div>
   );
 }

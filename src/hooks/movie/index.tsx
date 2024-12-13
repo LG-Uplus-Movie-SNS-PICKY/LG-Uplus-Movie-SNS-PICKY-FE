@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   fetchTopMovie,
   fetchRecommendMovie,
@@ -27,9 +27,23 @@ export const useRecommnedMovieQuery = () => {
 
 // 장르별 영화 조회 React Query - Custom Hook
 export const useGenreMovieQuery = (genreId: number) => {
-  return useQuery({
+  return useInfiniteQuery({
     queryKey: ["genreMovie", genreId],
-    queryFn: () => fetchGenreMovie(genreId),
+    queryFn: ({ pageParam }) =>
+      fetchGenreMovie(genreId, pageParam.lastMovidId, pageParam.lastLikeCount),
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.data?.last) {
+        return {
+          lastMovidId:
+            lastPage?.data?.content[lastPage?.data?.content.length - 1].movieId,
+          lastLikeCount:
+            lastPage?.data?.content[lastPage?.data?.content.length - 1].likes,
+        };
+      }
+
+      return undefined;
+    },
+    initialPageParam: { lastMovidId: 0, lastLikeCount: 0 },
     enabled: !!genreId,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
