@@ -7,17 +7,10 @@ interface MovieBackdropBanner {
   movie: BestMovieTypes;
 }
 
-function MovieBackdropBanner({ movie }: MovieBackdropBanner) {
+function MovieBackdropBanner() {
   const { data, isLoading } = useTopMovieQuery();
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log();
-    }
-  }, [isLoading]);
-
   return (
-    // Movie Backdrop Banner (Best Movie 평점 1등)
     <div
       css={styles.backdropBanner(!isLoading ? data.data[0].backdropUrl : "")}
     >

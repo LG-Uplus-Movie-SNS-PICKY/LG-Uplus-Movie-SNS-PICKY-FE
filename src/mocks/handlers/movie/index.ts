@@ -378,7 +378,15 @@ const movieHandlers: HttpHandler[] = [
       .sort((a, b) => b.totalRating - a.totalRating)
       .slice(0, 10);
 
-    return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
+    return HttpResponse.json(
+      {
+        success: true,
+        code: 200,
+        message: "요청이 성공적으로 처리되었습니다.",
+        data: [...bestMovies],
+      },
+      { status: 200 }
+    );
   }),
 
   // 장르별 영화 조회 API(Mocking Object)

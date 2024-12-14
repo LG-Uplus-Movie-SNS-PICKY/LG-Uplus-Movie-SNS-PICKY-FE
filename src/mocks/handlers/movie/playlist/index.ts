@@ -586,7 +586,7 @@ const MOCK_PLAYLIST_DATA = [
 const playlistHandler: HttpHandler[] = [
   // 플레이리스트를 가져오는 모킹 API
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/movie/playlist`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/playlist/all`,
     ({ request }) => {
       const url = new URL(request.url); // URL 생성
 
