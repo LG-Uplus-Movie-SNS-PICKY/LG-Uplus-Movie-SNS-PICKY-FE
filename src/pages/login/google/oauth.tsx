@@ -69,12 +69,12 @@ const LoginCallback: React.FC = () => {
             const newUserData = {
               ...currentUserCookie,
               user: {
-                birthdate: userResponse.data.birthdate,
-                name: userResponse.data.name,
+                // birthdate: userResponse.data.birthdate,
+                // name: userResponse.data.name,
                 nickname: userResponse.data.nickname,
                 gender: userResponse.data.gender,
-                nationality: userResponse.data.nationality,
-                email: userResponse.data.email,
+                // nationality: userResponse.data.nationality,
+                // email: userResponse.data.email,
                 profileUrl: userResponse.data.profileUrl,
               },
             };
