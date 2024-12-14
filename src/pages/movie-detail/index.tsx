@@ -157,7 +157,7 @@ function MovieDetail(props: MovieDetailProps) {
   // }
 
   useEffect(() => {
-    console.log(movieData);
+    console.log(movieDetail);
   }, [movieData]);
 
   return (

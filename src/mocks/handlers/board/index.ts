@@ -229,17 +229,11 @@ const boardHandlers: HttpHandler[] = [
       const url = new URL(request.url);
       const loginUser = getCookie("user") || {};
 
-      // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
-      const page = Number(url.searchParams.get("page") || 1);
-      const limit = Number(url.searchParams.get("limit") || 10);
+      // 무한 스크롤을 위한 size와 lastBoardId을 현재 주소에서 Param 값을 가져온다.
+      const size = Number(url.searchParams.get("size")) || 10;
+      const lastBoardId = Number(url.searchParams.get("lastBoardId")) || 0;
 
-      // 가져올 인덱스를 계산한다.
-      // start(시작값) : (page - 1) * limit
-      // end(마지막) : start + limit
-      const start = (page - 1) * limit;
-      const end = start + limit;
-
-      const response = board.slice(start, end).map((boardItem) => {
+      let filterBoard = board.map((boardItem) => {
         const boardId = boardItem.board_id; // board_id 가져오기
 
         // 관련 데이터 필터링
@@ -268,17 +262,57 @@ const boardHandlers: HttpHandler[] = [
           updatedDate: boardItem.updatedDate,
           likesCount: likes.length,
           commentsCount: comments.length,
-          contents: contents,
+          contents: contents.map((content) => ({
+            contentUrl: content.board_content_url,
+            boardContentType: content.board_content_type,
+          })),
           movieId: movieInfo?.movie_id,
           movieTitle: movieInfo?.movie_title,
           isLike: loginUser.localJwtDto.accessToken === userInfo?.user_id,
         };
       });
 
+      // 커서 기반 필터링
+      // lastBoardId보다 높은 게시물만 필터링
+      if (lastBoardId) {
+        filterBoard = filterBoard.filter(
+          (board) => board.boardId > lastBoardId
+        );
+      }
+
+      const paginatedBoards = filterBoard.slice(0, size);
+
       return HttpResponse.json(
         {
-          data: response,
-          nextPage: end < board.length ? page + 1 : null,
+          code: 200,
+          data: {
+            size: size,
+            content: paginatedBoards,
+            empty: paginatedBoards.length === 0,
+            first: !lastBoardId,
+            last: paginatedBoards.length < size,
+            number: 0,
+            numberOfElements: paginatedBoards.length,
+            pageable: {
+              offset: 0,
+              pageNumber: 0,
+              pageSize: 10,
+              paged: true,
+              sort: {
+                empty: true,
+                sorted: false,
+                unsorted: true,
+              },
+              unpaged: false,
+            },
+            sort: {
+              empty: true,
+              sorted: false,
+              unsorted: true,
+            },
+          },
+          message: "요청이 성공적으로 처리되었습니다.",
+          sucess: true,
         },
         { status: 200 }
       );
