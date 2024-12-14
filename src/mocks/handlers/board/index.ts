@@ -355,13 +355,15 @@ const boardHandlers: HttpHandler[] = [
           const userInfo = user.find(
             (info) => info.user_id === boardItem.user_id
           );
-          const comments = boardComment.filter(
-            (comment) => comment.board_id === boardId
-          );
           const contents = boardContent.filter(
             (content) => content.board_id === boardId
           );
+
           const likes = boardLike.filter((like) => like.board_id === boardId);
+
+          const comments = boardComment.filter(
+            (comment) => comment.board_id === boardId
+          );
 
           return {
             boardId,
@@ -452,17 +454,11 @@ const boardHandlers: HttpHandler[] = [
     const userInfo = user.find((element) => element.user_nickname === nickname);
 
     // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
-    const size = Number(url.searchParams.get("size")) || 10;
-    const lastCommentId = Number(url.searchParams.get("lastCommentId")) || 0;
-
-    // 가져올 인덱스를 계산한다.
-    // start(시작값) : (page - 1) * limit
-    // end(마지막) : start + limit
-    // const start = (page - 1) * limit;
-    // const end = start + limit;
+    const size = Number(url.searchParams.get("size") || 1);
+    const lastBoardId = Number(url.searchParams.get("lastBoardId") || 10);
 
     // 해당 유저가 등록한 무비로그만 추출한다.
-    const response = board
+    let filterBoardUser = board
       .filter((element) => element.user_id === userInfo?.user_id)
       .map((boardItem) => {
         const boardId = boardItem.board_id; // board_id 가져오기
@@ -472,18 +468,77 @@ const boardHandlers: HttpHandler[] = [
           (content) => content.board_id === boardId
         );
 
+        const movieInfo = movie.find(
+          (movie) => movie.movie_id === boardItem.movie_id
+        );
+
+        const likes = boardLike.filter((like) => like.board_id === boardId);
+
+        const comments = boardComment.filter(
+          (comment) => comment.board_id === boardId
+        );
+
         return {
           boardId,
+          writerId: userInfo?.user_id,
+          writerNickname: userInfo?.user_nickname,
+          writerProfileUrl: userInfo?.user_profile_url,
           context: boardItem.board_context,
+          isSpoiler: boardItem.is_spoiler,
           createdDate: boardItem.createdDate,
           updatedDate: boardItem.updatedDate,
-          contents: contents,
+          likesCount: likes.length,
+          commentsCount: comments.length,
+          contents: contents.map((content) => ({
+            contentUrl: content.board_content_url,
+            boardContentType: content.board_content_type,
+          })),
+          movieTitle: movieInfo?.movie_title,
+          isLike: false,
         };
       });
 
+    // 커서 기반 필터링
+    // lastBoardId보다 높은 게시물만 필터링
+    if (lastBoardId) {
+      filterBoardUser = filterBoardUser.filter(
+        (board) => board.boardId > lastBoardId
+      );
+    }
+
+    const paginatedBoards = filterBoardUser.slice(0, size);
+
     return HttpResponse.json(
       {
-        data: response,
+        code: 200,
+        data: {
+          size: size,
+          content: paginatedBoards,
+          empty: paginatedBoards.length === 0,
+          first: !lastBoardId,
+          last: paginatedBoards.length < size,
+          number: 0,
+          numberOfElements: paginatedBoards.length,
+          pageable: {
+            offset: 0,
+            pageNumber: 0,
+            pageSize: 10,
+            paged: true,
+            sort: {
+              empty: true,
+              sorted: false,
+              unsorted: true,
+            },
+            unpaged: false,
+          },
+          sort: {
+            empty: true,
+            sorted: false,
+            unsorted: true,
+          },
+        },
+        message: "요청이 성공적으로 처리되었습니다.",
+        sucess: true,
       },
       { status: 200 }
     );
@@ -630,19 +685,12 @@ const boardHandlers: HttpHandler[] = [
       const url = new URL(request.url);
 
       // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
-      const page = Number(url.searchParams.get("page") || 1);
-      const limit = Number(url.searchParams.get("limit") || 10);
-
-      // 가져올 인덱스를 계산한다.
-      // start(시작값) : (page - 1) * limit
-      // end(마지막) : start + limit
-      const start = (page - 1) * limit;
-      const end = start + limit;
+      const size = Number(url.searchParams.get("size") || 1);
+      const lastCommentId = Number(url.searchParams.get("lastCommentId") || 10);
 
       // 해당 무비로그에 속한 댓글 필터링
-      const response = boardComment
+      let filterBoardComment = boardComment
         .filter((comment) => comment.board_id === Number(boardId))
-        .slice(start, end)
         .map((comment) => {
           const writerUser = user.find(
             (user) => user.user_id === comment.user_id
@@ -659,16 +707,47 @@ const boardHandlers: HttpHandler[] = [
           };
         });
 
+      // 커서 기반 필터링
+      // lastBoardId보다 높은 게시물만 필터링
+      if (lastCommentId) {
+        filterBoardComment = filterBoardComment.filter(
+          (board) => board.commentId > lastCommentId
+        );
+      }
+
+      const paginatedBoards = filterBoardComment.slice(0, size);
+
       return HttpResponse.json(
         {
-          data: response,
-          nextPage:
-            end <
-            board.filter(
-              (item) => item.user_id === userInfo?.localJwtDto.accessToken
-            ).length
-              ? page + 1
-              : null,
+          code: 200,
+          data: {
+            size: size,
+            content: paginatedBoards,
+            empty: paginatedBoards.length === 0,
+            first: !lastCommentId,
+            last: paginatedBoards.length < size,
+            number: 0,
+            numberOfElements: paginatedBoards.length,
+            pageable: {
+              offset: 0,
+              pageNumber: 0,
+              pageSize: 10,
+              paged: true,
+              sort: {
+                empty: true,
+                sorted: false,
+                unsorted: true,
+              },
+              unpaged: false,
+            },
+            sort: {
+              empty: true,
+              sorted: false,
+              unsorted: true,
+            },
+          },
+          message: "요청이 성공적으로 처리되었습니다.",
+          sucess: true,
         },
         { status: 200 }
       );
