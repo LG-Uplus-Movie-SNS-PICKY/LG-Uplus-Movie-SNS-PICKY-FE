@@ -68,7 +68,7 @@ const playlistHandler: HttpHandler[] = [
 
   // 플레이리스트 조회 API(Mocking Object)
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/playlist/all`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/playlist/all`,
     ({ request }) => {
       const url = new URL(request.url); // URL 생성
 
