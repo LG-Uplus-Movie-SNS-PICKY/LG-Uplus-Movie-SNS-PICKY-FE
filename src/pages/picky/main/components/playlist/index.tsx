@@ -11,18 +11,23 @@ import { MovieItem } from "@stories/movie-item";
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
+import { usePlaylist } from "@hooks/playlist";
+import Loading from "@components/loading";
 
 interface PlaylistItemTypes {
   [key: string]: unknown;
-  movie_id: number;
-  movie_poster_url: string;
-  movie_title: string;
+  movieId: number;
+  posterUrl: string;
+  title: string;
+  likes: number;
+  totalRating: number;
+  backdropUrl: string;
 }
 
 interface PlaylistDataTypes {
-  movie_playlist_id: number;
-  movie_playlist_title: string;
-  movie_playlist_item: PlaylistItemTypes[];
+  playlistId: number;
+  title: string;
+  getSimpleMovieResps: PlaylistItemTypes[];
 }
 
 // 리액트 쿼리 queryFn
@@ -38,21 +43,12 @@ async function fetchMovies(pageParam: number) {
 function PlayListSection() {
   // 리액트 쿼리를 이용한 스크롤 데이터 업데이트
   const {
-    data,
+    data: playlists,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    isError,
-    error,
-  } = useInfiniteQuery({
-    queryKey: ["playlist"],
-    queryFn: ({ pageParam = 1 }) => fetchMovies(pageParam),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.nextPage ?? undefined;
-    },
-  });
+  } = usePlaylist();
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
@@ -64,24 +60,26 @@ function PlayListSection() {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
-  if (isLoading) return <div>로딩 중...</div>;
+  useEffect(() => {
+    if (!isLoading) console.log(playlists);
+  }, [isLoading]);
 
-  if (isError) return <div>에러가 발생했습니다. {error.message}</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div css={styles.container()}>
-      {/* 페이지 순회 -> 무한 스크롤링 */}
-      {Array.isArray(data?.pages) &&
-        data?.pages.map((page, index) => (
-          <React.Fragment key={index}>
-            {/* Playlist Data JSX Element Mapping  */}
-            {Array.isArray(page?.data) &&
-              page?.data.map((list: PlaylistDataTypes) => (
-                <div css={styles.playlistCard()} key={list.movie_playlist_id}>
-                  <h3>{list.movie_playlist_title}</h3>
-                  {/* Playlist Items Slider Mapping */}
+      {/* Playlist 스크롤링 */}
+      {Array.isArray(playlists?.pages) &&
+        playlists.pages.map((page, idx) => (
+          <React.Fragment key={idx}>
+            {Array.isArray(page.data.content) &&
+              page.data.content.map((playlist: PlaylistDataTypes) => (
+                <div css={styles.playlistCard()} key={playlist.playlistId}>
+                  <h3>{playlist.title}</h3>
+
+                  {/* Playlist에 속한 영화 슬라이드 효과 부여 */}
                   <Swiper
                     slidesPerView={3.8}
                     spaceBetween={10}
@@ -93,14 +91,16 @@ function PlayListSection() {
                     }}
                     css={styles.swiperContainer()}
                   >
-                    {list.movie_playlist_item.length > 0 &&
-                      list.movie_playlist_item.map((item) => (
-                        <SwiperSlide key={item.movie_id}>
+                    {playlist.getSimpleMovieResps.length > 0 &&
+                      playlist.getSimpleMovieResps.map((movie) => (
+                        <SwiperSlide key={movie.movieId}>
                           <MovieItem
                             type="basic"
-                            src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
-                            title={item.movie_title}
-                            name={item.movie_title}
+                            src={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
+                              movie.posterUrl
+                            }`}
+                            title={movie.title}
+                            name={movie.title}
                           />
                         </SwiperSlide>
                       ))}
@@ -110,13 +110,8 @@ function PlayListSection() {
           </React.Fragment>
         ))}
 
-      <div ref={ref}>
-        {isFetchingNextPage
-          ? "불러오는 중..."
-          : hasNextPage
-          ? "더 이상 데이터가 없습니다"
-          : ""}
-      </div>
+      {/* 현재 라우트 Viewport 마지막 영역 */}
+      <div ref={ref} className="inView"></div>
     </div>
   );
 }
