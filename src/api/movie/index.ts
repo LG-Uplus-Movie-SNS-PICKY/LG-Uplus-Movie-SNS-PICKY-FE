@@ -9,12 +9,24 @@ export async function fetchMovieCreate(
   behind: string[],
   streaming: Record<string, boolean>
 ) {
+  console.log({
+    addMovieReq: {
+      movie_info: movieInfo,
+      trailer,
+      ost,
+      movie_behind_videos: [behind],
+      streaming_platform: streaming,
+    },
+  });
+
   const { data } = await apiClient.post("/movie", {
-    movie_info: movieInfo,
-    trailer,
-    ost,
-    movie_behind_videos: [behind],
-    streaming_platform: streaming,
+    addMovieReq: JSON.stringify({
+      movie_info: movieInfo,
+      trailer,
+      ost,
+      movie_behind_videos: [behind],
+      streaming_platform: streaming,
+    }),
   });
 
   return data;

@@ -10,6 +10,8 @@ import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
 import Check from "@assets/icons/check.svg?react";
+import GenreTab from "./component/genre-tab";
+import { useGenreMovieQuery } from "@hooks/movie";
 
 const ottDummyData = [
   { icon: Netflix, name: "netflix" },
@@ -42,31 +44,32 @@ function TotalMoviesSection() {
   const [watchServiceUpdateActive, setWatchServiceUpdateActive] =
     useState(false);
 
+  const [selectButton, setSelectButton] = useState<number>(0);
+  const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
+
+  // 장르 버튼 최초 로드 시에 초기값 설정
+  const handleInitialGenre = (movieId: number) => {
+    if (!selectButton) {
+      setSelectButton(movieId);
+    }
+  };
+
+  // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
+  const GenreOnClick = (movieId: number) => {
+    setSelectButton(movieId);
+  };
+
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
         {/* Title */}
         <div css={styles.titleHeaderContainer()}>
-          {/* 플레이리스트 개수 */}
-          <div className="container">
-            <div className="section total">
-              <h3>Total Movies:</h3>
-              <span>305</span>
-            </div>
-
-            {/* 검색 필터 */}
-            <div className="section search">
-              <input type="text" placeholder="등록한 영화를 검색해주세요." />
-              <button>
-                <Search />
-              </button>
-            </div>
-          </div>
-
           {/* 장르 필터 */}
-          <div className="gerens">
-            <button>액션</button>
-          </div>
+          <GenreTab
+            onClick={GenreOnClick}
+            selectedGenres={selectButton}
+            onInitialGenre={handleInitialGenre}
+          />
         </div>
 
         {/* Movies Container */}

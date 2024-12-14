@@ -28,6 +28,8 @@ import {
 } from "@api/constants";
 import { useDetailMovieInfo, useSearchMovie } from "@hooks/movie";
 import { fetchMovieCreate } from "@api/movie";
+import Loading from "@components/loading";
+import { LoadingContainer } from "@pages/movie-detail/reviews/index.styles";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -156,8 +158,14 @@ function RegistMovieSection() {
             {/* 자동완성 */}
             {isInputFocus && movieSearch !== "" && (
               <ul css={styles.movieAutoCompleteContainer(result.length > 0)}>
-                {isSearchLoadign && <li className="loading">Loading</li>}
-                {isSearchError && <li className="error">Error</li>}
+                {isSearchLoadign && (
+                  <li className="loading">
+                    <Loading />
+                  </li>
+                )}
+                {isSearchError && (
+                  <li className="error">잠시 후 다시 시도해주세요...</li>
+                )}
                 {result.length > 0 &&
                   result.slice(0, 5).map((element: Movie) => (
                     <li
