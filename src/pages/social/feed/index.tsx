@@ -171,7 +171,7 @@ export default function SocialFeed() {
                   <div css={profileSection}>
                     <img
                       src={board.writerProfileUrl || "/default-profile.png"}
-                      alt="프로필"
+                      alt="프로필s"
                       style={{
                         width: "40px",
                         height: "40px",
