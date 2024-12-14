@@ -138,10 +138,18 @@ const reviewHandler: HttpHandler[] = [
         .map((review) => ({
           context: review.line_review_content,
           createdAt: new Date(review.created_at).toISOString(),
-          dislikes: 0,
+          dislikes: lineReviewLikes.filter(
+            (likes) =>
+              likes.line_review_id === review.line_review_id &&
+              likes.preference === "DISLIKE"
+          ).length,
           id: review.line_review_id,
           isSpoiler: review.is_spoiler,
-          likes: 0,
+          likes: lineReviewLikes.filter(
+            (likes) =>
+              likes.line_review_id === review.line_review_id &&
+              likes.preference === "LIKE"
+          ).length,
           movieId: review.movie_id,
           rating: review.line_review_rating,
           userId: review.user_id,

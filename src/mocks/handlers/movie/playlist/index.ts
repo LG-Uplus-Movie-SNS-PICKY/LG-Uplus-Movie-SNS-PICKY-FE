@@ -5,7 +5,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 1,
     title: "인생을 바꾼 명작들",
     // 포레스트 검프, 행복을 찾아서, 인턴, 인생은 아름다워, 여인의 향기, 트루먼쇼
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "포레스트 검프",
@@ -65,7 +65,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 2,
     title: "마음이 따뜻해지는 영화",
     // 굿 윌 헌팅, 하울의 움직이는 성, 터미널, 미나리
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "굿 윌 헌팅",
@@ -104,7 +104,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 3,
     title: "세상을 꿈꾸게 하는 영화",
     // 인턴, 행복을 찾아서, 더 울프 월 스트리트, 포레스트 검프, 라따뚜이, 브루스 올마이티
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 3,
         title: "인턴",
@@ -159,7 +159,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 4,
     title: "잊지 못할 감동의 순간",
     // 7번방의 선물, 인생은 아름다워, 그것만이 내 세상, 청춘의 증언, 레미제라블
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "7번방의 선물",
@@ -206,7 +206,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 5,
     title: "시간을 초월한 걸작",
     // 카사블랑카, 로마의 휴일, 대부, 백투더퓨처, 쇼생크 탈출, 바람과 함께 사라지다
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "카사블랑카",
@@ -261,7 +261,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 6,
     title: "심장을 뛰게 하는 액션",
     // 다크 나이트, 어벤져스, 브이 포 벤데타, 존 윅 3, 킬러의 보디가드, 범죄도시 1, 킹스맨 1, 글레디에이터, 탑건: 매버릭, 데드풀
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "다크 나이트",
@@ -348,7 +348,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 7,
     title: "밤을 밝히는 로맨스",
     // 노트북, 어바웃 타임, 러브스토리, 이터널 선샤인, 미드나잇 선, 타이타닉, 나의 소녀시대
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "노트북",
@@ -411,7 +411,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 8,
     title: "웃음 가득한 코미디",
     // 극한직업, 럭키, 예스맨, 스파이, 나 홀로 집에, 세 얼간이
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "극한직업",
@@ -466,7 +466,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 9,
     title: "두뇌를 자극하는 영화",
     // 이미테이션 게임, 인터스텔라, 세기의 매치, 히든 피겨스, 어메이징 메리
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "이미테이션 게임",
@@ -513,7 +513,7 @@ const MOCK_PLAYLIST_DATA = [
     playlistId: 10,
     title: "혼자 보기 아까운 명작",
     // 티파니에서 아침을, 대부, 차이나타운, 록키 발보아, 타이타닉, 포레스트 검프, 센과 치히로의 행방불명, 킹스 스피치
-    gerSimpleMovieResps: [
+    getSimpleMovieResps: [
       {
         movieId: 1,
         title: "티파니에서 아침을",
