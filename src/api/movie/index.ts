@@ -83,7 +83,23 @@ export async function fetchMovieDetailInfo(movieId: number) {
       },
     }
   );
+}
 
+// 모든 게시글 조회 API
+export async function fetchAllData() {
+  const { data } = await apiClient.get("/board/all");
+  return data;
+}
+
+// 게시글 삭제 API
+export async function deletePost(boardId: number) {
+  const { data } = await apiClient.delete(`board/${boardId}`);
+  return data;
+}
+
+// 게시글 좋아요/좋아요 취소 API
+export async function toggleLike(boardId: number) {
+  const { data } = await apiClient.post(`board/${boardId}/likes`);
   return data;
 }
 

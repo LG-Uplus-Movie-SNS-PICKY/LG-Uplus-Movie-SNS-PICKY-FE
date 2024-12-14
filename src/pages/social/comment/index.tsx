@@ -91,13 +91,14 @@ export default function FeedComment() {
   const [likeCountValue, setLikeCountValue] = useState(
     boardData?.likesCount || 0
   );
-  const [comments, setComments] = useState<Comment[]>([]); // 댓글 데이터
+  const [comments, setComments] = useState<Comment[]>([]); // 빈 배열로 초기화
   const [comment, setComment] = useState("");
-  const [myUserId] = useState<number>(6); // 현재 사용자 ID
+  const myUserId = 2;
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
-
+  const accessToken =
+    "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6Mywicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQwMDkxNzMsImV4cCI6MTczNDA5NTU3M30.cKKr0HPIUP9nH5BnZZwvf5dCo-MA-58ysEbAl-sJANQ";
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -105,13 +106,21 @@ export default function FeedComment() {
           `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/comments`,
           {
             headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
+              Authorization: `Bearer ${accessToken}`, //_없는 accessToken
             },
           }
         );
-        setComments(response.data.data || []);
+
+        const fetchedComments = response.data.data.content; // 댓글 배열 추출
+        if (Array.isArray(fetchedComments)) {
+          setComments(fetchedComments); // 댓글 데이터 설정
+        } else {
+          console.error("댓글 데이터가 배열이 아닙니다:", fetchedComments);
+          setComments([]); // 배열이 아닐 경우 빈 배열로 설정
+        }
       } catch (error) {
         console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
+        setComments([]); // API 호출 실패 시 빈 배열로 초기화
       }
     };
 
@@ -140,8 +149,8 @@ export default function FeedComment() {
         { content: comment },
         {
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`, //_없는 accessToken
+            // "Content-Type": "application/json",
           },
         }
       );
@@ -169,7 +178,16 @@ export default function FeedComment() {
     }
   };
 
-  const handleDeleteComment = (commentId: string) => {
+  const handleDeleteComment = (commentId: string, writerId: number) => {
+    console.log(writerId, myUserId);
+
+    if (writerId !== myUserId) {
+      setToastMessage("다른 유저의 댓글은 삭제할 수 없습니다.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000); // 3초 후 토스트 메시지 숨기기
+      return;
+    }
+
     setSelectedCommentId(commentId);
     setIsCommentDeleteModalOpen(true);
   };
@@ -178,15 +196,17 @@ export default function FeedComment() {
     if (!selectedCommentId) return;
 
     try {
-      await axios.delete(
+      const response = await axios.delete(
         `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/comments`,
         {
-          params: { commentId: selectedCommentId },
+          params: { commentId: selectedCommentId }, // 쿼리 매개변수로 commentId 전달
           headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
+            Authorization: `Bearer ${accessToken}`, // Bearer 토큰
           },
         }
       );
+
+      console.log("댓글 삭제 응답:", response.data); // 응답 디버깅
 
       // 댓글 삭제 성공 시, 로컬 상태에서 댓글 제거
       setComments((prevComments) =>
@@ -221,7 +241,9 @@ export default function FeedComment() {
   if (!boardData) {
     return <div>게시글 데이터를 불러오는 중...</div>;
   }
-
+  useEffect(() => {
+    console.log("댓글 데이터 업데이트:", comments);
+  }, [comments]);
   return (
     <div css={wrapper}>
       <div css={feedContainer}>
@@ -273,40 +295,44 @@ export default function FeedComment() {
         </div>
       </div>
       <div css={commentSection}>
-        {comments.map((comment, index) => (
-          <div css={commentItem} key={`comment-${comment.commentId}`}>
-            <div css={commentProfileSection}>
-              <div css={commentProfileDetails}>
-                <img
-                  src={comment.writerProfileUrl || "/default-profile.png"}
-                  alt="댓글 작성자 프로필"
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    borderRadius: "50%",
-                  }}
-                />
-                <div css={CommentInfoSection}>
-                  <div css={commentBox}>
-                    <span css={commentTimeSection}>
-                      {comment.writerNickname}
-                    </span>
-                    <span>{calculateTimeAgo(comment.createdDate)}</span>
-                  </div>
-                  <div css={commentTextSection}>
-                    <p>{comment.context}</p>
+        {Array.isArray(comments) && comments.length > 0 ? (
+          comments.map((comment) => (
+            <div css={commentItem} key={`comment-${comment.commentId}`}>
+              <div css={commentProfileSection}>
+                <div css={commentProfileDetails}>
+                  <img
+                    src={comment.writerProfileUrl || "/default-profile.png"}
+                    alt="댓글 작성자 프로필"
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div css={CommentInfoSection}>
+                    <div css={commentBox}>
+                      <span css={commentTimeSection}>
+                        {comment.writerNickname}
+                      </span>
+                      <span>{calculateTimeAgo(comment.createdDate)}</span>
+                    </div>
+                    <div css={commentTextSection}>
+                      <p>{comment.context}</p>
+                    </div>
                   </div>
                 </div>
+                <CommentReportButton
+                  onClick={() => {
+                    console.log("gndld", comment);
+                    console.log("삭제하려는 댓글 ID:", comment.writerId);
+                    console.log("작성자 ID:", myUserId);
+                    handleDeleteComment(comment.commentId.toString(), myUserId);
+                  }}
+                />
               </div>
-              <CommentReportButton
-                onClick={() =>
-                  handleDeleteComment(comment.commentId.toString())
-                }
-              />
             </div>
-          </div>
-        ))}
-        {comments.length === 0 && (
+          ))
+        ) : (
           <div key="no-comments">댓글이 없습니다. 첫 댓글을 작성해보세요!</div>
         )}
       </div>
@@ -345,7 +371,7 @@ export default function FeedComment() {
       {/* {isModalOpen && (
         <div css={modalOverlay} onClick={toggleModal}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {postUserId === myUserId ? (
+            {comment.writerId === myUserId ? (
               <>
                 <button onClick={() => navigate(`/movie-log/edit/${boardId}`)}>
                   <EditPost /> 게시글 수정
@@ -363,6 +389,7 @@ export default function FeedComment() {
           </div>
         </div>
       )} */}
+
       {/* 댓글 삭제 확인 모달 */}
       {isCommentDeleteModalOpen && (
         <div css={modalOverlay}>
