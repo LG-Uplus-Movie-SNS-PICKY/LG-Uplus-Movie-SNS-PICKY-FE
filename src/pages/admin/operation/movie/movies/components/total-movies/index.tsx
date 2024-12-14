@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.styles";
 
 import Search from "@assets/icons/search_small.svg?react";
@@ -12,6 +12,7 @@ import Wavve from "@assets/icons/wavve.svg?react";
 import Check from "@assets/icons/check.svg?react";
 import GenreTab from "./component/genre-tab";
 import { useGenreMovieQuery } from "@hooks/movie";
+import { MovieDataTypes } from "@type/api/movie";
 
 const ottDummyData = [
   { icon: Netflix, name: "netflix" },
@@ -45,7 +46,6 @@ function TotalMoviesSection() {
     useState(false);
 
   const [selectButton, setSelectButton] = useState<number>(0);
-  const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
 
   // 장르 버튼 최초 로드 시에 초기값 설정
   const handleInitialGenre = (movieId: number) => {
@@ -58,6 +58,14 @@ function TotalMoviesSection() {
   const GenreOnClick = (movieId: number) => {
     setSelectButton(movieId);
   };
+
+  const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(genreMovies);
+    }
+  }, [isLoading]);
 
   return (
     <>
@@ -74,6 +82,26 @@ function TotalMoviesSection() {
 
         {/* Movies Container */}
         <div css={styles.movieContainer()}>
+          {Array.isArray(genreMovies?.pages) &&
+            genreMovies?.pages.map((page, index) => (
+              <React.Fragment key={index}>
+                {/* Playlist Data JSX Element Mapping  */}
+                {Array.isArray(page?.data.content) &&
+                  page?.data.content.map((movie: MovieDataTypes) => (
+                    <></>
+                    // <MovieItem
+                    //   key={movie.movieId}
+                    //   type="all"
+                    //   src={movie.posterUrl}
+                    //   title={movie.title}
+                    //   name={movie.title}
+                    //   rate={movie.totalRating}
+                    //   like={movie.likes}
+                    //   onClick={() => navigate(`/movie/${movie.movieId}`)}
+                    // />
+                  ))}
+              </React.Fragment>
+            ))}
           {/* Movies Card */}
           <div css={styles.movieCard()}>
             {/* Movies Top -> Info, Poster */}
