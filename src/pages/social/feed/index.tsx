@@ -64,7 +64,8 @@ export default function SocialFeed() {
   const loadBoardData = async () => {
     try {
       const response = await fetchAllData();
-      const contentArray = response.content || []; // 응답에서 content 배열 추출
+      console.log(response); // 응답 구조 확인
+      const contentArray = response.data?.content || []; // 응답에서 content 배열 추출
       setBoardData(Array.isArray(contentArray) ? contentArray : []);
     } catch (error) {
       console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
