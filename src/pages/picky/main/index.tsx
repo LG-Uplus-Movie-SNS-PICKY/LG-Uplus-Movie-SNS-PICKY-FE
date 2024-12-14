@@ -146,7 +146,7 @@ function PickyPage() {
         <GenreTab />
 
         {/* Best Movies Section */}
-        <BsetMovieSection bestMovie={bestMovie} />
+        <BsetMovieSection />
 
         {/* Playlists */}
         <PlayListSection />

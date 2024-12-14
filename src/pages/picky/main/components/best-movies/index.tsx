@@ -1,11 +1,7 @@
 import FamousMovie from "@pages/main/components/famous-movie";
 import { BestMovieTypes } from "../..";
 
-interface BsetMovieSectionProps {
-  bestMovie: BestMovieTypes[];
-}
-
-function BsetMovieSection({ bestMovie }: BsetMovieSectionProps) {
+function BsetMovieSection() {
   return <FamousMovie isLogin={true} />;
 }
 
