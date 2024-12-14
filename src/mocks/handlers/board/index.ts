@@ -432,117 +432,122 @@ const boardHandlers: HttpHandler[] = [
     }
   ),
 
-  // 무비로그 조회 API(Mocking Object) - 프로필 페이지 사용자가 작성한 목록 조회
-  http.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/board`, ({ request }) => {
-    const authorization = request.headers.get("Authorization");
+  // 무비로그 조회 API(Mocking Object) - 프로필 페이지에서 사용자가 작성한 목록 조회
+  http.get(
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/board/user/:nickname`,
+    ({ params, request }) => {
+      const authorization = request.headers.get("Authorization");
 
-    const url = new URL(request.url);
-    const nickname = url.searchParams.get("nickname");
+      const url = new URL(request.url);
+      const { nickname } = params;
 
-    // 권환이 없을 경우 403 에러 발생
-    if (!authorization || !nickname) {
+      // 권환이 없을 경우 403 에러 발생
+      if (!authorization || !nickname) {
+        return HttpResponse.json(
+          {
+            message:
+              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Query String에 nickname를 추가했는지 확인해주세요.",
+          },
+          { status: 403 }
+        );
+      }
+
+      // Query String으로 넘겨받은 정보를 통해 유저의 정보를 찾는다.
+      const userInfo = user.find(
+        (element) => element.user_nickname === nickname
+      );
+
+      // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
+      const size = Number(url.searchParams.get("size") || 1);
+      const lastBoardId = Number(url.searchParams.get("lastBoardId") || 10);
+
+      // 해당 유저가 등록한 무비로그만 추출한다.
+      let filterBoardUser = board
+        .filter((element) => element.user_id === userInfo?.user_id)
+        .map((boardItem) => {
+          const boardId = boardItem.board_id; // board_id 가져오기
+
+          // 관련 데이터 필터링
+          const contents = boardContent.filter(
+            (content) => content.board_id === boardId
+          );
+
+          const movieInfo = movie.find(
+            (movie) => movie.movie_id === boardItem.movie_id
+          );
+
+          const likes = boardLike.filter((like) => like.board_id === boardId);
+
+          const comments = boardComment.filter(
+            (comment) => comment.board_id === boardId
+          );
+
+          return {
+            boardId,
+            writerId: userInfo?.user_id,
+            writerNickname: userInfo?.user_nickname,
+            writerProfileUrl: userInfo?.user_profile_url,
+            context: boardItem.board_context,
+            isSpoiler: boardItem.is_spoiler,
+            createdDate: boardItem.createdDate,
+            updatedDate: boardItem.updatedDate,
+            likesCount: likes.length,
+            commentsCount: comments.length,
+            contents: contents.map((content) => ({
+              contentUrl: content.board_content_url,
+              boardContentType: content.board_content_type,
+            })),
+            movieTitle: movieInfo?.movie_title,
+            isLike: false,
+          };
+        });
+
+      // 커서 기반 필터링
+      // lastBoardId보다 높은 게시물만 필터링
+      if (lastBoardId) {
+        filterBoardUser = filterBoardUser.filter(
+          (board) => board.boardId > lastBoardId
+        );
+      }
+
+      const paginatedBoards = filterBoardUser.slice(0, size);
+
       return HttpResponse.json(
         {
-          message:
-            "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 Query String에 nickname를 추가했는지 확인해주세요.",
-        },
-        { status: 403 }
-      );
-    }
-
-    // Query String으로 넘겨받은 정보를 통해 유저의 정보를 찾는다.
-    const userInfo = user.find((element) => element.user_nickname === nickname);
-
-    // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
-    const size = Number(url.searchParams.get("size") || 1);
-    const lastBoardId = Number(url.searchParams.get("lastBoardId") || 10);
-
-    // 해당 유저가 등록한 무비로그만 추출한다.
-    let filterBoardUser = board
-      .filter((element) => element.user_id === userInfo?.user_id)
-      .map((boardItem) => {
-        const boardId = boardItem.board_id; // board_id 가져오기
-
-        // 관련 데이터 필터링
-        const contents = boardContent.filter(
-          (content) => content.board_id === boardId
-        );
-
-        const movieInfo = movie.find(
-          (movie) => movie.movie_id === boardItem.movie_id
-        );
-
-        const likes = boardLike.filter((like) => like.board_id === boardId);
-
-        const comments = boardComment.filter(
-          (comment) => comment.board_id === boardId
-        );
-
-        return {
-          boardId,
-          writerId: userInfo?.user_id,
-          writerNickname: userInfo?.user_nickname,
-          writerProfileUrl: userInfo?.user_profile_url,
-          context: boardItem.board_context,
-          isSpoiler: boardItem.is_spoiler,
-          createdDate: boardItem.createdDate,
-          updatedDate: boardItem.updatedDate,
-          likesCount: likes.length,
-          commentsCount: comments.length,
-          contents: contents.map((content) => ({
-            contentUrl: content.board_content_url,
-            boardContentType: content.board_content_type,
-          })),
-          movieTitle: movieInfo?.movie_title,
-          isLike: false,
-        };
-      });
-
-    // 커서 기반 필터링
-    // lastBoardId보다 높은 게시물만 필터링
-    if (lastBoardId) {
-      filterBoardUser = filterBoardUser.filter(
-        (board) => board.boardId > lastBoardId
-      );
-    }
-
-    const paginatedBoards = filterBoardUser.slice(0, size);
-
-    return HttpResponse.json(
-      {
-        code: 200,
-        data: {
-          size: size,
-          content: paginatedBoards,
-          empty: paginatedBoards.length === 0,
-          first: !lastBoardId,
-          last: paginatedBoards.length < size,
-          number: 0,
-          numberOfElements: paginatedBoards.length,
-          pageable: {
-            offset: 0,
-            pageNumber: 0,
-            pageSize: 10,
-            paged: true,
+          code: 200,
+          data: {
+            size: size,
+            content: paginatedBoards,
+            empty: paginatedBoards.length === 0,
+            first: !lastBoardId,
+            last: paginatedBoards.length < size,
+            number: 0,
+            numberOfElements: paginatedBoards.length,
+            pageable: {
+              offset: 0,
+              pageNumber: 0,
+              pageSize: 10,
+              paged: true,
+              sort: {
+                empty: true,
+                sorted: false,
+                unsorted: true,
+              },
+              unpaged: false,
+            },
             sort: {
               empty: true,
               sorted: false,
               unsorted: true,
             },
-            unpaged: false,
           },
-          sort: {
-            empty: true,
-            sorted: false,
-            unsorted: true,
-          },
+          message: "요청이 성공적으로 처리되었습니다.",
+          sucess: true,
         },
-        message: "요청이 성공적으로 처리되었습니다.",
-        sucess: true,
-      },
-      { status: 200 }
-    );
-  }),
+        { status: 200 }
+      );
+    }
+  ),
 
   // 무비로그 좋아요 API(Mocking Object)
   http.post(
