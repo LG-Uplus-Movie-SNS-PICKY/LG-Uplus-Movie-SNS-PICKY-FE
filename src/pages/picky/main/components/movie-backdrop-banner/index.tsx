@@ -1,11 +1,5 @@
 import { useTopMovieQuery } from "@hooks/movie";
-import { BestMovieTypes } from "../..";
 import styles from "./index.styles";
-import { useEffect } from "react";
-
-interface MovieBackdropBanner {
-  movie: BestMovieTypes;
-}
 
 function MovieBackdropBanner() {
   const { data, isLoading } = useTopMovieQuery();
