@@ -231,7 +231,7 @@ const ReviewsPage = () => {
       <div style={{ width: "100%" }}>
         <MovieReviewContainer>
           <MovieHeader />
-          <MovieReviewsPoster imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`} />
+          <MovieReviewsPoster imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${movieData.backdrop_path}`} />
           <InfoContainer>
             <Title>{movieData.original_title}</Title>
             <DetailContainer>

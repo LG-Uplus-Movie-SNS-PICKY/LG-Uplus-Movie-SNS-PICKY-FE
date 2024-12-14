@@ -552,7 +552,7 @@ const movieHandlers: HttpHandler[] = [
               overview: movieInfo.movie_plot,
               runtime: movieInfo.movie_running_time,
               // rating: movieInfo.movie_total_rating,
-
+              
               // 장르 정보 필터링
               genres: [
                 ...movieAndGenres

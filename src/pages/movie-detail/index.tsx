@@ -52,8 +52,6 @@ interface Review {
 }
 
 function MovieDetail(props: MovieDetailProps) {
-  // const accessToken = localStorage.getItem("accessToken");
-  // const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
   const { id } = useParams(); // URL에서 movieId 추출
   const { data: movieDetail, isLoading: movieDetailIsLoading } =
     useMovieDetailQuery(Number(id));
@@ -72,7 +70,6 @@ function MovieDetail(props: MovieDetailProps) {
   const loadable = useRecoilValueLoadable(genresSelector);
 
   const genres = loadable.contents.data;
-  // console.log(genres);
 
   const handleReviewClick = () => {
     navigate(`/movie/${id}/review`); // movieId 변수를 사용
@@ -118,17 +115,15 @@ function MovieDetail(props: MovieDetailProps) {
           cast: sortedCast,
           directingCrew: sortedDirectingCrew,
         },
-        rating: rating || 0,
         availablePlatforms,
+        rating: rating || 0,
       });
     }
   }, [movieDetailIsLoading]);
 
   useEffect(() => {
     if (!lineReviewsIsLoading) {
-      // console.log("API 응답 데이터:", lineReviews?.pages[0].data);
       const allReviews = lineReviews?.pages[0].data.content as Review[];
-      // console.log("전체 리뷰 데이터:", allReviews);
 
       // 전체 리뷰 개수를 allReviews의 길이로 설정
       setTotalReviews(allReviews.length);
@@ -138,23 +133,9 @@ function MovieDetail(props: MovieDetailProps) {
         .sort((a: Review, b: Review) => b.likes - a.likes) // 공감순 정렬
         .slice(0, 3); // 상위 3개 가져오기
 
-      // console.log("공감순 상위 3개 리뷰:", topLikedReviews);
-
       setReviews(topLikedReviews); // 공감순 상위 3개 리뷰 설정
     }
   }, [lineReviewsIsLoading]);
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (error) {
-  //   return <div>Error: {error}</div>;
-  // }
-
-  // if (!movieData) {
-  //   return <div>No movie data found</div>;
-  // }
 
   useEffect(() => {
     console.log(movieData);
