@@ -54,6 +54,7 @@ export default {
           background-color: transparent;
           border: none;
           padding: 12px 16px;
+          display: flex;
 
           & > svg path {
             fill: #aaa;

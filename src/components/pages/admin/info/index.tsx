@@ -35,33 +35,8 @@ function DashboardInfoContainer({ data }: DashboardInfoContainerProps) {
                   <div css={styles.listItemInfo()}>
                     <div css={styles.listItemInfoTitle()}>
                       <h3 className="titleInfo">{item.itemTitle}</h3>
-                      <h3 className="titleInfo">
-                        {new Intl.NumberFormat("en-US").format(
-                          item.itemTotalCount ?? 0
-                        )}
-                      </h3>
                     </div>
                   </div>
-
-                  {/* Data Sub Item Info */}
-                  {item.subItems && (
-                    <div css={styles.listSubItemInfoContainer()}>
-                      {item.subItems.map((subItem, idx) => {
-                        return (
-                          <div key={idx} className="list-sub-item-info">
-                            <h3 className="subItemTitle">
-                              {subItem.subItemTitle}
-                            </h3>
-                            <h3>
-                              {new Intl.NumberFormat("en-US").format(
-                                subItem.subItemTotalCount ?? 0
-                              )}
-                            </h3>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
               </div>
             );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
 import axios from "axios";
@@ -23,6 +23,7 @@ import {
   NAVER_LOGIN_URL,
   TMDB_API_KEY,
 } from "@api/constants";
+import { useDetailMovieInfo, useSearchMovie } from "@hooks/movie";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -33,7 +34,7 @@ import {
 
 interface Movie {
   [key: string]: unknown;
-  id: string;
+  id: number;
   backdrop_path: string;
   title: string;
   original_title: string;
@@ -64,13 +65,13 @@ const ottDummyData = [
   { icon: Wavve, name: "wavve" },
 ];
 
-console.log(import.meta.env.VITE_SERVER_URL);
-
 function RegistMovieSection() {
   const [movieSearch, setMovieSearch] = useState<string>("");
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false); // 입력창 포커스(활성화 도중에만 자동완성 검색 결과 보이기)
 
-  const [movieInfo, setMovieInfo] = useState<DetailMovie | null>(null);
+  const [movieId, setMovieId] = useState<number>(0);
+
+  // const [movieInfo, setMovieInfo] = useState<DetailMovie | null>(null);
   const [activeOttBtn, setActiveOttBtn] = useState<Record<string, boolean>>({
     netflix: false,
     watcha: false,
@@ -89,53 +90,25 @@ function RegistMovieSection() {
     handleSearch(value);
   };
 
-  const fetchAllPages = async () => {
-    const { data } = await axios.get(
-      "https://api.themoviedb.org/3/search/movie",
-      {
-        params: {
-          query: movieSearch,
-          language: "ko-KR",
-        },
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${TMDB_API_KEY}`,
-        },
-      }
-    );
-
-    return data.results || [];
-  };
-
-  const detailMovieInfo = async (movieId: string) => {
-    const { data } = await axios.get(
-      `https://api.themoviedb.org/3/movie/${movieId}`,
-      {
-        params: {
-          append_to_response: "credits",
-          language: "ko-KR",
-        },
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${TMDB_API_KEY}`,
-        },
-      }
-    );
-
-    setMovieInfo(data);
-  };
-
-  // React Query v5의 useQuery 사용
+  // TMDB를 통해 불러온 영화 데이터 캐싱
   const {
     data: result = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["movies", movieSearch],
-    queryFn: fetchAllPages,
-    enabled: !!movieSearch,
-    staleTime: 1000 * 60 * 5, // 5분 동안 데이터 캐시 유지 (옵션)
-  });
+    isLoading: isSearchLoadign,
+    isError: isSearchError,
+  } = useSearchMovie(movieSearch);
+
+  // TMDB를 통해 불러온 영화 상세 정보 데이터 캐싱
+  const {
+    data: movieInfo,
+    isLoading: isMovieInfoLoading,
+    isError: isMovieInfoError,
+  } = useDetailMovieInfo(movieId);
+
+  useEffect(() => {
+    if (!isMovieInfoLoading) {
+      console.log(movieInfo);
+    }
+  }, [isMovieInfoLoading]);
 
   return (
     <>
@@ -163,14 +136,14 @@ function RegistMovieSection() {
             {/* 자동완성 */}
             {isInputFocus && movieSearch !== "" && (
               <ul css={styles.movieAutoCompleteContainer(result.length > 0)}>
-                {isLoading && <li className="loading">Loading</li>}
-                {isError && <li className="error">Error</li>}
+                {isSearchLoadign && <li className="loading">Loading</li>}
+                {isSearchError && <li className="error">Error</li>}
                 {result.length > 0 &&
                   result.slice(0, 5).map((element: Movie) => (
                     <li
                       key={element.id}
                       className="list-item"
-                      onMouseDown={() => detailMovieInfo(element.id)}
+                      onMouseDown={() => setMovieId(element.id)}
                     >
                       <div>
                         <div className="poster">

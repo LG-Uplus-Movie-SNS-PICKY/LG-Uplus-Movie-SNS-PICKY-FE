@@ -4,6 +4,8 @@ import {
   fetchRecommendMovie,
   fetchGenreMovie,
   fetchMovieDetail,
+  fetchSearchMovie,
+  fetchMovieDetailInfo,
 } from "@api/movie";
 
 // Top 10 Movie 조회 React Query - Custom Hook
@@ -63,5 +65,26 @@ export const useMovieDetailQuery = (movieId: number) => {
     queryFn: () => fetchMovieDetail(movieId),
     staleTime: 1000 * 60 * 30, // 추천 데이터 목록은 30분간 신선도 유지
     gcTime: 1000 * 60 * 60, // 추천 데이터 데이터 캐싱 시간은 1시간으로 유지
+  });
+};
+
+// TMDB 영화 조회 React Query - Custom Hook
+export const useSearchMovie = (movieSearch: string) => {
+  return useQuery({
+    queryKey: ["movies", movieSearch],
+    queryFn: () => fetchSearchMovie(movieSearch),
+    enabled: !!movieSearch,
+    staleTime: 1000 * 60 * 5, // 5분 동안 데이터 캐시 유지 (옵션)
+  });
+};
+
+// TMDB 영화 상세 데이터 React Query - Custom Hook
+export const useDetailMovieInfo = (movieId: number) => {
+  return useQuery({
+    queryKey: ["movieDetailInfo", movieId],
+    queryFn: () => fetchMovieDetailInfo(movieId),
+    enabled: !!movieId,
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
   });
 };

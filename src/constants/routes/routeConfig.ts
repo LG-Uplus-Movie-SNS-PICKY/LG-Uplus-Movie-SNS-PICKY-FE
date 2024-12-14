@@ -1,6 +1,6 @@
 export interface RouteConfigTypes {
   path: string;
-  header?: "basic" | "login" | "main" | "title";
+  header?: "basic" | "login" | "main" | "title" | "admin";
   label?: string;
   gnb: boolean;
   margin: string;
@@ -48,6 +48,12 @@ export const routeConfig: RouteConfigTypes[] = [
     path: "/notification",
     header: "title",
     label: "알림",
+    gnb: false,
+    margin: "60px 0 0 0",
+  },
+  {
+    path: "/admin/*",
+    header: "admin",
     gnb: false,
     margin: "60px 0 0 0",
   },
