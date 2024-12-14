@@ -66,7 +66,7 @@ function PickyGenreDetailPage() {
 
       {/* 장르에 해당하는 영화 데이터 출력 */}
       <section css={styles.movies()}>
-        <div>
+        <div className="movies">
           {isLoading && <Loading />}
           {Array.isArray(genreMovies?.pages) &&
             genreMovies?.pages.map((page, index) => (
