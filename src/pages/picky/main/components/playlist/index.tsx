@@ -96,9 +96,13 @@ function PlayListSection() {
                         <SwiperSlide key={movie.movieId}>
                           <MovieItem
                             type="basic"
-                            src={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
-                              movie.posterUrl
-                            }`}
+                            src={
+                              process.env.NODE_ENV === "development"
+                                ? movie.posterUrl
+                                : `${import.meta.env.VITE_TMDB_IMAGE_URL}/${
+                                    movie.posterUrl
+                                  }`
+                            }
                             title={movie.title}
                             name={movie.title}
                           />

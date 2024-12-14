@@ -8,9 +8,7 @@ export async function fetchPlaylists(lastPlaylistId: number) {
     params.append("last-playlist-id", lastPlaylistId.toString());
   }
 
-  const { data } = await apiClient.get(
-    `/movie/playlist/all?${params.toString()}`
-  );
+  const { data } = await apiClient.get(`/playlist/all?${params.toString()}`);
 
   return data;
 }
