@@ -8,57 +8,65 @@ import AddCircle from "@assets/icons/add_circle_small.svg?react";
 import Notification from "@assets/icons/notification.svg?react";
 import Search from "@assets/icons/search.svg?react";
 import UesrLogo from "@assets/icons/user_circle.svg?react";
-
-// Header Config 함수 타입 지정
-// type HeaderConfigFunction = (
-//   isLogin?: boolean,
-//   navigate?: NavigateFunction
-// ) => HeaderConfigReturn;
-
-// Header Config 반환값 지정
-// interface HeaderConfigReturn {
-//   buttons?: Array<ReactNode> | undefined;
-// }
+import { removeCookie } from "@util/cookie";
+import { Resetter, SetterOrUpdater } from "recoil";
+import { LoginStateTypes } from "@recoil/atoms/isLoginState";
 
 export type HeaderConfigReturn = Array<ReactNode> | undefined;
 
-/*
-
-  To Do
-  1. Title Type일 경우 -> 이전 정보 히스토리
-
-*/
-
 export function useHeaderConfig(
-  isLogin: boolean,
-  navigate: NavigateFunction
+  isLoginState: boolean,
+  isAuthUser: boolean,
+  navigate: NavigateFunction,
+  resetLoginState: Resetter,
+  setLoginState: SetterOrUpdater<LoginStateTypes>
 ): HeaderConfigReturn {
-  // 반환값으로 보낼 버튼 액션 정의
-  const buttons = isLogin
-    ? [
-        <AddCircle
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/movie-log/add")}
-        />,
-        <Notification
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/notification")}
-        />,
-        <Search
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/search")}
-        />,
-      ]
-    : [
+  if (isLoginState) {
+    if (isAuthUser) {
+      return [
         <div
-          onClick={() => navigate && navigate("/auth/sign-in")}
-          className="login-action-btn"
+          onClick={() => {
+            removeCookie("user");
+            resetLoginState();
+
+            setLoginState((prev) => ({
+              ...prev,
+              isLoading: false,
+            }));
+
+            navigate("/");
+          }}
+          className="admin_btn"
         >
-          <UesrLogo />
-          <span>로그인</span>
+          <span>로그아웃</span>
         </div>,
       ];
+    }
+
+    return [
+      <AddCircle
+        className="active-icon-btn"
+        onClick={() => navigate && navigate("/movie-log/add")}
+      />,
+      <Notification
+        className="active-icon-btn"
+        onClick={() => navigate && navigate("/notification")}
+      />,
+      <Search
+        className="active-icon-btn"
+        onClick={() => navigate && navigate("/search")}
+      />,
+    ];
+  }
 
   // 객체 반환
-  return buttons;
+  return [
+    <div
+      onClick={() => navigate && navigate("/auth/sign-in")}
+      className="login-action-btn"
+    >
+      <UesrLogo />
+      <span>로그인</span>
+    </div>,
+  ];
 }

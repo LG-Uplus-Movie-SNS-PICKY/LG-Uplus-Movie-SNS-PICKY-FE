@@ -8,6 +8,8 @@ export default {
       flex-direction: column;
       justify-content: center;
 
+      padding: 16px;
+
       gap: 8px;
 
       & > .dashboard-title {

@@ -1,0 +1,32 @@
+[
+  {
+    "platform_id": 1,
+    "platform_name": "netflix",
+    "platform_url": "https://www.netflix.com/"
+  },
+  {
+    "platform_id": 2,
+    "platform_name": "wavve",
+    "platform_url": "https://www.wavve.com/"
+  },
+  {
+    "platform_id": 3,
+    "platform_name": "tving",
+    "platform_url": "https://www.tving.com/"
+  },
+  {
+    "platform_id": 4,
+    "platform_name": "coupang",
+    "platform_url": "https://play.coupang.com/"
+  },
+  {
+    "platform_id": 5,
+    "platform_name": "whatcha",
+    "platform_url": "https://watcha.com/"
+  },
+  {
+    "platform_id": 6,
+    "platform_name": "disney",
+    "platform_url": "https://www.disneyplus.com/"
+  }
+]

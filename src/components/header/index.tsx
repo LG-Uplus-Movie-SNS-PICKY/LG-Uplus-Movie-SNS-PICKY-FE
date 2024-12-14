@@ -1,19 +1,33 @@
 import { HeaderConfigReturn, useHeaderConfig } from "@constants/header";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { Header } from "@stories/header";
-import { NaviationProps, HeaderProps } from "@type/navigation";
+import { HeaderProps } from "@type/navigation";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from "recoil";
 
 // 전역에서 사용할 Header 컴포넌트
 function GlobalHeader({ headerType, label, location, navigate }: HeaderProps) {
   const isLoginState = useRecoilValue(isLogin);
   const [activeBtn, setActiveBtn] = useState<HeaderConfigReturn>(undefined);
-  const validTypes = ["title", "main", "basic", "login"];
+  const validTypes = ["title", "main", "basic", "login", "admin"];
+
+  const resetLoginState = useResetRecoilState(isLogin);
+  const setLoginState = useSetRecoilState(isLogin);
 
   // 현재 경로에 맞는 type, label, activeBtn 값 할당
   useEffect(() => {
-    const headerType = useHeaderConfig(isLoginState.isLoginState, navigate);
+    const headerType = useHeaderConfig(
+      isLoginState.isLoginState,
+      isLoginState.isAuthUser,
+      navigate,
+      resetLoginState,
+      setLoginState
+    );
     setActiveBtn(headerType);
   }, [isLoginState, location]);
 
@@ -23,7 +37,7 @@ function GlobalHeader({ headerType, label, location, navigate }: HeaderProps) {
     <Header
       type={
         validTypes.includes(headerType)
-          ? (headerType as "title" | "main" | "basic" | "login")
+          ? (headerType as "title" | "main" | "basic" | "login" | "admin")
           : undefined
       }
       label={label}

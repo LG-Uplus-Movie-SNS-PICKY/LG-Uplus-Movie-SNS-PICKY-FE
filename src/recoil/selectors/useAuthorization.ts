@@ -27,6 +27,20 @@ export const useSyncLoginState = () => {
         isLoginInfo: user.user || {},
         isLoading: false,
       });
+    } else {
+      setLoginState({
+        isLoginState: false,
+        isAuthUser: false,
+        isLoginInfo: {
+          name: "",
+          nickname: "",
+          profile_url: "",
+          nationlity: "",
+          birthdate: "",
+          gender: "",
+        },
+        isLoading: false,
+      });
     }
   }, [setLoginState]);
 };
