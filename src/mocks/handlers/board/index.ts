@@ -452,19 +452,18 @@ const boardHandlers: HttpHandler[] = [
     const userInfo = user.find((element) => element.user_nickname === nickname);
 
     // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
-    const page = Number(url.searchParams.get("page") || 1);
-    const limit = Number(url.searchParams.get("limit") || 10);
+    const size = Number(url.searchParams.get("size")) || 10;
+    const lastCommentId = Number(url.searchParams.get("lastCommentId")) || 0;
 
     // 가져올 인덱스를 계산한다.
     // start(시작값) : (page - 1) * limit
     // end(마지막) : start + limit
-    const start = (page - 1) * limit;
-    const end = start + limit;
+    // const start = (page - 1) * limit;
+    // const end = start + limit;
 
     // 해당 유저가 등록한 무비로그만 추출한다.
     const response = board
       .filter((element) => element.user_id === userInfo?.user_id)
-      .slice(start, end)
       .map((boardItem) => {
         const boardId = boardItem.board_id; // board_id 가져오기
 
@@ -485,11 +484,6 @@ const boardHandlers: HttpHandler[] = [
     return HttpResponse.json(
       {
         data: response,
-        nextPage:
-          end <
-          board.filter((item) => item.user_id === userInfo?.user_id).length
-            ? page + 1
-            : null,
       },
       { status: 200 }
     );
