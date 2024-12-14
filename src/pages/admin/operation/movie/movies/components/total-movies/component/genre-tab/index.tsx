@@ -36,11 +36,11 @@ function GenreTab({
 
   const genres = loadable.contents.data;
 
-  useEffect(() => {
-    if (loadable.state === "hasValue" && onInitialGenre) {
-      onInitialGenre(loadable.contents.data[0].genreId);
-    }
-  }, [loadable]);
+  // useEffect(() => {
+  //   if (loadable.state === "hasValue" && onInitialGenre) {
+  //     onInitialGenre(loadable.contents.data[0].genreId);
+  //   }
+  // }, [loadable]);
 
   return (
     genres.length > 0 && (

@@ -13,6 +13,9 @@ import Check from "@assets/icons/check.svg?react";
 import GenreTab from "./component/genre-tab";
 import { useGenreMovieQuery } from "@hooks/movie";
 import { MovieDataTypes } from "@type/api/movie";
+import MovieCard from "./component/movie-card";
+import { useRecoilValueLoadable } from "recoil";
+import { genresSelector } from "@recoil/selectors/genresSelector";
 
 const ottDummyData = [
   { icon: Netflix, name: "netflix" },
@@ -42,28 +45,27 @@ const movieInfo = {
 };
 
 function TotalMoviesSection() {
-  const [watchServiceUpdateActive, setWatchServiceUpdateActive] =
-    useState(false);
-
-  const [selectButton, setSelectButton] = useState<number>(0);
-
-  // 장르 버튼 최초 로드 시에 초기값 설정
-  const handleInitialGenre = (movieId: number) => {
-    if (!selectButton) {
-      setSelectButton(movieId);
-    }
-  };
+  const loadable = useRecoilValueLoadable(genresSelector);
+  const [selectButton, setSelectButton] = useState<number | null>(null);
 
   // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
   const GenreOnClick = (movieId: number) => {
     setSelectButton(movieId);
   };
 
-  const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
+  useEffect(() => {
+    if (loadable.state === "hasValue" && loadable.contents.data.length > 0) {
+      setSelectButton(loadable.contents.data[0].genreId);
+    }
+  }, [loadable]);
+
+  const { data: genreMovies, isLoading } = useGenreMovieQuery(
+    selectButton ?? -1
+  );
 
   useEffect(() => {
     if (!isLoading) {
-      console.log(genreMovies);
+      console.log(loadable.contents.data);
     }
   }, [isLoading]);
 
@@ -75,8 +77,7 @@ function TotalMoviesSection() {
           {/* 장르 필터 */}
           <GenreTab
             onClick={GenreOnClick}
-            selectedGenres={selectButton}
-            onInitialGenre={handleInitialGenre}
+            selectedGenres={selectButton ?? -1}
           />
         </div>
 
@@ -88,138 +89,16 @@ function TotalMoviesSection() {
                 {/* Playlist Data JSX Element Mapping  */}
                 {Array.isArray(page?.data.content) &&
                   page?.data.content.map((movie: MovieDataTypes) => (
-                    <></>
-                    // <MovieItem
-                    //   key={movie.movieId}
-                    //   type="all"
-                    //   src={movie.posterUrl}
-                    //   title={movie.title}
-                    //   name={movie.title}
-                    //   rate={movie.totalRating}
-                    //   like={movie.likes}
-                    //   onClick={() => navigate(`/movie/${movie.movieId}`)}
-                    // />
+                    <MovieCard
+                      key={movie.movieId}
+                      movie={movie}
+                      genres={
+                        loadable.state === "hasValue" && loadable.contents.data
+                      }
+                    />
                   ))}
               </React.Fragment>
             ))}
-          {/* Movies Card */}
-          <div css={styles.movieCard()}>
-            {/* Movies Top -> Info, Poster */}
-            <div css={styles.movieDetailTop()}>
-              {/* Title, Genres, Release */}
-              <div className="detail">
-                <div className="info">
-                  <h3>제목</h3>
-                  <span>
-                    {movieInfo.title}({movieInfo.original_title})
-                  </span>
-                </div>
-
-                <div className="info">
-                  <h3>장르</h3>
-                  <span>
-                    {movieInfo.genres.map((genre) => genre.name).join(", ")}
-                  </span>
-                </div>
-
-                <div className="info">
-                  <h3>출시년도</h3>
-                  <span>{movieInfo.release_date}</span>
-                </div>
-              </div>
-
-              {/* Poster */}
-              <div className="movie-poster">
-                <img
-                  src={movieInfo.poster_path}
-                  alt={movieInfo.original_title}
-                />
-              </div>
-            </div>
-
-            {/* Movie Description */}
-            <div css={styles.movieDetailDescription()}>
-              <h3>소개</h3>
-              <p>{movieInfo.overview}</p>
-            </div>
-
-            {/* Actors Slides */}
-
-            {/* OST or Behind Input */}
-            <div css={styles.movieDetailInput()}>
-              <div className="input-container">
-                <label htmlFor="ost">OST</label>
-                <div className="input">
-                  <div className="update">
-                    <input
-                      type="text"
-                      id="ost"
-                      placeholder="영화의 OST를 Youtube 재생목록 List Param 값을 작성해주세요."
-                      value={movieInfo.ost}
-                      readOnly
-                    />
-                    <button>수정</button>
-                  </div>
-
-                  <span>
-                    * Youtube 재생목록의 List Param 값을 기입해주세요.
-                  </span>
-                </div>
-              </div>
-
-              <div className="input-container">
-                <label htmlFor="behind">비하인드</label>
-                <div className="input">
-                  <div className="update">
-                    <input
-                      type="text"
-                      id="behind"
-                      placeholder="영화의 비하인드 Youtube 재생목록 List Param 값을 작성해주세요."
-                      value={movieInfo.behind}
-                      readOnly
-                    />
-                    <button>수정</button>
-                  </div>
-
-                  <span>
-                    * Youtube 재생목록의 List Param 값을 기입해주세요.
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* OTT Service */}
-            <div css={styles.movieDetailWatchService()}>
-              <div className="title">
-                <h3>시청할 수 있는 서비스</h3>
-                {/* 수정 버튼 */}
-                <div className="update">
-                  <button onClick={() => setWatchServiceUpdateActive(true)}>
-                    수정
-                  </button>
-                </div>
-              </div>
-              <div className="service">
-                {ottDummyData.map((data, idx) => {
-                  return (
-                    <div
-                      className={`icon-btn ${
-                        watchServiceUpdateActive ? "to-updated" : ""
-                      }`}
-                      key={idx}
-                    >
-                      {movieInfo.service.includes(data.name) && (
-                        <div className="selected">
-                          <Check />
-                        </div>
-                      )}
-                      {React.createElement(data.icon)}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </>
