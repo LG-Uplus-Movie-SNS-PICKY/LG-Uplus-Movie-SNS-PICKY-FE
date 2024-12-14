@@ -16,6 +16,9 @@ import Diesney from "@assets/icons/disneyplus.svg?react";
 import Coupang from "@assets/icons/coupangplay.svg?react";
 import Wavve from "@assets/icons/wavve.svg?react";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 import Check from "@assets/icons/check.svg?react";
 import {
   GOOGLE_LOGIN_URL,
@@ -24,6 +27,7 @@ import {
   TMDB_API_KEY,
 } from "@api/constants";
 import { useDetailMovieInfo, useSearchMovie } from "@hooks/movie";
+import { fetchMovieCreate } from "@api/movie";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -58,11 +62,11 @@ interface DetailMovie {
 
 const ottDummyData = [
   { icon: Netflix, name: "netflix" },
+  { icon: Diesney, name: "disney" },
   { icon: Watcha, name: "watcha" },
-  { icon: Tving, name: "tving" },
-  { icon: Diesney, name: "disneyplus" },
-  { icon: Coupang, name: "coupangplay" },
   { icon: Wavve, name: "wavve" },
+  { icon: Tving, name: "tving" },
+  { icon: Coupang, name: "coupang" },
 ];
 
 function RegistMovieSection() {
@@ -71,14 +75,20 @@ function RegistMovieSection() {
 
   const [movieId, setMovieId] = useState<number>(0);
 
+  const [trailerInputValue, setTrailerInputValue] = useState("");
+  const [ostInputValue, setOstInputValue] = useState("");
+  const [behindInputValue, setBehindInputValue] = useState("");
+
+  const [isPosterImageLoading, setIsPosterImageLoading] = useState(false);
+
   // const [movieInfo, setMovieInfo] = useState<DetailMovie | null>(null);
   const [activeOttBtn, setActiveOttBtn] = useState<Record<string, boolean>>({
     netflix: false,
+    disney: false,
     watcha: false,
-    tving: false,
-    disneyplus: false,
-    coupangplay: false,
     wavve: false,
+    tving: false,
+    coupang: false,
   });
 
   // lodash debounce 함수 정의 -> debounce: 짧은 시간 간격으로 발생하는 이벤트를 바로 호출하는 것이 아닌 마지막 이벤트 핸들러만 호출
@@ -104,17 +114,27 @@ function RegistMovieSection() {
     isError: isMovieInfoError,
   } = useDetailMovieInfo(movieId);
 
-  useEffect(() => {
-    if (!isMovieInfoLoading) {
-      console.log(movieInfo);
+  const onSubmit = async (event: React.FormEvent<Element>) => {
+    event.preventDefault();
+
+    if (movieInfo && behindInputValue && ostInputValue) {
+      const resposne = await fetchMovieCreate(
+        movieInfo,
+        trailerInputValue,
+        ostInputValue,
+        [behindInputValue],
+        activeOttBtn
+      );
+
+      console.log(resposne);
     }
-  }, [isMovieInfoLoading]);
+  };
 
   return (
     <>
       {/* 영화 등록 Form */}
       <form
-        onSubmit={(event: React.FormEvent<Element>) => event.preventDefault()}
+        onSubmit={(event: React.FormEvent<Element>) => onSubmit(event)}
         css={styles.registerForm()}
       >
         <div css={styles.registerContainer()}>
@@ -196,7 +216,12 @@ function RegistMovieSection() {
                     <div className="info">
                       <h3>장르</h3>
                       <span>
-                        {movieInfo.genres.map((genre) => genre.name).join(", ")}
+                        {movieInfo.genres
+                          .map(
+                            (genre: { [key: string]: unknown; name: string }) =>
+                              genre.name
+                          )
+                          .join(", ")}
                       </span>
                     </div>
 
@@ -208,10 +233,18 @@ function RegistMovieSection() {
 
                   {/* Movie Poster */}
                   <div className="movie-poster">
-                    <img
-                      src={`https://image.tmdb.org/t/p/original/${movieInfo.poster_path}`}
-                      alt={movieInfo.original_title}
+                    <LazyLoadImage
+                      src={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
+                        movieInfo.poster_path
+                      }`}
+                      effect={"blur"}
+                      onLoad={() => setIsPosterImageLoading(true)}
+                      onError={() => setIsPosterImageLoading(false)}
                     />
+
+                    {!isPosterImageLoading && (
+                      <span>{movieInfo.original_title}</span>
+                    )}
                   </div>
                 </div>
 
@@ -222,15 +255,37 @@ function RegistMovieSection() {
 
                 {/* Actress - Swiper */}
 
-                {/* OST or Behind Id Input */}
+                {/* Trailer, OST or Behind Id Input */}
                 <div css={styles.inputContainer()}>
+                  <div className="input">
+                    <label htmlFor="trailer">예고편</label>
+                    <div>
+                      <input
+                        type="text"
+                        id="trailer"
+                        placeholder="영화의 예고편 주소를 작성해주세요."
+                        value={trailerInputValue}
+                        onChange={(event) =>
+                          setTrailerInputValue(event.target.value)
+                        }
+                      />
+                      <span>
+                        * Youtube 재생목록의 List Param 값을 기입해주세요.
+                      </span>
+                    </div>
+                  </div>
+
                   <div className="input">
                     <label htmlFor="ost">OST</label>
                     <div>
                       <input
                         type="text"
                         id="ost"
-                        placeholder="영화의 OST를 Youtube 재생목록 List Param 값을 작성해주세요."
+                        placeholder="영화의 OST 주소를 작성해주세요."
+                        value={ostInputValue}
+                        onChange={(event) =>
+                          setOstInputValue(event.target.value)
+                        }
                       />
                       <span>
                         * Youtube 재생목록의 List Param 값을 기입해주세요.
@@ -244,7 +299,11 @@ function RegistMovieSection() {
                       <input
                         type="text"
                         id="behind"
-                        placeholder="영화의 비하인드 Youtube 재생목록 List Param 값을 작성해주세요."
+                        placeholder="영화의 비하인드 주소를 작성해주세요."
+                        value={behindInputValue}
+                        onChange={(event) =>
+                          setBehindInputValue(event.target.value)
+                        }
                       />
                       <span>
                         * Youtube 재생목록의 List Param 값을 기입해주세요.
@@ -255,9 +314,10 @@ function RegistMovieSection() {
 
                 {/* OTT Select */}
                 <div className="select-box">
-                  {ottDummyData.map((data) => {
+                  {ottDummyData.map((data, idx) => {
                     return (
                       <div
+                        key={idx}
                         className="icon-btn"
                         onClick={() =>
                           setActiveOttBtn((prev) => ({
