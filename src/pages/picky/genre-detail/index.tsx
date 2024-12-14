@@ -13,8 +13,6 @@ import { MovieDataTypes } from "@type/api/movie";
 import { MovieItem } from "@stories/movie-item";
 import { useInView } from "react-intersection-observer";
 
-let idx = 0;
-
 function PickyGenreDetailPage() {
   const navigate = useNavigate();
   const { genreId } = useParams(); // 장르 아이디 param

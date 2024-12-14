@@ -378,25 +378,33 @@ const movieHandlers: HttpHandler[] = [
       .sort((a, b) => b.totalRating - a.totalRating)
       .slice(0, 10);
 
-    return HttpResponse.json({ data: [...bestMovies] }, { status: 200 });
+    return HttpResponse.json(
+      {
+        success: true,
+        code: 200,
+        message: "요청이 성공적으로 처리되었습니다.",
+        data: [...bestMovies],
+      },
+      { status: 200 }
+    );
   }),
 
   // 장르별 영화 조회 API(Mocking Object)
   http.get(
     `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/genre`,
     ({ request }) => {
-      const authorization = request.headers.get("Authorization");
+      // const authorization = request.headers.get("Authorization");
 
-      // 권환이 없을 경우 403 에러 발생
-      if (!authorization) {
-        return HttpResponse.json(
-          {
-            message:
-              "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 확인해주세요.",
-          },
-          { status: 403 }
-        );
-      }
+      // // 권환이 없을 경우 403 에러 발생
+      // if (!authorization) {
+      //   return HttpResponse.json(
+      //     {
+      //       message:
+      //         "권한이 없습니다. Request Headers에 Authorization를 추가 (임시로 아무값이나 넣어도 무관) 또는 로그인을 하셨는지 확인해주세요.",
+      //     },
+      //     { status: 403 }
+      //   );
+      // }
 
       const url = new URL(request.url);
       const genreId = Number(url.searchParams.get("genreId") || 0);
