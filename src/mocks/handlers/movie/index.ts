@@ -618,7 +618,7 @@ const movieHandlers: HttpHandler[] = [
             },
             trailer: movieInfo.movie_trailer_url,
             ost: movieInfo.movie_ost_url,
-            // rating: movieInfo.movie_total_rating,
+            rating: movieInfo.movie_total_rating,
             movie_behind_videos: [
               movieBehindVideos.find(
                 (video) => video.movie_id === movieInfo.movie_id

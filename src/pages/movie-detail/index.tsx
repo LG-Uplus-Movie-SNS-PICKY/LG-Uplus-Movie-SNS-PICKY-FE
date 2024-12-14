@@ -138,7 +138,7 @@ function MovieDetail(props: MovieDetailProps) {
   }, [lineReviewsIsLoading]);
 
   useEffect(() => {
-    console.log(movieData);
+    console.log(movieDetail);
   }, [movieData]);
 
   return (

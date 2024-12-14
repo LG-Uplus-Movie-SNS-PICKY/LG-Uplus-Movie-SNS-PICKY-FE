@@ -71,7 +71,7 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
           css={styles.CastContainer()}
         >
           {groupedCast.map((group, index) => {
-            console.log(group);
+            // console.log(group);
             return (
               <SwiperSlide key={index}>
                 {group.map((cast, idx) => (
