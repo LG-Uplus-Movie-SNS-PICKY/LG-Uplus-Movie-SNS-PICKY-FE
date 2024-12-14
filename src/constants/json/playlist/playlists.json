@@ -1,0 +1,19 @@
+[
+  { "movie_playlist_id": 1, "movie_playlist_title": "로맨틱 무드" },
+  { "movie_playlist_id": 2, "movie_playlist_title": "액션의 세계" },
+  { "movie_playlist_id": 3, "movie_playlist_title": "감동적인 스토리" },
+  { "movie_playlist_id": 4, "movie_playlist_title": "스릴 넘치는 순간" },
+  { "movie_playlist_id": 5, "movie_playlist_title": "가족과 함께" },
+  { "movie_playlist_id": 6, "movie_playlist_title": "추억의 명작" },
+  { "movie_playlist_id": 7, "movie_playlist_title": "눈물샘 자극 영화" },
+  { "movie_playlist_id": 8, "movie_playlist_title": "웃음이 가득한 코미디" },
+  { "movie_playlist_id": 9, "movie_playlist_title": "판타지 모험" },
+  { "movie_playlist_id": 10, "movie_playlist_title": "긴장감 넘치는 추리" },
+  { "movie_playlist_id": 11, "movie_playlist_title": "음악과 함께하는 영화" },
+  { "movie_playlist_id": 12, "movie_playlist_title": "고전 영화의 매력" },
+  { "movie_playlist_id": 13, "movie_playlist_title": "SF와 미래" },
+  { "movie_playlist_id": 14, "movie_playlist_title": "역사 속으로" },
+  { "movie_playlist_id": 15, "movie_playlist_title": "독립 영화 감상" },
+  { "movie_playlist_id": 16, "movie_playlist_title": "청춘과 성장" },
+  { "movie_playlist_id": 17, "movie_playlist_title": "어린이를 위한 영화" }
+]
