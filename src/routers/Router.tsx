@@ -24,7 +24,6 @@ import GuestRouter from "./router/GuestRoutes";
 import UserRoutes from "./router/UserRoutes";
 import AdminRouter from "./router/AdminRoutes";
 import { getCookie } from "@util/cookie";
-import NotificationSSE from "@hooks/notification/connect";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -47,8 +46,6 @@ function Router() {
       <BrowserRouter
         future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
       >
-        <NotificationSSE />
-
         <Global styles={globalStyle} />
 
         <Layout>
