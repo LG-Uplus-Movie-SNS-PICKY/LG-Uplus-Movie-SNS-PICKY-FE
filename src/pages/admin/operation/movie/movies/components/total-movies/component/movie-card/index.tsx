@@ -94,7 +94,10 @@ function MovieCard({ movie, genres }: MovieCardProps) {
   };
 
   // 수정된 데이터 제출 핸들러
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>, id: number) => {
+  const onSubmit = async (
+    event: React.FormEvent<HTMLFormElement>,
+    id: number
+  ) => {
     event.preventDefault();
 
     if (!updateMovieInfo || !movieInfo.data) return;
@@ -105,8 +108,11 @@ function MovieCard({ movie, genres }: MovieCardProps) {
       return;
     }
 
+    console.log("id: " + id);
+    console.log(updateMovieInfo);
+
     // 영화의 정보가 수정된 경우
-    const response = fetchMovieDetailUpdate(id, updateMovieInfo);
+    const response = await fetchMovieDetailUpdate(id, updateMovieInfo);
     console.log(response);
   };
 
