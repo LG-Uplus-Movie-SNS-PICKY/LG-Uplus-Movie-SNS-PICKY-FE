@@ -83,7 +83,23 @@ export async function fetchMovieDetailInfo(movieId: number) {
       },
     }
   );
+}
 
+// 모든 게시글 조회 API
+export async function fetchAllData() {
+  const { data } = await apiClient.get("/board/all");
+  return data;
+}
+
+// 게시글 삭제 API
+export async function deletePost(boardId: number) {
+  const { data } = await apiClient.delete(`/board/${boardId}`);
+  return data;
+}
+
+// 게시글 좋아요/좋아요 취소 API
+export async function toggleLike(boardId: number) {
+  const { data } = await apiClient.post(`/board/${boardId}/likes`);
   return data;
 }
 
@@ -94,12 +110,64 @@ export async function fetchMovieDetail(movieId: number) {
 }
 
 // 영화 좋아요 API
-export async function toggleMovieLike(movieId: number): Promise<{ success: boolean; message: string }> {
+export async function toggleMovieLike(
+  movieId: number
+): Promise<{ success: boolean; message: string }> {
   try {
     const { data } = await apiClient.post(`/movie/${movieId}/like`);
     return data;
   } catch (error: any) {
     console.error("영화 좋아요 상태 변경 실패:", error);
+    throw error;
+  }
+}
+
+//무비로그 댓글 조회회
+export async function fetchComments(
+  boardId: number,
+  size: number = 10,
+  lastCommentId?: number
+) {
+  try {
+    const params = new URLSearchParams({ size: size.toString() });
+
+    if (lastCommentId) {
+      params.append("lastCommentId", lastCommentId.toString());
+    }
+
+    const { data } = await apiClient.get(
+      `/board/${boardId}/comments?${params.toString()}`
+    );
+
+    return data;
+  } catch (error) {
+    console.error("댓글 조회 중 오류 발생:", error);
+    throw error;
+  }
+}
+
+// 댓글 생성 POST API
+export async function createComment(boardId: number, content: string) {
+  try {
+    const { data } = await apiClient.post(`/board/${boardId}/comment`, {
+      content,
+    });
+    return data;
+  } catch (error) {
+    console.error("댓글 작성 중 오류 발생:", error);
+    throw error;
+  }
+}
+
+// 댓글 삭제 DELETE API
+export async function deleteComment(
+  boardId: number,
+  commentId: number
+): Promise<void> {
+  try {
+    await apiClient.delete(`/board/${boardId}/comments/${commentId}`);
+  } catch (error) {
+    console.error("댓글 삭제 중 오류 발생:", error);
     throw error;
   }
 }
