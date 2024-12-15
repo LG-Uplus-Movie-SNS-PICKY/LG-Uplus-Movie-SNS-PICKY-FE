@@ -184,3 +184,59 @@ export async function deleteComment(
     throw error;
   }
 }
+
+// 게시글 생성 API
+export async function createBoard(
+  boardContext: string,
+  movieId: number,
+  isSpoiler: boolean,
+  images: File[],
+  videos: File[]
+) {
+  try {
+    const formData = new FormData();
+    formData.append(
+      "request",
+      JSON.stringify({ boardContext, movieId, isSpoiler })
+    );
+
+    // 이미지 파일 추가
+    images.forEach((image) => {
+      formData.append("image", image);
+    });
+
+    // 비디오 파일 추가
+    videos.forEach((video) => {
+      formData.append("video", video);
+    });
+
+    const { data } = await apiClient.post("/board", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return data;
+  } catch (error) {
+    console.error("게시글 생성 중 오류 발생:", error);
+    throw error;
+  }
+}
+
+// 게시글 수정 API
+export const updateBoard = async (
+  boardId: number,
+  boardContext: string,
+  isSpoiler: boolean
+) => {
+  try {
+    const { data } = await apiClient.post(`/board/${boardId}`, {
+      boardContext,
+      isSpoiler,
+    });
+    return data;
+  } catch (error) {
+    console.error("게시글 수정 중 오류 발생:", error);
+    throw error;
+  }
+};

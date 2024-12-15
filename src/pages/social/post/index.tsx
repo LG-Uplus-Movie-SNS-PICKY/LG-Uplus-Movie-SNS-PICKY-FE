@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, KeyboardEvent, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // navigate를 위해 추가
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { createBoard } from "@api/movie";
 import MovieSearch from "@assets/icons/movie_search.svg?react";
 import DelButton from "@assets/icons/delete.svg?react";
 import BackPost from "@assets/icons/back_post.svg?react";
@@ -76,19 +76,28 @@ const mockMovies = [
   },
 ];
 
+interface MovieData {
+  title: string;
+  releaseDate: string;
+  country: string;
+  genres: string[]; // genres는 문자열 배열임
+}
+
 export default function SocialPost() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredMovies, setFilteredMovies] = useState<typeof mockMovies>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false); // 뒤로가기 모달 상태
-  const [selectedMovieData, setSelectedMovieData] = useState<
-    null | (typeof mockMovies)[0]
-  >(null);
+  const [selectedMovieData, setSelectedMovieData] = useState<MovieData | null>(
+    null
+  );
   const [reviewText, setReviewText] = useState<string>("");
   const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
   const [activeIndex, setActiveIndex] = useState<number>(-1); // 활성화된 항목 인덱스
   const [fileUrl, setFileUrl] = useState<string>(""); // 파일 URL 저장
-  const fileInputRef = useRef<HTMLInputElement | null>(null); // 파일 입력 Ref
+  const [images, setImages] = useState<File[]>([]);
+  const [videos, setVideos] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
 
@@ -189,9 +198,9 @@ export default function SocialPost() {
     setIsBackModalOpen(true);
   };
 
-  const handleFileChange = () => {
-    if (fileInputRef.current?.files?.[0]) {
-      const file = fileInputRef.current.files[0];
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
       const fileReader = new FileReader();
       fileReader.onload = () => {
         if (fileReader.result) {
@@ -203,32 +212,20 @@ export default function SocialPost() {
   };
 
   const handleShareClick = async () => {
-    if (!isButtonActive) {
-      alert("모든 필드를 작성해주세요.");
+    if (!isButtonActive || (!images.length && !videos.length)) {
+      alert("모든 필드를 작성하고 파일을 업로드해주세요.");
       return;
     }
 
-    const payload = {
-      boardContext: reviewText,
-      movieId: selectedMovieData!.title, // 실제 영화 ID로 수정 필요
-      contents: fileUrl
-        ? [{ contentUrl: fileUrl, type: "PHOTO" }] // 예시로 PHOTO 고정
-        : [],
-      isSpoiler: selectedSpoiler === "있음",
-    };
-
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
-            "Content-Type": "application/json",
-          },
-        }
+      await createBoard(
+        reviewText,
+        1, // movieId를 실제 데이터로 교체 필요
+        selectedSpoiler === "있음",
+        images,
+        videos
       );
-      console.log("게시글 생성 성공:", response.data);
+
       alert("게시글이 성공적으로 생성되었습니다.");
       navigate("/");
     } catch (error) {
@@ -269,8 +266,8 @@ export default function SocialPost() {
             <p>{selectedMovieData.country}</p>
           </div>
           <div css={movieGenres}>
-            {selectedMovieData.genres.map((genre) => (
-              <span key={genre}>{genre}</span>
+            {selectedMovieData?.genres.map((genre: string, index: number) => (
+              <span key={`${genre}-${index}`}>{genre}</span>
             ))}
           </div>
         </div>
