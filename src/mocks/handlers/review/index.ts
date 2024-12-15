@@ -70,18 +70,18 @@ const reviewHandler: HttpHandler[] = [
       }
 
       // 모든 값을 정상적으로 받았을 경우에는 데이터 추가
-      response.push({
-        id: response.length + 1,
-        userId: userInfo.localJwtDto.accessToken,
-        writerNickname: userInfo.user.nickname,
-        movieId: body.movieId,
-        rating: body.rating,
-        context: body.context,
-        isSpoiler: body.isSpoler,
-        likes: 0,
-        dislikes: 0,
-        createdAt: new Date().toISOString(),
-      });
+      // response.push({
+      //   id: response.length + 1,
+      //   userId: userInfo.localJwtDto.accessToken,
+      //   writerNickname: userInfo.user.nickname,
+      //   movieId: body.movieId,
+      //   rating: body.rating,
+      //   context: body.context,
+      //   isSpoiler: body.isSpoler,
+      //   likes: 0,
+      //   dislikes: 0,
+      //   createdAt: new Date().toISOString(),
+      // });
 
       return HttpResponse.json(
         { message: "Resource created successfully" },
@@ -104,12 +104,12 @@ const reviewHandler: HttpHandler[] = [
           { status: 400, statusText: "LINE_REVIEW_ID_MISSING" }
         );
 
-      response.forEach((data) => {
-        if (data.id === Number(lineReviewId)) {
-          data.context = requestBody.context;
-          data.isSpoiler = requestBody.isSpoiler;
-        }
-      });
+      // response.forEach((data) => {
+      //   if (data.id === Number(lineReviewId)) {
+      //     data.context = requestBody.context;
+      //     data.isSpoiler = requestBody.isSpoiler;
+      //   }
+      // });
 
       return HttpResponse.json(
         { message: "Comment updated successfully" },
@@ -183,17 +183,17 @@ const reviewHandler: HttpHandler[] = [
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
-        .slice(0, 2);
+        .slice(0, 10);
 
       return HttpResponse.json(
         {
           code: 200,
           data: {
-            size: 2,
+            size: 10,
             content: paginatedReviews,
             empty: paginatedReviews.length === 0,
             first: !lastCreatedAt && !lastReviewId,
-            last: paginatedReviews.length < 2,
+            last: paginatedReviews.length < 10,
             number: 0,
             numberOfElements: paginatedReviews.length,
             pageable: {
@@ -305,11 +305,11 @@ const reviewHandler: HttpHandler[] = [
           lastCursor:
             paginatedReviews.length > 0
               ? {
-                lastCreatedAt:
-                  paginatedReviews[paginatedReviews.length - 1].createdAt,
-                lastReviewId:
-                  paginatedReviews[paginatedReviews.length - 1].id,
-              }
+                  lastCreatedAt:
+                    paginatedReviews[paginatedReviews.length - 1].createdAt,
+                  lastReviewId:
+                    paginatedReviews[paginatedReviews.length - 1].id,
+                }
               : null,
           numberOfElements: paginatedReviews.length,
           first: !lastCreatedAt && !lastReviewId,
