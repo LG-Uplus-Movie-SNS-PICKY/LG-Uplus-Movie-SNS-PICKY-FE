@@ -6,7 +6,6 @@ export const wrapper = css`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-top: 60px;
 `;
 
 export const feedContainer = css`

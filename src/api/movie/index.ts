@@ -93,13 +93,13 @@ export async function fetchAllData() {
 
 // 게시글 삭제 API
 export async function deletePost(boardId: number) {
-  const { data } = await apiClient.delete(`board/${boardId}`);
+  const { data } = await apiClient.delete(`/board/${boardId}`);
   return data;
 }
 
 // 게시글 좋아요/좋아요 취소 API
 export async function toggleLike(boardId: number) {
-  const { data } = await apiClient.post(`board/${boardId}/likes`);
+  const { data } = await apiClient.post(`/board/${boardId}/likes`);
   return data;
 }
 
@@ -121,35 +121,53 @@ export async function toggleMovieLike(
     throw error;
   }
 }
-// 특정 게시글 댓글 조회 GET API
+
+//무비로그 댓글 조회회
 export async function fetchComments(
   boardId: number,
-  size = 10,
+  size: number = 10,
   lastCommentId?: number
 ) {
-  const params = new URLSearchParams({ size: size.toString() });
-  if (lastCommentId) {
-    params.append("lastCommentId", lastCommentId.toString());
-  }
+  try {
+    const params = new URLSearchParams({ size: size.toString() });
 
-  const { data } = await apiClient.get(
-    `/board/${boardId}/comments?${params.toString()}`
-  );
-  return data;
+    if (lastCommentId) {
+      params.append("lastCommentId", lastCommentId.toString());
+    }
+
+    const { data } = await apiClient.get(
+      `/board/${boardId}/comments?${params.toString()}`
+    );
+
+    return data;
+  } catch (error) {
+    console.error("댓글 조회 중 오류 발생:", error);
+    throw error;
+  }
 }
 
 // 댓글 생성 POST API
-export async function addComment(boardId: number, context: string) {
-  const { data } = await apiClient.post(`/board/${boardId}/comment`, {
-    context,
-  });
-  return data;
+export async function createComment(boardId: number, content: string) {
+  try {
+    const { data } = await apiClient.post(`/board/${boardId}/comment`, {
+      content,
+    });
+    return data;
+  } catch (error) {
+    console.error("댓글 작성 중 오류 발생:", error);
+    throw error;
+  }
 }
 
 // 댓글 삭제 DELETE API
-export async function deleteComment(boardId: number, commentId: number) {
-  const { data } = await apiClient.delete(
-    `/board/${boardId}/comments/${commentId}`
-  );
-  return data;
+export async function deleteComment(
+  boardId: number,
+  commentId: number
+): Promise<void> {
+  try {
+    await apiClient.delete(`/board/${boardId}/comments/${commentId}`);
+  } catch (error) {
+    console.error("댓글 삭제 중 오류 발생:", error);
+    throw error;
+  }
 }
