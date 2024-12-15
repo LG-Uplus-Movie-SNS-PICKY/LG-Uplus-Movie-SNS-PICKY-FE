@@ -6,7 +6,6 @@ import RecommendMovieSlider from "./components/recommend-slider";
 
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
-import axios from "axios";
 
 function Main() {
   const isLoginState = useRecoilValue(isLogin);

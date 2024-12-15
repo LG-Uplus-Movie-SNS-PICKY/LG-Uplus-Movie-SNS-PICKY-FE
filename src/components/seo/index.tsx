@@ -9,7 +9,7 @@ interface SEOProps {
 }
 
 function SEO({ title = "PICKY", description, image, url }: SEOProps) {
-  const defaultImage = `${window.location.href}src/assets/images/logo.png`;
+  const defaultImage = `${window.location.href}public/images/picky.jpeg`;
   const defaultURL =
     process.env.NODE_ENV === "development"
       ? "http://localhost:5173"
