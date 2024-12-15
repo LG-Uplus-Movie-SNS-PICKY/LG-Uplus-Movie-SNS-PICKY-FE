@@ -23,13 +23,13 @@ interface CastTypes {
   [key: string]: unknown;
   id: number;
   character: string;
-  original_name: string;
+  name: string;
   profile_path: string;
 }
 interface CrewsTypes {
   [key: string]: unknown;
   id: number;
-  original_name: string;
+  name: string;
   profile_path: string;
   job: string;
 }
@@ -167,7 +167,7 @@ const movieHandlers: HttpHandler[] = [
           if (isEmpty(actor)) {
             filmCrew.push({
               film_crew_id: credit.id,
-              film_crew_name: credit.original_name,
+              film_crew_name: credit.name,
               film_crew_profile_url: credit.profile_path,
             });
           }
@@ -191,7 +191,7 @@ const movieHandlers: HttpHandler[] = [
           if (isEmpty(crew)) {
             filmCrew.push({
               film_crew_id: credit.id,
-              film_crew_name: credit.original_name,
+              film_crew_name: credit.name,
               film_crew_profile_url: credit.profile_path,
             });
           }
@@ -215,7 +215,7 @@ const movieHandlers: HttpHandler[] = [
           if (isEmpty(crew)) {
             filmCrew.push({
               film_crew_id: credit.id,
-              film_crew_name: credit.original_name,
+              film_crew_name: credit.name,
               film_crew_profile_url: credit.profile_path,
             });
           }
@@ -564,7 +564,7 @@ const movieHandlers: HttpHandler[] = [
             // 영화 정보
             movie_info: {
               id: movieInfo.movie_id,
-              original_title: movieInfo.movie_title,
+              title: movieInfo.movie_title,
               release_date: new Date(
                 movieInfo.movie_release_data
               ).toISOString(),
@@ -604,7 +604,7 @@ const movieHandlers: HttpHandler[] = [
                       return {
                         id: actorInfo?.film_crew_id,
                         character: crew.movie_crew_role,
-                        original_name: actorInfo?.film_crew_name,
+                        name: actorInfo?.film_crew_name,
                         profile_path: actorInfo?.film_crew_profile_url,
                       };
                     }),
@@ -627,7 +627,7 @@ const movieHandlers: HttpHandler[] = [
                       return {
                         id: directingCrewInfo?.film_crew_id,
                         job: crew.movie_crew_role,
-                        original_name: directingCrewInfo?.film_crew_name,
+                        name: directingCrewInfo?.film_crew_name,
                         profile_path: directingCrewInfo?.film_crew_profile_url,
                       };
                     }),
