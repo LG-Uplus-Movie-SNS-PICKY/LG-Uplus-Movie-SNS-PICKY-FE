@@ -36,10 +36,7 @@ const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const [isYTReady, setIsYTReady] = useState(false);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
-    const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY; // YouTube Data API Key 확인
-
-    // YouTube Data API Key 확인
-    console.log("YouTube Data API Key (전역):", YOUTUBE_API_KEY);
+    const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
     useEffect(() => {
         if (!movieDetailIsLoading) {
