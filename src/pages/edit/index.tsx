@@ -33,7 +33,7 @@ export default function ProfileEditPage() {
   const [userData, setUserData] = useState({
     name: "",
     nickname: "",
-    profile: "",
+    profile: "" as string | null,
     birthdate: "",
     gender: "",
     nationality: "",
@@ -43,9 +43,7 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState<string>(
-    userData.profile || ""
-  );
+  const [profileImage, setProfileImage] = useState<string | null>(userData.profile || "");
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -149,7 +147,7 @@ export default function ProfileEditPage() {
   };
 
   const handleSetDefaultImage = () => {
-    setProfileImage("");
+    setProfileImage(null);
     showToast("기본 이미지로 설정되었습니다.");
   };
 
