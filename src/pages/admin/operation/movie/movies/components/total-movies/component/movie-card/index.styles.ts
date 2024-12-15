@@ -51,10 +51,15 @@ export default {
         height: 132px;
         border-radius: 8px;
         overflow: hidden;
+        background-color: #191919;
 
-        & > img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & img {
+          display: block;
           width: 100%;
-          height: 100%;
         }
       }
     `;
