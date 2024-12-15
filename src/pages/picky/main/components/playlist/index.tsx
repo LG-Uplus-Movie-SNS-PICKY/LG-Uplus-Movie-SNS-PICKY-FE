@@ -95,23 +95,25 @@ function PlayListSection() {
                     css={styles.swiperContainer()}
                   >
                     {playlist.getSimpleMovieResps.length > 0 &&
-                      playlist.getSimpleMovieResps.map((movie) => (
-                        <SwiperSlide key={movie.movieId}>
-                          <MovieItem
-                            type="basic"
-                            src={
-                              process.env.NODE_ENV === "development"
-                                ? movie.posterUrl
-                                : `${import.meta.env.VITE_TMDB_IMAGE_URL}/${
-                                    movie.posterUrl
-                                  }`
-                            }
-                            title={movie.title}
-                            name={movie.title}
-                            onClick={() => navigate(`/movie/${movie.movieId}`)}
-                          />
-                        </SwiperSlide>
-                      ))}
+                      playlist.getSimpleMovieResps.map((movie) => {
+                        console.log(movie.posterUrl);
+
+                        return (
+                          <SwiperSlide key={movie.movieId}>
+                            <MovieItem
+                              type="basic"
+                              src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                                movie.posterUrl
+                              }`}
+                              title={movie.title}
+                              name={movie.title}
+                              onClick={() =>
+                                navigate(`/movie/${movie.movieId}`)
+                              }
+                            />
+                          </SwiperSlide>
+                        );
+                      })}
                   </Swiper>
                 </div>
               ))}
