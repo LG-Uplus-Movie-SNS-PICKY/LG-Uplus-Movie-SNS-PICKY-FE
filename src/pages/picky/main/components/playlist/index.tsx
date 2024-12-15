@@ -13,6 +13,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { usePlaylist } from "@hooks/playlist";
 import Loading from "@components/loading";
+import { useNavigate } from "react-router-dom";
 
 interface PlaylistItemTypes {
   [key: string]: unknown;
@@ -49,6 +50,8 @@ function PlayListSection() {
     isFetchingNextPage,
     isLoading,
   } = usePlaylist();
+
+  const navigate = useNavigate();
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
@@ -105,6 +108,7 @@ function PlayListSection() {
                             }
                             title={movie.title}
                             name={movie.title}
+                            onClick={() => navigate(`/movie/${movie.movieId}`)}
                           />
                         </SwiperSlide>
                       ))}
