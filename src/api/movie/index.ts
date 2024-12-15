@@ -1,4 +1,24 @@
 import apiClient from "@api";
+import axios from "axios";
+
+// 영화 등록 POST API
+export async function fetchMovieCreate(
+  movieInfo: Record<string, boolean>,
+  trailer: string,
+  ost: string,
+  behind: string[],
+  streaming: Record<string, boolean>
+) {
+  const { data } = await apiClient.post("/movie", {
+    movie_info: movieInfo,
+    trailer,
+    ost,
+    movie_behind_videos: [behind],
+    streaming_platform: streaming,
+  });
+
+  return data;
+}
 
 // Top 10 Movie 조회 GET API
 export async function fetchTopMovie() {
@@ -44,4 +64,41 @@ export async function toggleMovieLike(movieId: number): Promise<{ success: boole
     console.error("영화 좋아요 상태 변경 실패:", error);
     throw error;
   }
+}
+// TMDB 영화 조회 GET API
+export async function fetchSearchMovie(movieSearch: string) {
+  const { data } = await axios.get(
+    "https://api.themoviedb.org/3/search/movie",
+    {
+      params: {
+        query: movieSearch,
+        language: "ko-KR",
+      },
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+      },
+    }
+  );
+
+  return data.results;
+}
+
+// TMDB 영화 상세 조회 GET API
+export async function fetchMovieDetailInfo(movieId: number) {
+  const { data } = await axios.get(
+    `https://api.themoviedb.org/3/movie/${movieId}`,
+    {
+      params: {
+        append_to_response: "credits",
+        language: "ko-KR",
+      },
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_API_KEY}`,
+      },
+    }
+  );
+
+  return data;
 }

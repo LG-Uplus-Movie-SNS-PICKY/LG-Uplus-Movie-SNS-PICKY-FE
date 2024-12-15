@@ -6,6 +6,7 @@ import movieAndGenres from "@constants/json/genres/movieAndGenre.json";
 import movieCrews from "@constants/json/movie/movieCrew.json";
 import filmCrew from "@constants/json/movie/filmCrew.json";
 import movieBehindVideos from "@constants/json/movie/movieBehindVideos.json";
+import platform from "@constants/json/movie/platform.json";
 import platforms from "@constants/json/movie/platforms.json";
 import movieLikes from "@constants/json/movie/movieLikes.json";
 import genres from "@constants/json/genres/genres.json";
@@ -57,12 +58,16 @@ interface MovieInfoTypes {
   backdrop_path: string;
 }
 
+interface PlatformTypes {
+  off: boolean;
+}
+
 interface BodyType {
   movie_info: MovieInfoTypes;
   trailer: TrailerType;
   ost: OstType;
   movie_behind_videos: MovieBehindVideosType;
-  selectPlatform: number[];
+  streaming_platform: Array<PlatformTypes>;
 }
 
 function calculateTotalRating(likes: number) {
@@ -96,8 +101,13 @@ const movieHandlers: HttpHandler[] = [
         );
       }
 
-      const { movie_info, ost, trailer, movie_behind_videos, selectPlatform } =
-        (await request.json()) as BodyType;
+      const {
+        movie_info,
+        ost,
+        trailer,
+        movie_behind_videos,
+        streaming_platform,
+      } = (await request.json()) as BodyType;
 
       // 영화 추가
       movies.push({
@@ -123,25 +133,27 @@ const movieHandlers: HttpHandler[] = [
       // 해당 영화 비하인드 추가
       movieBehindVideos.push({
         movie_behind_video_id: movieBehindVideos.length + 1,
-        movie_behind_video_url: movie_behind_videos,
+        movie_behind_video_url: movie_behind_videos[0],
         movie_id: movie_info.id,
       });
 
       // 해당 영화 OTT 서비스 추가
-      selectPlatform.forEach((selector) => {
-        const platform = platforms.find(
-          (platform) => platform.platform_id === selector
-        );
+      for (let key in streaming_platform) {
+        if (streaming_platform[key]) {
+          const platformInfo = platform.find(
+            (platform) => platform.platform_name === key
+          );
 
-        if (!isEmpty(platform)) {
-          platforms.push({
-            movie_id: movie_info.id,
-            platform_id: platform.platform_id,
-            platform_name: platform.platform_name,
-            platform_url: platform.platform_url,
-          });
+          if (!isEmpty(platformInfo)) {
+            platforms.push({
+              movie_id: movie_info.id,
+              platform_id: platformInfo?.platform_id,
+              platform_name: key.toUpperCase(),
+              platform_url: platformInfo?.platform_url,
+            });
+          }
         }
-      });
+      }
 
       // 해당 영화 배우 추가
       if (movie_info.credits.cast.length) {
@@ -194,7 +206,7 @@ const movieHandlers: HttpHandler[] = [
       }
 
       // 해당 영화 제작진 추가
-      if (movie_info.credits.directingCrew.length) {
+      if (movie_info.credits?.directingCrew) {
         movie_info.credits.directingCrew.forEach((credit) => {
           // 중복된 제작진이 있는지 확인
           const crew = filmCrew.find((crew) => crew.film_crew_id === credit.id);

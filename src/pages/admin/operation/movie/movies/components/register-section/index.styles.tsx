@@ -54,6 +54,7 @@ export default {
           background-color: transparent;
           border: none;
           padding: 12px 16px;
+          display: flex;
 
           & > svg path {
             fill: #aaa;
@@ -65,7 +66,6 @@ export default {
 
   registerButton(): SerializedStyles {
     return css`
-      height: 45.61px;
       padding: 12px 24px;
       background-color: #fff;
       border: none;
@@ -275,13 +275,18 @@ export default {
 
       & > .movie-poster {
         width: 88px;
-        height: 132px;
+        height: 125.38;
         border-radius: 8px;
         overflow: hidden;
+        background-color: #191919;
 
-        & > img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & img {
           width: 100%;
-          height: 100%;
+          display: block;
         }
       }
 

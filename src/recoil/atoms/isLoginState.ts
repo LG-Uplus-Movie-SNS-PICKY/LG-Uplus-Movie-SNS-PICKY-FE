@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export interface LoginUserInfoTypes {
   [key: string]: unknown;
@@ -10,7 +10,7 @@ export interface LoginUserInfoTypes {
   gender: string;
 }
 
-interface LoginStateTypes {
+export interface LoginStateTypes {
   isLoginState: boolean;
   isAuthUser: boolean;
   isLoginInfo: LoginUserInfoTypes;

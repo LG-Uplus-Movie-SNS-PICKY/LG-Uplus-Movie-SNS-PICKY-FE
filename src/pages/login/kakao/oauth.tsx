@@ -34,7 +34,6 @@ const LoginCallback: React.FC = () => {
       })
       .then(async (response) => {
         // 소셜 로그인 서비스에서 정보를 제대로 전달 받았을 경우
-
         const { oAuth2Token, localJwtDto, isRegistrationDone, role } =
           response.data.data;
 
@@ -69,18 +68,17 @@ const LoginCallback: React.FC = () => {
             const newUserData = {
               ...currentUserCookie,
               user: {
-                birthdate: userResponse.data.birthdate,
-                name: userResponse.data.name,
+                // birthdate: userResponse.data.birthdate,
+                // name: userResponse.data.name,
                 nickname: userResponse.data.nickname,
                 gender: userResponse.data.gender,
-                nationality: userResponse.data.nationality,
-                email: userResponse.data.email,
+                // nationality: userResponse.data.nationality,
+                // email: userResponse.data.email,
                 profileUrl: userResponse.data.profileUrl,
               },
             };
 
             // 로그인 사용자의 쿠키 값을 설정
-            // cookies.set("user", JSON.stringify(newUserData));
             setCookie("user", JSON.stringify(newUserData), {
               path: "/", // 모든 경로에서 접근 가능
               maxAge: 60 * 60 * 24, // 1일 (초 단위)
@@ -97,12 +95,8 @@ const LoginCallback: React.FC = () => {
             });
 
             setToastMessage("로그인에 성공했습니다!");
-            // setTimeout(() => navigate("/"), 2000);
           } else {
             // 유저 정보가 등록되지 않았을 경우
-            // console.error("User API error:", );
-
-            // console.log(getCookie("user"));
             setToastMessage(
               "등록되지 않은 사용자입니다. 잠시 후 개인정보 입력 페이지로 넘어가겠습니다."
             );
@@ -123,7 +117,6 @@ const LoginCallback: React.FC = () => {
       })
       .finally(() => {
         // 성공, 실패에 상관없이 무조건 한 번은 실행되는 코드
-
         setIsLoading(false);
       });
   }, [navigate, setUserState, setIsLoginState]);
