@@ -21,6 +21,7 @@ export default {
 
       & > .main-logo {
         width: 82px;
+        cursor: pointer;
       }
     `;
   },

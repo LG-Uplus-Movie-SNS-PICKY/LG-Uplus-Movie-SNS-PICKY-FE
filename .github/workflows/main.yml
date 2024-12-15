@@ -29,6 +29,7 @@ jobs:
           echo "VITE_GOOGLE_REDIRECT_URL=${{ secrets.VITE_GOOGLE_REDIRECT_URL }}" >> .env.production
           echo "VITE_KAKAO_REDIRECT_URL=${{ secrets.VITE_KAKAO_REDIRECT_URL }}" >> .env.production
           echo "VITE_KAKAO_CLIENT_ID=${{ secrets.VITE_KAKAO_CLIENT_ID }}" >> .env.production
+          echo "VITE_YOUTUBE_API_KEY=${{ secrets.VITE_YOUTUBE_API_KEY }}" >> .env.production
 
       - name: Build
         run: yarn build
@@ -39,7 +40,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          
+
       - name: Invalidate CloudFront Cache
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"
         env:

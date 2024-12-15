@@ -36,9 +36,6 @@ export const useGenreMovieQuery = (genreId: number) => {
       fetchGenreMovie(genreId, pageParam.lastMovidId, pageParam.lastLikeCount),
 
     getNextPageParam: (lastPage) => {
-      // console.log("lastPage");
-      // console.log(lastPage);
-
       if (!lastPage?.data?.last) {
         return {
           lastMovidId:
@@ -77,7 +74,6 @@ export const useSearchMovie = (movieSearch: string) => {
     staleTime: 1000 * 60 * 5, // 5분 동안 데이터 캐시 유지 (옵션)
   });
 };
-
 // TMDB 영화 상세 데이터 React Query - Custom Hook
 export const useDetailMovieInfo = (movieId: number) => {
   return useQuery({

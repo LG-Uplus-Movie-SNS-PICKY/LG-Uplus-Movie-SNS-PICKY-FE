@@ -268,7 +268,15 @@ export default function SocialFeed() {
               <>
                 <button
                   onClick={() =>
-                    navigate(`/movie-log/edit/${selectedBoard.boardId}`)
+                    navigate(`/movie-log/edit/${selectedBoard.boardId}`, {
+                      state: {
+                        boardId: selectedBoard.boardId,
+                        movieTitle: selectedBoard.movieTitle,
+                        contents: selectedBoard.contents,
+                        boardContext: selectedBoard.context,
+                        isSpoiler: selectedBoard.isSpoiler,
+                      },
+                    })
                   }
                   style={{ color: "#000" }}
                 >

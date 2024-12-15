@@ -269,6 +269,7 @@ const boardHandlers: HttpHandler[] = [
           movieId: movieInfo?.movie_id,
           movieTitle: movieInfo?.movie_title,
           isLike: loginUser.localJwtDto.accessToken === userInfo?.user_id,
+          isAuthor: loginUser.localJwtDto.accessToken === userInfo?.user_id,
         };
       });
 
@@ -382,6 +383,7 @@ const boardHandlers: HttpHandler[] = [
             })),
             movieTitle: movieInfo?.movie_title,
             isLike: loginUser.localJwtDto.accessToken === userInfo?.user_id,
+            isAuthor: loginUser.localJwtDto.accessToken === userInfo?.user_id,
           };
         });
 
@@ -457,6 +459,8 @@ const boardHandlers: HttpHandler[] = [
         (element) => element.user_nickname === nickname
       );
 
+      const loginUser = getCookie("user") || {};
+
       // 무한 스크롤을 위한 page와 limit을 현재 주소에서 Param 값을 가져온다.
       const size = Number(url.searchParams.get("size") || 1);
       const lastBoardId = Number(url.searchParams.get("lastBoardId") || 10);
@@ -498,7 +502,8 @@ const boardHandlers: HttpHandler[] = [
               boardContentType: content.board_content_type,
             })),
             movieTitle: movieInfo?.movie_title,
-            isLike: false,
+            isLike: loginUser.localJwtDto.accessToken === userInfo?.user_id,
+            isAuthor: loginUser.localJwtDto.accessToken === userInfo?.user_id,
           };
         });
 
@@ -709,6 +714,7 @@ const boardHandlers: HttpHandler[] = [
             context: comment.comment_context,
             createdDate: comment.createdDate,
             updatedDate: comment.updatedDate,
+            isAuthor: userInfo.localJwtDto.accessToken === writerUser?.user_id,
           };
         });
 

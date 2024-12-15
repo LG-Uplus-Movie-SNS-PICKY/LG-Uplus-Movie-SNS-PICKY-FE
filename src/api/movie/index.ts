@@ -1,4 +1,5 @@
 import apiClient from "@api";
+import { MovieDetailTypes } from "@type/api/movie";
 import axios from "axios";
 
 // 영화 등록 POST API
@@ -13,10 +14,20 @@ export async function fetchMovieCreate(
     movie_info: movieInfo,
     trailer,
     ost,
-    movie_behind_videos: [behind],
+    movie_behind_videos: behind,
     streaming_platform: streaming,
   });
 
+  return data;
+}
+
+// 영화 정보 수정 PATCH API
+export async function fetchMovieDetailUpdate(
+  movieId: number,
+  movieInfo: MovieDetailTypes
+) {
+  console.log(movieInfo);
+  const { data } = await apiClient.patch(`/movie/${movieId}`, movieInfo);
   return data;
 }
 
@@ -83,6 +94,8 @@ export async function fetchMovieDetailInfo(movieId: number) {
       },
     }
   );
+
+  return data;
 }
 
 // 모든 게시글 조회 API
@@ -171,3 +184,59 @@ export async function deleteComment(
     throw error;
   }
 }
+
+// 게시글 생성 API
+export async function createBoard(
+  boardContext: string,
+  movieId: number,
+  isSpoiler: boolean,
+  images: File[],
+  videos: File[]
+) {
+  try {
+    const formData = new FormData();
+    formData.append(
+      "request",
+      JSON.stringify({ boardContext, movieId, isSpoiler })
+    );
+
+    // 이미지 파일 추가
+    images.forEach((image) => {
+      formData.append("image", image);
+    });
+
+    // 비디오 파일 추가
+    videos.forEach((video) => {
+      formData.append("video", video);
+    });
+
+    const { data } = await apiClient.post("/board", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return data;
+  } catch (error) {
+    console.error("게시글 생성 중 오류 발생:", error);
+    throw error;
+  }
+}
+
+// 게시글 수정 API
+export const updateBoard = async (
+  boardId: number,
+  boardContext: string,
+  isSpoiler: boolean
+) => {
+  try {
+    const { data } = await apiClient.post(`/board/${boardId}`, {
+      boardContext,
+      isSpoiler,
+    });
+    return data;
+  } catch (error) {
+    console.error("게시글 수정 중 오류 발생:", error);
+    throw error;
+  }
+};

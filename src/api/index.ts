@@ -31,17 +31,17 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
     // 공통 에러 처리 로직
-    console.log(error);
+    // console.log(error);
 
-    if (error.response) {
-      // 서버에서 받은 응답(Response) 에러 처리
-      console.error("API Error", error.response.data || error.message);
-    } else {
-      // 네트워크 에러 또는 기타 에러
-      console.error("Network Error: " + error.message);
-    }
+    // if (error.response) {
+    //   // 서버에서 받은 응답(Response) 에러 처리
+    //   console.error("API Error", error.response.data || error.message);
+    // } else {
+    //   // 네트워크 에러 또는 기타 에러
+    //   console.error("Network Error: " + error.message);
+    // }
 
-    return Promise.resolve(error);
+    return Promise.reject(error);
   }
 );
 

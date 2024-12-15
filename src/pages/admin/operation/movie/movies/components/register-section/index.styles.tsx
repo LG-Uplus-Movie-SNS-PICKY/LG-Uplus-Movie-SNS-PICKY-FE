@@ -88,6 +88,14 @@ export default {
       align-items: center;
       overflow-y: scroll;
 
+      & > li.loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(320px / 2);
+        width: 150px;
+      }
+
       & > .list-item {
         width: 100%;
 
