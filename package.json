@@ -6,22 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "postbuild": "react-snap",
     "lint": "eslint .",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "svgr": "npx @svgr/cli -d src/assets/svg --ignore-existing --typescript --no-dimensions public/svg"
-  },
-  "reactSnap": {
-    "inlineCss": true,
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ],
-    "inclide": [
-      "/"
-    ]
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
@@ -53,7 +42,6 @@
     "react-router-dom": "^6.28.0",
     "react-select": "^5.8.3",
     "react-slick": "^0.30.2",
-    "react-snap": "^1.23.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "styled-components": "^6.1.13",
