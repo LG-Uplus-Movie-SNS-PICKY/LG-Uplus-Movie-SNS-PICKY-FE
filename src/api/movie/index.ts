@@ -1,4 +1,5 @@
 import apiClient from "@api";
+import { MovieDetailTypes } from "@type/api/movie";
 import axios from "axios";
 
 // 영화 등록 POST API
@@ -13,10 +14,20 @@ export async function fetchMovieCreate(
     movie_info: movieInfo,
     trailer,
     ost,
-    movie_behind_videos: [behind],
+    movie_behind_videos: behind,
     streaming_platform: streaming,
   });
 
+  return data;
+}
+
+// 영화 정보 수정 PATCH API
+export async function fetchMovieDetailUpdate(
+  movieId: number,
+  movieInfo: MovieDetailTypes
+) {
+  console.log(movieInfo);
+  const { data } = await apiClient.patch(`/movie/${movieId}`, movieInfo);
   return data;
 }
 
@@ -83,6 +94,8 @@ export async function fetchMovieDetailInfo(movieId: number) {
       },
     }
   );
+
+  return data;
 }
 
 // 모든 게시글 조회 API

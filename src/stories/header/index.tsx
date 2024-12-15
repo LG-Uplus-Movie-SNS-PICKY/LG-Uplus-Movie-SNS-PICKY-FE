@@ -35,7 +35,7 @@ export function Header({
           <span>{label}</span>
         </div>
       ) : (
-        <Logo className="main-logo" />
+        <Logo className="main-logo" onClick={() => navigate("/")} />
       )}
 
       {/* 로그인 상태에 따른 활성화 버튼 컴포넌트 조건부 렌더링 */}
