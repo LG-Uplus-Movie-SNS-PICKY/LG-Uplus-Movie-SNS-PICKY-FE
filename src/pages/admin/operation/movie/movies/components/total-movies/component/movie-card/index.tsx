@@ -106,7 +106,8 @@ function MovieCard({ movie, genres }: MovieCardProps) {
     }
 
     // 영화의 정보가 수정된 경우
-    fetchMovieDetailUpdate(id, updateMovieInfo);
+    const response = fetchMovieDetailUpdate(id, updateMovieInfo);
+    console.log(response);
   };
 
   return (
