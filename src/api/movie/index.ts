@@ -110,7 +110,9 @@ export async function fetchMovieDetail(movieId: number) {
 }
 
 // 영화 좋아요 API
-export async function toggleMovieLike(movieId: number): Promise<{ success: boolean; message: string }> {
+export async function toggleMovieLike(
+  movieId: number
+): Promise<{ success: boolean; message: string }> {
   try {
     const { data } = await apiClient.post(`/movie/${movieId}/like`);
     return data;
@@ -118,4 +120,36 @@ export async function toggleMovieLike(movieId: number): Promise<{ success: boole
     console.error("영화 좋아요 상태 변경 실패:", error);
     throw error;
   }
+}
+// 특정 게시글 댓글 조회 GET API
+export async function fetchComments(
+  boardId: number,
+  size = 10,
+  lastCommentId?: number
+) {
+  const params = new URLSearchParams({ size: size.toString() });
+  if (lastCommentId) {
+    params.append("lastCommentId", lastCommentId.toString());
+  }
+
+  const { data } = await apiClient.get(
+    `/board/${boardId}/comments?${params.toString()}`
+  );
+  return data;
+}
+
+// 댓글 생성 POST API
+export async function addComment(boardId: number, context: string) {
+  const { data } = await apiClient.post(`/board/${boardId}/comment`, {
+    context,
+  });
+  return data;
+}
+
+// 댓글 삭제 DELETE API
+export async function deleteComment(boardId: number, commentId: number) {
+  const { data } = await apiClient.delete(
+    `/board/${boardId}/comments/${commentId}`
+  );
+  return data;
 }
