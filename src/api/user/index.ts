@@ -1,6 +1,6 @@
 import apiClient from "@api";
 
-// 닉네임 중복 체크를 위한 GEÍT API
+// 닉네임 중복 체크를 위한 GET API
 export async function fetchNicknameValidation(nickname: string) {
   const { data } = await apiClient.get("/user/nickname-validation", {
     params: {
@@ -51,5 +51,11 @@ export async function fetchProfileUser(formData: FormData) {
     },
   });
 
+  return data;
+}
+
+// 마이페이지 (게시글 수, 팔로워 수, 팔로잉 수)를 가져오는 GET API
+export async function fetchUserInfo(nickname: string) {
+  const { data } = await apiClient.get(`/user/mypage/${nickname}`);
   return data;
 }
