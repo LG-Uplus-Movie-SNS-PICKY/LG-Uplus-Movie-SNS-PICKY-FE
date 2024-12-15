@@ -11,11 +11,12 @@ import "swiper/css/autoplay";
 import "swiper/css/pagination";
 import { fetchRecommendMovie } from "@api/movie";
 import { useRecommnedMovieQuery } from "@hooks/movie";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Loading from "@components/loading";
 import { RecommendMovieDataTypes } from "@type/api/movie";
 import { Swiper as SwiperCore } from "swiper";
 import { useNavigate } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 /**
  * 사용자 맞춤 영화를 보여주는 슬라이더
@@ -25,6 +26,8 @@ function RecommendMovieSlider() {
   const { data, isLoading } = useRecommnedMovieQuery();
   const swiperRef = useRef<SwiperCore | null>(null);
   const navigate = useNavigate();
+
+  const [imageLoad, setImageLoad] = useState(false);
 
   useEffect(() => {
     if (!isLoading && data.data.length > 0) {
@@ -53,7 +56,9 @@ function RecommendMovieSlider() {
         data.data.map((movie: RecommendMovieDataTypes) => (
           <SwiperSlide key={movie.movieId}>
             <div
-              css={styles.sliderItem(movie.posterUrl)}
+              css={styles.sliderItem(
+                `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.posterUrl}`
+              )}
               onClick={() => navigate(`/movie/${movie.movieId}`)}
             >
               {/* Background Image */}
@@ -68,6 +73,15 @@ function RecommendMovieSlider() {
 
                 {/* Movie Poster Section */}
                 <div css={styles.moviePosterContainer()}>
+                  <LazyLoadImage
+                    src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                      movie.posterUrl
+                    }`}
+                    onLoad={() => setImageLoad(true)}
+                    onError={() => setImageLoad(false)}
+                  />
+                  {!imageLoad && <span>{movie.title}</span>}
+
                   <img src={movie.posterUrl} alt="image" />
                 </div>
 

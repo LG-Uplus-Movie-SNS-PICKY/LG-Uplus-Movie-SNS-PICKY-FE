@@ -313,8 +313,10 @@ const movieHandlers: HttpHandler[] = [
 
       // 해당 사용자가 등록한 장르 확인
       const preference = genrePreferences.filter(
-        (preference) => preference.user_id === userInfo.localJwtDto.accessToken
+        (preference) => preference.user_id === 7
       );
+
+      // console.log(preference);
 
       const recommendMovies = movies
         .filter((movie) => {
@@ -572,7 +574,7 @@ const movieHandlers: HttpHandler[] = [
               overview: movieInfo.movie_plot,
               runtime: movieInfo.movie_running_time,
               // rating: movieInfo.movie_total_rating,
-              
+
               // 장르 정보 필터링
               genres: [
                 ...movieAndGenres
