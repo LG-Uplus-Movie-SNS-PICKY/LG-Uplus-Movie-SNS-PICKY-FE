@@ -73,47 +73,73 @@ function My() {
   //   }
   // }
 
-  // 닉네임 검증 함수
-  async function checkNickname(nickname: string) {
-    try {
-      const response = await fetchNicknameValidation(nickname);
-      setIsValid(response.isValid); // API에서 받은 값을 상태로 설정
-    } catch (error) {
-      console.error("닉네임 검증 중 오류가 발생했습니다:", error);
-      setIsValid(false); // 오류가 발생한 경우 기본값으로 false 설정 -> 서버 오류로 일단 임시로 처리
-    }
-  }
+  // // 닉네임 검증 함수
+  // async function checkNickname(nickname: string) {
+  //   try {
+  //     const response = await fetchNicknameValidation(nickname);
+  //     setIsValid(response.isValid); // API에서 받은 값을 상태로 설정
+  //   } catch (error) {
+  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
+  //     setIsValid(false); // 오류가 발생한 경우 기본값으로 false 설정 -> 서버 오류로 일단 임시로 처리
+  //   }
+  // }
 
-  // 닉네임 검증 후 사용자 정보 로드
+  // // 닉네임 검증 후 사용자 정보 로드
+  // useEffect(() => {
+  //   if (nickname) {
+  //     checkNickname(nickname); // 닉네임 검증
+  //   }
+  // }, [nickname]);
+
+  // useEffect(() => {
+  //   if (isValid === false) {
+  //     // 닉네임이 사용 가능할 때만 사용자 정보 로드
+  //     const loadUserInfo = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const data = await fetchUserInfo(nickname as string);
+
+  //         setUserData(data);
+  //         setBoardCount(data.boardCount ?? 0);
+  //         setFollowersCount(data.followerCount ?? 0);
+  //         setFollowingCount(data.followingCount ?? 0);
+  //       } catch (err) {
+  //         console.error(err);
+  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     loadUserInfo();
+  //   }
+  // }, [isValid, nickname]);
+
+  // 사용자 정보 로드
   useEffect(() => {
     if (nickname) {
-      checkNickname(nickname); // 닉네임 검증
-    }
-  }, [nickname]);
-
-  useEffect(() => {
-    if (isValid === false) {
-      // 닉네임이 사용 가능할 때만 사용자 정보 로드
       const loadUserInfo = async () => {
         try {
           setLoading(true);
           const data = await fetchUserInfo(nickname as string);
-
+          
+          console.log("Fetched User Data:", data); // 콘솔에 사용자 정보 출력
+          
           setUserData(data);
           setBoardCount(data.boardCount ?? 0);
           setFollowersCount(data.followerCount ?? 0);
           setFollowingCount(data.followingCount ?? 0);
         } catch (err) {
-          console.error(err);
+          console.error("Error fetching user info:", err); // 오류 발생 시 출력
           setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
         } finally {
           setLoading(false);
         }
       };
-
+  
       loadUserInfo();
     }
-  }, [isValid, nickname]);
+  }, [nickname]);
 
   const dummyData = {
     id: 1,
