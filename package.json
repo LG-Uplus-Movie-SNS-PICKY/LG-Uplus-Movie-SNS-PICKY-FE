@@ -15,6 +15,8 @@
   "dependencies": {
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.0",
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
+    "@prerenderer/rollup-plugin": "^0.3.12",
     "@tanstack/react-query": "^5.62.3",
     "@tanstack/react-query-devtools": "^5.60.5",
     "@types/event-source-polyfill": "^1.0.5",
@@ -30,6 +32,7 @@
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "msw": "^2.6.6",
+    "puppeteer": "^23.10.4",
     "react": "^18.3.1",
     "react-cookie": "^7.2.2",
     "react-datepicker": "^7.5.0",
