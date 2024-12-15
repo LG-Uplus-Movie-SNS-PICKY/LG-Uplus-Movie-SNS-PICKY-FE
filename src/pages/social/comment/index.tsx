@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
 import {
   feedContainer,
   feedItem,
@@ -43,6 +42,7 @@ import DeletePost from "@assets/icons/delete_post.svg?react";
 import { Modal } from "@stories/modal";
 import { Toast } from "@stories/toast";
 import { MovieLog, BoardContentTypes } from "@stories/movie-log";
+import { fetchComments, createComment, deleteComment } from "@api/movie";
 
 interface Content {
   board_content_id: number;
@@ -91,31 +91,37 @@ export default function FeedComment() {
   const [likeCountValue, setLikeCountValue] = useState(
     boardData?.likesCount || 0
   );
-  const [comments, setComments] = useState<Comment[]>([]); // 댓글 데이터
+  const [comments, setComments] = useState<Comment[]>([]); // 빈 배열로 초기화
   const [comment, setComment] = useState("");
-  const [myUserId] = useState<number>(6); // 현재 사용자 ID
+  const myUserId = 2;
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchComments = async () => {
+    const fetchAndSetComments = async () => {
+      if (!boardId) return;
+
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/comments`,
-          {
-            headers: {
-              Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
-            },
-          }
-        );
-        setComments(response.data.data || []);
+        const response = await fetchComments(Number(boardId), 10);
+        console.log("댓글 API 응답 데이터:", response);
+
+        // 응답 데이터에서 댓글 리스트를 정확히 추출
+        const fetchedComments =
+          response?.content || response?.data?.content || [];
+        if (Array.isArray(fetchedComments)) {
+          setComments(fetchedComments);
+        } else {
+          console.error("댓글 데이터가 배열이 아닙니다:", fetchedComments);
+          setComments([]);
+        }
       } catch (error) {
         console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
+        setComments([]);
       }
     };
 
-    if (boardId) fetchComments();
+    fetchAndSetComments();
   }, [boardId]);
 
   const toggleModal = () => {
@@ -132,25 +138,16 @@ export default function FeedComment() {
   };
 
   const handleCommentSubmit = async () => {
-    if (!comment.trim()) return;
+    if (!comment.trim() || !boardId) return;
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/comment`,
-        { content: comment },
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await createComment(Number(boardId), comment);
 
       // 댓글 생성 후, 로컬 상태 업데이트
       setComments((prevComments) => [
         ...prevComments,
         {
-          commentId: response.data.commentId,
+          commentId: response.commentId,
           writerId: myUserId,
           writerNickname: "현재 사용자 닉네임", // 실제 데이터에 맞게 설정 필요
           writerProfileUrl: "", // 사용자 프로필 URL 설정 필요
@@ -169,32 +166,43 @@ export default function FeedComment() {
     }
   };
 
-  const handleDeleteComment = (commentId: string) => {
+  const handleDeleteComment = async (commentId: string, writerId: number) => {
+    if (writerId !== myUserId) {
+      setToastMessage("다른 유저의 댓글은 삭제할 수 없습니다.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000); // 3초 후 토스트 메시지 숨기기
+      return;
+    }
     setSelectedCommentId(commentId);
     setIsCommentDeleteModalOpen(true);
+
+    try {
+      await deleteComment(Number(boardId), Number(commentId));
+      setComments((prevComments) =>
+        prevComments.filter(
+          (comment) => comment.commentId !== Number(commentId)
+        )
+      );
+      setToastMessage("댓글이 성공적으로 삭제되었습니다.");
+      setShowToast(true);
+    } catch (error) {
+      console.error("댓글 삭제 중 오류 발생:", error);
+      setToastMessage("댓글 삭제에 실패했습니다.");
+      setShowToast(true);
+    }
+    console.log("isCommentDeleteModalOpen:", isCommentDeleteModalOpen); // 상태 확인
   };
 
   const confirmDeleteComment = async () => {
-    if (!selectedCommentId) return;
+    if (!selectedCommentId || !boardId) return;
 
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/board/${boardId}/comments`,
-        {
-          params: { commentId: selectedCommentId },
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
-          },
-        }
-      );
-
-      // 댓글 삭제 성공 시, 로컬 상태에서 댓글 제거
+      await deleteComment(Number(boardId), Number(selectedCommentId)); // API 호출
       setComments((prevComments) =>
         prevComments.filter(
           (comment) => comment.commentId.toString() !== selectedCommentId
         )
-      );
-
+      ); // 로컬 상태에서 삭제
       setToastMessage("댓글이 성공적으로 삭제되었습니다.");
       setShowToast(true);
     } catch (error) {
@@ -202,26 +210,17 @@ export default function FeedComment() {
       setToastMessage("댓글 삭제에 실패했습니다.");
       setShowToast(true);
     } finally {
-      setIsCommentDeleteModalOpen(false);
+      setIsCommentDeleteModalOpen(false); // 모달 닫기
       setSelectedCommentId(null); // 선택된 댓글 ID 초기화
     }
-  };
-
-  const calculateTimeAgo = (createdDate: string) => {
-    const now = new Date();
-    const created = new Date(createdDate);
-    const diff = Math.floor((now.getTime() - created.getTime()) / 1000);
-
-    if (diff < 60) return `${diff}초 전`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
-    return `${Math.floor(diff / 86400)}일 전`;
   };
 
   if (!boardData) {
     return <div>게시글 데이터를 불러오는 중...</div>;
   }
-
+  useEffect(() => {
+    console.log("댓글 데이터 업데이트:", comments);
+  }, [comments]);
   return (
     <div css={wrapper}>
       <div css={feedContainer}>
@@ -243,7 +242,7 @@ export default function FeedComment() {
               <span css={movieTitle}>{boardData.movieTitle}</span>
             </div>
           </div>
-          <div css={timeSection}>{calculateTimeAgo(boardData.createdDate)}</div>
+          <div css={timeSection}></div>
         </div>
         <div css={contentSection}>{boardData.context}</div>
 
@@ -273,41 +272,56 @@ export default function FeedComment() {
         </div>
       </div>
       <div css={commentSection}>
-        {comments.map((comment, index) => (
-          <div css={commentItem} key={`comment-${comment.commentId}`}>
-            <div css={commentProfileSection}>
-              <div css={commentProfileDetails}>
-                <img
-                  src={comment.writerProfileUrl || "/default-profile.png"}
-                  alt="댓글 작성자 프로필"
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    borderRadius: "50%",
-                  }}
-                />
-                <div css={CommentInfoSection}>
-                  <div css={commentBox}>
-                    <span css={commentTimeSection}>
-                      {comment.writerNickname}
-                    </span>
-                    <span>{calculateTimeAgo(comment.createdDate)}</span>
-                  </div>
-                  <div css={commentTextSection}>
-                    <p>{comment.context}</p>
+        {Array.isArray(comments) && comments.length > 0 ? (
+          comments.map((comment) => (
+            <div css={commentItem} key={`comment-${comment.commentId}`}>
+              <div css={commentProfileSection}>
+                <div css={commentProfileDetails}>
+                  <img
+                    src={"/default-profile.png"}
+                    alt="댓글 작성자 프로필"
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div css={CommentInfoSection}>
+                    <div css={commentBox}>
+                      <span css={commentTimeSection}>
+                        {comment.writerNickname}
+                      </span>
+                      {/* <span>{calculateTimeAgo(comment.createdDate)}</span> */}
+                    </div>
+                    <div css={commentTextSection}>
+                      <p>{comment.context}</p>
+                    </div>
                   </div>
                 </div>
+                <CommentReportButton
+                  onClick={() =>
+                    handleDeleteComment(
+                      comment.commentId.toString(),
+                      comment.writerId
+                    )
+                  }
+                />
               </div>
-              <CommentReportButton
-                onClick={() =>
-                  handleDeleteComment(comment.commentId.toString())
-                }
-              />
             </div>
-          </div>
-        ))}
-        {comments.length === 0 && (
+          ))
+        ) : (
           <div key="no-comments">댓글이 없습니다. 첫 댓글을 작성해보세요!</div>
+        )}
+        {isCommentDeleteModalOpen && (
+          <div css={modalOverlay}>
+            <Modal
+              message="댓글을 삭제하시겠습니까?"
+              confirmText="삭제"
+              cancelText="취소"
+              onConfirm={confirmDeleteComment} // 삭제 API 호출
+              onCancel={() => setIsCommentDeleteModalOpen(false)} // 모달 닫기
+            />
+          </div>
         )}
       </div>
 
@@ -335,47 +349,12 @@ export default function FeedComment() {
               onClick={handleCommentSubmit}
             />
           ) : (
-            <RegistComment css={registerImage} onClick={handleCommentSubmit} />
+            <RegistComment css={registerImage} />
           )}
         </div>
       </div>
       {/* 모달 및 토스트 */}
-      {showToast && <Toast message={toastMessage} direction="up" />}
-      {/* 모달 및 토스트 */}
-      {/* {isModalOpen && (
-        <div css={modalOverlay} onClick={toggleModal}>
-          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {postUserId === myUserId ? (
-              <>
-                <button onClick={() => navigate(`/movie-log/edit/${boardId}`)}>
-                  <EditPost /> 게시글 수정
-                </button>
-                <button onClick={() => setIsDeleteModalOpen(true)}>
-                  <DeletePost /> 삭제하기
-                </button>
-              </>
-            ) : (
-              <>
-                <button>욕설 신고</button>
-                <button>스포일러 신고</button>
-              </>
-            )}
-          </div>
-        </div>
-      )} */}
-      {/* 댓글 삭제 확인 모달 */}
-      {isCommentDeleteModalOpen && (
-        <div css={modalOverlay}>
-          <Modal
-            message={`댓글을 삭제하시겠습니까?`}
-            confirmText="삭제"
-            cancelText="취소"
-            onConfirm={confirmDeleteComment}
-            onCancel={() => setIsCommentDeleteModalOpen(false)}
-          />
-        </div>
-      )}
-      {showToast && <Toast message={toastMessage} direction="up" />}
+      {showToast && <Toast message={toastMessage} direction="down" />}
     </div>
   );
 }
