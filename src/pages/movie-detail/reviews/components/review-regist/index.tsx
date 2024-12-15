@@ -145,6 +145,12 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
                     <ReviewInput
                         value={review}
                         onChange={handleReviewChange}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault(); // 기본 Enter 키 동작 방지
+                                handleSubmit(); // 엔터키로 한줄평 등록
+                            }
+                        }}
                         placeholder="감상평을 작성해주세요."
                     />
                     <SubmitButton onClick={handleSubmit}>등록</SubmitButton>

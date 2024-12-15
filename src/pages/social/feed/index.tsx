@@ -40,6 +40,7 @@ interface BoardContent {
   movieTitle: string;
   createdDate: string;
   context: string;
+  isAuthor: boolean;
   isSpoiler: boolean;
   isLike: boolean;
   likesCount: number;
@@ -114,12 +115,13 @@ export default function SocialFeed() {
 
   // 게시글 삭제 처리
   const confirmDeletePost = async () => {
-    if (!selectedBoard) return;
+    if (!selectedBoard || !selectedBoard.isAuthor) {
+      alert("권한이 없습니다. 삭제할 수 없습니다.");
+      return;
+    }
 
     try {
       await deletePost(selectedBoard.boardId);
-      console.log(selectedBoard.boardId);
-
       setBoardData((prevData) =>
         prevData.filter((board) => board.boardId !== selectedBoard.boardId)
       );
@@ -264,7 +266,7 @@ export default function SocialFeed() {
       {isOptionsModalOpen && selectedBoard && (
         <div css={modalOverlay} onClick={() => setIsOptionsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {selectedBoard.writerId === myUserId ? (
+            {selectedBoard.isAuthor ? (
               <>
                 <button
                   onClick={() =>
