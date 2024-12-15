@@ -9,19 +9,11 @@ interface SEOProps {
 }
 
 function SEO({ title = "PICKY", description, image, url }: SEOProps) {
-  const defaultImage = "/src/assets/images/logo.png";
+  const defaultImage = `${window.location.href}src/assets/images/logo.png`;
   const defaultURL =
     process.env.NODE_ENV === "development"
       ? "http://localhost:5173"
       : "https://www.picky-movie.com";
-
-  console.log("url: " + url);
-  console.log("defaultURL: " + defaultURL);
-  console.log("url + defaultURL: " + defaultURL + url);
-
-  console.log(url ? defaultURL + url : defaultURL);
-  console.log("defaultImage: " + defaultImage);
-  console.log("image: " + image);
 
   return (
     <Helmet>
