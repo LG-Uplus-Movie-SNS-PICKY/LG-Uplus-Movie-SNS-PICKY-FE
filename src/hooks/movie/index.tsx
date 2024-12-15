@@ -74,7 +74,6 @@ export const useSearchMovie = (movieSearch: string) => {
     staleTime: 1000 * 60 * 5, // 5분 동안 데이터 캐시 유지 (옵션)
   });
 };
-
 // TMDB 영화 상세 데이터 React Query - Custom Hook
 export const useDetailMovieInfo = (movieId: number) => {
   return useQuery({

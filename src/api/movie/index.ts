@@ -94,6 +94,8 @@ export async function fetchMovieDetailInfo(movieId: number) {
       },
     }
   );
+
+  return data;
 }
 
 // 모든 게시글 조회 API
