@@ -9,7 +9,7 @@ export const notificationsState = atom<NotificationTypes[]>({
 
 // 읽지 않은 알림 수 상태 (selector로 계산)
 export const unreadCountState = selector({
-  key: "notificationsState",
+  key: "unreadCountState",
   get: ({ get }) => {
     const notifications = get(notificationsState);
     return notifications.filter((notifications) => !notifications.isRead)
