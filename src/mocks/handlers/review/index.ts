@@ -226,7 +226,7 @@ const reviewHandler: HttpHandler[] = [
   // param = size: 가져올 데이터 개수, lastReviewId: 제일 마지막에 본 리뷰 ID, lastCreatedAt: 제일 마지막에 본 리뷰 Date
   // headers -> 필수
   http.get(
-    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/:nickname`,
+    `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/user/:nickname`,
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
       const { nickname } = params;
