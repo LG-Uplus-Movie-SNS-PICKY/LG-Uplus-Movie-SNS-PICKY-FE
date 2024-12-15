@@ -70,8 +70,24 @@ export async function fetchLineReviewsByUser(
     params.append("lastCreatedAt", lastCreatedAt);
   }
 
-  const { data } = await apiClient.get(`/linereview/user/${nickname}?${params.toString()}`);
-  return data;
+  try {
+    const { data } = await apiClient.get(`/linereview/user/${nickname}?${params.toString()}`);
+    console.log("API Response:", data);
+
+    // 응답 데이터 구조 확인 및 파싱
+    if (data?.context && data?.lastCursor) {
+      return {
+        context: data.context,
+        lastCursor: data.lastCursor,
+      };
+    } else {
+      console.error("API 응답 구조가 예상과 다릅니다:", data);
+      throw new Error("API 응답 오류");
+    }
+  } catch (error) {
+    console.error("API 호출 실패:", error);
+    throw error;
+  }
 }
 
 // 한줄평 수정 PATCH API

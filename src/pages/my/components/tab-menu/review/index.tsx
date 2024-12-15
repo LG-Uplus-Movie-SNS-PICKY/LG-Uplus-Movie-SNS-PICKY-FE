@@ -63,6 +63,7 @@ function LineReviewContent() {
   const { nickname } = useParams<{ nickname: string }>();
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
+  const [lastCursor, setLastCursor] = useState<{ lastCreatedAt: string; lastReviewId: number } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 관리
@@ -80,10 +81,20 @@ function LineReviewContent() {
 
       try {
         setIsLoading(true);
-        const response = await fetchLineReviewsByUser(nickname, 10); // API 호출
-        setReviews(response.content || []);
+
+        // 실제 API 호출 복원
+        const response = await fetchLineReviewsByUser(nickname, 10);
+        console.log("Fetched Reviews:", response);
+
+        setReviews(response.context || []); // API 응답 데이터에서 리뷰 설정
+        setLastCursor(response.lastCursor || null); // 페이징 정보 설정
+
+        // // 더미 데이터 설정
+        // setReviews(dummyData.data.content || []);
+        // setLastCursor(null);
+
       } catch (err) {
-        console.error(err);
+        console.error("API 호출 실패:", err);
         setError("한줄평 데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
@@ -93,13 +104,29 @@ function LineReviewContent() {
     fetchLineReviews();
   }, [nickname]);
 
-  // // 더미 데이터 정의
   // const dummyData = {
   //   success: true,
   //   code: 200,
   //   message: "요청이 성공적으로 처리되었습니다.",
   //   data: {
   //     content: [
+  //       {
+  //         id: 96,
+  //         writerNickname: "우진쓰~",
+  //         userId: 10,
+  //         rating: 5.0,
+  //         context: "노래 너무 좋아여👍",
+  //         isSpoiler: false,
+  //         likes: 0,
+  //         dislikes: 0,
+  //         createdAt: "2024-12-15T17:06:13.377225",
+  //         movie: {
+  //           movieId: 1241982,
+  //           movieTitle: "모아나 2",
+  //           moviePosterUrl: "/2WVvPcVRqfjyVzIUVIcszGb6zT4.jpg",
+  //         },
+  //         isAuthor: true,
+  //       },
   //       {
   //         id: 95,
   //         writerNickname: "우진쓰~",
@@ -117,37 +144,21 @@ function LineReviewContent() {
   //         },
   //         isAuthor: true,
   //       },
-  //       {
-  //         id: 93,
-  //         writerNickname: "우진쓰~",
-  //         userId: 10,
-  //         rating: 5.0,
-  //         context: "인생영화👍",
-  //         isSpoiler: false,
-  //         likes: 0,
-  //         dislikes: 0,
-  //         createdAt: "2024-12-15T05:04:23.946122",
-  //         movie: {
-  //           movieId: 12445,
-  //           movieTitle: "해리 포터와 죽음의 성물 2",
-  //           moviePosterUrl: "/ehUeFvQeo8Vr2aDIKLsLbC8okcw.jpg",
-  //         },
-  //         isAuthor: true,
-  //       },
   //     ],
   //   },
   // };
 
   // useEffect(() => {
-  //   // 더미 데이터를 사용하여 상태 업데이트
-  //   setIsLoading(true);
+  //   // 더미 데이터를 직접 사용하여 상태 설정
   //   try {
-  //     setReviews(dummyData.data.content);
+  //     setIsLoading(true); // 로딩 상태 설정
+  //     setReviews(dummyData.data.content || []); // 더미 데이터에서 리뷰 데이터 설정
+  //     setLastCursor(null); // lastCursor 필요 시 설정
   //   } catch (err) {
-  //     console.error(err);
-  //     setError("더미 데이터를 로드하는 중 문제가 발생했습니다.");
+  //     console.error("더미 데이터 처리 중 오류 발생:", err);
+  //     setError("더미 데이터를 처리하는 중 오류가 발생했습니다.");
   //   } finally {
-  //     setIsLoading(false);
+  //     setIsLoading(false); // 로딩 상태 해제
   //   }
   // }, []);
 
@@ -258,7 +269,10 @@ function LineReviewContent() {
 
   return (
     <div css={styles.container()} className={reviews.length ? "" : "centered"}>
+      {/* 리뷰 데이터가 없는 경우 EmptyLineReview를 렌더링 */}
       {reviews.length === 0 && <EmptyLineReview />}
+
+      {/* 리뷰 데이터가 있을 경우 렌더링 */}
       {reviews.length > 0 &&
         reviews.map((review) => (
           <div key={review.id} css={styles.reviewCard()}>
