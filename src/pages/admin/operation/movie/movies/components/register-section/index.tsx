@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import styles from "./index.styles";
 
@@ -30,6 +30,7 @@ import { useDetailMovieInfo, useSearchMovie } from "@hooks/movie";
 import { fetchMovieCreate } from "@api/movie";
 import Loading from "@components/loading";
 import { LoadingContainer } from "@pages/movie-detail/reviews/index.styles";
+import { Toast } from "@stories/toast";
 
 // // Swiper Lib Import
 // import { Swiper, SwiperSlide } from "swiper/react";
@@ -83,6 +84,8 @@ function RegistMovieSection() {
 
   const [isPosterImageLoading, setIsPosterImageLoading] = useState(false);
 
+  const [toastMessage, setToastMessage] = useState("");
+
   // const [movieInfo, setMovieInfo] = useState<DetailMovie | null>(null);
   const [activeOttBtn, setActiveOttBtn] = useState<Record<string, boolean>>({
     netflix: false,
@@ -120,15 +123,31 @@ function RegistMovieSection() {
     event.preventDefault();
 
     if (movieInfo && behindInputValue && ostInputValue) {
-      const resposne = await fetchMovieCreate(
-        movieInfo,
-        trailerInputValue,
-        ostInputValue,
-        [behindInputValue],
-        activeOttBtn
-      );
+      try {
+        await fetchMovieCreate(
+          movieInfo,
+          trailerInputValue,
+          ostInputValue,
+          [behindInputValue],
+          activeOttBtn
+        );
 
-      console.log(resposne);
+        setToastMessage("영화가 등록되었습니다.");
+
+        setTimeout(() => {
+          setMovieSearch("");
+          setMovieId(0);
+          setTrailerInputValue("");
+          setOstInputValue("");
+          setBehindInputValue("");
+        }, 3000);
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          if (error.response) {
+            setToastMessage(error.response.data.message);
+          }
+        }
+      }
     }
   };
 
@@ -146,6 +165,7 @@ function RegistMovieSection() {
               <input
                 type="text"
                 placeholder="등록할 영화 제목 입력"
+                value={movieSearch}
                 onChange={handleChange}
                 onFocus={() => setIsInputFocus(true)}
                 onBlur={() => setIsInputFocus(false)}
@@ -350,6 +370,8 @@ function RegistMovieSection() {
           )}
         </div>
       </form>
+
+      {toastMessage && <Toast message={toastMessage} direction="none" />}
     </>
   );
 }

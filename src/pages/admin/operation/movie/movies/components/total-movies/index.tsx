@@ -45,12 +45,6 @@ function TotalMoviesSection() {
     selectButton ?? -1
   );
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(loadable.contents.data);
-    }
-  }, [isLoading]);
-
   return (
     <>
       <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>

@@ -17,11 +17,11 @@ function MovieCard({ movie, genres }: MovieCardProps) {
 
   const [isPosterImageLoading, setIsPosterImageLoading] = useState(false); // 포스터 이미지 Loading
 
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(movieInfo);
-    }
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     console.log(movieInfo);
+  //   }
+  // }, [isLoading]);
 
   return (
     !isLoading && (
@@ -163,8 +163,8 @@ function MovieCard({ movie, genres }: MovieCardProps) {
             {/* 수정 버튼 */}
             <div className="update">
               {/* <button onClick={() => setWatchServiceUpdateActive(true)}>
-            수정
-          </button> */}
+                수정
+              </button> */}
             </div>
           </div>
           <div className="service">

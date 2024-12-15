@@ -1,5 +1,5 @@
 import apiClient from "@api";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 // 영화 등록 POST API
 export async function fetchMovieCreate(
@@ -9,24 +9,12 @@ export async function fetchMovieCreate(
   behind: string[],
   streaming: Record<string, boolean>
 ) {
-  console.log({
-    addMovieReq: {
-      movie_info: movieInfo,
-      trailer,
-      ost,
-      movie_behind_videos: [behind],
-      streaming_platform: streaming,
-    },
-  });
-
   const { data } = await apiClient.post("/movie", {
-    addMovieReq: JSON.stringify({
-      movie_info: movieInfo,
-      trailer,
-      ost,
-      movie_behind_videos: [behind],
-      streaming_platform: streaming,
-    }),
+    movie_info: movieInfo,
+    trailer,
+    ost,
+    movie_behind_videos: behind,
+    streaming_platform: streaming,
   });
 
   return data;
