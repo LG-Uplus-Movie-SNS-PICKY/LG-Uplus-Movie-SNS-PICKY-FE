@@ -305,11 +305,11 @@ const reviewHandler: HttpHandler[] = [
           lastCursor:
             paginatedReviews.length > 0
               ? {
-                  lastCreatedAt:
-                    paginatedReviews[paginatedReviews.length - 1].createdAt,
-                  lastReviewId:
-                    paginatedReviews[paginatedReviews.length - 1].id,
-                }
+                lastCreatedAt:
+                  paginatedReviews[paginatedReviews.length - 1].createdAt,
+                lastReviewId:
+                  paginatedReviews[paginatedReviews.length - 1].id,
+              }
               : null,
           numberOfElements: paginatedReviews.length,
           first: !lastCreatedAt && !lastReviewId,

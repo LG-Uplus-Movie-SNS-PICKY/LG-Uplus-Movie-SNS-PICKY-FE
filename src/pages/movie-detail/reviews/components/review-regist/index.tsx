@@ -1,6 +1,7 @@
+
+
 // pages/movie-detail/reviews/components/review-regist/index.tsx
 import { useState } from 'react';
-import axios from 'axios';
 import {
     Container,
     TitleContainer,
@@ -21,10 +22,29 @@ import {
     MaxText
 } from './index.styles';
 import { Toast } from '@stories/toast'
+import { createLineReview } from '@api/linereview';
+import { getCookie } from '@util/cookie';
 
-const ReviewRegist = ({ refetch }: { refetch: () => void }) => {
-    // const accessToken = localStorage.getItem("accessToken");
-    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTMsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzMzOTY1NTE5LCJleHAiOjE3MzQwNTE5MTl9.0l58z2m5gbDOhBQfluWGZ8c5rJRhqZh_cAPx_8CxNWQ"
+interface Review {
+    id: number;
+    writerNickname: string;
+    userId: number;
+    movieId: number;
+    rating: number;
+    context: string;
+    isSpoiler: boolean;
+    likes: number;
+    dislikes: number;
+    createdAt: string;
+}
+
+interface ReviewRegistProps {
+    refetch: () => void; // 리뷰 목록 새로고침 함수
+    movieId: number; // 동적으로 전달되는 movieId
+    onAddReview: (newReview: Review) => void; // 새로운 리뷰 추가 콜백
+}
+
+const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
     const [rating, setRating] = useState(0);
     const [review, setReview] = useState('');
     const [spoiler, setSpoiler] = useState<boolean | null>(null);
@@ -48,51 +68,53 @@ const ReviewRegist = ({ refetch }: { refetch: () => void }) => {
         }
     };
 
-    // const handleSubmit = () => {
-    //     if (rating === 0 || spoiler === null || review.length === 0) {
-    //         showToast("모든 입력 필드를 채워주세요.", 'up');
-    //     } else {
-    //         console.log({ rating, review, spoiler });
-    //         showToast("관람평이 등록되었습니다.", 'up');
-    //     }
-    // };
-
     const handleSubmit = async () => {
         if (rating === 0 || spoiler === null || review.length === 0) {
-          showToast("모든 입력 필드를 채워주세요.", 'up');
-          return;
+            showToast("모든 입력 필드를 채워주세요.", "up");
+            return;
         }
-    
-        const reviewData = {
-          userId: 7, // 테스트용 User ID (실제 로그인 정보를 기반으로 대체 필요)
-          writerNickname: "먹식이", // 테스트용 닉네임
-          movieId: 1, // 영화 ID (고정)
-          rating,
-          content: review,
-          isSpoler: spoiler,
+
+        // 사용자 정보 가져오기
+        const userInfo = getCookie("user") || {};
+
+        // userInfo 검증
+        if (!userInfo || !userInfo.localJwtDto || !userInfo.user) {
+            showToast("사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요.", "up");
+            return;
+        }
+
+        console.log("userInfo:", userInfo.localJwtDto.accessToken);
+        console.log("userInfo:", userInfo.user.nickname);
+
+        const newReview = {
+            id: Date.now(), // 임시 ID
+            userId: userInfo.localJwtDto.accessToken, // userId를 userInfo에서 추출
+            writerNickname: userInfo.user.nickname, // writerNickname을 userInfo에서 추출
+            movieId,
+            rating,
+            context: review,
+            isSpoiler: spoiler,
+            likes: 0,
+            dislikes: 0,
+            createdAt: new Date().toISOString(),
         };
-    
+
         try {
-          console.log("보낼 데이터:", reviewData);
-    
-          const response = await axios.post(
-            `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/create`,
-            reviewData,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`, // 토큰
-              },
-            }
-          );
-    
-          console.log("등록 성공:", response.data);
-          showToast("한줄평 등록이 완료되었습니다.", 'up');
-          refetch(); // 등록 후 리뷰 목록 새로고침
+            const response = await createLineReview(newReview);
+            console.log("등록 성공:", response);
+
+            // 새 리뷰 추가
+            onAddReview(newReview);
+
+            showToast("한줄평 등록이 완료되었습니다.", "up");
+            setRating(0);
+            setReview("");
+            setSpoiler(null);
         } catch (error) {
-          console.error("등록 실패:", error);
-          showToast("한줄평 등록에 실패했습니다.", 'down');
+            console.error("등록 실패:", error);
+            showToast("한줄평 등록에 실패했습니다.", "down");
         }
-      };    
+    };
 
     return (
         <Container>

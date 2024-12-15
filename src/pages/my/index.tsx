@@ -27,10 +27,10 @@ import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
-import axios, { AxiosError } from "axios";
+import { getCookie } from "@util/cookie";
 
 function My() {
-  const param = useParams();
+  const { nickname } = useParams(); // URL에서 nickname 추출
   const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const settingsButtonRef = useRef<HTMLButtonElement | null>(null); // SettingsButton ref 추가
@@ -42,11 +42,15 @@ function My() {
   );
   const [isFollowing, setIsFollowing] = useState(false);
 
+  // 사용자 정보 가져오기
+  const userInfo = getCookie("user") || {};
+  const [myNickname, setMyNickname] = useState(userInfo.user.nickname);  // 현재 사용자 닉네임 설정
+
   const dummyData = {
     id: 1,
     profileImage: "",
     reviews: 0,
-    nickname: "Nick Name",
+    // nickname: "Nick Name",
     role: "critic",
     followers: [
       {
@@ -79,9 +83,6 @@ function My() {
     ],
   };
 
-  const currentUserId = 2; // 현재 로그인한 사용자 ID (예시)
-  const isCurrentUser = dummyData.id === currentUserId;
-
   const [followersCount, setFollowersCount] = useState(
     dummyData.followers.length
   );
@@ -95,7 +96,7 @@ function My() {
   };
 
   const handleEditClick = () => {
-    navigate(`/user/${dummyData.nickname}/edit`);
+    navigate(`/user/${myNickname}/edit`);
   };
 
   const handleFollowClick = () => {
@@ -116,50 +117,50 @@ function My() {
     setIsFollowersModalOpen(false);
   };
 
-  useEffect(() => {
-    const { nickname } = param;
+  // useEffect(() => {
+  //   const { nickname } = param;
 
-    const fetchUserInfo = async () => {
-      try {
-        const { data } = await axios.post(
-          `${
-            import.meta.env.VITE_SERVER_URL
-          }/api/v1/user/validate-user?nickname=${nickname}`,
-          {},
-          {
-            headers: {
-              Authorization: 1,
-            },
-          }
-        );
+  //   const fetchUserInfo = async () => {
+  //     try {
+  //       const { data } = await axios.post(
+  //         `${
+  //           import.meta.env.VITE_SERVER_URL
+  //         }/api/v1/user/validate-user?nickname=${nickname}`,
+  //         {},
+  //         {
+  //           headers: {
+  //             Authorization: 1,
+  //           },
+  //         }
+  //       );
 
-        console.log(data);
-      } catch (error) {
-        if (error instanceof AxiosError && error.response) {
-          switch (error.response.data.errorCode) {
-            case "AUTH_HEADER_MISSING":
-              navigate("/"); // Authorization 값을 보내지 않는 경우
-              break;
+  //       console.log(data.message);
+  //     } catch (error) {
+  //       if (error instanceof AxiosError && error.response) {
+  //         switch (error.response.data.errorCode) {
+  //           case "AUTH_HEADER_MISSING":
+  //             navigate("/"); // Authorization 값을 보내지 않는 경우
+  //             break;
 
-            case "USER_NOT_FOUND":
-              // navigate("/"); // 존재하지 않는 사용자인 경우
-              break;
-          }
-        }
-      }
-    };
+  //           case "USER_NOT_FOUND":
+  //             // navigate("/"); // 존재하지 않는 사용자인 경우
+  //             break;
+  //         }
+  //       }
+  //     }
+  //   };
 
-    fetchUserInfo();
-  }, []);
+  //   fetchUserInfo();
+  // }, []);
 
   return (
     <>
-      <SEO
+      {/* <SEO
         title={`PICKY: ${dummyData.nickname}`}
         description={`${dummyData.nickname}님의 프로필(팔로워: ${dummyData.followers.length}명, 팔로잉: ${dummyData.followings.length}명)`}
         image={dummyData.profileImage}
         url={`http://localhost:5173/${location.pathname}`}
-      />
+      /> */}
 
       <Wrapper ref={wrapperRef}>
         <ProfileContainer>
@@ -196,14 +197,14 @@ function My() {
         </ProfileContainer>
 
         <NickNameContainer>
-          <NickName>{dummyData.nickname}</NickName>
+          <NickName>{myNickname}</NickName>
           {dummyData.role === "critic" && <CriticBadge />}{" "}
           {/* critic일 때만 렌더링 */}
         </NickNameContainer>
 
         {/* 프로필 편집 or 팔로우/팔로잉 버튼 */}
         <ButtonContainer>
-          {isCurrentUser ? (
+          {nickname === myNickname ? (
             <EditButton onClick={handleEditClick}>프로필 편집</EditButton>
           ) : (
             <Button

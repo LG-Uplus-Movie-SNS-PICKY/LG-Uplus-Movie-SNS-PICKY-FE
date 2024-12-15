@@ -23,11 +23,12 @@ import {
 import SpoilerToggleSvg from "@assets/icons/spoiler_toggle.svg?react";
 import SpoilerToggleActiveSvg from "@assets/icons/spoiler_toggle_active.svg?react";
 import SEO from "@components/seo";
-import axios from "axios";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
 import Loading from "@components/loading";
+import { fetchGenders, fetchLineReviewMovie, fetchRatings } from "@api/linereview";
+import { useMovieDetailQuery } from "@hooks/movie";
+import { useLineReviewMovieQuery } from "@hooks/review";
 
 interface Review {
   id: number;
@@ -42,90 +43,88 @@ interface Review {
   createdAt: string;
 }
 
-interface ReviewResponse {
-  data: Review[];
-  nextPage?: number;
+const defaultRatings: RatingsData = {
+  totalCount: 0,
+  oneCount: 0,
+  twoCount: 0,
+  threeCount: 0,
+  fourCount: 0,
+  fiveCount: 0,
+};
+
+const defaultGenders: GendersData = {
+  totalCount: 0,
+  maleCount: 0,
+  femaleCount: 0,
+  manAverage: 0,
+  womanAverage: 0,
+};
+
+interface RatingsData {
+  totalCount: number;
+  oneCount: number;
+  twoCount: number;
+  threeCount: number;
+  fourCount: number;
+  fiveCount: number;
+}
+
+interface GendersData {
+  totalCount: number;
+  maleCount: number;
+  femaleCount: number;
+  manAverage: number;
+  womanAverage: number;
 }
 
 const ReviewsPage = () => {
-  // const accessToken = localStorage.getItem("accessToken");
-  const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
-  // const { id: movieId } = useParams(); // 영화 ID 가져오기
   const { id } = useParams(); // URL에서 movieId 추출
+  const movieId = id ? Number(id) : 0; // id가 undefined인 경우 기본값 설정
+
+  // // 더미 데이터
+  // const dummyRatings: RatingsData = {
+  //   totalCount: 5,
+  //   oneCount: 0,
+  //   twoCount: 0,
+  //   threeCount: 1,
+  //   fourCount: 1,
+  //   fiveCount: 3,
+  // };
+  
+  // const dummyGenders: GendersData = {
+  //   totalCount: 5,
+  //   maleCount: 3,
+  //   femaleCount: 2,
+  //   manAverage: 3.0,
+  //   womanAverage: 4.0,
+  // };
+
+  const { data: movieDetail, isLoading: movieDetailIsLoading } =
+    useMovieDetailQuery(Number(id));
+  // const { data: lineReviews, isLoading: lineReviewsIsLoading } =
+  //   useLineReviewMovieQuery(Number(id));
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [includeSpoilers, setIncludeSpoilers] = useState(false);
   const [sortBy, setSortBy] = useState("likes");
-  // const [movieInfo, setMovieInfo] = useState<MovieInfo | null>(null);
   const [movieData, setMovieData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // const fetchReviews = async ({
-  //   pageParam = 1,
-  //   sortBy,
-  // }: {
-  //   pageParam: number;
-  //   sortBy: string;
-  // }): Promise<ReviewResponse> => {
-  //   await new Promise((resolve) => setTimeout(resolve, 1000)); // 1초 지연
-  //   const response = await axios.get<ReviewResponse>(
-  //     `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/${id}`,
-  //     {
-  //       headers: { Authorization: `Bearer ${accessToken}` },
-  //       params: {
-  //         page: pageParam,
-  //         limit: 10,
-  //         sortType: sortBy,
-  //       },
-  //     }
-  //   );
-  //   return response.data;
-  // };
-
-  const fetchReviews = async ({
-    pageParam = 1,
-    sortBy,
-  }: {
-    pageParam: number;
-    sortBy: string;
-  }): Promise<ReviewResponse> => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/movie/${id}`,
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-          params: {
-            page: pageParam,
-            limit: 10,
-            sortType: sortBy,
-          },
-        }
-      );
-      console.log("리뷰 API 응답 데이터:", response.data); // 응답 데이터를 콘솔에 출력
-      return {
-        data: response.data.data.content, // 리뷰 데이터
-        nextPage: response.data.data.last ? undefined : pageParam + 1, // 다음 페이지 계산
-      };
-    } catch (error) {
-      console.error("리뷰 데이터를 가져오는 중 오류 발생:", error);
-      throw error;
-    }
-  };
+  const [ratings, setRatings] = useState<RatingsData>(defaultRatings);
+  const [genders, setGenders] = useState<GendersData>(defaultGenders);
 
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-    refetch,
     isLoading,
-  } = useInfiniteQuery({
-    queryKey: ["reviews", { sortBy, includeSpoilers }],
-    queryFn: ({ pageParam = 1 }) => fetchReviews({ pageParam, sortBy }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) => lastPage.nextPage ?? undefined,
-  });
+    refetch,
+  } = useLineReviewMovieQuery(Number(id));
 
-  const { ref, inView } = useInView({ threshold: 1.0 });
+  const { ref, inView } = useInView({
+    threshold: 1.0,
+  });
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -133,69 +132,91 @@ const ReviewsPage = () => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  // 병합된 모든 리뷰 데이터
+  const allReviews = data?.pages?.flatMap((page) => page.data.content) || []; // 병합된 데이터
+
+  // 영화 데이터 가져오기
   useEffect(() => {
-    if (data) {
-      const allReviews = data.pages.flatMap((page) => page.data || []);
-      console.log("모든 리뷰 데이터 확인:", allReviews);
+    if (!movieDetailIsLoading) {
+      // API 응답 데이터 구조 검증
+      if (!movieDetail.data) {
+        throw new Error("Invalid API response: Missing data");
+      }
+
+      const { movie_info } = movieDetail.data;
+
+      if (!movie_info) {
+        throw new Error("Invalid API response: Missing movie_info");
+      }
+
+      setMovieData({
+        ...movie_info,
+      });
     }
-  }, [data]);
+  }, [movieDetailIsLoading]);
 
+  // ratings와 genders 데이터 가져오기
   useEffect(() => {
-    const fetchMovieData = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        console.log("영화 API 응답 데이터:", response.data); // 응답 확인
-
-        const movie_info = response.data?.data?.movie_info;
-        if (!movie_info) {
-          throw new Error("API 응답에서 movie_info 데이터를 찾을 수 없습니다.");
-        }
-
-        setMovieData(movie_info);
-        setLoading(false);
-      } catch (err) {
-        if (err instanceof Error) {
-          console.error("영화 데이터 불러오기 실패:", err.message);
-          setError(err.message || "Failed to fetch movie data");
-        } else {
-          console.error("영화 데이터 불러오기 실패:", err);
-          setError("Failed to fetch movie data");
-        }
-        setLoading(false);
+        const ratingsData = await fetchRatings(movieId);
+        const gendersData = await fetchGenders(movieId);
+        setRatings(ratingsData);
+        console.log("평점 데이터:", ratingsData);
+        setGenders(gendersData);
+        console.log("성별 데이터:", gendersData);
+      } catch (error) {
+        console.error("Error fetching ratings or genders:", error);
       }
     };
 
-    fetchMovieData();
-  }, [id]);
+    fetchData();
+  }, [movieId]);
 
-  const handleToggleSpoilers = () => {
-    setIncludeSpoilers(!includeSpoilers);
+  // 한줄평 데이터 가져오기
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const data = await fetchLineReviewMovie(Number(id));
+        const allReviews = data?.data?.content || [];
+        setReviews(allReviews);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load reviews.");
+      }
+    };
+
+    fetchReviews();
+  }, [id, sortBy]);
+
+  // 스포일러 포함 여부 필터링
+  const filteredReviews = includeSpoilers
+    ? allReviews // 모든 데이터 반환
+    : allReviews.filter((review) => !review.isSpoiler); // 스포일러 제거
+
+  // 새로운 리뷰 추가 함수
+  const handleAddReview = (newReview: Review) => {
+    console.log("새로 추가된 리뷰 데이터:", newReview); // 전달된 리뷰 데이터 확인
+    setReviews((prevReviews) => [newReview, ...prevReviews]); // 새로운 리뷰를 앞에 추가
   };
 
-  const currentPageReviews: Review[] =
-    data?.pages[data.pages.length - 1]?.data || []; // 현재 페이지의 데이터
-  const allReviews: Review[] = data?.pages.flatMap((page) => page.data) || [];
+  // 정렬된 리뷰 데이터
+  const sortedReviews = [...reviews]
+    .filter((review) => (includeSpoilers ? true : !review.isSpoiler)) // 스포일러 필터링
+    .sort((a, b) => {
+      if (sortBy === "likes") return b.likes - a.likes; // 좋아요 순 정렬
+      if (sortBy === "latest")
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // 최신 순 정렬
+      return 0;
+    });
 
-  // const filteredReviews = includeSpoilers
-  //   ? allReviews
-  //   : allReviews.filter((review) => !review.isSpoiler);
+  useEffect(() => {
+    console.log("현재 정렬된 리뷰 데이터:", sortedReviews);
+  }, [sortedReviews]);
 
-  const filteredReviews = (allReviews || []).filter(
-    (review) => review && !review.isSpoiler
-  );
-
-  const sortedReviews = [...filteredReviews].sort((a, b) => {
-    if (sortBy === "likes") {
-      return b.likes - a.likes;
-    }
-    if (sortBy === "latest") {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    }
-    return 0;
-  });
+  const handleToggleSpoilers = () => {
+    setIncludeSpoilers((prev) => !prev);
+  };
 
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
@@ -203,112 +224,92 @@ const ReviewsPage = () => {
     return `${hours}시간 ${mins}분`;
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!movieData) {
-    return <div>No movie data found</div>;
-  }
-
-  if (!data) {
-    return <div>데이터 없음.</div>;
-  }
-
   return (
-    <>
-      <SEO
-        title={`${movieData.original_title}(${new Date(movieData.release_date).getFullYear()})`}
-        description={`${movieData.original_title}의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
-        image={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
-        url={`http://localhost:5173/${location.pathname}`}
-      />
+    movieData && (
+      <>
+        {/* <SEO
+          title={`${movieData.original_title}(${new Date(movieData.release_date).getFullYear()})`}
+          description={`${movieData.original_title}의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
+          image={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
+          url={`http://localhost:5173/${location.pathname}`}
+        /> */}
 
-      <div style={{ width: "100%" }}>
-        <MovieReviewContainer>
-          <MovieHeader />
-          <MovieReviewsPoster imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`} />
-          <InfoContainer>
-            <Title>{movieData.original_title}</Title>
-            <DetailContainer>
-              <DetailText>{new Date(movieData.release_date).getFullYear()}</DetailText>
-              |
-              {/* {movieInfo.age === "all" && <AgeAllSvg />}
-              {movieInfo.age === "12" && <Age12Svg />}
-              {movieInfo.age === "15" && <Age15Svg />}
-              {movieInfo.age === "19" && <Age19Svg />} */}
-              <DetailText>{formatRuntime(movieData.runtime)}</DetailText>
-            </DetailContainer>
-          </InfoContainer>
-          {/* <ReviewGraph reviews={allReviews} /> */}
-          <ReviewRegist refetch={refetch} />
-          <ReviewsWrapper>
-            <FilterContainer>
-              <SortContainer>
-                <SortOption
-                  onClick={() => setSortBy("likes")}
-                  active={sortBy === "likes"}
-                >
-                  공감순
-                </SortOption>
-                <SortOption
-                  onClick={() => setSortBy("latest")}
-                  active={sortBy === "latest"}
-                >
-                  최신순
-                </SortOption>
-              </SortContainer>
-              <SpoilerToggleContainer>
-                <SpoilerToggleText>스포일러 포함</SpoilerToggleText>
-                <SpoilerToggleButton onClick={handleToggleSpoilers}>
-                  {includeSpoilers ? (
-                    <SpoilerToggleActiveSvg />
-                  ) : (
-                    <SpoilerToggleSvg />
-                  )}
-                </SpoilerToggleButton>
-              </SpoilerToggleContainer>
-            </FilterContainer>
+        <div style={{ width: "100%" }}>
+          <MovieReviewContainer>
+            <MovieHeader />
+            <MovieReviewsPoster imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`} />
+            <InfoContainer>
+              <Title>{movieData.original_title}</Title>
+              <DetailContainer>
+                <DetailText>{new Date(movieData.release_date).getFullYear()}</DetailText>
+                |
+                <DetailText>{formatRuntime(movieData.runtime)}</DetailText>
+              </DetailContainer>
+            </InfoContainer>
 
-            {/* 로딩 상태 관리 */}
-            {isLoading ? (
-              <LoadingContainer>
-                <Loading />
-              </LoadingContainer>
-            ) : (
-              <>
-                <MovieReview reviews={sortedReviews || []} lastReviewRef={ref} />
+            {/* ReviewGraph에 ratings와 genders 전달 */}
+            <ReviewGraph ratings={ratings} genders={genders} />
+            {/* <ReviewGraph ratings={dummyRatings} genders={dummyGenders} /> */}
 
-                {/* 추가 데이터 로딩 중 */}
-                {isFetchingNextPage && (
-                  <LoadingContainer>
-                    <Loading />
-                  </LoadingContainer>
-                )}
+            {/* 리뷰 등록 컴포넌트 */}
+            <ReviewRegist movieId={movieId} refetch={refetch} onAddReview={handleAddReview} />
 
-                {/* 모든 데이터 로드 완료 시 메시지 */}
-                {!hasNextPage && sortedReviews.length > 0 && (
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      textAlign: "center",
-                      fontWeight: "600",
-                      margin: "16px",
-                    }}
+            <ReviewsWrapper>
+              <FilterContainer>
+                <SortContainer>
+                  <SortOption
+                    onClick={() => setSortBy("likes")}
+                    active={sortBy === "likes"}
                   >
-                    마지막 리뷰입니다.
-                  </div>
-                )}
-              </>
-            )}
-          </ReviewsWrapper>
-        </MovieReviewContainer>
-      </div>
-    </>
+                    공감순
+                  </SortOption>
+                  <SortOption
+                    onClick={() => setSortBy("latest")}
+                    active={sortBy === "latest"}
+                  >
+                    최신순
+                  </SortOption>
+                </SortContainer>
+                <SpoilerToggleContainer>
+                  <SpoilerToggleText>스포일러 포함</SpoilerToggleText>
+                  <SpoilerToggleButton onClick={handleToggleSpoilers}>
+                    {includeSpoilers ? (
+                      <SpoilerToggleActiveSvg />
+                    ) : (
+                      <SpoilerToggleSvg />
+                    )}
+                  </SpoilerToggleButton>
+                </SpoilerToggleContainer>
+              </FilterContainer>
+
+              <MovieReview reviews={sortedReviews} />
+
+              {/* 리뷰 데이터 */}
+              {/* {isLoading ? (
+                <LoadingContainer>
+                  <Loading />
+                </LoadingContainer>
+              ) : (
+                <>
+                  <MovieReview reviews={sortedReviews || []} />
+                </>
+              )} */}
+            </ReviewsWrapper>
+          </MovieReviewContainer>
+          <div ref={ref} style={{ height: "20px" }} />
+          {isFetchingNextPage &&
+            <LoadingContainer>
+              <Loading />
+            </LoadingContainer>
+          }
+          {!hasNextPage && allReviews.length > 0 && (
+            <div style={{ textAlign: "center", margin: "16px", fontWeight: "600" }}>
+              마지막 리뷰입니다.
+            </div>
+          )}
+        </div>
+      </>
+    )
   );
 };
 

@@ -49,12 +49,6 @@ export async function fetchGenreMovie(
   return data;
 }
 
-// 영화 상세 조회 GET API
-export async function fetchMovieDetail(movieId: number) {
-  const { data } = await apiClient.get(`/movie/${movieId}`);
-  return data;
-}
-
 // TMDB 영화 조회 GET API
 export async function fetchSearchMovie(movieSearch: string) {
   const { data } = await axios.get(
@@ -91,4 +85,21 @@ export async function fetchMovieDetailInfo(movieId: number) {
   );
 
   return data;
+}
+
+// 영화 상세 조회 GET API
+export async function fetchMovieDetail(movieId: number) {
+  const { data } = await apiClient.get(`/movie/${movieId}`);
+  return data;
+}
+
+// 영화 좋아요 API
+export async function toggleMovieLike(movieId: number): Promise<{ success: boolean; message: string }> {
+  try {
+    const { data } = await apiClient.post(`/movie/${movieId}/like`);
+    return data;
+  } catch (error: any) {
+    console.error("영화 좋아요 상태 변경 실패:", error);
+    throw error;
+  }
 }
