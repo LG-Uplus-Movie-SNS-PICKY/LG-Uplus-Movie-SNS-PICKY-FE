@@ -241,14 +241,14 @@ function RegistMovieSection() {
                     <div className="info">
                       <h3>제목</h3>
                       <span>
-                        {movieInfo.title}({movieInfo.original_title})
+                        {movieInfo?.title}({movieInfo?.original_title})
                       </span>
                     </div>
 
                     <div className="info">
                       <h3>장르</h3>
                       <span>
-                        {movieInfo.genres
+                        {movieInfo?.genres
                           .map(
                             (genre: { [key: string]: unknown; name: string }) =>
                               genre.name
@@ -259,7 +259,7 @@ function RegistMovieSection() {
 
                     <div className="info">
                       <h3>출시년도</h3>
-                      <span>{movieInfo.release_date}</span>
+                      <span>{movieInfo?.release_date}</span>
                     </div>
                   </div>
 
@@ -267,7 +267,7 @@ function RegistMovieSection() {
                   <div className="movie-poster">
                     <LazyLoadImage
                       src={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
-                        movieInfo.poster_path
+                        movieInfo?.poster_path
                       }`}
                       effect={"blur"}
                       onLoad={() => setIsPosterImageLoading(true)}
@@ -275,14 +275,14 @@ function RegistMovieSection() {
                     />
 
                     {!isPosterImageLoading && (
-                      <span>{movieInfo.original_title}</span>
+                      <span>{movieInfo?.original_title}</span>
                     )}
                   </div>
                 </div>
 
                 <div className="desciprtion">
                   <h3>소개</h3>
-                  <p>{movieInfo.overview}</p>
+                  <p>{movieInfo?.overview}</p>
                 </div>
 
                 {/* Actress - Swiper */}
