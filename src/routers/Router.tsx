@@ -24,6 +24,7 @@ import GuestRouter from "./router/GuestRoutes";
 import UserRoutes from "./router/UserRoutes";
 import AdminRouter from "./router/AdminRoutes";
 import { getCookie } from "@util/cookie";
+import NotificationSSE from "@hooks/notification/connect";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -46,6 +47,8 @@ function Router() {
       <BrowserRouter
         future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
       >
+        <NotificationSSE />
+
         <Global styles={globalStyle} />
 
         <Layout>
@@ -70,7 +73,10 @@ function Router() {
             <Route path="/admin/*" element={<AdminRouter />} />
 
             {/* 도메인 */}
-            <Route path="/google626ac0bef2281c75.html" element={<DomainGoogle />} />
+            <Route
+              path="/google626ac0bef2281c75.html"
+              element={<DomainGoogle />}
+            />
           </Routes>
         </Layout>
       </BrowserRouter>

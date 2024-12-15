@@ -23,6 +23,7 @@
     "date-fns": "^4.1.0",
     "emoji-toolkit": "^9.0.1",
     "emotion-reset": "^3.0.1",
+    "event-source-polyfill": "^1.0.31",
     "formik": "^2.4.6",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
