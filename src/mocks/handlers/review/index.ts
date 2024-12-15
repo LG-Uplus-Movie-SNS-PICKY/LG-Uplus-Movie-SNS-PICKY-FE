@@ -183,17 +183,17 @@ const reviewHandler: HttpHandler[] = [
           (a, b) =>
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
-        .slice(0, 10);
+        .slice(0, 2);
 
       return HttpResponse.json(
         {
           code: 200,
           data: {
-            size: 10,
+            size: 2,
             content: paginatedReviews,
             empty: paginatedReviews.length === 0,
             first: !lastCreatedAt && !lastReviewId,
-            last: paginatedReviews.length < 10,
+            last: paginatedReviews.length < 2,
             number: 0,
             numberOfElements: paginatedReviews.length,
             pageable: {

@@ -1,6 +1,5 @@
 // pages/movie-detail/index.tsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import MovieHeader from "./components/movie-header";
 import MoviePoster from "./components/movie-poster";
 import MovieRating from "./components/movie-rating";

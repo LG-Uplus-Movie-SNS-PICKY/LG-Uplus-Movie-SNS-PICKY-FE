@@ -34,3 +34,14 @@ export async function fetchMovieDetail(movieId: number) {
   const { data } = await apiClient.get(`/movie/${movieId}`);
   return data;
 }
+
+// 영화 좋아요 API
+export async function toggleMovieLike(movieId: number): Promise<{ success: boolean; message: string }> {
+  try {
+    const { data } = await apiClient.post(`/movie/${movieId}/like`);
+    return data;
+  } catch (error: any) {
+    console.error("영화 좋아요 상태 변경 실패:", error);
+    throw error;
+  }
+}
