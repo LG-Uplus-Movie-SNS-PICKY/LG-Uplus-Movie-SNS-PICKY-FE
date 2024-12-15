@@ -26,6 +26,7 @@
     "emotion-reset": "^3.0.1",
     "event-source-polyfill": "^1.0.31",
     "formik": "^2.4.6",
+    "gsap": "^3.12.5",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "msw": "^2.6.6",

@@ -35,7 +35,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
         break;
       case "user":
         const currentUser = getCookie("user").user.nickname;
-        navigate(`/user/${currentUser}`);
+        navigate(`/user/${encodeURIComponent(currentUser)}`);
         break;
     }
   };
@@ -56,7 +56,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
     if (!currentActiveTab) {
       // /user/ 경로 접근
       if (pathname.match(/^\/user\/[^/]+$/)) {
-        const pathNickname = pathname.split("/")[2];
+        const pathNickname = decodeURIComponent(pathname.split("/")[2]);
         const currentUser = getCookie("user").user.nickname;
 
         // 접근한 사용자 프로필 경로와 로그인한 사용자와 같을 경우
