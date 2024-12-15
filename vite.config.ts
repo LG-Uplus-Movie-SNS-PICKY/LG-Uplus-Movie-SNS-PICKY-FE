@@ -12,7 +12,7 @@ export default defineConfig({
     }),
     svgr(),
     prerender({
-      routes: ["/", "/counter", "/otherpage/1", "/otherpage/2", "/otherpage/3"],
+      routes: ["/", "/movie-log", "/picky"],
       renderer: "@prerenderer/renderer-puppeteer",
       server: {
         port: 3000,
