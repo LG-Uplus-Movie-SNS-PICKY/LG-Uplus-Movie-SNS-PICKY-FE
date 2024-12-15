@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import YouTubePlayer from '@components/youtube-player';
 import { Skeleton, SkeletonImage, SkeletonTitle, SkeletonArtist } from '../skeleton';
-import axios from 'axios';
 import {
     ModalContainer,
     CloseButton,
@@ -23,125 +22,84 @@ import {
 import ModalCloseSvg from '@assets/icons/modal_close.svg?react';
 import YouTubeLogoSvg from '@assets/icons/youtube.svg?react';
 import { useParams } from 'react-router-dom';
-
-interface YouTubePlaylist {
-    title: string;
-    playlistId: string;
-}
-
-interface OST {
-    title: string;
-    artist: string;
-    cover: string;
-}
-
-const YOUTUBE_API_KEY = 'AIzaSyDb5ViShQWptvuz5_IGmCZV0p2IvAEuhKk'; // YouTube Data API Key 넣기
+import { useMovieDetailQuery } from '@hooks/movie';
+import { fetchBehindVideos, fetchOstVideos } from "@/api/youtube";
 
 const BehindModal = ({ onClose }: { onClose: () => void }) => {
     const { id } = useParams<{ id: string }>(); // useParams로 movieId 가져오기
+    const { data: movieDetail, isLoading: movieDetailIsLoading } =
+        useMovieDetailQuery(Number(id));
     const [ostVideos, setOstVideos] = useState<any[]>([]);
     const [behindVideos, setBehindVideos] = useState<string[]>([]);
     const [ostPlaylistId, setOstPlaylistId] = useState<string | null>(null);
     const [behindPlaylistId, setBehindPlaylistId] = useState<string | null>(null); // 비하인드 영상 Playlist ID 저장
     const [isYTReady, setIsYTReady] = useState(false);
     const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
-    // const accessToken = localStorage.getItem("accessToken");
-    const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
+
+    const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY; // YouTube Data API Key 확인
 
     // YouTube Data API Key 확인
     console.log("YouTube Data API Key (전역):", YOUTUBE_API_KEY);
 
-    // API 호출을 통해 데이터 가져오기
     useEffect(() => {
-        const fetchMovieData = async () => {
-            try {
-                const response = await axios.get(
-                    `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${id}`,
-                    { headers: { Authorization: `Bearer ${accessToken}` } }
-                );
-                console.log('영화 API 응답 데이터:', response.data);
-
-                // OST와 비하인드 영상 ID 추출
-                const { ost, movie_behind_videos } = response.data.data || {};
-
-                // 콘솔에 데이터 출력
-                console.log('OST Playlist ID:', ost);
-                console.log('Behind Videos Playlist ID:', movie_behind_videos);
-
-                // 상태 업데이트
-                setOstPlaylistId(ost || null);
-                setBehindPlaylistId(movie_behind_videos?.[0] || null);
-            } catch (error) {
-                console.error('영화 데이터 가져오기 실패:', error);
-            } finally {
-                setIsLoading(false); // 로딩 상태 해제
+        if (!movieDetailIsLoading) {
+            // API 응답 데이터 구조 검증
+            if (!movieDetail.data) {
+                throw new Error("Invalid API response: Missing data");
             }
-        };
 
-        fetchMovieData();
-    }, [id]);
+            const { ost, movie_behind_videos } = movieDetail.data;
 
-    // 비하인드 영상 Playlist 동영상 가져오기
+            if (!ost || !movie_behind_videos) {
+                throw new Error("Invalid API response: Missing movie_info");
+            }
+
+            // 상태 업데이트
+            setOstPlaylistId(ost || null);
+            setBehindPlaylistId(movie_behind_videos?.[0] || null);
+
+            // 콘솔에 데이터 출력
+            console.log('apiClient OST Playlist ID:', ost);
+            console.log('apiClient Behind Videos Playlist ID:', movie_behind_videos);
+        }
+    }, [movieDetailIsLoading]);
+
+    // 비하인드 영상 데이터 가져오기
     useEffect(() => {
         if (!behindPlaylistId) return;
 
-        const fetchBehindVideos = async () => {
+        const loadBehindVideos = async () => {
+            setIsLoading(true);
             try {
-                setIsLoading(true); // 로딩 시작
-                const response = await axios.get(
-                    `https://www.googleapis.com/youtube/v3/playlistItems`,
-                    {
-                        params: {
-                            part: 'snippet',
-                            playlistId: behindPlaylistId,
-                            key: YOUTUBE_API_KEY,
-                            maxResults: 50,
-                        },
-                    }
-                );
-                // response에서 videoId 추출
-                const videoIds = response.data.items.map(
-                    (item: any) => item.snippet.resourceId.videoId
-                );
-
-                console.log('비하인드 영상 videoIds:', videoIds); // 가져온 비디오 ID를 콘솔에 출력
-
-                setBehindVideos(videoIds); // 상태에 저장
+                const videoIds = await fetchBehindVideos(behindPlaylistId, YOUTUBE_API_KEY!);
+                setBehindVideos(videoIds);
             } catch (error) {
                 console.error('비하인드 영상 가져오기 실패:', error);
             } finally {
-                setIsLoading(false); // 로딩 종료
+                setIsLoading(false);
             }
         };
 
-        fetchBehindVideos();
+        loadBehindVideos();
     }, [behindPlaylistId]);
 
-    // OST Playlist 동영상 가져오기
+    // OST 데이터 가져오기
     useEffect(() => {
         if (!ostPlaylistId) return;
 
-        const fetchOstVideos = async () => {
+        const loadOstVideos = async () => {
+            setIsLoading(true);
             try {
-                const response = await axios.get(
-                    `https://www.googleapis.com/youtube/v3/playlistItems`,
-                    {
-                        params: {
-                            part: 'snippet',
-                            playlistId: ostPlaylistId,
-                            key: YOUTUBE_API_KEY,
-                            maxResults: 50,
-                        },
-                    }
-                );
-                console.log('OST 동영상 데이터:', response.data.items);
-                setOstVideos(response.data.items || []);
+                const items = await fetchOstVideos(ostPlaylistId, YOUTUBE_API_KEY!);
+                setOstVideos(items || []);
             } catch (error) {
                 console.error('OST 동영상 가져오기 실패:', error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        fetchOstVideos();
+        loadOstVideos();
     }, [ostPlaylistId]);
 
     // YouTube Player (YouTube 비하인드 영상)

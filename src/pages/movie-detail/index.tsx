@@ -144,7 +144,7 @@ function MovieDetail(props: MovieDetailProps) {
     movieData && (
       <>
         <SEO
-          title={`${movieData.original_title}(${
+          title={`${movieData.title}(${
             movieData.release_date.split("-")[0]
           })`}
           description={movieData.overview}
@@ -160,7 +160,7 @@ function MovieDetail(props: MovieDetailProps) {
             imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
               movieData.backdrop_path
             }`}
-            title={movieData.original_title}
+            title={movieData.title}
             year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
             // nation="N/A" // nation 정보가 없다면 기본값 설정
             genre={
@@ -189,13 +189,13 @@ function MovieDetail(props: MovieDetailProps) {
             castData={[
               // 감독 정보를 먼저 추가
               ...movieData.credits.directingCrew.map((crew: any) => ({
-                name: crew.original_name,
+                name: crew.name,
                 role: crew.job,
                 image: crew.profile_path,
               })),
               // 그다음 배우 정보 추가
               ...movieData.credits.cast.map((actor: any) => ({
-                name: actor.original_name,
+                name: actor.name,
                 role: actor.character,
                 image: actor.profile_path,
               })),

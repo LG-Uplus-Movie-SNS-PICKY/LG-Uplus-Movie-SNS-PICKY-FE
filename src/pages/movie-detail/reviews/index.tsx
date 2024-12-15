@@ -81,24 +81,6 @@ const ReviewsPage = () => {
   const { id } = useParams(); // URL에서 movieId 추출
   const movieId = id ? Number(id) : 0; // id가 undefined인 경우 기본값 설정
 
-  // // 더미 데이터
-  // const dummyRatings: RatingsData = {
-  //   totalCount: 5,
-  //   oneCount: 0,
-  //   twoCount: 0,
-  //   threeCount: 1,
-  //   fourCount: 1,
-  //   fiveCount: 3,
-  // };
-  
-  // const dummyGenders: GendersData = {
-  //   totalCount: 5,
-  //   maleCount: 3,
-  //   femaleCount: 2,
-  //   manAverage: 3.0,
-  //   womanAverage: 4.0,
-  // };
-
   const { data: movieDetail, isLoading: movieDetailIsLoading } =
     useMovieDetailQuery(Number(id));
   // const { data: lineReviews, isLoading: lineReviewsIsLoading } =
@@ -227,19 +209,19 @@ const ReviewsPage = () => {
   return (
     movieData && (
       <>
-        {/* <SEO
-          title={`${movieData.original_title}(${new Date(movieData.release_date).getFullYear()})`}
-          description={`${movieData.original_title}의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
+        <SEO
+          title={`${movieData.title}(${new Date(movieData.release_date).getFullYear()})`}
+          description={`${movieData.title}의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
           image={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
           url={`http://localhost:5173/${location.pathname}`}
-        /> */}
+        />
 
         <div style={{ width: "100%" }}>
           <MovieReviewContainer>
             <MovieHeader />
             <MovieReviewsPoster imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`} />
             <InfoContainer>
-              <Title>{movieData.original_title}</Title>
+              <Title>{movieData.title}</Title>
               <DetailContainer>
                 <DetailText>{new Date(movieData.release_date).getFullYear()}</DetailText>
                 |
@@ -249,7 +231,6 @@ const ReviewsPage = () => {
 
             {/* ReviewGraph에 ratings와 genders 전달 */}
             <ReviewGraph ratings={ratings} genders={genders} />
-            {/* <ReviewGraph ratings={dummyRatings} genders={dummyGenders} /> */}
 
             {/* 리뷰 등록 컴포넌트 */}
             <ReviewRegist movieId={movieId} refetch={refetch} onAddReview={handleAddReview} />

@@ -27,7 +27,8 @@ import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
-import { getCookie } from "@util/cookie";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@/recoil/atoms/isLoginState";
 
 function My() {
   const { nickname } = useParams(); // URL에서 nickname 추출
@@ -42,9 +43,9 @@ function My() {
   );
   const [isFollowing, setIsFollowing] = useState(false);
 
-  // 사용자 정보 가져오기
-  const userInfo = getCookie("user") || {};
-  const [myNickname, setMyNickname] = useState(userInfo.user.nickname);  // 현재 사용자 닉네임 설정
+  // 로그인 상태에서 사용자 정보 가져오기
+  const loginState = useRecoilValue(isLogin);
+  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
 
   const dummyData = {
     id: 1,
