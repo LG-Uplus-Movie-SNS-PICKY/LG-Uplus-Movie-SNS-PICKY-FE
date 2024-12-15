@@ -1,6 +1,6 @@
-import { useState, ChangeEvent, KeyboardEvent, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // navigate를 위해 추가
-import axios from "axios";
+import { useState, useEffect, ChangeEvent } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { updateBoard } from "@api/movie"; // 수정 API import
 import BackPost from "@assets/icons/back_post.svg?react";
 import Review from "@assets/icons/review.svg?react";
 import { Button } from "@stories/button";
@@ -31,11 +31,20 @@ import {
 } from "./index.styles";
 
 export default function PostModify() {
-  const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false); // 뒤로가기 모달 상태
-  const [reviewText, setReviewText] = useState<string>("");
-  const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
-
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // 이전 페이지에서 넘어온 게시글 데이터
+  const { state } = location;
+  const { boardId, movieTitle, contents, boardContext, isSpoiler } = state;
+
+  // 상태
+  const [reviewText, setReviewText] = useState<string>(boardContext || "");
+  const [selectedSpoiler, setSelectedSpoiler] = useState<string>(
+    isSpoiler ? "있음" : "없음"
+  );
+  const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false);
+
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setReviewText(e.target.value);
   };
@@ -48,6 +57,16 @@ export default function PostModify() {
     setIsBackModalOpen(true);
   };
 
+  const handleUpdate = async () => {
+    try {
+      await updateBoard(boardId, reviewText, selectedSpoiler === "있음");
+      alert("게시글이 수정되었습니다.");
+      navigate(-1);
+    } catch (error) {
+      alert("게시글 수정에 실패했습니다.");
+    }
+  };
+
   return (
     <div css={wrapper}>
       {isBackModalOpen && (
@@ -55,7 +74,7 @@ export default function PostModify() {
           <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
           <div css={modalContainer}>
             <Modal
-              message="공유하지 않고 화면을 나가면 작성 중인 리뷰가 삭제될 수 있습니다. 나가시겠습니까?"
+              message="수정을 취소하고 나가시겠습니까?"
               confirmText="나가기"
               cancelText="취소"
               onConfirm={() => navigate(-1)}
@@ -69,29 +88,43 @@ export default function PostModify() {
         <div css={backButton} onClick={handleBackClick}>
           <BackPost />
         </div>
-        <h2 css={movieTitle}>아이언맨</h2>
+        <h2 css={movieTitle}>{movieTitle}</h2>
         <div css={movieDetails}>
-          <p>🕑 리오넬 메시</p>
+          <p>🕑 {contents?.[0]?.boardContentType || "기타"}</p>
         </div>
         <div css={movieCountry}>
-          <p>대한민국</p>
+          <p>영화 상세</p>
         </div>
         <div css={movieGenres}>
-          <span>스릴러</span>
+          <span>스포일러 {isSpoiler ? "있음" : "없음"}</span>
         </div>
       </div>
 
       <div css={postContainer}>
-        <div style={{ width: "360px", height: "360px", background: "gray" }}>
-          asd
-        </div>
+        {contents?.map((content: any, index: number) => (
+          <div key={index} style={{ margin: "10px 0" }}>
+            {content.boardContentType === "PHOTO" ? (
+              <img
+                src={content.contentUrl}
+                alt="게시물 사진"
+                style={{ width: "100%", borderRadius: "8px" }}
+              />
+            ) : (
+              <video
+                controls
+                src={content.contentUrl}
+                style={{ width: "100%", borderRadius: "8px" }}
+              />
+            )}
+          </div>
+        ))}
       </div>
 
       <div css={reviewSection}>
         <div css={reviewContainer}>
           {!reviewText && <Review css={reviewIcon} />}
           <textarea
-            placeholder="        리뷰를 작성해주세요...&#13;&#10;&#13;&#10;욕설, 비방, 명예훼손성 표현은 누군가에게 상처가 될 수 있습니다."
+            placeholder="리뷰를 수정해주세요..."
             css={reviewInput}
             value={reviewText}
             onChange={handleInputChange}
@@ -127,7 +160,7 @@ export default function PostModify() {
       </div>
 
       <div css={shareButton}>
-        <Button btnType="Active" label="공유" />
+        <Button btnType="Active" label="수정 완료" onClick={handleUpdate} />
       </div>
     </div>
   );
