@@ -189,13 +189,9 @@ function MovieCard({ movie, genres }: MovieCardProps) {
             {/* Poster */}
             <div className="movie-poster">
               <LazyLoadImage
-                src={
-                  process.env.NODE_ENV === "development"
-                    ? movieInfo.data.movie_info.poster_path
-                    : `${import.meta.env.VITE_TMDB_IMAGE_URL}/${
-                        movieInfo.data.movie_info.poster_path
-                      }`
-                }
+                src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                  movieInfo.data.movie_info.poster_path
+                }`}
                 effect={"blur"}
                 onLoad={() => setIsPosterImageLoading(true)}
                 onError={() => setIsPosterImageLoading(false)}

@@ -39,7 +39,7 @@ export default function Login() {
       const data = await axios
         .patch(
           `${import.meta.env.VITE_SERVER_URL}/api/v1/user`,
-          { id: 7 },
+          { id: 6 },
           {
             headers: {
               Authorization: "1",
@@ -112,9 +112,11 @@ export default function Login() {
           />
         </Block.FlexBox>
 
-        <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
-          Local Login Btn
-        </button>
+        {process.env.NODE_ENV === "development" && (
+          <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
+            Local Login Btn
+          </button>
+        )}
       </Block.FlexBox>
     </>
   );
