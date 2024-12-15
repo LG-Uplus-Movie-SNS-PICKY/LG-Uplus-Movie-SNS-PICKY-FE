@@ -29,3 +29,19 @@ export interface PlatformDataTypes {
   platformName: string;
   platformUrl: string;
 }
+
+// 영화 상세 정보 타입 정의
+export interface MovieDetailTypes {
+  [key: string]: unknown;
+  movie_info: MovieDetailMovieInfoTypes;
+  movie_behind_videos: string[];
+  trailer: string;
+  ost: string;
+  streaming_platform: Record<string, boolean>;
+}
+
+export interface MovieDetailMovieInfoTypes {
+  [key: string]: unknown;
+  id: number;
+  original_title: string;
+}

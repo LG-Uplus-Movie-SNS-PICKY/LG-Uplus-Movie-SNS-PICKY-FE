@@ -63,7 +63,7 @@ interface DetailMovie {
   poster_path: string;
 }
 
-const ottDummyData = [
+const streamingServie = [
   { icon: Netflix, name: "netflix" },
   { icon: Diesney, name: "disney" },
   { icon: Watcha, name: "watcha" },
@@ -73,7 +73,9 @@ const ottDummyData = [
 ];
 
 function RegistMovieSection() {
+  const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [movieSearch, setMovieSearch] = useState<string>("");
+
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false); // 입력창 포커스(활성화 도중에만 자동완성 검색 결과 보이기)
 
   const [movieId, setMovieId] = useState<number>(0);
@@ -102,6 +104,7 @@ function RegistMovieSection() {
   // 검색어 Input Change Event Handler
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    setSearchInputValue(value);
     handleSearch(value);
   };
 
@@ -135,12 +138,13 @@ function RegistMovieSection() {
         setToastMessage("영화가 등록되었습니다.");
 
         setTimeout(() => {
+          setSearchInputValue("");
           setMovieSearch("");
           setMovieId(0);
           setTrailerInputValue("");
           setOstInputValue("");
           setBehindInputValue("");
-        }, 3000);
+        }, 1000);
       } catch (error: unknown) {
         if (error instanceof AxiosError) {
           if (error.response) {
@@ -165,7 +169,7 @@ function RegistMovieSection() {
               <input
                 type="text"
                 placeholder="등록할 영화 제목 입력"
-                value={movieSearch}
+                value={searchInputValue}
                 onChange={handleChange}
                 onFocus={() => setIsInputFocus(true)}
                 onBlur={() => setIsInputFocus(false)}
@@ -342,7 +346,7 @@ function RegistMovieSection() {
 
                 {/* OTT Select */}
                 <div className="select-box">
-                  {ottDummyData.map((data, idx) => {
+                  {streamingServie.map((data, idx) => {
                     return (
                       <div
                         key={idx}

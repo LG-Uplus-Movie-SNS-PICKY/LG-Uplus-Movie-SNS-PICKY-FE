@@ -1,5 +1,6 @@
 import apiClient from "@api";
-import axios, { AxiosError } from "axios";
+import { MovieDetailTypes } from "@type/api/movie";
+import axios from "axios";
 
 // 영화 등록 POST API
 export async function fetchMovieCreate(
@@ -17,6 +18,16 @@ export async function fetchMovieCreate(
     streaming_platform: streaming,
   });
 
+  return data;
+}
+
+// 영화 정보 수정 PATCH API
+export async function fetchMovieDetailUpdate(
+  movieId: number,
+  movieInfo: MovieDetailTypes
+) {
+  console.log(movieInfo);
+  const { data } = await apiClient.patch(`/movie/${movieId}`, movieInfo);
   return data;
 }
 

@@ -12,6 +12,23 @@ export default {
       gap: 16px;
       background-color: #fff;
       padding: 12px;
+
+      border-radius: 4px;
+      box-shadow: 0 0 4px rgba(193, 193, 193, 0.4);
+
+      & > button[type="submit"] {
+        /* margin-top: 24px; */
+        border-radius: 12px;
+        cursor: pointer;
+
+        padding: 5px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+
+        background-color: #f6f8fa;
+        border: 1px solid #d1d9e0;
+      }
     `;
   },
 
@@ -130,6 +147,8 @@ export default {
             }
 
             & > button {
+              cursor: pointer;
+
               padding: 5px 16px;
               font-size: 12px;
               font-weight: 600;
@@ -153,7 +172,9 @@ export default {
     return css`
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 8px;
+
+      margin-bottom: 12px;
 
       & > .title {
         display: flex;
@@ -175,10 +196,7 @@ export default {
 
         & > .icon-btn {
           position: relative;
-
-          &.to-updated {
-            cursor: pointer;
-          }
+          cursor: pointer;
 
           & > svg {
             display: block;

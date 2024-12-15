@@ -1,30 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styles from "./index.styles";
 
-import Search from "@assets/icons/search_small.svg?react";
-import Netflix from "@assets/icons/netflix.svg?react";
-import Watcha from "@assets/icons/watcha.svg?react";
-import Tving from "@assets/icons/tving.svg?react";
-import Diesney from "@assets/icons/disneyplus.svg?react";
-import Coupang from "@assets/icons/coupangplay.svg?react";
-import Wavve from "@assets/icons/wavve.svg?react";
-
-import Check from "@assets/icons/check.svg?react";
 import GenreTab from "./component/genre-tab";
 import { useGenreMovieQuery } from "@hooks/movie";
 import { MovieDataTypes } from "@type/api/movie";
 import MovieCard from "./component/movie-card";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
-
-const ottDummyData = [
-  { icon: Netflix, name: "netflix" },
-  { icon: Watcha, name: "watcha" },
-  { icon: Tving, name: "tving" },
-  { icon: Diesney, name: "disneyplus" },
-  { icon: Coupang, name: "coupangplay" },
-  { icon: Wavve, name: "wavve" },
-];
 
 function TotalMoviesSection() {
   const loadable = useRecoilValueLoadable(genresSelector);
