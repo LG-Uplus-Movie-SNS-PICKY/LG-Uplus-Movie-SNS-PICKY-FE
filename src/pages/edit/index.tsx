@@ -170,7 +170,7 @@ export default function ProfileEditPage() {
 
     // 기본 이미지 설정
     if (profileImage === null) {
-      formData.append("profile", "null"); // 문자열 "null"로 추가
+      formData.append("profile", "");
     } else if (profileImage !== userData.profile) {
       try {
         const response = await fetch(profileImage);
