@@ -34,9 +34,6 @@ jobs:
       - name: Build
         run: yarn build
 
-      - name: Run react-snap
-        run: yarn postbuild
-
       - name: S3 Deploy
         run: aws s3 sync ./dist s3://picky-web/ --acl bucket-owner-full-control # 현재 build된 폴더에 접근 후 s3 버킷인 csr-test-1-bucket에 파일 업로드
         env:
