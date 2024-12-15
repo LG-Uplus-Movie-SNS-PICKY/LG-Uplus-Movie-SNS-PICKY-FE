@@ -9,7 +9,14 @@ interface SEOProps {
 }
 
 function SEO({ title = "PICKY", description, image, url }: SEOProps) {
-  const defaultImage = `${window.location.href}public/images/picky.jpeg`;
+  const defaultImage =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:5173/public/images/picky.jpeg"
+      : "https://www.picky-movie.com/images/picky.jpeg";
+
+  console.log("https://www.picky-movie.com/public/images/picky.jpeg");
+  console.log("https://www.picky-movie.com/images/picky.jpeg");
+
   const defaultURL =
     process.env.NODE_ENV === "development"
       ? "http://localhost:5173"
