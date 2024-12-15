@@ -11,7 +11,7 @@ import Loading from "@components/loading";
 
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { deleteLineReview, fetchLineReviewsByUser, updateLineReview } from "@api/linereview";
 
@@ -61,6 +61,7 @@ function LineReviewContent() {
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
 
   const { nickname } = useParams<{ nickname: string }>();
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -69,28 +70,91 @@ function LineReviewContent() {
     null
   );
 
+  // useEffect(() => {
+  //   const fetchLineReviews = async () => {
+  //     if (!nickname) {
+  //       setError("닉네임이 제공되지 않았습니다.");
+  //       setIsLoading(false);
+  //       return;
+  //     }
+
+  //     try {
+  //       setIsLoading(true);
+  //       const response = await fetchLineReviewsByUser(nickname, 10); // API 호출
+  //       setReviews(response.content || []);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError("한줄평 데이터를 불러오는 중 오류가 발생했습니다.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+
+  //   fetchLineReviews();
+  // }, [nickname]);
+
+  // 더미 데이터 정의
+  const dummyData = {
+    success: true,
+    code: 200,
+    message: "요청이 성공적으로 처리되었습니다.",
+    data: {
+      content: [
+        {
+          id: 95,
+          writerNickname: "우진쓰~",
+          userId: 10,
+          rating: 5.0,
+          context: "이거 보면서 눈물 콧물 왕창ㅜㅜ😭",
+          isSpoiler: false,
+          likes: 0,
+          dislikes: 0,
+          createdAt: "2024-12-15T16:19:11.693746",
+          movie: {
+            movieId: 158445,
+            movieTitle: "7번방의 선물",
+            moviePosterUrl: "/c9TqJPm4pZCuiEXumTayoNIrBSK.jpg",
+          },
+          isAuthor: true,
+        },
+        {
+          id: 93,
+          writerNickname: "우진쓰~",
+          userId: 10,
+          rating: 5.0,
+          context: "인생영화👍",
+          isSpoiler: false,
+          likes: 0,
+          dislikes: 0,
+          createdAt: "2024-12-15T05:04:23.946122",
+          movie: {
+            movieId: 12445,
+            movieTitle: "해리 포터와 죽음의 성물 2",
+            moviePosterUrl: "/ehUeFvQeo8Vr2aDIKLsLbC8okcw.jpg",
+          },
+          isAuthor: true,
+        },
+      ],
+    },
+  };
+
   useEffect(() => {
-    const fetchLineReviews = async () => {
-      if (!nickname) {
-        setError("닉네임이 제공되지 않았습니다.");
-        setIsLoading(false);
-        return;
-      }
+    // 더미 데이터를 사용하여 상태 업데이트
+    setIsLoading(true);
+    try {
+      setReviews(dummyData.data.content);
+    } catch (err) {
+      console.error(err);
+      setError("더미 데이터를 로드하는 중 문제가 발생했습니다.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
-      try {
-        setIsLoading(true);
-        const response = await fetchLineReviewsByUser(nickname, 10); // API 호출
-        setReviews(response.content || []);
-      } catch (err) {
-        console.error(err);
-        setError("한줄평 데이터를 불러오는 중 오류가 발생했습니다.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    fetchLineReviews();
-  }, [nickname]);
+  const handleMovieClick = (movieId: number) => {
+    navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
+  };
 
   const showToast = (message: string, direction: "none" | "up" | "down"): Promise<void> => {
     return new Promise((resolve) => {
@@ -198,7 +262,7 @@ function LineReviewContent() {
       {reviews.length === 0 && <EmptyLineReview />}
       {reviews.length > 0 &&
         reviews.map((review) => (
-          <div key={review.id} css={styles.reviewCard()}>
+          <div key={review.id} css={styles.reviewCard()} onClick={() => handleMovieClick(review.movie.movieId)}>
             {/* 영화 포스터 이미지 */}
             <div className="poster">
               {review.movie?.moviePosterUrl ? (

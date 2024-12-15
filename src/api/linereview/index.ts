@@ -70,7 +70,7 @@ export async function fetchLineReviewsByUser(
     params.append("lastCreatedAt", lastCreatedAt);
   }
 
-  const { data } = await apiClient.get(`/linereview/${nickname}?${params.toString()}`);
+  const { data } = await apiClient.get(`/linereview/user/${nickname}?${params.toString()}`);
   return data;
 }
 
