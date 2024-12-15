@@ -43,5 +43,5 @@ export interface MovieDetailTypes {
 export interface MovieDetailMovieInfoTypes {
   [key: string]: unknown;
   id: number;
-  original_title: string;
+  title: string;
 }

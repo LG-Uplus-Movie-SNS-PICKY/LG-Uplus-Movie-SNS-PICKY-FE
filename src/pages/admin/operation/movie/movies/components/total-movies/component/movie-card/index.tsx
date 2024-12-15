@@ -148,7 +148,7 @@ function MovieCard({ movie, genres }: MovieCardProps) {
             <div className="detail">
               <div className="info">
                 <h3>제목</h3>
-                <span>{updateMovieInfo?.movie_info.original_title}</span>
+                <span>{updateMovieInfo?.movie_info.title}</span>
               </div>
 
               <div className="info">
