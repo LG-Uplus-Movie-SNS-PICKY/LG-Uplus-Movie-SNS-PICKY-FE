@@ -1,4 +1,5 @@
 import { css, SerializedStyles } from "@emotion/react";
+import styled from "@emotion/styled";
 
 export default {
   container(): SerializedStyles {
@@ -62,4 +63,15 @@ export default {
       }
     `;
   },
+
+  emptyState(): SerializedStyles {
+    return css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 120px;
+    `;
+  }
 };
