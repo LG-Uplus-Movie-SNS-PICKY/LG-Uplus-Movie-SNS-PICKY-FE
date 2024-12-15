@@ -98,6 +98,14 @@ export default function SocialPost() {
     selectedSpoiler !== "null" &&
     !!fileUrl;
 
+  console.log("selectedMovieData:", selectedMovieData);
+  console.log("reviewText.trim():", reviewText.trim());
+  console.log("selectedSpoiler:", selectedSpoiler);
+  console.log("fileUrl:", fileUrl);
+  console.log("isButtonActive:", isButtonActive);
+
+  console.log(isButtonActive);
+
   const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
     setSelectedMovieData(movie);
     setSearchTerm(movie.title);
@@ -108,14 +116,34 @@ export default function SocialPost() {
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
+
     if (value) {
       const results = mockMovies.filter((movie) =>
-        movie.title.toLowerCase().includes(value.toLowerCase())
+        movie.title.toLowerCase().startsWith(value.toLowerCase())
       );
       setFilteredMovies(results);
     } else {
       setFilteredMovies([]);
     }
+  };
+
+  const getHighlightedText = (text: string, highlight: string) => {
+    if (!highlight) return text;
+
+    const startIndex = text.toLowerCase().indexOf(highlight.toLowerCase());
+    if (startIndex === -1) return text;
+
+    const beforeMatch = text.slice(0, startIndex);
+    const match = text.slice(startIndex, startIndex + highlight.length);
+    const afterMatch = text.slice(startIndex + highlight.length);
+
+    return (
+      <>
+        {beforeMatch}
+        <span style={{ color: "#FF084A", fontWeight: "bold" }}>{match}</span>
+        {afterMatch}
+      </>
+    );
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -280,7 +308,8 @@ export default function SocialPost() {
                     ]}
                     onClick={() => handleMovieSelect(movie)}
                   >
-                    {movie.title}
+                    {getHighlightedText(movie.title, searchTerm)}{" "}
+                    {/* 하이라이트 함수 적용 */}
                   </div>
                 ))}
               </div>

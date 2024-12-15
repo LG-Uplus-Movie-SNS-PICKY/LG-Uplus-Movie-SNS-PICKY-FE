@@ -19,6 +19,7 @@ import ThumbsUp from '@assets/icons/thumbs_up.svg?react';
 import ThumbsUpActive from '@assets/icons/thumbs_up_active.svg?react';
 import MovieLogSvg from '@assets/icons/movie_log.svg?react';
 import BehindSvg from '@assets/icons/behind.svg?react';
+import { toggleMovieLike } from '@api/movie';
 
 interface MovieRatingProps {
     rating: number;
@@ -27,8 +28,6 @@ interface MovieRatingProps {
 }
 
 const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
-    // const accessToken = localStorage.getItem("accessToken");
-    const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
     const totalStars = 5;
 
     // 랜덤 관람자 수 생성 (100 ~ 10000)
@@ -43,36 +42,19 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
         return 0; // 빈 별
     });
 
-    // `initialLike`를 초기값으로 설정
     const [likeActive, setLikeActive] = useState(initialLike);
     const [showBehindModal, setShowBehindModal] = useState(false);
     const [peopleCount, setPeopleCount] = useState<number>(getRandomPeopleCount); // 관람자 수 상태
 
-    // 좋아요 상태 토글 및 API 호출
-    const toggleLike = async () => {
+    const handleToggleLike = async () => {
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_SERVER_URL}/api/v1/movie/${movieId}/like`,
-                {}, // POST 요청이므로 빈 body
-                {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                }
-            );
-
-            console.log(response.data.message); // 성공 메시지 출력
-            const updatedLikeStatus = !likeActive; // 상태 반전
-            setLikeActive(updatedLikeStatus); // 좋아요 상태 업데이트
-            console.log(`현재 좋아요 상태: ${updatedLikeStatus}`);
-        } catch (error: any) {
-            console.error("좋아요 상태 변경 실패", error);
-            if (error.response) {
-                console.error("응답 상태:", error.response.status);
-                console.error("응답 데이터:", error.response.data);
-            } else {
-                console.error("요청 실패:", error.request);
-            }
+          const response = await toggleMovieLike(movieId);
+          console.log(response.message);
+          setLikeActive((prev) => !prev); // 좋아요 상태 변경
+        } catch (error) {
+          console.error("좋아요 변경 중 오류 발생:", error);
         }
-    };
+      };
 
     return (
         <RatingContainer>
@@ -88,7 +70,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
                 ))}
             </RatingStarContainer>
             <TabBarContainer>
-                <IconContainer onClick={toggleLike}>
+                <IconContainer onClick={handleToggleLike}>
                     {likeActive ? <ThumbsUpActive /> : <ThumbsUp />}
                     <LikeText active={likeActive}>좋아요</LikeText>
                 </IconContainer>
