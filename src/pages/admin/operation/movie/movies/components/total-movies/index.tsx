@@ -7,6 +7,7 @@ import { MovieDataTypes } from "@type/api/movie";
 import MovieCard from "./component/movie-card";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
+import { useInView } from "react-intersection-observer";
 
 function TotalMoviesSection() {
   const loadable = useRecoilValueLoadable(genresSelector);
@@ -23,9 +24,22 @@ function TotalMoviesSection() {
     }
   }, [loadable]);
 
-  const { data: genreMovies, isLoading } = useGenreMovieQuery(
-    selectButton ?? -1
-  );
+  const {
+    data: genreMovies,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGenreMovieQuery(selectButton ?? -1);
+
+  const { ref, inView } = useInView({
+    threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <>
@@ -58,6 +72,8 @@ function TotalMoviesSection() {
               </React.Fragment>
             ))}
         </div>
+
+        <div ref={ref} style={{ height: "10px" }} />
       </div>
     </>
   );

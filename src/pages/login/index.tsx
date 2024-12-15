@@ -112,9 +112,11 @@ export default function Login() {
           />
         </Block.FlexBox>
 
-        <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
-          Local Login Btn
-        </button>
+        {process.env.NODE_ENV === "development" && (
+          <button onClick={socialLoginClikc} style={{ cursor: "pointer" }}>
+            Local Login Btn
+          </button>
+        )}
       </Block.FlexBox>
     </>
   );

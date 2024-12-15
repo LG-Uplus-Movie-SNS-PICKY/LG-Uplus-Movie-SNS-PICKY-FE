@@ -3,14 +3,18 @@ import Router from "./routers/Router";
 import QueryProvider from "./provider/QueryProvider";
 import NotificationSSE from "@hooks/notification/connect";
 
+import { HelmetProvider } from "react-helmet-async";
+
 function App() {
   return (
-    <RecoilRoot>
-      <QueryProvider>
-        <NotificationSSE />
-        <Router />
-      </QueryProvider>
-    </RecoilRoot>
+    <HelmetProvider>
+      <RecoilRoot>
+        <QueryProvider>
+          <NotificationSSE />
+          <Router />
+        </QueryProvider>
+      </RecoilRoot>
+    </HelmetProvider>
   );
 }
 

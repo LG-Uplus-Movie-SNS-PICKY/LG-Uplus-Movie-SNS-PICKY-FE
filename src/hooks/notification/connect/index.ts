@@ -20,7 +20,11 @@ function NotificationSSE() {
 
     // 사용자가 로그인을 했을 경우에 SSE랑 연결을 시도한다.
     if (isLoginState && !isAuthUser) {
+      // 1. 초기 데이터 구성을 위한 API 호출을 한다.
+
       const token = getCookie("user") || {};
+
+      // 2. 프론트-서버 SSE 연결
 
       // Header를 포함시켜야 하기 때문에 기존 EventSource가 아닌 EventSourcePolyfill 라이브러리를 사용한다.
       const eventSource = new EventSourcePolyfill(
@@ -32,11 +36,14 @@ function NotificationSSE() {
         }
       );
 
-      eventSourceRef.current = eventSource;
-
       // 메세지 수신
       eventSource.onmessage = (event) => {
         console.log("Received data:", event);
+        console.log(event.data);
+
+        // 3. 실시간으로 데이터 올 시 해당 데이터를 상태 관리를 한다.
+        // const data = JSON.parse(event.data);
+        // console.log(data);
       };
 
       // 에러 처리
@@ -47,8 +54,7 @@ function NotificationSSE() {
       // 컴포넌트 언마운트 시 SSE 연결 종료
       return () => {
         if (eventSourceRef.current) {
-          eventSourceRef.current.close();
-          eventSourceRef.current = null;
+          eventSource.close();
         }
       };
     }

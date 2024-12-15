@@ -4,12 +4,18 @@ import { Flex as Wrapper } from "./index.styles";
 import { LayoutProps } from "./type";
 import { matchPath, useLocation, useNavigate } from "react-router-dom";
 import GlobalNavigatorBar from "@components/navbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRecoilValue, useRecoilValueLoadable } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { routeConfig } from "@constants/routes/routeConfig";
 import { HeaderProps } from "@type/navigation";
 import { genresSelector } from "@recoil/selectors/genresSelector";
+import { debounce, throttle } from "lodash";
+
+import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
+gsap.registerPlugin(ScrollToPlugin);
 
 function Layout({ children }: LayoutProps): JSX.Element {
   const navigate = useNavigate();
@@ -24,6 +30,8 @@ function Layout({ children }: LayoutProps): JSX.Element {
 
   const [showGlobalNavbar, setShowGlobalNavbar] = useState(false);
   const [isDefaultMargin, setIsDefaultMargin] = useState("0");
+
+  const layoutRef = useRef<HTMLDivElement | null>(null);
 
   // 현재 경로에 맞는 Header와 Navbar의 타입 정의
   useEffect(() => {
@@ -67,6 +75,20 @@ function Layout({ children }: LayoutProps): JSX.Element {
     }
   }, [isLoginInfo, location, loadable]);
 
+  useEffect(() => {
+    const handleScrollToTop = throttle((layout) => {
+      gsap.to(layout, {
+        scrollTo: { y: 0 },
+        duration: 0.8,
+      });
+    }, 100);
+
+    const scrollPostion = layoutRef.current?.scrollTop ?? window.screenY;
+    if (scrollPostion > 0) {
+      handleScrollToTop(layoutRef.current || window);
+    }
+  }, [layoutRef, location]);
+
   return (
     <>
       <MainLayout
@@ -88,6 +110,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
           justify="flex-start"
           margin={isDefaultMargin}
           height="100vh"
+          ref={layoutRef}
         >
           {children}
         </Wrapper>

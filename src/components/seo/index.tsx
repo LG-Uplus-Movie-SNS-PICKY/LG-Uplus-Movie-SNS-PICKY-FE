@@ -15,8 +15,13 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
       ? "http://localhost:5173"
       : "https://www.picky-movie.com";
 
-  console.log(defaultURL + url);
-  console.log(image);
+  console.log("url: " + url);
+  console.log("defaultURL: " + defaultURL);
+  console.log("url + defaultURL: " + defaultURL + url);
+
+  console.log(url ? defaultURL + url : defaultURL);
+  console.log("defaultImage: " + defaultImage);
+  console.log("image: " + image);
 
   return (
     <Helmet>
@@ -30,7 +35,7 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
       {description && <meta property="og:description" content={description} />}
 
       <meta property="og:image" content={image || defaultImage} />
-      <meta property="og:url" content={defaultURL + url || defaultURL} />
+      <meta property="og:url" content={url ? defaultURL + url : defaultURL} />
 
       {/* Kakao Meta Data */}
       <meta property="kakao:title" content={title} />
@@ -47,7 +52,10 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
         <meta property="twitter:description" content={description} />
       )}
       <meta property="twitter:image" content={image || defaultImage} />
-      <meta property="twitter:url" content={defaultURL + url || defaultURL} />
+      <meta
+        property="twitter:url"
+        content={url ? defaultURL + url : defaultURL}
+      />
     </Helmet>
   );
 }
