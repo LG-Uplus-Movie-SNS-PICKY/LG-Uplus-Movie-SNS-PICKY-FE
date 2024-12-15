@@ -26,7 +26,7 @@ export async function fetchMovieDetailUpdate(
   movieId: number,
   movieInfo: MovieDetailTypes
 ) {
-  console.log(movieInfo);
+  // console.log(movieInfo);
   const { data } = await apiClient.patch(`/movie/${movieId}`, movieInfo);
   return data;
 }
