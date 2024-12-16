@@ -4,15 +4,7 @@ import NotificationRander from "./components/notification-rander";
 import SEO from "@components/seo";
 import { useUnreadNotificationQuery } from "@hooks/notification/fetch";
 import { useInView } from "react-intersection-observer";
-import { NotificationTypes } from "@type/api/notification";
-
-// 날짜별 데이터 타입
-interface GroupNotifications {
-  today: NotificationTypes[];
-  last7days: NotificationTypes[];
-  last30days: NotificationTypes[];
-  older: NotificationTypes[];
-}
+import { GroupNotifications, NotificationTypes } from "@type/api/notification";
 
 // DB에서 가져온 알림의 날짜를 '오늘', '7일', '30일', '이후' 별로 나누는 함수
 function groupNotificationsByDate(
@@ -96,25 +88,32 @@ function NotificationPage() {
 
       <div style={{ flex: 1 }}>
         {groupNotifications.today.length > 0 && (
-          <NotificationRander title="오늘" section={groupNotifications.today} />
+          <NotificationRander
+            title="오늘"
+            section={groupNotifications.today}
+            setGroupNotifications={setGroupNotifications}
+          />
         )}
 
         {groupNotifications.last7days.length > 0 && (
           <NotificationRander
             title="최근 7일"
             section={groupNotifications.last7days}
+            setGroupNotifications={setGroupNotifications}
           />
         )}
         {groupNotifications.last30days.length > 0 && (
           <NotificationRander
             title="최근 30일"
             section={groupNotifications.last30days}
+            setGroupNotifications={setGroupNotifications}
           />
         )}
         {groupNotifications.older.length > 0 && (
           <NotificationRander
             title="이전활동"
             section={groupNotifications.older}
+            setGroupNotifications={setGroupNotifications}
           />
         )}
 

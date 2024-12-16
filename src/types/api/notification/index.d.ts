@@ -1,3 +1,4 @@
+// 알림 데이터 타입
 export interface NotificationTypes {
   notificationId: number;
   boardId: number;
@@ -9,4 +10,12 @@ export interface NotificationTypes {
   senderNickname: string;
   createdAt: string;
   isRead: boolean;
+}
+
+// 날짜별 데이터 타입
+export interface GroupNotifications {
+  today: NotificationTypes[];
+  last7days: NotificationTypes[];
+  last30days: NotificationTypes[];
+  older: NotificationTypes[];
 }

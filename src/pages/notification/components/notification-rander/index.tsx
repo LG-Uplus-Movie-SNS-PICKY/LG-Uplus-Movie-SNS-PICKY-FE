@@ -5,11 +5,16 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { NotificationTypes } from "@type/api/notification";
+import { GroupNotifications, NotificationTypes } from "@type/api/notification";
+import { fetchReadNotification } from "@api/notification";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface NotificationRanderProps {
   title: string;
   section: NotificationTypes[];
+  setGroupNotifications: React.Dispatch<
+    React.SetStateAction<GroupNotifications>
+  >;
 }
 
 function formatRelativeTime(createdAt: string) {
@@ -41,18 +46,68 @@ function formatRelativeTime(createdAt: string) {
   }
 }
 
-function NotificationRander({ title, section }: NotificationRanderProps) {
+function NotificationRander({
+  title,
+  section,
+  setGroupNotifications,
+}: NotificationRanderProps) {
   const navigate = useNavigate();
 
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [movieImageLoading, setMovieImageLoading] = useState(false);
 
-  // 알림을 클릭할 경우 -> 해당 알림 게시물로 이동 + 알림 읽음 업데이트
-  const onReadNotifiaction = (boardId: number, notificationId: number) => {
-    console.log("Hello");
+  const queryClient = useQueryClient();
 
-    // navigate 이동
-    console.log(boardId);
+  // console.log(section);
+
+  // 알림을 클릭할 경우 -> 해당 알림 게시물로 이동 + 알림 읽음 업데이트
+  const onReadNotifiaction = async (
+    boardId: number,
+    notificationId: number
+  ) => {
+    // 알림 읽음 처리
+    await fetchReadNotification(notificationId);
+
+    // 리액트 쿼리를 통해 캐싱된 데이터 알림 읽음 처리
+    queryClient.setQueryData(["unreadNotification"], (oldData) => {
+      if (!oldData) return oldData;
+
+      // 캐싱 데이터에서 읽음 처리된 알림 업데이트
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          data: {
+            ...page.data,
+            content: page.data.content.map((notif: NotificationTypes) => {
+              return notif.notificationId === notificationId
+                ? { ...notif, isRead: true }
+                : notif;
+            }),
+          },
+        })),
+      };
+    });
+
+    // 상태를 업데이트 시켜서 해당 알림 항목을 뷰에서 사라지게 만든다.
+    setGroupNotifications((prev) => {
+      const keys = Object.keys(prev) as (keyof GroupNotifications)[];
+
+      const updatedGroups = keys.reduce((groups, key) => {
+        groups[key] = prev[key as keyof typeof prev].map((notif) =>
+          notif.notificationId === notificationId
+            ? { ...notif, isRead: true }
+            : notif
+        );
+
+        return groups;
+      }, {} as typeof prev);
+
+      return updatedGroups;
+    });
+
+    // 해당 무비로그 게시물로 이동
+    navigate(`/movie-log/detail/${boardId}`);
   };
 
   return (
