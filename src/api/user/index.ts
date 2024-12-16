@@ -62,7 +62,7 @@ export async function fetchUserInfo(nickname: string) {
 
 /** 영화 검색 API */
 export async function fetchMovieSearch(keyword: string) {
-  const { data } = await apiClient.get("/api/v1/movie/search", {
+  const { data } = await apiClient.get("/movie/search", {
     params: { keyword },
   });
   return data;
@@ -70,7 +70,7 @@ export async function fetchMovieSearch(keyword: string) {
 
 /** 사용자 검색 API */
 export async function fetchUserSearch(keyword: string) {
-  const { data } = await apiClient.get("/api/v1/user/search", {
+  const { data } = await apiClient.get("/user/search", {
     params: { keyword },
   });
   return data;

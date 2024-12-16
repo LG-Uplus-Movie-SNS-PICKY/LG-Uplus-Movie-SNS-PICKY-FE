@@ -55,8 +55,8 @@ export const filterLabelStyle = css`
 
 export const filterModalStyle = css`
   position: absolute;
-  top: 5.8%;
-  left: 13%;
+  top: 55px;
+  left: 56px;
   background: #ffffff;
   border-radius: 10px;
   border: 1px solid #d9d9d9;
@@ -196,8 +196,7 @@ export const emptyTextStyle = css`
 export const searchButtonStyle = css`
   position: absolute;
   right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 10px;
   background: none;
   display: flex;
   border: none;
