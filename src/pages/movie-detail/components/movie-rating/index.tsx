@@ -20,6 +20,7 @@ import ThumbsUpActive from '@assets/icons/thumbs_up_active.svg?react';
 import MovieLogSvg from '@assets/icons/movie_log.svg?react';
 import BehindSvg from '@assets/icons/behind.svg?react';
 import { toggleMovieLike } from '@api/movie';
+import { useNavigate } from 'react-router-dom';
 
 interface MovieRatingProps {
     rating: number;
@@ -45,6 +46,12 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
     const [likeActive, setLikeActive] = useState(initialLike);
     const [showBehindModal, setShowBehindModal] = useState(false);
     const [peopleCount, setPeopleCount] = useState<number>(getRandomPeopleCount); // 관람자 수 상태
+
+    const navigate = useNavigate();
+
+    const handleMovieLog = () => {
+        navigate(`/board/${movieId}`);
+    }
 
     const handleToggleLike = async () => {
         try {
@@ -74,7 +81,7 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
                     {likeActive ? <ThumbsUpActive /> : <ThumbsUp />}
                     <LikeText active={likeActive}>좋아요</LikeText>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={handleMovieLog}>
                     <MovieLogSvg />
                     무비로그
                 </IconContainer>

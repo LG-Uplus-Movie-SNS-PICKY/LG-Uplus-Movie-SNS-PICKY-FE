@@ -14,6 +14,8 @@ import ReactDOM from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { deleteLineReview, fetchLineReviewsByUser, updateLineReview } from "@api/linereview";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@/recoil/atoms/isLoginState";
 
 export interface LineReviewData {
   [key: string]: unknown;
@@ -60,7 +62,7 @@ function LineReviewContent() {
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null); // 선택된 리뷰 ID 관리
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
 
-  const { nickname } = useParams<{ nickname: string }>();
+  const { nickname } = useParams(); // URL에서 nickname 추출
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
   const [lastCursor, setLastCursor] = useState<{ lastCreatedAt: string; lastReviewId: number } | null>(null);
@@ -70,6 +72,10 @@ function LineReviewContent() {
   const [selectedReview, setSelectedReview] = useState<LineReviewData | null>(
     null
   );
+
+  // 로그인 상태에서 사용자 정보 가져오기
+  const loginState = useRecoilValue(isLogin);
+  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
 
   useEffect(() => {
     const fetchLineReviews = async () => {
@@ -82,16 +88,11 @@ function LineReviewContent() {
       try {
         setIsLoading(true);
 
-        // 실제 API 호출 복원
-        const response = await fetchLineReviewsByUser(nickname, 10);
-        console.log("Fetched Reviews:", response);
+        const response = await fetchLineReviewsByUser(nickname);
+        console.log("API 응답 데이터 전체:", response); // 전체 데이터 출력
 
         setReviews(response.context || []); // API 응답 데이터에서 리뷰 설정
         setLastCursor(response.lastCursor || null); // 페이징 정보 설정
-
-        // // 더미 데이터 설정
-        // setReviews(dummyData.data.content || []);
-        // setLastCursor(null);
 
       } catch (err) {
         console.error("API 호출 실패:", err);
@@ -103,64 +104,6 @@ function LineReviewContent() {
 
     fetchLineReviews();
   }, [nickname]);
-
-  // const dummyData = {
-  //   success: true,
-  //   code: 200,
-  //   message: "요청이 성공적으로 처리되었습니다.",
-  //   data: {
-  //     content: [
-  //       {
-  //         id: 96,
-  //         writerNickname: "우진쓰~",
-  //         userId: 10,
-  //         rating: 5.0,
-  //         context: "노래 너무 좋아여👍",
-  //         isSpoiler: false,
-  //         likes: 0,
-  //         dislikes: 0,
-  //         createdAt: "2024-12-15T17:06:13.377225",
-  //         movie: {
-  //           movieId: 1241982,
-  //           movieTitle: "모아나 2",
-  //           moviePosterUrl: "/2WVvPcVRqfjyVzIUVIcszGb6zT4.jpg",
-  //         },
-  //         isAuthor: true,
-  //       },
-  //       {
-  //         id: 95,
-  //         writerNickname: "우진쓰~",
-  //         userId: 10,
-  //         rating: 5.0,
-  //         context: "이거 보면서 눈물 콧물 왕창ㅜㅜ😭",
-  //         isSpoiler: false,
-  //         likes: 0,
-  //         dislikes: 0,
-  //         createdAt: "2024-12-15T16:19:11.693746",
-  //         movie: {
-  //           movieId: 158445,
-  //           movieTitle: "7번방의 선물",
-  //           moviePosterUrl: "/c9TqJPm4pZCuiEXumTayoNIrBSK.jpg",
-  //         },
-  //         isAuthor: true,
-  //       },
-  //     ],
-  //   },
-  // };
-
-  // useEffect(() => {
-  //   // 더미 데이터를 직접 사용하여 상태 설정
-  //   try {
-  //     setIsLoading(true); // 로딩 상태 설정
-  //     setReviews(dummyData.data.content || []); // 더미 데이터에서 리뷰 데이터 설정
-  //     setLastCursor(null); // lastCursor 필요 시 설정
-  //   } catch (err) {
-  //     console.error("더미 데이터 처리 중 오류 발생:", err);
-  //     setError("더미 데이터를 처리하는 중 오류가 발생했습니다.");
-  //   } finally {
-  //     setIsLoading(false); // 로딩 상태 해제
-  //   }
-  // }, []);
 
   const handleMovieClick = (movieId: number) => {
     navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
@@ -327,21 +270,23 @@ function LineReviewContent() {
               </div>
             </div>
 
-            {/* 수정 & 삭제 버튼 */}
-            <div css={styles.reviewBtnContainer()}>
-              <div
-                css={styles.reviewEditBtn()}
-                onClick={() => openEditModal(review)}
-              >
-                수정
+            {/* 수정/삭제 버튼 렌더링 조건 */}
+            {review.isAuthor === true ? (
+              <div css={styles.reviewBtnContainer()}>
+                <div
+                  css={styles.reviewEditBtn()}
+                  onClick={() => openEditModal(review)}
+                >
+                  수정
+                </div>
+                <div
+                  css={styles.reviewDeleteBtn()}
+                  onClick={() => handleDeleteClick(review.id)}
+                >
+                  삭제
+                </div>
               </div>
-              <div
-                css={styles.reviewDeleteBtn()}
-                onClick={() => handleDeleteClick(review.id)}
-              >
-                삭제
-              </div>
-            </div>
+            ) : null}
           </div>
         ))}
 

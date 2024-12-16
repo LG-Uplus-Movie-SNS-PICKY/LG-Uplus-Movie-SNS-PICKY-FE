@@ -34,7 +34,7 @@ export const ContentContainer = styled.div`
   justify-content: center;
   position: relative;
   width: 90%;
-  max-width: 500px;
+  max-width: 398px;
   background-color: #FFFFFF;
   border-radius: 12px;
   box-sizing: border-box;
