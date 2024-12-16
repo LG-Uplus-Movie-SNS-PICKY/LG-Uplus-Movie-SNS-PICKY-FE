@@ -41,30 +41,27 @@ function NotificationRander({ title, section }: NotificationRanderProps) {
       <h2 className="title">{title}</h2>
       <ul>
         {section.map((notif, index) => (
-          <li key={notif.id} css={styles.notificationCard()}>
+          <li key={notif.notificationId} css={styles.notificationCard()}>
             <div className="req-user">
               <div className="profile">
                 <img
-                  src={notif.req_user_profile}
-                  alt={`${notif.req_user_nickname}-profile`}
+                  src={notif.senderProfileUrl}
+                  alt={`${notif.senderNickname}-profile`}
                 />
               </div>
 
               <p className="content">
-                <span className="bold">{notif.req_user_nickname}</span>님이{" "}
-                <span className="bold">{notif.req_user_movie.movie_tile}</span>
-                에 새로운 게시물을 등록했습니다.
+                <span className="bold">{notif.senderNickname}</span>님이{" "}
+                <span className="bold">{notif.movieTitle}</span>에 새로운
+                게시물을 등록했습니다.
                 <span className="date">
-                  {formatRelativeTime(notif.created_at)}
+                  {formatRelativeTime(notif.createdAt)}
                 </span>
               </p>
             </div>
 
             <div className="movie-log-thumbnail">
-              <img
-                src={notif.req_user_movie_log.movie_image}
-                alt={`${notif.req_user_movie.movie_tile}-movie-log-${notif.req_user_movie_log.movie_log_id}`}
-              />
+              <img src={notif.moviePosterUrl} alt={`${notif.movieTitle}`} />
             </div>
           </li>
         ))}
