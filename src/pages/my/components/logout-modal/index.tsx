@@ -8,6 +8,7 @@ import {
     ModalBackground
 } from './index.styles';
 import { Toast } from '@stories/toast'
+import { cancelMembership } from '@api/user';
 
 interface LogoutModalProps {
     onClose: () => void;
@@ -58,11 +59,31 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
         setIsConfirmModalOpen(true);
     };
 
-    const handleConfirmCancelMembership = async () => {
-        await showToast('회원탈퇴가 완료되었습니다.', 'up');
-        window.location.reload();
-    };
+    // const handleConfirmCancelMembership = async () => {
+    //     await showToast('회원탈퇴가 완료되었습니다.', 'up');
+    //     window.location.reload();
+    // };
 
+    const handleConfirmCancelMembership = async () => {
+        try {
+            const platform = "kakao"; // 플랫폼 정보 (예: kakao, google 등)
+            const oAuth2Token = {
+                access_token: "string", // 실제 토큰으로 교체
+                refresh_token: "string",
+                token_type: "string",
+                expires_in: "string",
+            };
+
+            const response = await cancelMembership(platform, oAuth2Token);
+            console.log("회원탈퇴 성공:", response);
+
+            await showToast("회원탈퇴가 완료되었습니다.", "up");
+            window.location.replace("/"); // 탈퇴 후 메인 페이지로 이동
+        } catch (error: any) {
+            console.error("회원탈퇴 실패:", error);
+            await showToast("회원탈퇴에 실패했습니다. 다시 시도해주세요.", "down");
+        }
+    };
 
     const handleCancel = () => {
         setIsConfirmModalOpen(false);

@@ -11,9 +11,11 @@ import Loading from "@components/loading";
 
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { deleteLineReview, fetchLineReviewsByUser, updateLineReview } from "@api/linereview";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@/recoil/atoms/isLoginState";
 
 export interface LineReviewData {
   [key: string]: unknown;
@@ -60,14 +62,20 @@ function LineReviewContent() {
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null); // 선택된 리뷰 ID 관리
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
 
-  const { nickname } = useParams<{ nickname: string }>();
+  const { nickname } = useParams(); // URL에서 nickname 추출
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
+  const [lastCursor, setLastCursor] = useState<{ lastCreatedAt: string; lastReviewId: number } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 관리
   const [selectedReview, setSelectedReview] = useState<LineReviewData | null>(
     null
   );
+
+  // 로그인 상태에서 사용자 정보 가져오기
+  const loginState = useRecoilValue(isLogin);
+  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
 
   useEffect(() => {
     const fetchLineReviews = async () => {
@@ -79,10 +87,15 @@ function LineReviewContent() {
 
       try {
         setIsLoading(true);
-        const response = await fetchLineReviewsByUser(nickname, 10); // API 호출
-        setReviews(response.content || []);
+
+        const response = await fetchLineReviewsByUser(nickname);
+        console.log("API 응답 데이터 전체:", response); // 전체 데이터 출력
+
+        setReviews(response.context || []); // API 응답 데이터에서 리뷰 설정
+        setLastCursor(response.lastCursor || null); // 페이징 정보 설정
+
       } catch (err) {
-        console.error(err);
+        console.error("API 호출 실패:", err);
         setError("한줄평 데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
@@ -91,6 +104,10 @@ function LineReviewContent() {
 
     fetchLineReviews();
   }, [nickname]);
+
+  const handleMovieClick = (movieId: number) => {
+    navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
+  };
 
   const showToast = (message: string, direction: "none" | "up" | "down"): Promise<void> => {
     return new Promise((resolve) => {
@@ -195,12 +212,15 @@ function LineReviewContent() {
 
   return (
     <div css={styles.container()} className={reviews.length ? "" : "centered"}>
+      {/* 리뷰 데이터가 없는 경우 EmptyLineReview를 렌더링 */}
       {reviews.length === 0 && <EmptyLineReview />}
+
+      {/* 리뷰 데이터가 있을 경우 렌더링 */}
       {reviews.length > 0 &&
         reviews.map((review) => (
           <div key={review.id} css={styles.reviewCard()}>
             {/* 영화 포스터 이미지 */}
-            <div className="poster">
+            <div className="poster" onClick={() => handleMovieClick(review.movie.movieId)}>
               {review.movie?.moviePosterUrl ? (
                 <img
                   src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${review.movie.moviePosterUrl}`}
@@ -250,21 +270,23 @@ function LineReviewContent() {
               </div>
             </div>
 
-            {/* 수정 & 삭제 버튼 */}
-            <div css={styles.reviewBtnContainer()}>
-              <div
-                css={styles.reviewEditBtn()}
-                onClick={() => openEditModal(review)}
-              >
-                수정
+            {/* 수정/삭제 버튼 렌더링 조건 */}
+            {review.isAuthor === true ? (
+              <div css={styles.reviewBtnContainer()}>
+                <div
+                  css={styles.reviewEditBtn()}
+                  onClick={() => openEditModal(review)}
+                >
+                  수정
+                </div>
+                <div
+                  css={styles.reviewDeleteBtn()}
+                  onClick={() => handleDeleteClick(review.id)}
+                >
+                  삭제
+                </div>
               </div>
-              <div
-                css={styles.reviewDeleteBtn()}
-                onClick={() => handleDeleteClick(review.id)}
-              >
-                삭제
-              </div>
-            </div>
+            ) : null}
           </div>
         ))}
 

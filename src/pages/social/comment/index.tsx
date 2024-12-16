@@ -72,6 +72,7 @@ interface Comment {
   context: string;
   createdDate: string;
   updatedDate: string;
+  isAuthor: boolean;
 }
 
 export default function FeedComment() {
@@ -93,7 +94,6 @@ export default function FeedComment() {
   );
   const [comments, setComments] = useState<Comment[]>([]); // 빈 배열로 초기화
   const [comment, setComment] = useState("");
-  const myUserId = 2;
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const navigate = useNavigate();
@@ -148,12 +148,13 @@ export default function FeedComment() {
         ...prevComments,
         {
           commentId: response.commentId,
-          writerId: myUserId,
+          writerId: 1,
           writerNickname: "현재 사용자 닉네임", // 실제 데이터에 맞게 설정 필요
           writerProfileUrl: "", // 사용자 프로필 URL 설정 필요
           context: comment,
           createdDate: new Date().toISOString(),
           updatedDate: new Date().toISOString(),
+          isAuthor: true,
         },
       ]);
       setComment("");
@@ -166,8 +167,8 @@ export default function FeedComment() {
     }
   };
 
-  const handleDeleteComment = async (commentId: string, writerId: number) => {
-    if (writerId !== myUserId) {
+  const handleDeleteComment = async (commentId: string, isAuthor: boolean) => {
+    if (isAuthor == false) {
       setToastMessage("다른 유저의 댓글은 삭제할 수 없습니다.");
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000); // 3초 후 토스트 메시지 숨기기
@@ -298,20 +299,24 @@ export default function FeedComment() {
                     </div>
                   </div>
                 </div>
-                <CommentReportButton
-                  onClick={() =>
-                    handleDeleteComment(
-                      comment.commentId.toString(),
-                      comment.writerId
-                    )
-                  }
-                />
+                {/* isAuthor가 true일 때만 CommentReportButton 렌더링 */}
+                {comment.isAuthor && (
+                  <CommentReportButton
+                    onClick={() =>
+                      handleDeleteComment(
+                        comment.commentId.toString(),
+                        comment.isAuthor
+                      )
+                    }
+                  />
+                )}
               </div>
             </div>
           ))
         ) : (
           <div key="no-comments">댓글이 없습니다. 첫 댓글을 작성해보세요!</div>
         )}
+
         {isCommentDeleteModalOpen && (
           <div css={modalOverlay}>
             <Modal

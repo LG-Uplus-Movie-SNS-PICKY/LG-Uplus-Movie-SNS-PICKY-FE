@@ -30,6 +30,7 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
+    console.log(error);
     // 공통 에러 처리 로직
     console.log(error);
 

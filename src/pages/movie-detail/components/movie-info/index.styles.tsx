@@ -50,6 +50,7 @@ export const Title = styled.span`
 export const ContentText = styled.span`
     font-size: 16px;
     font-weight: 400;
+    line-height: 18px;
 `;
 
 {/*  Slides -> 최상위 부모 컴포넌트 */}

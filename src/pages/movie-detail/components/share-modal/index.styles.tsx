@@ -24,7 +24,7 @@ export const ModalContent = styled.div`
   flex-direction: column;
   gap: 16px;
   width: 90%;
-  max-width: 500px;
+  max-width: 398px;
 `;
 
 export const ModalTitle = styled.div`

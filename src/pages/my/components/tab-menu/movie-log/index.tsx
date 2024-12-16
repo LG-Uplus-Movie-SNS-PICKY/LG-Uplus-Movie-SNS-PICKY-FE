@@ -1,15 +1,20 @@
+import { useEffect, useState } from "react";
 import EmptyFeed from "@assets/icons/my-page/empty-feed.svg?react";
 import styles from "./index.styles";
+import { fetchUserMovieLogs } from "@api/movie";
 
 export interface MovieLogData {
-  id: number;
+  boardId: number;
+  contents: {
+    contentUrl: string; // 영화 포스터 URL
+    boardContentType: string;
+  }[];
 }
 
 interface MovieLogContentProps {
-  data: MovieLogData[];
+  nickname: string; // 닉네임을 프로퍼티로 전달
 }
 
-// 사용자가 게시글을 하나도 등록하지 않았을 경우
 function EmptyMovieLog() {
   return (
     <>
@@ -19,14 +24,61 @@ function EmptyMovieLog() {
   );
 }
 
-function MovieLogContnent({ data }: MovieLogContentProps) {
+function MovieLogContent({ nickname }: MovieLogContentProps) {
+  const [data, setData] = useState<MovieLogData[]>([]);
+  const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
+
+  const loadMovieLogs = async () => {
+    try {
+      const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
+      const newLogs = response.content || [];
+      setData((prev) => [...prev, ...newLogs]);
+
+      // 마지막 boardId 업데이트
+      if (newLogs.length > 0) {
+        setLastBoardId(newLogs[newLogs.length - 1].boardId);
+      }
+    } catch (error) {
+      console.error("게시글 조회 중 오류 발생:", error);
+    }
+  };
+
+  useEffect(() => {
+    loadMovieLogs();
+  }, [nickname]);
+
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyMovieLog />}
       {data.length > 0 &&
-        data.map((element) => <div className="movie-log"></div>)}
+        data.map((element) => {
+          // contents 중 첫 번째 이미지만 사용
+          const posterUrl =
+            element.contents.find(
+              (content) => content.boardContentType === "IMAGE"
+            )?.contentUrl || "";
+
+          return (
+            <div key={element.boardId} className="movie-log">
+              {posterUrl ? (
+                <img
+                  src={posterUrl}
+                  alt="movie-poster"
+                  style={{ width: "100px", height: "150px" }}
+                />
+              ) : (
+                <EmptyFeed /> // 포스터가 없으면 대체 이미지
+              )}
+            </div>
+          );
+        })}
+      {data.length > 0 && (
+        <button onClick={loadMovieLogs} style={{ marginTop: "20px" }}>
+          더 불러오기
+        </button>
+      )}
     </div>
   );
 }
 
-export default MovieLogContnent;
+export default MovieLogContent;
