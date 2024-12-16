@@ -16,3 +16,11 @@ export const fetchUnreadNotification = async (lastNotificationId: number) => {
 
   return data;
 };
+
+// 사용자 알림 읽음 처리 PATCH API
+export const fetchReadNotification = async (notificationId: number) => {
+  const { data } = await apiClient.patch(
+    `notification/notifications/${notificationId}`
+  );
+  return data;
+};
