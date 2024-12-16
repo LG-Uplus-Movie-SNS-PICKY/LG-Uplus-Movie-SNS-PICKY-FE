@@ -19,6 +19,7 @@ export interface MovieItemProps {
   state?: string;
   name: string;
   style?: React.CSSProperties;
+  disabled?: boolean;
   isLoading?: boolean;
   isError?: boolean;
   onClick?: (movieId?: number) => void;
@@ -73,6 +74,7 @@ export function MovieItem({
   state = "abouttime",
   name,
   style,
+  disabled,
   isLoading,
   onClick,
 }: MovieItemProps): JSX.Element {
@@ -97,7 +99,7 @@ export function MovieItem({
       </div>
 
       {/* 영화 제목 */}
-      <span className="movie-title">{title}</span>
+      {!disabled && <span className="movie-title">{title}</span>}
 
       {/* Type === "rate" : 별점만 보여주기 */}
       {type !== "basic" && <RateComponent rate={rate} />}

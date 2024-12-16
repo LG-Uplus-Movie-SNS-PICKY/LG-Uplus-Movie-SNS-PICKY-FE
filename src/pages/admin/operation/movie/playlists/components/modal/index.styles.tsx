@@ -22,13 +22,11 @@ export default {
 
       display: flex;
       flex-direction: column;
-      gap: 24px;
 
-      padding: 20px;
       width: 100%;
       max-width: 400px;
 
-      max-height: 600px;
+      height: 600px;
 
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -39,6 +37,7 @@ export default {
 
   modalTitle(): SerializedStyles {
     return css`
+      padding: 18px 20px;
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -71,6 +70,7 @@ export default {
         color: #ddd;
         font-weight: 600;
         outline: none;
+        cursor: pointer;
       }
     `;
   },
@@ -78,10 +78,61 @@ export default {
   modalMovies(): SerializedStyles {
     return css`
       width: 100%;
+      height: 100%;
 
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 8px;
+      overflow-y: scroll;
+
+      scrollbar-width: none; /* Firefox: 스크롤바 숨김 */
+      -ms-overflow-style: none; /* IE: 스크롤바 숨김 */
+
+      &::-webkit-scrollbar {
+        display: none; /* Webkit (Chrome, Safari): 스크롤바 숨김 */
+      }
+
+      /* padding: 10px 0; */
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      margin: 18px 0;
+
+      & > .movies-container {
+        width: 100%;
+        padding: 0 16px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        & > .movie-lists {
+          width: 100%;
+          flex: 1;
+
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+          gap: 8px;
+        }
+      }
+    `;
+  },
+
+  select(): SerializedStyles {
+    return css`
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      z-index: 1;
+      border-radius: 4px;
+      background-color: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px);
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      cursor: pointer;
     `;
   },
 };

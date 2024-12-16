@@ -1,4 +1,4 @@
-import { fetchPlaylists } from "@api/playlist";
+import { fetchCreatePlaylist, fetchPlaylists } from "@api/playlist";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 // 플레이리스트 조회 React Query - Custom Hook
@@ -21,3 +21,5 @@ export const usePlaylist = () => {
     gcTime: 1000 * 60 * 30,
   });
 };
+
+// 플레이리스트 추가를 위한 영화 조회 React Query - Custom Hook

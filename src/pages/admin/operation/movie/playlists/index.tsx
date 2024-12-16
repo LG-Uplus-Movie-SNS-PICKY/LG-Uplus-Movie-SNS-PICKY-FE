@@ -11,7 +11,6 @@ import {
   fetchCreatePlaylist,
   fetchUpdatePlaylist,
   fetchDeletePlaylist,
-  fetchCallPlaylist,
 } from "@api/playlist";
 import Modal from "./components/modal";
 

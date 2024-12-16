@@ -13,23 +13,7 @@ export async function fetchPlaylists(lastPlaylistId: number) {
   return data;
 }
 
-// 영화 조회 API 호출
-export async function fetchCallPlaylist(
-  lastMovieId: number,
-  createdAt: string
-) {
-  const params = new URLSearchParams();
-  if (lastMovieId && createdAt) {
-    params.append("last-movie-id", lastMovieId.toString());
-    params.append("created-at", createdAt);
-  }
-
-  const { data } = await apiClient.get(
-    `/admin/playlist/movies?${params.toString()}`
-  );
-  return data;
-}
-
+// 플레이리스트 추가 POST API
 export async function fetchCreatePlaylist(movieIds: number[], title: string) {
   try {
     console.log("API 요청 데이터:", { title, movieIds });
@@ -46,7 +30,7 @@ export async function fetchCreatePlaylist(movieIds: number[], title: string) {
   }
 }
 
-// 플레이리스트 업데이트를 위한 PATCH API
+// 플레이리스트 수정 PATCH API
 export async function fetchUpdatePlaylist(
   playlistId: number,
   title: string,
@@ -61,7 +45,7 @@ export async function fetchUpdatePlaylist(
   return data;
 }
 
-// 영화 삭제
+// 플레이리스트 삭제 DELETE API
 export async function fetchDeletePlaylist(playlistId: number) {
   const { data } = await apiClient.delete(`/admin/playlist/${playlistId}`);
   return data;
