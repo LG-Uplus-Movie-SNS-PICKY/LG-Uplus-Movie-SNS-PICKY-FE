@@ -34,6 +34,7 @@ import { fetchAllData, deletePost, toggleLike } from "@api/movie";
 import { Toast } from "@stories/toast";
 import { useFetchAllMovieLogQuery } from "@hooks/movie-log";
 import { useInView } from "react-intersection-observer";
+import { MovieLog } from "@stories/movie-log";
 
 interface BoardContent {
   boardId: number;
@@ -244,13 +245,16 @@ export default function SocialFeed() {
                         revealSpoiler(board.boardId);
                     }}
                   >
-                    <div
-                      style={{
-                        width: "360px",
-                        height: "360px",
-                        background: "gray",
-                      }}
-                    ></div>
+                    <MovieLog
+                      boardContent={board.contents.map((content, index) => ({
+                        board_content_id: index, // index를 고유 ID로 사용 (숫자)
+                        board_content_url: content.contentUrl, // URL
+                        board_content_type:
+                          content.boardContentType === "Video"
+                            ? "Video"
+                            : "Image", // 타입 설정
+                      }))}
+                    />
                   </div>
                   {board.isSpoiler && !isSpoilerRevealed && (
                     <div css={spoilerText}>

@@ -112,6 +112,22 @@ export async function fetchAllData(lastBoardId: number) {
   return data;
 }
 
+export async function fetchMovieLogs(
+  movieId: number,
+  size: number = 10,
+  lastBoardId?: number
+) {
+  const params = new URLSearchParams();
+
+  params.append("size", size.toString());
+  if (lastBoardId) {
+    params.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(`board/${movieId}?${params.toString()}`);
+  return data;
+}
+
 // 게시글 삭제 API
 export async function deletePost(boardId: number) {
   const { data } = await apiClient.delete(`/board/${boardId}`);
