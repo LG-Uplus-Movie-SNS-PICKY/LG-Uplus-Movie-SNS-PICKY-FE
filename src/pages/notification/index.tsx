@@ -19,6 +19,8 @@ function groupNotificationsByDate(
 
   return notifications.reduce<GroupNotifications>(
     (days, notification) => {
+      if (notification.isRead) return days;
+
       const createdAt = new Date(notification.createdAt);
 
       if (createdAt >= today) days.today.push(notification);
