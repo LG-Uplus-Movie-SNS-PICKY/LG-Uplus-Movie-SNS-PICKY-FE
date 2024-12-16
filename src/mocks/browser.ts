@@ -12,7 +12,7 @@ export const worker = setupWorker(
   // ...boardHandlers,
   ...reviewHandler,
   // ...movieHandelrs,
-  ...playlistHandler,
+  // ...playlistHandler,
   ...authHandler,
   ...userHandler
 );

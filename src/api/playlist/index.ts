@@ -15,19 +15,12 @@ export async function fetchPlaylists(lastPlaylistId: number) {
 
 // 플레이리스트 추가 POST API
 export async function fetchCreatePlaylist(movieIds: number[], title: string) {
-  try {
-    console.log("API 요청 데이터:", { title, movieIds });
-    console.log("movieIds 배열:", movieIds);
-    const response = await apiClient.post("/admin/playlist", {
-      movieIds, // JSON 형식에 맞게 전달
-      title,
-    });
-    console.log("API 응답 데이터:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("플레이리스트 생성 요청 중 오류 발생:", error);
-    throw error; // 상위에서 에러 처리
-  }
+  const { data } = await apiClient.post(`/admin/playlist`, {
+    movieIds,
+    title,
+  });
+
+  return data;
 }
 
 // 플레이리스트 수정 PATCH API

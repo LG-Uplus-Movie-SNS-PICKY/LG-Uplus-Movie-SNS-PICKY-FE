@@ -11,6 +11,7 @@ import { MovieItem } from "@stories/movie-item";
 
 import Checked from "@assets/icons/checked-movie.svg?react";
 import { Toast } from "@stories/toast";
+import { fetchCreatePlaylist } from "@api/playlist";
 
 interface ModalProps {
   setCreateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -58,7 +59,8 @@ function Modal({ setCreateModalOpen }: ModalProps) {
     if (!isLoading) console.log(genreMovies);
   }, [isLoading]);
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // 플레이리스트 추가 이벤트 핸들러
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // 플레이리스트 제목 And 영화를 하나도 선택하지 않은 경우
@@ -70,8 +72,16 @@ function Modal({ setCreateModalOpen }: ModalProps) {
     } else if (!selectMovie.length) {
       // 아무런 영화도 선택하지 않을 경우
       setToastMessage("플레이리스트에 추가하고 싶은 영화를 선택해주세요.");
+    } else if (selectMovie.length < 3 || selectMovie.length > 10) {
+      setToastMessage("영화는 최소 3개에서 최대 10만 선택해주세요.");
     } else {
-      console.log("Hello");
+      // 플레이리스트 제목과 영화를 선택했을 경우
+      await fetchCreatePlaylist(selectMovie, title);
+      setToastMessage("플레이리스트가 추가되었습니다!!");
+
+      setTimeout(() => {
+        setCreateModalOpen(false);
+      }, 2000);
     }
 
     if (toastMessage) {
