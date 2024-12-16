@@ -11,7 +11,7 @@ export const fetchUnreadNotification = async (lastNotificationId: number) => {
 
   // 요청을 보내고 읽지 않은 알림을 조회한다.
   const { data } = await apiClient.get(
-    `/notification/notifications?lastNotificationId=${params.toString()}`
+    `/notification/notifications?${params.toString()}`
   );
 
   return data;

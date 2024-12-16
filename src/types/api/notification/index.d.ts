@@ -4,9 +4,9 @@ export interface NotificationTypes {
   movieId: number;
   movieTitle: string;
   moviePosterUrl: string;
-  userId: number;
-  userProfileUrl: string;
-  userNickName: string;
+  senderId: number;
+  senderProfileUrl: string;
+  senderNickname: string;
   createdAt: string;
   isRead: boolean;
 }

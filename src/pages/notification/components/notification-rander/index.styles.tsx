@@ -32,17 +32,36 @@ export default {
       justify-content: space-between;
       align-items: center;
 
+      gap: 16px;
+
       & > .req-user {
+        flex: 1;
         display: flex;
         align-items: center;
         gap: 12px;
 
         & > .profile {
+          position: relative;
+
           width: 48px;
           height: 48px;
           overflow: hidden;
           border-radius: 50%;
-          /* background-color: aqua; */
+          background-color: #191919;
+
+          cursor: pointer;
+
+          & > span:last-child {
+            position: absolute;
+
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            font-size: 8px;
+            color: #5e5e5e;
+          }
 
           & > img {
             width: 100%;
@@ -59,6 +78,7 @@ export default {
           & > .bold {
             font-weight: 600;
             color: #000;
+            cursor: pointer;
           }
 
           & > .date {

@@ -1,6 +1,11 @@
 import styles from "./index.styles";
 import { Notification } from "../../constants";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 interface NotificationRanderProps {
   title: string;
   section: Notification[];
@@ -36,35 +41,71 @@ function formatRelativeTime(createdAt: string) {
 }
 
 function NotificationRander({ title, section }: NotificationRanderProps) {
+  const navigate = useNavigate();
+
+  const [profileImageLoading, setProfileImageLoading] = useState(false);
+  const [movieImageLoading, setMovieImageLoading] = useState(false);
+
   return (
     <div css={styles.notificationContainer()}>
       <h2 className="title">{title}</h2>
       <ul>
-        {section.map((notif, index) => (
-          <li key={notif.notificationId} css={styles.notificationCard()}>
-            <div className="req-user">
-              <div className="profile">
-                <img
-                  src={notif.senderProfileUrl}
-                  alt={`${notif.senderNickname}-profile`}
-                />
-              </div>
+        {section.map(
+          (notif, index) =>
+            !notif.isRead && (
+              <li key={notif.notificationId} css={styles.notificationCard()}>
+                <div className="req-user">
+                  <div
+                    className="profile"
+                    onClick={() => navigate(`/user/${notif.senderNicknam}`)}
+                  >
+                    <LazyLoadImage
+                      src={notif.senderProfileUrl}
+                      effect={"blur"}
+                      onLoad={() => setProfileImageLoading(true)}
+                      onError={() => setProfileImageLoading(false)}
+                    />
 
-              <p className="content">
-                <span className="bold">{notif.senderNickname}</span>님이{" "}
-                <span className="bold">{notif.movieTitle}</span>에 새로운
-                게시물을 등록했습니다.
-                <span className="date">
-                  {formatRelativeTime(notif.createdAt)}
-                </span>
-              </p>
-            </div>
+                    {!profileImageLoading && (
+                      <span>{notif.senderNickname}</span>
+                    )}
+                  </div>
 
-            <div className="movie-log-thumbnail">
-              <img src={notif.moviePosterUrl} alt={`${notif.movieTitle}`} />
-            </div>
-          </li>
-        ))}
+                  <p className="content">
+                    <span
+                      className="bold"
+                      onClick={() => navigate(`/user/${notif.senderNickname}`)}
+                    >
+                      {notif.senderNickname}
+                    </span>
+                    님이{" "}
+                    <span
+                      className="bold"
+                      onClick={() => navigate(`/movie/${notif.movieId}`)}
+                    >
+                      {notif.movieTitle}
+                    </span>
+                    에 새로운 게시물을 등록했습니다.
+                    <span className="date">
+                      {formatRelativeTime(notif.createdAt)}
+                    </span>
+                  </p>
+                </div>
+
+                <div className="movie-log-thumbnail">
+                  <LazyLoadImage
+                    src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                      notif.moviePosterUrl
+                    }`}
+                    onLoad={() => setMovieImageLoading(true)}
+                    onError={() => setMovieImageLoading(false)}
+                  />
+
+                  {!movieImageLoading && <span>{notif.movieTitle}</span>}
+                </div>
+              </li>
+            )
+        )}
       </ul>
     </div>
   );
