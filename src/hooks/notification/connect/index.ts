@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { getCookie } from "@util/cookie";
 import { useQueryClient } from "@tanstack/react-query";
+import { UnreadNotificationsTypes } from "@type/api/notification";
 
 function NotificationSSE() {
   const queryClient = useQueryClient();
@@ -46,25 +47,30 @@ function NotificationSSE() {
         const newNotification = JSON.parse(event.data);
 
         // React Query 캐시 업데이트
-        queryClient.setQueryData(["unreadNotification"], (oldData) => {
-          if (!oldData) return oldData;
-          return {
-            ...oldData,
-            pages: oldData.pages.map((page, index) => {
-              if (index === 0) {
-                // 첫 번째 페이지에 새 알림 추가
-                return {
-                  ...page,
-                  data: {
-                    ...page.data,
-                    numberOfElements: page.data.numberOfElements + 1, // 새로운 알림 수 증가
-                    content: [newNotification, ...page.data.content], // 새로운 알림 추가
-                  },
-                };
-              }
-            }),
-          };
-        });
+        queryClient.setQueryData<UnreadNotificationsTypes>(
+          ["unreadNotification"],
+          (oldData) => {
+            if (!oldData) return oldData;
+            return {
+              ...oldData,
+              pages: oldData.pages.map((page, index) => {
+                if (index === 0) {
+                  // 첫 번째 페이지에 새 알림 추가
+                  return {
+                    ...page,
+                    data: {
+                      ...page.data,
+                      numberOfElements: page.data.numberOfElements + 1, // 새로운 알림 수 증가
+                      content: [newNotification, ...page.data.content], // 새로운 알림 추가
+                    },
+                  };
+                }
+
+                return page;
+              }),
+            };
+          }
+        );
       };
 
       // 에러 처리
