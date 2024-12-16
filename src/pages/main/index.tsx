@@ -39,7 +39,9 @@ function Main() {
         description="PICKY는 영화 리뷰와 정보를 한곳에서 확인하고, 영화 팬들을 위한 최적의 커뮤니티 서비스입니다."
       />
 
-      <button onClick={onClick}>Hello</button>
+      {process.env.NODE_ENV === "development" && (
+        <button onClick={onClick}>Hello</button>
+      )}
 
       {/* Slider or Banner Section */}
       {process.env.NODE_ENV !== "development" || !isLoginState.isLoginState ? (
