@@ -94,26 +94,30 @@ export default function SocialPost() {
   const [reviewText, setReviewText] = useState<string>("");
   const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
   const [activeIndex, setActiveIndex] = useState<number>(-1); // 활성화된 항목 인덱스
-  const [fileUrl, setFileUrl] = useState<string>(""); // 파일 URL 저장
-  const [images, setImages] = useState<File[]>([]);
+  const [fileUrl, setFileUrl] = useState<string>("asdasdasd"); // 파일 URL 저장
+  const [images, setImages] = useState<File[]>([]); // 이미지 상태
   const [videos, setVideos] = useState<File[]>([]);
+
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
 
   const isButtonActive =
-    !!selectedMovieData &&
-    !!reviewText.trim() &&
-    selectedSpoiler !== "null" &&
-    !!fileUrl;
+    !!selectedMovieData && // 영화 선택됨
+    !!reviewText.trim() && // 리뷰 작성됨
+    selectedSpoiler !== "null"; // 스포일러 여부 선택됨
+  // images.length > 0 && // 이미지가 업로드됨
+  // videos.length > 0; // 이미지가 업로드됨
 
-  console.log("selectedMovieData:", selectedMovieData);
-  console.log("reviewText.trim():", reviewText.trim());
-  console.log("selectedSpoiler:", selectedSpoiler);
-  console.log("fileUrl:", fileUrl);
-  console.log("isButtonActive:", isButtonActive);
+  // console.log("selectedMovieData:", selectedMovieData);
+  // console.log("reviewText.trim():", reviewText.trim());
+  // console.log("selectedSpoiler:", selectedSpoiler);
+  // console.log("fileUrl:", fileUrl);
+  // console.log("isButtonActive:", isButtonActive);
 
-  console.log(isButtonActive);
+  // console.log(isButtonActive);
 
   const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
     setSelectedMovieData(movie);
@@ -199,35 +203,39 @@ export default function SocialPost() {
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        if (fileReader.result) {
-          setFileUrl(fileReader.result.toString());
-        }
-      };
-      fileReader.readAsDataURL(file);
+    const files = e.target.files;
+
+    if (files && files.length > 0) {
+      const fileArray = Array.from(files);
+      // console.log("선택된 파일들:", fileArray);
+
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages, ...fileArray];
+        // console.log("업데이트된 이미지 상태:", updatedImages);
+        return updatedImages;
+      });
     }
   };
 
   const handleShareClick = async () => {
-    if (!isButtonActive || (!images.length && !videos.length)) {
-      alert("모든 필드를 작성하고 파일을 업로드해주세요.");
-      return;
-    }
+    // if (!images.length && !videos.length) {
+    //   alert("모든 필드를 작성하고 파일을 업로드해주세요.");
+
+    //   return;
+    // }
+
+    console.log(mediaFiles);
 
     try {
       await createBoard(
         reviewText,
-        1, // movieId를 실제 데이터로 교체 필요
+        11, // movieId를 실제 데이터로 교체 필요
         selectedSpoiler === "있음",
-        images,
-        videos
+        mediaFiles
       );
 
       alert("게시글이 성공적으로 생성되었습니다.");
-      navigate("/");
+      // navigate("/movie-log"); // 성공 후 메인 페이지로 이동
     } catch (error) {
       console.error("게시글 생성 중 오류 발생:", error);
       alert("게시글 생성에 실패했습니다.");
@@ -316,13 +324,19 @@ export default function SocialPost() {
       )}
 
       <div css={postContainer}>
-        <FileInput type="media" />
-        <input
+        <FileInput
+          type="media"
+          mediaFiles={mediaFiles}
+          setMediaFiles={setMediaFiles}
+        />
+
+        {/* <input
           type="file"
+          multiple
           ref={fileInputRef}
           style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
+          onChange={             }
+        /> */}
       </div>
 
       <div css={reviewSection}>

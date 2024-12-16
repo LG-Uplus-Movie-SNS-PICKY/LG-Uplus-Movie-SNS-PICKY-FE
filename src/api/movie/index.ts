@@ -135,7 +135,7 @@ export async function toggleMovieLike(
   }
 }
 
-//무비로그 댓글 조회회
+//무비로그 댓글 조회
 export async function fetchComments(
   boardId: number,
   size: number = 10,
@@ -185,43 +185,52 @@ export async function deleteComment(
   }
 }
 
-// 게시글 생성 API
-export async function createBoard(
+// 게시글 생성 API 호출
+export const createBoard = async (
   boardContext: string,
   movieId: number,
   isSpoiler: boolean,
-  images: File[],
-  videos: File[]
-) {
-  try {
-    const formData = new FormData();
-    formData.append(
-      "request",
-      JSON.stringify({ boardContext, movieId, isSpoiler })
-    );
+  mediaFiles: File[]
+) => {
+  const formData = new FormData();
 
-    // 이미지 파일 추가
-    images.forEach((image) => {
-      formData.append("image", image);
+  // JSON 데이터 추가
+  const jsonData = {
+    boardContext,
+    movieId,
+    isSpoiler,
+  };
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(jsonData)], { type: "application/json" })
+  );
+
+  // 이미지 및 비디오 파일 추가
+  if (mediaFiles.length > 0) {
+    mediaFiles.forEach((file) => {
+      const types = file.type;
+
+      if (types.startsWith("image/")) formData.append("image", file);
+      if (types.startsWith("video/")) formData.append("video", file);
     });
-
-    // 비디오 파일 추가
-    videos.forEach((video) => {
-      formData.append("video", video);
-    });
-
-    const { data } = await apiClient.post("/board", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    return data;
-  } catch (error) {
-    console.error("게시글 생성 중 오류 발생:", error);
-    throw error;
   }
-}
+
+  console.log("Current formData is Images:");
+  console.log(formData.getAll("image"));
+
+  console.log("Current formData is Videos:");
+  console.log(formData.getAll("video"));
+
+  // API 요청
+  const response = await apiClient.post("/board", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
 
 // 게시글 수정 API
 export const updateBoard = async (
@@ -245,12 +254,14 @@ export const updateBoard = async (
 export async function fetchLikedMovies(nickname: string) {
   try {
     const { data } = await apiClient.get(`/movie/user/${nickname}`);
-    
+
     // 응답 데이터 가공
     const movies = data?.data?.content?.map((movie: any) => ({
       movie_id: movie.movieId,
       movie_title: movie.movieTitle,
-      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.moviePosterUrl}`, // 포스터 URL 완성
+      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${
+        movie.moviePosterUrl
+      }`, // 포스터 URL 완성
       movie_total_rating: movie.movieTotalRating,
     }));
 

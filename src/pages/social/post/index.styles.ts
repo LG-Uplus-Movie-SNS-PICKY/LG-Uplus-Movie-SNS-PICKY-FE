@@ -146,7 +146,9 @@ export const modalContainer = css`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1001;
-  width: 63%;
+  width: 100%;
+  max-width: 430px;
+  padding: 0 29px;
 `;
 
 export const modalContent = css`
@@ -250,7 +252,7 @@ export const reviewInput = css`
   border: none;
   outline: none;
   resize: none;
-  color: #9d9d9d;
+  color: #000;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.64px;

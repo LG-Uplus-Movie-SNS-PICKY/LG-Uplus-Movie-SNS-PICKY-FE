@@ -129,6 +129,7 @@ export const movieCard = ($isSelected: boolean) => css`
 export const movieImage = ($isSelected: boolean) => css`
   position: relative;
   height: 100px;
+  width: 80px;
   border-radius: 10px;
   object-fit: cover;
   filter: ${$isSelected ? "brightness(40%) blur(0.6px)" : "none"};

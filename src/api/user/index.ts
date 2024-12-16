@@ -67,3 +67,19 @@ export async function cancelMembership(platform: string, oAuth2Token: any) {
     });
     return response.data;
 }
+
+/** 영화 검색 API */
+export async function fetchMovieSearch(keyword: string) {
+  const { data } = await apiClient.get("/movie/search", {
+    params: { keyword },
+  });
+  return data;
+}
+
+/** 사용자 검색 API */
+export async function fetchUserSearch(keyword: string) {
+  const { data } = await apiClient.get("/user/search", {
+    params: { keyword },
+  });
+  return data;
+}

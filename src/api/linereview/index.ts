@@ -31,7 +31,10 @@ export async function createLineReview(reviewData: {
 }
 
 // 한줄평 좋아요/싫어요 API
-export async function toggleLineReviewLike(lineReviewId: number, preference: "LIKE" | "DISLIKE") {
+export async function toggleLineReviewLike(
+  lineReviewId: number,
+  preference: "LIKE" | "DISLIKE"
+) {
   const params = {
     lineReviewId,
     preference,
@@ -57,7 +60,7 @@ export async function fetchRatings(movieId: number) {
 // 영화 성별 분포 API 요청
 export async function fetchGenders(movieId: number) {
   const { data } = await apiClient.get(`/linereview/movie/${movieId}/genders`);
-  return data.data; 
+  return data.data;
 }
 
 // 특정 유저의 한줄평 조회 GET API
@@ -78,7 +81,9 @@ export async function fetchLineReviewsByUser(
   }
 
   try {
-    const { data } = await apiClient.get(`/linereview/user/${nickname}?${params.toString()}`);
+    const { data } = await apiClient.get(
+      `/linereview/user/${nickname}?${params.toString()}`
+    );
     console.log("API Response:", data);
 
     // 응답 데이터 구조 확인 및 파싱
@@ -121,3 +126,22 @@ export async function deleteLineReview(lineReviewId: number) {
     throw error;
   }
 }
+
+export const fetchUserBoards = async (
+  nickname: string,
+  size: number = 10,
+  lastBoardId: number | null = null
+) => {
+  try {
+    const response = await apiClient.get(`/board/user/${nickname}`, {
+      params: {
+        size,
+        lastBoardId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
+    throw error;
+  }
+};
