@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import {
   containerStyle,
   headerStyle,
@@ -20,25 +20,25 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 import Loading from "@components/loading";
 import { RecommendMovieDataTypes } from "@type/api/movie";
 
-interface Movie {
-  movieId: number;
-  title: string;
-  posterUrl: string;
-  totalRating: number;
-}
+// interface Movie {
+//   movieId: number;
+//   title: string;
+//   posterUrl: string;
+//   totalRating: number;
+// }
 
 export default function MovieRecommendationPage() {
   // const username = "최우진";
   // const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
 
-  const { data, isLoading } = useRecommnedMovieQuery();
+  const { data, isLoading,  } = useRecommnedMovieQuery();
   const { isLoginInfo } = useRecoilValue(isLogin);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!isLoading) console.log(data);
-  }, [isLoading]);
+  }, [isLoading, data]);
 
   return (
     <>
