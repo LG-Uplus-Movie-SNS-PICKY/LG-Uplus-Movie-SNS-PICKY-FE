@@ -10,8 +10,6 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
   const isLoginState = useRecoilValue(isLogin);
   const [activeTab, setActiveTab] = useState("");
 
-  const currentUser = getCookie("user").user.nickname;
-
   // console.log("outer " + count);
   // console.log("isLoginState: " + isLoginState.isLoginState);
   // console.log("isAuthUser: " + isLoginState.isAuthUser);
@@ -36,6 +34,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
         navigate("/recommendation");
         break;
       case "user":
+        const currentUser = getCookie("user").user.nickname;
         navigate(`/user/${encodeURIComponent(currentUser)}`);
         break;
     }
@@ -58,6 +57,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
       // /user/ 경로 접근
       if (pathname.match(/^\/user\/[^/]+$/)) {
         const pathNickname = decodeURIComponent(pathname.split("/")[2]);
+        const currentUser = getCookie("user").user.nickname;
 
         // 접근한 사용자 프로필 경로와 로그인한 사용자와 같을 경우
         if (pathNickname === currentUser) {
