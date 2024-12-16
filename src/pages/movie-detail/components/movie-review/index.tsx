@@ -23,6 +23,8 @@ import ThumbsUpActiveSvg from "@assets/icons/thumbs_up_mini_active.svg?react";
 import ThumbsDownActiveSvg from "@assets/icons/thumbs_down_mini_active.svg?react";
 import { Toast } from "@stories/toast";
 import { toggleLineReviewLike } from "@api/linereview";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@/recoil/atoms/isLoginState";
 
 interface ReviewProps {
   reviews: {
@@ -52,74 +54,98 @@ const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
   const [reviewInteractions, setReviewInteractions] = useState<ReviewInteraction[]>([]);
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
 
+  // 로그인 상태에서 사용자 정보 가져오기
+  const loginState = useRecoilValue(isLogin);
+  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
+
   // 리뷰 데이터 초기화
   useEffect(() => {
     setReviewInteractions(
       reviews.map((review) => ({
         likes: review.likes,
         dislikes: review.dislikes,
-        liked: false,
-        disliked: false,
+        liked: false, // 초기값
+        disliked: false, // 초기값
       }))
     );
   }, [reviews]);
 
   // 토스트 메시지 표시 함수
   const showToast = (message: string, direction: "none" | "up" | "down" = "none") => {
-  console.log(`Toast Message: ${message}, Direction: ${direction}`); // 콘솔에 메시지 출력
-  setToast({ message, direction });
-  setTimeout(() => setToast(null), 1500); // 1.5초 후 메시지 사라짐
-};
+    console.log(`Toast Message: ${message}, Direction: ${direction}`); // 콘솔에 메시지 출력
+    setToast({ message, direction });
+    setTimeout(() => setToast(null), 1500); // 1.5초 후 메시지 사라짐
+  };
 
   // 좋아요/싫어요 처리
   const handleInteraction = async (index: number, type: "like" | "dislike") => {
     const review = reviews[index];
     const isLike = type === "like";
-    const preference = isLike ? "LIKE" : "DISLIKE";
-
+  
+    // 본인이 작성한 한줄평에 대한 처리 방지
+    if (review.writerNickname === myNickname) {
+      showToast("본인이 작성한 한줄평에 좋아요/싫어요를 할 수 없습니다.", "none");
+      return;
+    }
+  
+    // 현재 리뷰의 상태 가져오기
+    const currentInteraction = reviewInteractions[index];
+    if (!currentInteraction) {
+      console.error(`리뷰 상태를 찾을 수 없습니다: index ${index}`);
+      return;
+    }
+  
+    // 현재 상태를 콘솔에 출력
+    console.log(`현재 리뷰 상태 (index: ${index}):`, {
+      liked: currentInteraction.liked,
+      disliked: currentInteraction.disliked,
+      likes: currentInteraction.likes,
+      dislikes: currentInteraction.dislikes,
+    });
+  
     try {
-      const response = await toggleLineReviewLike(review.id, preference);
-
-      console.log(response.message); // 성공 메시지 출력
-
+      // API 요청 보내기
+      await toggleLineReviewLike(review.id, isLike ? "LIKE" : "DISLIKE");
+  
+      // 상태 업데이트
       setReviewInteractions((prev) =>
         prev.map((interaction, idx) => {
-          if (idx === index) {
-            const wasLiked = interaction.liked;
-            const wasDisliked = interaction.disliked;
-
-            return {
-              ...interaction,
-              liked: isLike ? !wasLiked : false,
-              disliked: !isLike ? !wasDisliked : false,
-              likes:
-                isLike && !wasLiked
-                  ? interaction.likes + 1
-                  : isLike && wasLiked
-                  ? interaction.likes - 1
-                  : interaction.likes,
-              dislikes:
-                !isLike && !wasDisliked
-                  ? interaction.dislikes + 1
-                  : !isLike && wasDisliked
-                  ? interaction.dislikes - 1
-                  : interaction.dislikes,
-            };
+          if (idx !== index) return interaction;
+  
+          if (isLike) {
+            // 좋아요 버튼 클릭 처리
+            return currentInteraction.liked
+              ? { ...interaction, liked: false, likes: interaction.likes - 1 }
+              : {
+                  ...interaction,
+                  liked: true,
+                  disliked: false,
+                  likes: interaction.likes + 1,
+                  dislikes: currentInteraction.disliked ? interaction.dislikes - 1 : interaction.dislikes,
+                };
+          } else {
+            // 싫어요 버튼 클릭 처리
+            return currentInteraction.disliked
+              ? { ...interaction, disliked: false, dislikes: interaction.dislikes - 1 }
+              : {
+                  ...interaction,
+                  disliked: true,
+                  liked: false,
+                  dislikes: interaction.dislikes + 1,
+                  likes: currentInteraction.liked ? interaction.likes - 1 : interaction.likes,
+                };
           }
-          return interaction;
         })
       );
+  
+      // 성공 메시지
+      showToast(isLike ? "좋아요를 등록했습니다." : "싫어요를 등록했습니다.", "none");
     } catch (error: any) {
-      console.error("좋아요/싫어요 처리 중 오류:", error);
-
-      if (error.response?.status === 403) {
-        showToast(error.response.data?.message || "요청이 거부되었습니다.");
-      } else {
-        showToast("처리 중 오류가 발생했습니다.");
-      }
+      console.error("좋아요/싫어요 처리 중 오류:", error.response?.data || error.message);
+      showToast("처리 중 오류가 발생했습니다.");
     }
   };
-
+  
   // 별점 렌더링
   const renderStars = (rating: number) => (
     <StarContainer>

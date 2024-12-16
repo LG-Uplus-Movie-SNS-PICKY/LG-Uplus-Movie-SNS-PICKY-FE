@@ -25,17 +25,17 @@ export const BasicFileInput: Story = {
       {
         board_content_id: 1,
         board_content_url: image1,
-        board_content_type: "Photo",
+        board_content_type: "Image",
       },
       {
         board_content_id: 2,
         board_content_url: image2,
-        board_content_type: "Photo",
+        board_content_type: "Image",
       },
       {
         board_content_id: 3,
         board_content_url: image3,
-        board_content_type: "Photo",
+        board_content_type: "Image",
       },
     ],
   },

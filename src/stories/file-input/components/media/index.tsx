@@ -7,10 +7,14 @@ import MediaFileSlider from "./slider";
 // 미디어 타입 컴포넌트 props 종류
 interface MediaTypeProps {
   access: string; // input file에 업로드 할 수 있는 확장자 정보
+  mediaFiles?: File[];
+  setMediaFiles?: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-function MediaType({ access }: MediaTypeProps) {
-  const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
+function MediaType({ access, mediaFiles, setMediaFiles }: MediaTypeProps) {
+  if (!mediaFiles || !setMediaFiles) return null;
+
+  // const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   // input type=file 파일 업로드 시 onChange 이벤트 핸들러 발생

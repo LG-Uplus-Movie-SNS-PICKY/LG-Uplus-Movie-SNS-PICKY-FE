@@ -278,7 +278,7 @@ const ReviewsPage = () => {
               )} */}
             </ReviewsWrapper>
           </MovieReviewContainer>
-          <div ref={ref} style={{ height: "20px" }} />
+          {/* <div ref={ref} style={{ height: "20px" }} />
           {isFetchingNextPage &&
             <LoadingContainer>
               <Loading />
@@ -288,7 +288,7 @@ const ReviewsPage = () => {
             <div style={{ textAlign: "center", margin: "16px", fontWeight: "600" }}>
               마지막 리뷰입니다.
             </div>
-          )}
+          )} */}
         </div>
       </>
     )

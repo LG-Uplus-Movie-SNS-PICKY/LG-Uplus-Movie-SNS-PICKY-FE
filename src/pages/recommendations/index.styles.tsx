@@ -108,7 +108,7 @@ export const movieRatingStyle = css`
 
 export const movieWrapperStyle = css`
   display: flex;
-  padding: 0px 32px;
+  padding: 0px 20px;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
