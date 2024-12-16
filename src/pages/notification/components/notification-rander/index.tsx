@@ -1,14 +1,15 @@
 import styles from "./index.styles";
-import { Notification } from "../../constants";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { NotificationTypes } from "@type/api/notification";
 
 interface NotificationRanderProps {
   title: string;
-  section: Notification[];
+  section: NotificationTypes[];
 }
 
 function formatRelativeTime(createdAt: string) {
@@ -26,11 +27,11 @@ function formatRelativeTime(createdAt: string) {
   const diffInWeeks = Math.floor(diffInDays / 7); // 몇 주전에 등록된 날짜인지 계산
 
   if (diffInSeconds < 60)
-    return `${diffInSeconds}초`; // 60초 이내에 등록된 날짜일 경우
+    return `${diffInSeconds}초 전`; // 60초 이내에 등록된 날짜일 경우
   else if (diffInMinutes < 60)
-    return `${diffInMinutes}분`; // 60분 이내에 등록된 날짜일 경우
+    return `${diffInMinutes}분 전`; // 60분 이내에 등록된 날짜일 경우
   else if (diffInHours < 24)
-    return `${diffInHours}일`; // 하루 이내에 등록된 날짜일 경우
+    return `${diffInHours}시간 전`; // 하루 이내에 등록된 날짜일 경우
   else if (diffInDays < 7)
     return `${diffInDays}일`; // 7일 이내에 등록된 날짜일 경우
   else if (diffInDays < 30)
@@ -46,18 +47,21 @@ function NotificationRander({ title, section }: NotificationRanderProps) {
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [movieImageLoading, setMovieImageLoading] = useState(false);
 
+  // 알림을 클릭할 경우 -> 해당 알림 게시물로 이동 + 알림 읽음 업데이트
+  const onReadNotifiaction = (notificationId: number) => {};
+
   return (
     <div css={styles.notificationContainer()}>
       <h2 className="title">{title}</h2>
       <ul>
         {section.map(
-          (notif, index) =>
+          (notif) =>
             !notif.isRead && (
               <li key={notif.notificationId} css={styles.notificationCard()}>
                 <div className="req-user">
                   <div
                     className="profile"
-                    onClick={() => navigate(`/user/${notif.senderNicknam}`)}
+                    onClick={() => navigate(`/user/${notif.senderNickname}`)}
                   >
                     <LazyLoadImage
                       src={notif.senderProfileUrl}
