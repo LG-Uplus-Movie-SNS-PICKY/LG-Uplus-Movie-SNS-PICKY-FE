@@ -10,8 +10,8 @@ import userHandler from "./handlers/user";
 
 export const worker = setupWorker(
   // ...boardHandlers,
-  // ...reviewHandler,
-  // ...movieHandelrs,
+  ...reviewHandler,
+  ...movieHandelrs,
   ...playlistHandler,
   ...authHandler,
   ...userHandler

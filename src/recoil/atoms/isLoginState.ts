@@ -2,11 +2,8 @@ import { atom, selector } from "recoil";
 
 export interface LoginUserInfoTypes {
   [key: string]: unknown;
-  name: string;
   nickname: string;
   profile_url: string;
-  nationlity: string;
-  birthdate: string;
   gender: string;
 }
 
@@ -24,11 +21,8 @@ export const isLogin = atom<LoginStateTypes>({
     isLoginState: false,
     isAuthUser: false,
     isLoginInfo: {
-      name: "",
       nickname: "",
       profile_url: "",
-      nationlity: "",
-      birthdate: "",
       gender: "",
     },
     isLoading: true,

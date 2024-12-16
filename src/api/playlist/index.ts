@@ -10,7 +10,6 @@ export async function fetchPlaylists(lastPlaylistId: number) {
   }
 
   const { data } = await apiClient.get(`/playlist/all?${params.toString()}`);
-
   return data;
 }
 
