@@ -295,3 +295,21 @@ export async function fetchLikedMovies(nickname: string) {
     throw error;
   }
 }
+
+// 닉네임으로 해당 사용자가 작성한 게시글 조회 API
+export async function fetchUserMovieLogs(
+  nickname: string,
+  size: number = 10,
+  lastBoardId?: number
+) {
+  const params = new URLSearchParams();
+  params.append("size", size.toString());
+  if (lastBoardId) {
+    params.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(
+    `/board/user/${nickname}?${params.toString()}`
+  );
+  return data;
+}
