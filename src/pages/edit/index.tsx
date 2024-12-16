@@ -4,7 +4,6 @@ import profileIcon from "@assets/icons/profile.svg";
 import {
   containerStyle,
   headerStyle,
-  headerTitleStyle,
   profileImageContainerStyle,
   profileImageStyle,
   labelStyle,
@@ -43,7 +42,9 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState<string | null>(userData.profile || "");
+  const [profileImage, setProfileImage] = useState<string | null>(
+    userData.profile || ""
+  );
   const [nicknameError, setNicknameError] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
@@ -231,9 +232,7 @@ export default function ProfileEditPage() {
       <SEO title={`${nickname}: 프로필 수정`} />
 
       <div css={containerStyle}>
-        <header css={headerStyle}>
-          <h1 css={headerTitleStyle}>프로필 편집</h1>
-        </header>
+        <header css={headerStyle}></header>
 
         <div css={profileImageContainerStyle}>
           <div css={profileWrapper}>
