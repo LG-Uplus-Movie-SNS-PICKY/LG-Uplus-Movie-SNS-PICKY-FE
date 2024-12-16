@@ -212,7 +212,11 @@ export const createBoard = async (
   videos.forEach((video) => formData.append("video", video));
 
   // API 요청
-  const response = await apiClient.post("/board", formData);
+  const response = await apiClient.post("/board", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
   return response.data;
 };
