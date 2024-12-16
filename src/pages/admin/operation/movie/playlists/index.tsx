@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import Modal from "react-modal";
+
 import styles from "./index.styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Mousewheel } from "swiper/modules";
@@ -13,6 +13,7 @@ import {
   fetchDeletePlaylist,
   fetchCallPlaylist,
 } from "@api/playlist";
+import Modal from "./components/modal";
 
 function MoviePlaylistOperationPage() {
   const [playlists, setPlaylists] = useState<
@@ -25,7 +26,9 @@ function MoviePlaylistOperationPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [title, setTitle] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
 
@@ -34,45 +37,6 @@ function MoviePlaylistOperationPage() {
   //   title: string;
   //   posterUrl: string;
   // }
-
-  const loadMovies = useCallback(async () => {
-    console.log("loadMovies 함수 호출됨");
-    setIsLoading(true);
-    try {
-      const response = await fetchCallPlaylist();
-      console.log("API 응답 데이터:", response);
-
-      if (!response || !response.data || !response.data.content) {
-        throw new Error("Invalid response structure");
-      }
-
-      const { content } = response.data;
-
-      if (!Array.isArray(content)) {
-        throw new Error("Content is not an array");
-      }
-
-      // 데이터 매핑
-      const movies = content.map((movie) => ({
-        movieId: movie.movieId,
-        title: movie.title,
-        posterUrl: movie.posterUrl,
-      }));
-
-      setAvailableMovies(movies);
-
-      console.log("영화 데이터:", movies);
-    } catch (error) {
-      console.error("영화 목록 불러오기 오류:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log("useEffect 실행됨");
-    loadMovies();
-  }, [loadMovies]);
 
   // 영화 선택/해제 토글
   const toggleMovieSelection = (id: number) => {
@@ -151,7 +115,7 @@ function MoviePlaylistOperationPage() {
         await createPlaylist();
       }
       resetForm();
-      setIsModalOpen(false);
+      setCreateModalOpen(false);
     } catch (error) {
       console.error("플레이리스트 저장 중 오류 발생:", error);
     } finally {
@@ -173,33 +137,24 @@ function MoviePlaylistOperationPage() {
     setEditingId(id);
     setTitle(name);
     setSelectedMovies(movieIds);
-    setIsModalOpen(true);
+    setCreateModalOpen(true);
   };
 
-  // 모달 열기
   const openModal = async () => {
-    console.log("openModal 함수 호출됨");
-    resetForm();
-    try {
-      await loadMovies();
-      console.log("영화 목록 로드 성공");
-    } catch (error) {
-      console.error("영화 목록 로드 중 오류:", error);
-    }
-    setIsModalOpen(true);
+    setCreateModalOpen(true);
   };
 
   return (
     <>
+      {/* Header -> Total Playlist, Add Playlist Btn */}
       <div css={styles.titleHeaderContainer()}>
-        <div className="container">
-          <h3>Total Playlists: {playlists.length}</h3>
-          <button onClick={openModal} className="playlist-button">
-            <AddCircleIcon width="16px" height="16px" />
-            <span>추가</span>
-          </button>
-        </div>
+        <h3>Total Playlists: {playlists.length}</h3>
+        <button onClick={openModal} className="playlist-button">
+          <AddCircleIcon width="16px" height="16px" />
+          <span>추가</span>
+        </button>
       </div>
+
       <div css={styles.playlistContainer()}>
         {playlists.map((playlist) => (
           <div key={playlist.id} css={styles.playlistCard()}>
@@ -321,43 +276,13 @@ function MoviePlaylistOperationPage() {
           </div>
         ))}
       </div>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-        ariaHideApp={false}
-        style={{
-          content: {
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            padding: "20px",
-            width: "100%",
-            maxWidth: "400px",
-            borderRadius: "10px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            zIndex: 1000,
-          },
-          overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 999,
-          },
-        }}
+
+      {createModalOpen && <Modal setCreateModalOpen={setCreateModalOpen} />}
+
+      {/* 
       >
-        <h2 style={{ textAlign: "center", marginBottom: "15px" }}>
-          {isEditing ? "플레이리스트 수정" : "플레이리스트 추가"}
-        </h2>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="플레이리스트 제목"
-          style={{
-            width: "100%",
-            padding: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ddd",
-          }}
-        />
+        
+        
         <div style={{ margin: "15px 0" }}>
           {availableMovies.map((movie) => (
             <label
@@ -405,7 +330,7 @@ function MoviePlaylistOperationPage() {
         >
           {isEditing ? "수정 완료" : "추가 완료"}
         </button>
-      </Modal>
+      </Modal> */}
     </>
   );
 }
