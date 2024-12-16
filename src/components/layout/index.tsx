@@ -95,7 +95,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
         position="relative"
         direction="column"
         align="center"
-        height="100vh"
+        height="100dvh"
       >
         <GlobalHeader
           headerType={headerTypes}
@@ -109,7 +109,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
           direction="column"
           justify="flex-start"
           margin={isDefaultMargin}
-          height="100dvh"
+          height="100vh"
           ref={layoutRef}
         >
           {children}
