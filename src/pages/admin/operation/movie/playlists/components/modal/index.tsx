@@ -28,6 +28,8 @@ function Modal({ setCreateModalOpen }: ModalProps) {
         </div>
 
         <div css={styles.modalMovies()}>
+          {/* 영화 조회 */}
+
           {/* Movies 마지막 영역 */}
           <div />
         </div>
