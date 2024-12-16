@@ -109,7 +109,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
           direction="column"
           justify="flex-start"
           margin={isDefaultMargin}
-          height="100vh"
+          height="100dvh"
           ref={layoutRef}
         >
           {children}

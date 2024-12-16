@@ -14,9 +14,6 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
       ? "http://localhost:5173/public/images/picky.jpeg"
       : "https://www.picky-movie.com/images/picky.jpeg";
 
-  console.log("https://www.picky-movie.com/public/images/picky.jpeg");
-  console.log("https://www.picky-movie.com/images/picky.jpeg");
-
   const defaultURL =
     process.env.NODE_ENV === "development"
       ? "http://localhost:5173"
