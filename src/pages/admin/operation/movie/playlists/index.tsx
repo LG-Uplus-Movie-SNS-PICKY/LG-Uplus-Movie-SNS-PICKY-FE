@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Modal from "react-modal";
 import styles from "./index.styles";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -16,7 +16,7 @@ import {
 
 function MoviePlaylistOperationPage() {
   const [playlists, setPlaylists] = useState<
-    { id: number; name: string; movieIds: number[] }[]
+    { id: number; title: string; movieIds: number[] }[]
   >([]);
   const [availableMovies, setAvailableMovies] = useState<
     { movieId: number; title: string; posterUrl: string }[]
@@ -27,29 +27,52 @@ function MoviePlaylistOperationPage() {
   const [title, setTitle] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
 
-  // ** 영화 목록 로드 **
-  // ** 영화 목록 로드 **
-  const loadMovies = async () => {
+  // interface Movie {
+  //   movieId: number;
+  //   title: string;
+  //   posterUrl: string;
+  // }
+
+  const loadMovies = useCallback(async () => {
+    console.log("loadMovies 함수 호출됨");
+    setIsLoading(true);
     try {
-      const data = await fetchCallPlaylist(undefined, undefined, 20); // null 대신 undefined 사용
-      setAvailableMovies(data.content || []);
+      const response = await fetchCallPlaylist();
+      console.log("API 응답 데이터:", response);
+
+      if (!response || !response.data || !response.data.content) {
+        throw new Error("Invalid response structure");
+      }
+
+      const { content } = response.data;
+
+      if (!Array.isArray(content)) {
+        throw new Error("Content is not an array");
+      }
+
+      // 데이터 매핑
+      const movies = content.map((movie) => ({
+        movieId: movie.movieId,
+        title: movie.title,
+        posterUrl: movie.posterUrl,
+      }));
+
+      setAvailableMovies(movies);
+
+      console.log("영화 데이터:", movies);
     } catch (error) {
       console.error("영화 목록 불러오기 오류:", error);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    const loadInitialData = async () => {
-      try {
-        await loadMovies();
-        setPlaylists([{ id: 1, name: "액션 영화 모음", movieIds: [1, 2, 3,4,5,6,7,8,9,10] }]); // 초기 더미 데이터
-      } catch (error) {
-        console.error("데이터 로드 중 오류 발생:", error);
-      }
-    };
-    loadInitialData();
-  }, []);
+    console.log("useEffect 실행됨");
+    loadMovies();
+  }, [loadMovies]);
 
   // 영화 선택/해제 토글
   const toggleMovieSelection = (id: number) => {
@@ -63,12 +86,16 @@ function MoviePlaylistOperationPage() {
   // 플레이리스트 추가
   const createPlaylist = async () => {
     try {
-      const newPlaylist = await fetchCreatePlaylist(title, selectedMovies);
+      console.log("플레이리스트 생성 요청 시작");
+      console.log("제목:", title, "선택된 영화 ID:", selectedMovies);
+      const newPlaylist = await fetchCreatePlaylist(selectedMovies, title);
+      console.log("API 응답:", newPlaylist);
+
       setPlaylists((prev) => [
         ...prev,
         {
           id: newPlaylist.id,
-          name: title,
+          title: title,
           movieIds: selectedMovies,
         },
       ]);
@@ -150,8 +177,15 @@ function MoviePlaylistOperationPage() {
   };
 
   // 모달 열기
-  const openModal = () => {
+  const openModal = async () => {
+    console.log("openModal 함수 호출됨");
     resetForm();
+    try {
+      await loadMovies();
+      console.log("영화 목록 로드 성공");
+    } catch (error) {
+      console.error("영화 목록 로드 중 오류:", error);
+    }
     setIsModalOpen(true);
   };
 
@@ -169,10 +203,15 @@ function MoviePlaylistOperationPage() {
       <div css={styles.playlistContainer()}>
         {playlists.map((playlist) => (
           <div key={playlist.id} css={styles.playlistCard()}>
-            {/* Playlist Header */}
-            <h3>{playlist.name}</h3>
-
-            {/* Playlist Content */}
+            <h3
+              style={{
+                textAlign: "center",
+                marginBottom: "15px",
+                fontSize: "18px",
+              }}
+            >
+              {playlist.title}
+            </h3>
             <div css={styles.reportInfoContainer()}>
               <Swiper
                 slidesPerView={"auto"}
@@ -193,17 +232,30 @@ function MoviePlaylistOperationPage() {
                     <SwiperSlide key={id}>
                       <div style={{ textAlign: "center" }}>
                         <img
-                          src={movie?.posterUrl || image3}
+                          src={
+                            movie?.posterUrl
+                              ? `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`
+                              : image3
+                          }
                           alt={movie?.title || `영화 ${id}`}
                           style={{
-                            width: "200px",
-                            height: "250px",
+                            width: "120px",
+                            height: "160px",
                             objectFit: "cover",
                             borderRadius: "8px",
                             marginBottom: "8px",
+                            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
                           }}
                         />
-                        <p style={{ fontSize: "12px", alignContent: "left" }}>
+                        <p
+                          style={{
+                            fontSize: "12px",
+                            marginTop: "5px",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
                           {movie?.title || `영화 ${id}`}
                         </p>
                       </div>
@@ -212,20 +264,60 @@ function MoviePlaylistOperationPage() {
                 })}
               </Swiper>
             </div>
-
-            {/* Action Buttons */}
-            <button
-              onClick={() =>
-                handleEditPlaylist(
-                  playlist.id,
-                  playlist.name,
-                  playlist.movieIds
-                )
-              }
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginTop: "20px",
+              }}
             >
-              수정
-            </button>
-            <button onClick={() => deletePlaylist(playlist.id)}>삭제</button>
+              <button
+                style={{
+                  backgroundColor: "#007BFF",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s",
+                }}
+                onClick={() =>
+                  handleEditPlaylist(
+                    playlist.id,
+                    playlist.title,
+                    playlist.movieIds
+                  )
+                }
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#0056b3")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#007BFF")
+                }
+              >
+                수정
+              </button>
+              <button
+                style={{
+                  backgroundColor: "#dc3545",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "5px",
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  transition: "background-color 0.3s",
+                }}
+                onClick={() => deletePlaylist(playlist.id)}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#b02a37")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#dc3545")
+                }
+              >
+                삭제
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -237,13 +329,12 @@ function MoviePlaylistOperationPage() {
           content: {
             top: "50%",
             left: "50%",
-            right: "auto",
-            bottom: "auto",
-            marginRight: "-50%",
             transform: "translate(-50%, -50%)",
-            width: "90%", // 반응형 너비
-            maxWidth: "430px",
             padding: "20px",
+            width: "100%",
+            maxWidth: "400px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
             zIndex: 1000,
           },
           overlay: {
@@ -252,14 +343,22 @@ function MoviePlaylistOperationPage() {
           },
         }}
       >
-        <h2>{isEditing ? "플레이리스트 수정" : "플레이리스트 추가"}</h2>
+        <h2 style={{ textAlign: "center", marginBottom: "15px" }}>
+          {isEditing ? "플레이리스트 수정" : "플레이리스트 추가"}
+        </h2>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="플레이리스트 제목"
+          style={{
+            width: "100%",
+            padding: "10px",
+            borderRadius: "5px",
+            border: "1px solid #ddd",
+          }}
         />
-        <div>
+        <div style={{ margin: "15px 0" }}>
           {availableMovies.map((movie) => (
             <label
               key={movie.movieId}
@@ -276,20 +375,34 @@ function MoviePlaylistOperationPage() {
                 style={{ marginRight: "10px" }}
               />
               <img
-                src={movie.posterUrl}
+                src={`${TMDB_IMAGE_PREFIX}${movie.posterUrl}`}
                 alt={movie.title}
                 style={{
                   width: "50px",
                   height: "75px",
                   marginRight: "10px",
                   objectFit: "cover",
+                  borderRadius: "5px",
                 }}
               />
               {movie.title}
             </label>
           ))}
         </div>
-        <button onClick={handleSavePlaylist} disabled={isLoading}>
+        <button
+          onClick={handleSavePlaylist}
+          disabled={isLoading}
+          style={{
+            backgroundColor: isEditing ? "#007BFF" : "#28a745",
+            color: "#fff",
+            border: "none",
+            borderRadius: "5px",
+            padding: "10px 20px",
+            cursor: "pointer",
+            textAlign: "center",
+            width: "100%",
+          }}
+        >
           {isEditing ? "수정 완료" : "추가 완료"}
         </button>
       </Modal>
