@@ -49,7 +49,7 @@ function NotificationPage() {
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useUnreadNotificationQuery();
+  } = useUnreadNotificationQuery(true);
 
   // 날짜별로 그룹화된 알림 데이터를 저장할 상태 변수
   const [groupNotifications, setGroupNotifications] =
