@@ -245,12 +245,14 @@ export const updateBoard = async (
 export async function fetchLikedMovies(nickname: string) {
   try {
     const { data } = await apiClient.get(`/movie/user/${nickname}`);
-    
+
     // 응답 데이터 가공
     const movies = data?.data?.content?.map((movie: any) => ({
       movie_id: movie.movieId,
       movie_title: movie.movieTitle,
-      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.moviePosterUrl}`, // 포스터 URL 완성
+      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${
+        movie.moviePosterUrl
+      }`, // 포스터 URL 완성
       movie_total_rating: movie.movieTotalRating,
     }));
 

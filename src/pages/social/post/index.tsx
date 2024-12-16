@@ -94,7 +94,7 @@ export default function SocialPost() {
   const [reviewText, setReviewText] = useState<string>("");
   const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
   const [activeIndex, setActiveIndex] = useState<number>(-1); // 활성화된 항목 인덱스
-  const [fileUrl, setFileUrl] = useState<string>(""); // 파일 URL 저장
+  const [fileUrl, setFileUrl] = useState<string>("asdasdasd"); // 파일 URL 저장
   const [images, setImages] = useState<File[]>([]);
   const [videos, setVideos] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
