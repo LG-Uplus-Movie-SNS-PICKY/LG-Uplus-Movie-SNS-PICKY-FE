@@ -48,7 +48,12 @@ function NotificationRander({ title, section }: NotificationRanderProps) {
   const [movieImageLoading, setMovieImageLoading] = useState(false);
 
   // 알림을 클릭할 경우 -> 해당 알림 게시물로 이동 + 알림 읽음 업데이트
-  const onReadNotifiaction = (notificationId: number) => {};
+  const onReadNotifiaction = (boardId: number, notificationId: number) => {
+    console.log("Hello");
+
+    // navigate 이동
+    console.log(boardId);
+  };
 
   return (
     <div css={styles.notificationContainer()}>
@@ -57,7 +62,13 @@ function NotificationRander({ title, section }: NotificationRanderProps) {
         {section.map(
           (notif) =>
             !notif.isRead && (
-              <li key={notif.notificationId} css={styles.notificationCard()}>
+              <li
+                key={notif.notificationId}
+                css={styles.notificationCard()}
+                onClick={() =>
+                  onReadNotifiaction(notif.boardId, notif.notificationId)
+                }
+              >
                 <div className="req-user">
                   <div
                     className="profile"
