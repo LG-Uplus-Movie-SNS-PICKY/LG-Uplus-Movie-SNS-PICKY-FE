@@ -12,7 +12,7 @@ import {
 
 // 전역에서 사용할 Header 컴포넌트
 function GlobalHeader({ headerType, label, location, navigate }: HeaderProps) {
-  const isLoginState = useRecoilValue(isLogin);
+  const { isLoginState, isAuthUser } = useRecoilValue(isLogin);
   const [activeBtn, setActiveBtn] = useState<HeaderConfigReturn>(undefined);
   const validTypes = ["title", "main", "basic", "login", "admin"];
 
@@ -22,8 +22,8 @@ function GlobalHeader({ headerType, label, location, navigate }: HeaderProps) {
   // 현재 경로에 맞는 type, label, activeBtn 값 할당
   useEffect(() => {
     const headerType = useHeaderConfig(
-      isLoginState.isLoginState,
-      isLoginState.isAuthUser,
+      isLoginState,
+      isAuthUser,
       navigate,
       resetLoginState,
       setLoginState

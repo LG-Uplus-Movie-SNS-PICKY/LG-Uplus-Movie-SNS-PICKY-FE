@@ -7,7 +7,7 @@ import { useRecoilValue } from "recoil";
 
 // let count = 1;
 function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
-  const isLoginState = useRecoilValue(isLogin);
+  const { isLoginState, isAuthUser } = useRecoilValue(isLogin);
   const [activeTab, setActiveTab] = useState("");
 
   // console.log("outer " + count);
@@ -76,7 +76,7 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
     setActiveTab(currentActiveTab);
   }, [location]);
 
-  if (!isLoginState.isLoginState || isLoginState.isAuthUser || !show) {
+  if (!isLoginState || isAuthUser || !show) {
     // console.log("inner " + count++);
     // console.log("isLoginState: " + !isLoginState.isLoginState);
     // console.log("isAuthUser: " + isLoginState.isAuthUser);
