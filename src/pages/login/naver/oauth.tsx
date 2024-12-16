@@ -43,6 +43,7 @@ const LoginCallback: React.FC = () => {
           oAuth2Token?.refresh_token &&
           localJwtDto?.accessToken
         ) {
+          // oAuth2 기본 정보 저장 -> user가 아닌 다른걸로 변경 필요
           setCookie(
             "user",
             JSON.stringify({
@@ -69,12 +70,8 @@ const LoginCallback: React.FC = () => {
             const newUserData = {
               ...currentUserCookie,
               user: {
-                // birthdate: userResponse.data.birthdate,
-                // name: userResponse.data.name,
                 nickname: userResponse.data.nickname,
                 gender: userResponse.data.gender,
-                // nationality: userResponse.data.nationality,
-                // email: userResponse.data.email,
                 profileUrl: userResponse.data.profileUrl,
               },
             };

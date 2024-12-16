@@ -5,25 +5,18 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 export const usePlaylist = () => {
   return useInfiniteQuery({
     queryKey: ["playlist"],
-    queryFn: ({ pageParam }) => fetchPlaylists(pageParam.lastPlaylistId),
+    queryFn: ({ pageParam }) => fetchPlaylists(pageParam),
 
     getNextPageParam: (lastPage) => {
       if (!lastPage?.data?.last) {
-        console.log(
-          lastPage?.data?.content[lastPage?.data?.content.length - 1].playlistId
-        );
-
-        return {
-          lastPlaylistId:
-            lastPage?.data?.content[lastPage?.data?.content.length - 1]
-              .playlistId,
-        };
+        return lastPage?.data?.content[lastPage?.data?.content.length - 1]
+          .playlistId;
       }
 
       return undefined;
     },
 
-    initialPageParam: { lastPlaylistId: 0 },
+    initialPageParam: 0,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
   });
