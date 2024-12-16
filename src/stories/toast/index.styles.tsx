@@ -21,6 +21,7 @@ export default {
         max-width: 90%;
         white-space: nowrap;
         transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        z-index: 9999;
 
         /* 위치 설정 */
         ${direction === "up" && "top: 16px;"}

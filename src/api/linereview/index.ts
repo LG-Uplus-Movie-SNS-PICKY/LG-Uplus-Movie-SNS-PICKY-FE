@@ -40,8 +40,15 @@ export async function toggleLineReviewLike(
     preference,
   };
 
-  const { data } = await apiClient.post("/linereviewlike", params);
-  return data;
+  try {
+    const { data } = await apiClient.post("/linereviewlike", params);
+    console.log("API 요청 성공:", data); // 성공 로그
+    return data;
+  } catch (error: any) {
+    console.error("API 요청 본문:", params); // 요청 데이터 확인
+    console.error("API 응답 오류:", error.response?.data || error.message); // 응답 데이터 확인
+    throw error; // 에러 다시 던지기
+  }
 }
 
 // 영화 평점 분포 API 요청
@@ -80,10 +87,10 @@ export async function fetchLineReviewsByUser(
     console.log("API Response:", data);
 
     // 응답 데이터 구조 확인 및 파싱
-    if (data?.context && data?.lastCursor) {
+    if (data?.data?.content) {
       return {
-        context: data.context,
-        lastCursor: data.lastCursor,
+        context: data.data.content, // 리뷰 데이터
+        lastCursor: data.data.pageable, // 페이징 정보
       };
     } else {
       console.error("API 응답 구조가 예상과 다릅니다:", data);
@@ -100,11 +107,13 @@ export async function updateLineReview(
   linereviewId: number,
   updatedData: { context: string; isSpoiler: boolean }
 ) {
-  const { data } = await apiClient.patch(
-    `/linereview/${linereviewId}`,
-    updatedData
-  );
-  return data;
+  try {
+    const response = await apiClient.patch(`/linereview/${linereviewId}`, updatedData);
+    return response.data; // 서버 응답 데이터 반환
+  } catch (error: any) {
+    console.error("PATCH 요청 오류:", error.response?.data || error.message);
+    throw error;
+  }
 }
 
 // 한줄평 삭제 DELETE API
