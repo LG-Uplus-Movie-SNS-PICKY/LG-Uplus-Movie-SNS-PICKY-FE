@@ -99,8 +99,16 @@ export async function fetchMovieDetailInfo(movieId: number) {
 }
 
 // 모든 게시글 조회 API
-export async function fetchAllData() {
-  const { data } = await apiClient.get("/board/all");
+// lastBoardId -> 마지막 게시물 아이디 값을
+export async function fetchAllData(lastBoardId: number) {
+  const param = new URLSearchParams(); // ?id=${id}
+
+  // lastBoardId가 존재한다면 params에 추가하겠습니다.
+  if (lastBoardId) {
+    param.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(`/board/all?${param.toString()}`); // /board/all? //board/adll?last={}
   return data;
 }
 
