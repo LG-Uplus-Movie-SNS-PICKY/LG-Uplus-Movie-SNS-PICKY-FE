@@ -1,5 +1,4 @@
 import { isLogin } from "@recoil/atoms/isLoginState";
-import { notificationsState } from "@recoil/atoms/isNotificationState";
 import { useEffect, useRef } from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
@@ -10,7 +9,6 @@ import { useQueryClient } from "@tanstack/react-query";
 function NotificationSSE() {
   const queryClient = useQueryClient();
 
-  const setNotifications = useSetRecoilState(notificationsState);
   const { isLoginState, isAuthUser } = useRecoilValue(isLogin);
 
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null);
@@ -37,13 +35,13 @@ function NotificationSSE() {
         }
       );
 
-      // 메세지 수신
+      // 3. 실시간으로 데이터 올 시 해당 데이터를 캐시 데이터를 업데이트 시킨다.
       eventSource.onmessage = (event) => {
-        console.log("Received data:", event);
-        console.log(event.data);
-        // 3. 실시간으로 데이터 올 시 해당 데이터를 상태 관리를 한다.
-        // const data = JSON.parse(event.data);
-        // console.log(data);
+        // 초기 메세지 무시
+        if (event.data.startsWith("EventStream ")) {
+          console.log("Initial connection message ignored: " + event.data);
+          return;
+        }
       };
 
       // 에러 처리

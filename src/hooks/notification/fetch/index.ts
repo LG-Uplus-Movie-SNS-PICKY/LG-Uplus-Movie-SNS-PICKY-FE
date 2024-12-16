@@ -1,12 +1,12 @@
-import { fetchUnReadNotification } from "@api/notification";
+import { fetchUnreadNotification } from "@api/notification";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 // 사용자의 읽지 않은 알림 조회 React Query - Custom Hook
-export const useUnReadNotificationQuery = () => {
+export const useUnreadNotificationQuery = () => {
   return useInfiniteQuery({
-    queryKey: ["unReadNotification"],
+    queryKey: ["unreadNotification"],
     queryFn: ({ pageParam }) =>
-      fetchUnReadNotification(pageParam.lastNotificationId),
+      fetchUnreadNotification(pageParam.lastNotificationId),
 
     getNextPageParam: (lastPage) => {
       if (!lastPage?.data?.last) {

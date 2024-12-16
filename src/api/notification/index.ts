@@ -1,7 +1,7 @@
 import apiClient from "@api";
 
 // 사용자 로그인 시 알림 초기 데이터를 받는 GET API
-export const fetchUnReadNotification = async (lastNotificationId: number) => {
+export const fetchUnreadNotification = async (lastNotificationId: number) => {
   const params = new URLSearchParams();
 
   // lastNotificationId가 Truthy 값일 경우 param을 추가한다.
