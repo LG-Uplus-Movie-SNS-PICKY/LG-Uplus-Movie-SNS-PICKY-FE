@@ -76,11 +76,11 @@ function NotificationSSE() {
 
       // 에러 처리
       eventSource.onerror = (error) => {
-        console.log("SSE Error:", error);
+        // console.log("SSE Error:", error);
 
         // 상태 확인 -> 연결이 중단된 경우
         if (eventSource.readyState === EventSourcePolyfill.CLOSED) {
-          console.log("SSE 연결이 닫혔습니다. 재연결 시도 중...");
+          // console.log("SSE 연결이 닫혔습니다. 재연결 시도 중...");
         }
       };
 

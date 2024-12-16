@@ -10,10 +10,11 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 import { routeConfig } from "@constants/routes/routeConfig";
 import { HeaderProps } from "@type/navigation";
 import { genresSelector } from "@recoil/selectors/genresSelector";
-import { debounce, throttle } from "lodash";
+import { debounce, isEmpty, throttle } from "lodash";
 
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { getCookie, removeCookie } from "@util/cookie";
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -35,6 +36,9 @@ function Layout({ children }: LayoutProps): JSX.Element {
 
   // 현재 경로에 맞는 Header와 Navbar의 타입 정의
   useEffect(() => {
+    const token = getCookie("token") || {};
+    if (!isEmpty(token)) removeCookie("token");
+
     const config = routeConfig.find(
       (config) =>
         config.path === matchPath(config.path, location.pathname)?.pattern.path
