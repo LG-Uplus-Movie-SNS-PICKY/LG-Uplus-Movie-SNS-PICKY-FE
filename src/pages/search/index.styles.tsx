@@ -50,14 +50,13 @@ export const filterLabelStyle = css`
   text-align: center;
   display: flex;
   align-items: center;
-  margin-top: 6px;
   letter-spacing: 0.5px;
 `;
 
 export const filterModalStyle = css`
   position: absolute;
-  top: 11%;
-  left: 12%;
+  top: 55px;
+  left: 56px;
   background: #ffffff;
   border-radius: 10px;
   border: 1px solid #d9d9d9;
@@ -87,7 +86,7 @@ export const filterButtonStyle = css`
   justify-content: center;
   /* flex-direction: column; */
   background-color: #f1f1f1;
-  padding: 8px 0 8px 16px;
+  padding: 12px 0 8px 16px;
   border-radius: 50px 0px 0px 50px;
   background: #f1f1f1;
   font-family: 400;
@@ -197,8 +196,7 @@ export const emptyTextStyle = css`
 export const searchButtonStyle = css`
   position: absolute;
   right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 10px;
   background: none;
   display: flex;
   border: none;

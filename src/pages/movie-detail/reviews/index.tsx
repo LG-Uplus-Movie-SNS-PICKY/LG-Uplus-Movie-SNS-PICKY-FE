@@ -219,7 +219,8 @@ const ReviewsPage = () => {
         <div style={{ width: "100%" }}>
           <MovieReviewContainer>
             <MovieHeader />
-            <MovieReviewsPoster imageUrl={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`} />
+            <MovieReviewsPoster imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${movieData.backdrop_path
+              }`} />
             <InfoContainer>
               <Title>{movieData.title}</Title>
               <DetailContainer>
@@ -277,7 +278,7 @@ const ReviewsPage = () => {
               )} */}
             </ReviewsWrapper>
           </MovieReviewContainer>
-          <div ref={ref} style={{ height: "20px" }} />
+          {/* <div ref={ref} style={{ height: "20px" }} />
           {isFetchingNextPage &&
             <LoadingContainer>
               <Loading />
@@ -287,7 +288,7 @@ const ReviewsPage = () => {
             <div style={{ textAlign: "center", margin: "16px", fontWeight: "600" }}>
               마지막 리뷰입니다.
             </div>
-          )}
+          )} */}
         </div>
       </>
     )

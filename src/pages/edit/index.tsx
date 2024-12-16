@@ -4,7 +4,6 @@ import profileIcon from "@assets/icons/profile.svg";
 import {
   containerStyle,
   headerStyle,
-  headerTitleStyle,
   profileImageContainerStyle,
   profileImageStyle,
   labelStyle,
@@ -33,7 +32,7 @@ export default function ProfileEditPage() {
   const [userData, setUserData] = useState({
     name: "",
     nickname: "",
-    profile: "",
+    profile: "" as string | null,
     birthdate: "",
     gender: "",
     nationality: "",
@@ -43,7 +42,7 @@ export default function ProfileEditPage() {
   });
 
   const [nickname, setNickname] = useState(userData.nickname);
-  const [profileImage, setProfileImage] = useState<string>(
+  const [profileImage, setProfileImage] = useState<string | null>(
     userData.profile || ""
   );
   const [nicknameError, setNicknameError] = useState<string | null>(null);
@@ -149,7 +148,7 @@ export default function ProfileEditPage() {
   };
 
   const handleSetDefaultImage = () => {
-    setProfileImage("");
+    setProfileImage(null);
     showToast("기본 이미지로 설정되었습니다.");
   };
 
@@ -172,7 +171,7 @@ export default function ProfileEditPage() {
 
     // 기본 이미지 설정
     if (profileImage === null) {
-      formData.append("profile", "null"); // 문자열 "null"로 추가
+      formData.append("profile", "");
     } else if (profileImage !== userData.profile) {
       try {
         const response = await fetch(profileImage);
@@ -233,9 +232,7 @@ export default function ProfileEditPage() {
       <SEO title={`${nickname}: 프로필 수정`} />
 
       <div css={containerStyle}>
-        <header css={headerStyle}>
-          <h1 css={headerTitleStyle}>프로필 편집</h1>
-        </header>
+        <header css={headerStyle}></header>
 
         <div css={profileImageContainerStyle}>
           <div css={profileWrapper}>

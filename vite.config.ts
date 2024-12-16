@@ -3,12 +3,34 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
+import prerender from "@prerenderer/rollup-plugin";
+
 export default defineConfig({
   plugins: [
     react({
       jsxImportSource: "@emotion/react",
     }),
     svgr(),
+    prerender({
+      routes: ["/", "/movie-log", "/picky"],
+      renderer: "@prerenderer/renderer-puppeteer",
+      server: {
+        port: 3000,
+        host: "localhost",
+      },
+      rendererOptions: {
+        maxConcurrentRoutes: 1,
+        renderAfterTime: 500,
+      },
+      postProcess(renderedRoute) {
+        renderedRoute.html = renderedRoute.html
+          .replace(/http:/i, "https:")
+          .replace(
+            /(https:\/\/)?(localhost|127\.0\.0\.1):\d*/i,
+            "https://www.picky-movie.com//"
+          );
+      },
+    }),
   ],
   server: {
     host: true,

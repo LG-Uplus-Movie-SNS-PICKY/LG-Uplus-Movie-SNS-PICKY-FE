@@ -3,15 +3,20 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   registerForm(): SerializedStyles {
     return css`
+      position: relative;
+
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      /* gap: 24px; */
     `;
   },
 
   registerContainer(): SerializedStyles {
     return css`
+      position: absolute;
+      z-index: 9999;
+
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -29,7 +34,6 @@ export default {
       flex-direction: column;
 
       background-color: #fff;
-      /* border-radius: 4px; */
 
       box-shadow: 0 1px 4px rgba(170, 170, 170, 0.4);
 
@@ -174,6 +178,8 @@ export default {
 
   movieDetailContainer(): SerializedStyles {
     return css`
+      margin-top: 60px;
+
       width: 100%;
       min-height: 180px;
 

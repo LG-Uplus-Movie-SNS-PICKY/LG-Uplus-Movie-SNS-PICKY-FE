@@ -9,8 +9,6 @@ import Home from "@pages/main";
 
 import Layout from "@components/layout";
 
-import { HelmetProvider } from "react-helmet-async";
-
 import { useEffect } from "react";
 
 import { useSetRecoilState } from "recoil";
@@ -42,39 +40,40 @@ function Router() {
   }, [setIsLoginState]);
 
   return (
-    <HelmetProvider>
-      <BrowserRouter
-        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
-      >
-        <Global styles={globalStyle} />
+    <BrowserRouter
+      future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+    >
+      <Global styles={globalStyle} />
 
-        <Layout>
-          <Routes>
-            {/* 공개 라우트 - 관리자 접근 X */}
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute role="common">
-                  <Home />
-                </ProtectedRoute>
-              }
-            />
+      <Layout>
+        <Routes>
+          {/* 공개 라우트 - 관리자 접근 X */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute role="common">
+                <Home />
+              </ProtectedRoute>
+            }
+          />
 
-            {/* 비로그인 사용자 라우트 */}
-            <Route path="/auth/*" element={<GuestRouter />} />
+          {/* 비로그인 사용자 라우트 */}
+          <Route path="/auth/*" element={<GuestRouter />} />
 
-            {/* 로그인 사용자 라우트 */}
-            <Route path="/*" element={<UserRoutes />} />
+          {/* 로그인 사용자 라우트 */}
+          <Route path="/*" element={<UserRoutes />} />
 
-            {/* 관리자 사용자 라우트 */}
-            <Route path="/admin/*" element={<AdminRouter />} />
+          {/* 관리자 사용자 라우트 */}
+          <Route path="/admin/*" element={<AdminRouter />} />
 
-            {/* 도메인 */}
-            <Route path="/google626ac0bef2281c75.html" element={<DomainGoogle />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </HelmetProvider>
+          {/* 도메인 */}
+          <Route
+            path="/google626ac0bef2281c75.html"
+            element={<DomainGoogle />}
+          />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 }
 

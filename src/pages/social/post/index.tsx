@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, KeyboardEvent, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // navigate를 위해 추가
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { createBoard } from "@api/movie";
 import MovieSearch from "@assets/icons/movie_search.svg?react";
 import DelButton from "@assets/icons/delete.svg?react";
 import BackPost from "@assets/icons/back_post.svg?react";
@@ -76,35 +76,48 @@ const mockMovies = [
   },
 ];
 
+interface MovieData {
+  title: string;
+  releaseDate: string;
+  country: string;
+  genres: string[]; // genres는 문자열 배열임
+}
+
 export default function SocialPost() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredMovies, setFilteredMovies] = useState<typeof mockMovies>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false); // 뒤로가기 모달 상태
-  const [selectedMovieData, setSelectedMovieData] = useState<
-    null | (typeof mockMovies)[0]
-  >(null);
+  const [selectedMovieData, setSelectedMovieData] = useState<MovieData | null>(
+    null
+  );
   const [reviewText, setReviewText] = useState<string>("");
   const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
   const [activeIndex, setActiveIndex] = useState<number>(-1); // 활성화된 항목 인덱스
-  const [fileUrl, setFileUrl] = useState<string>(""); // 파일 URL 저장
-  const fileInputRef = useRef<HTMLInputElement | null>(null); // 파일 입력 Ref
+  const [fileUrl, setFileUrl] = useState<string>("asdasdasd"); // 파일 URL 저장
+  const [images, setImages] = useState<File[]>([]); // 이미지 상태
+  const [videos, setVideos] = useState<File[]>([]);
+
+  const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const navigate = useNavigate();
 
   const isButtonActive =
-    !!selectedMovieData &&
-    !!reviewText.trim() &&
-    selectedSpoiler !== "null" &&
-    !!fileUrl;
+    !!selectedMovieData && // 영화 선택됨
+    !!reviewText.trim() && // 리뷰 작성됨
+    selectedSpoiler !== "null"; // 스포일러 여부 선택됨
+  // images.length > 0 && // 이미지가 업로드됨
+  // videos.length > 0; // 이미지가 업로드됨
 
-  console.log("selectedMovieData:", selectedMovieData);
-  console.log("reviewText.trim():", reviewText.trim());
-  console.log("selectedSpoiler:", selectedSpoiler);
-  console.log("fileUrl:", fileUrl);
-  console.log("isButtonActive:", isButtonActive);
+  // console.log("selectedMovieData:", selectedMovieData);
+  // console.log("reviewText.trim():", reviewText.trim());
+  // console.log("selectedSpoiler:", selectedSpoiler);
+  // console.log("fileUrl:", fileUrl);
+  // console.log("isButtonActive:", isButtonActive);
 
-  console.log(isButtonActive);
+  // console.log(isButtonActive);
 
   const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
     setSelectedMovieData(movie);
@@ -189,48 +202,40 @@ export default function SocialPost() {
     setIsBackModalOpen(true);
   };
 
-  const handleFileChange = () => {
-    if (fileInputRef.current?.files?.[0]) {
-      const file = fileInputRef.current.files[0];
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        if (fileReader.result) {
-          setFileUrl(fileReader.result.toString());
-        }
-      };
-      fileReader.readAsDataURL(file);
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files && files.length > 0) {
+      const fileArray = Array.from(files);
+      // console.log("선택된 파일들:", fileArray);
+
+      setImages((prevImages) => {
+        const updatedImages = [...prevImages, ...fileArray];
+        // console.log("업데이트된 이미지 상태:", updatedImages);
+        return updatedImages;
+      });
     }
   };
 
   const handleShareClick = async () => {
-    if (!isButtonActive) {
-      alert("모든 필드를 작성해주세요.");
-      return;
-    }
+    // if (!images.length && !videos.length) {
+    //   alert("모든 필드를 작성하고 파일을 업로드해주세요.");
 
-    const payload = {
-      boardContext: reviewText,
-      movieId: selectedMovieData!.title, // 실제 영화 ID로 수정 필요
-      contents: fileUrl
-        ? [{ contentUrl: fileUrl, type: "PHOTO" }] // 예시로 PHOTO 고정
-        : [],
-      isSpoiler: selectedSpoiler === "있음",
-    };
+    //   return;
+    // }
+
+    console.log(mediaFiles);
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_SERVER_URL}/api/v1/board`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`, //_없는 accessToken
-            "Content-Type": "application/json",
-          },
-        }
+      await createBoard(
+        reviewText,
+        11, // movieId를 실제 데이터로 교체 필요
+        selectedSpoiler === "있음",
+        mediaFiles
       );
-      console.log("게시글 생성 성공:", response.data);
+
       alert("게시글이 성공적으로 생성되었습니다.");
-      navigate("/");
+      navigate("/movie-log"); // 성공 후 메인 페이지로 이동
     } catch (error) {
       console.error("게시글 생성 중 오류 발생:", error);
       alert("게시글 생성에 실패했습니다.");
@@ -269,8 +274,8 @@ export default function SocialPost() {
             <p>{selectedMovieData.country}</p>
           </div>
           <div css={movieGenres}>
-            {selectedMovieData.genres.map((genre) => (
-              <span key={genre}>{genre}</span>
+            {selectedMovieData?.genres.map((genre: string, index: number) => (
+              <span key={`${genre}-${index}`}>{genre}</span>
             ))}
           </div>
         </div>
@@ -319,13 +324,19 @@ export default function SocialPost() {
       )}
 
       <div css={postContainer}>
-        <FileInput type="media" />
-        <input
+        <FileInput
+          type="media"
+          mediaFiles={mediaFiles}
+          setMediaFiles={setMediaFiles}
+        />
+
+        {/* <input
           type="file"
+          multiple
           ref={fileInputRef}
           style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
+          onChange={             }
+        /> */}
       </div>
 
       <div css={reviewSection}>

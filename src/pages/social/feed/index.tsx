@@ -32,6 +32,9 @@ import { Modal } from "@stories/modal";
 import SEO from "@components/seo";
 import { fetchAllData, deletePost, toggleLike } from "@api/movie";
 import { Toast } from "@stories/toast";
+import { useFetchAllMovieLogQuery } from "@hooks/movie-log";
+import { useInView } from "react-intersection-observer";
+import { MovieLog } from "@stories/movie-log";
 
 interface BoardContent {
   boardId: number;
@@ -40,6 +43,7 @@ interface BoardContent {
   movieTitle: string;
   createdDate: string;
   context: string;
+  isAuthor: boolean;
   isSpoiler: boolean;
   isLike: boolean;
   likesCount: number;
@@ -61,10 +65,34 @@ export default function SocialFeed() {
   const myUserId = 7; // 현재 사용자 ID 설정
   const [showToast, setShowToast] = useState(false); // 토스트 메시지 상태
 
+  const {
+    data: board,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    fetchNextPage,
+  } = useFetchAllMovieLogQuery();
+
+  useEffect(() => {
+    if (!isLoading) console.log(board);
+  }, [isLoading]);
+
+  // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
+  const { ref, inView } = useInView({
+    threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
   // 게시글 데이터를 가져오는 함수
   const loadBoardData = async () => {
     try {
-      const response = await fetchAllData();
+      const lastBoardId = 0; // 첫 호출 시 기본값 설정
+      const response = await fetchAllData(lastBoardId);
       console.log(response); // 응답 구조 확인
       const contentArray = response.data?.content || [];
       setBoardData(Array.isArray(contentArray) ? contentArray : []);
@@ -114,12 +142,13 @@ export default function SocialFeed() {
 
   // 게시글 삭제 처리
   const confirmDeletePost = async () => {
-    if (!selectedBoard) return;
+    if (!selectedBoard || !selectedBoard.isAuthor) {
+      alert("권한이 없습니다. 삭제할 수 없습니다.");
+      return;
+    }
 
     try {
       await deletePost(selectedBoard.boardId);
-      console.log(selectedBoard.boardId);
-
       setBoardData((prevData) =>
         prevData.filter((board) => board.boardId !== selectedBoard.boardId)
       );
@@ -216,13 +245,16 @@ export default function SocialFeed() {
                         revealSpoiler(board.boardId);
                     }}
                   >
-                    <div
-                      style={{
-                        width: "360px",
-                        height: "360px",
-                        background: "gray",
-                      }}
-                    ></div>
+                    <MovieLog
+                      boardContent={board.contents.map((content, index) => ({
+                        board_content_id: index, // index를 고유 ID로 사용 (숫자)
+                        board_content_url: content.contentUrl, // URL
+                        board_content_type:
+                          content.boardContentType === "Video"
+                            ? "Video"
+                            : "Image", // 타입 설정
+                      }))}
+                    />
                   </div>
                   {board.isSpoiler && !isSpoilerRevealed && (
                     <div css={spoilerText}>
@@ -261,14 +293,24 @@ export default function SocialFeed() {
         </div>
       </div>
 
+      <div ref={ref} style={{ height: "10px" }} />
+
       {isOptionsModalOpen && selectedBoard && (
         <div css={modalOverlay} onClick={() => setIsOptionsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {selectedBoard.writerId === myUserId ? (
+            {selectedBoard.isAuthor ? (
               <>
                 <button
                   onClick={() =>
-                    navigate(`/movie-log/edit/${selectedBoard.boardId}`)
+                    navigate(`/movie-log/edit/${selectedBoard.boardId}`, {
+                      state: {
+                        boardId: selectedBoard.boardId,
+                        movieTitle: selectedBoard.movieTitle,
+                        contents: selectedBoard.contents,
+                        boardContext: selectedBoard.context,
+                        isSpoiler: selectedBoard.isSpoiler,
+                      },
+                    })
                   }
                   style={{ color: "#000" }}
                 >

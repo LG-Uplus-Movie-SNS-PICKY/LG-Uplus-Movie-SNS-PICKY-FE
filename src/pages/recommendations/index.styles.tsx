@@ -71,7 +71,7 @@ export const subtitleStyle = css`
 
 export const movieGridStyle = css`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 16px;
   justify-content: center;
   padding: 0px 32px;
@@ -108,7 +108,7 @@ export const movieRatingStyle = css`
 
 export const movieWrapperStyle = css`
   display: flex;
-  padding: 0px 32px;
+  padding: 0px 20px;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;

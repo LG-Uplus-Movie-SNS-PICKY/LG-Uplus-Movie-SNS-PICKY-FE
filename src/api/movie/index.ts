@@ -26,7 +26,7 @@ export async function fetchMovieDetailUpdate(
   movieId: number,
   movieInfo: MovieDetailTypes
 ) {
-  console.log(movieInfo);
+  // console.log(movieInfo);
   const { data } = await apiClient.patch(`/movie/${movieId}`, movieInfo);
   return data;
 }
@@ -99,8 +99,32 @@ export async function fetchMovieDetailInfo(movieId: number) {
 }
 
 // 모든 게시글 조회 API
-export async function fetchAllData() {
-  const { data } = await apiClient.get("/board/all");
+// lastBoardId -> 마지막 게시물 아이디 값을
+export async function fetchAllData(lastBoardId: number) {
+  const param = new URLSearchParams(); // ?id=${id}
+
+  // lastBoardId가 존재한다면 params에 추가하겠습니다.
+  if (lastBoardId) {
+    param.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(`/board/all?${param.toString()}`); // /board/all? //board/adll?last={}
+  return data;
+}
+
+export async function fetchMovieLogs(
+  movieId: number,
+  size: number = 10,
+  lastBoardId?: number
+) {
+  const params = new URLSearchParams();
+
+  params.append("size", size.toString());
+  if (lastBoardId) {
+    params.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(`board/${movieId}?${params.toString()}`);
   return data;
 }
 
@@ -135,7 +159,7 @@ export async function toggleMovieLike(
   }
 }
 
-//무비로그 댓글 조회회
+//무비로그 댓글 조회
 export async function fetchComments(
   boardId: number,
   size: number = 10,
@@ -183,4 +207,109 @@ export async function deleteComment(
     console.error("댓글 삭제 중 오류 발생:", error);
     throw error;
   }
+}
+
+// 게시글 생성 API 호출
+export const createBoard = async (
+  boardContext: string,
+  movieId: number,
+  isSpoiler: boolean,
+  mediaFiles: File[]
+) => {
+  const formData = new FormData();
+
+  // JSON 데이터 추가
+  const jsonData = {
+    boardContext,
+    movieId,
+    isSpoiler,
+  };
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(jsonData)], { type: "application/json" })
+  );
+
+  // 이미지 및 비디오 파일 추가
+  if (mediaFiles.length > 0) {
+    mediaFiles.forEach((file) => {
+      const types = file.type;
+
+      if (types.startsWith("image/")) formData.append("image", file);
+      if (types.startsWith("video/")) formData.append("video", file);
+    });
+  }
+
+  console.log("Current formData is Images:");
+  console.log(formData.getAll("image"));
+
+  console.log("Current formData is Videos:");
+  console.log(formData.getAll("video"));
+
+  // API 요청
+  const response = await apiClient.post("/board", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
+// 게시글 수정 API
+export const updateBoard = async (
+  boardId: number,
+  boardContext: string,
+  isSpoiler: boolean
+) => {
+  try {
+    const { data } = await apiClient.post(`/board/${boardId}`, {
+      boardContext,
+      isSpoiler,
+    });
+    return data;
+  } catch (error) {
+    console.error("게시글 수정 중 오류 발생:", error);
+    throw error;
+  }
+};
+
+// 좋아요한 영화 목록 조회 API
+export async function fetchLikedMovies(nickname: string) {
+  try {
+    const { data } = await apiClient.get(`/movie/user/${nickname}`);
+
+    // 응답 데이터 가공
+    const movies = data?.data?.content?.map((movie: any) => ({
+      movie_id: movie.movieId,
+      movie_title: movie.movieTitle,
+      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${
+        movie.moviePosterUrl
+      }`, // 포스터 URL 완성
+      movie_total_rating: movie.movieTotalRating,
+    }));
+
+    return movies || []; // 결과가 없으면 빈 배열 반환
+  } catch (error) {
+    console.error("좋아요한 영화 조회 중 오류 발생:", error);
+    throw error;
+  }
+}
+
+// 닉네임으로 해당 사용자가 작성한 게시글 조회 API
+export async function fetchUserMovieLogs(
+  nickname: string,
+  size: number = 10,
+  lastBoardId?: number
+) {
+  const params = new URLSearchParams();
+  params.append("size", size.toString());
+  if (lastBoardId) {
+    params.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(
+    `/board/user/${nickname}?${params.toString()}`
+  );
+  return data;
 }

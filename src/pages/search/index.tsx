@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import ClawMachine from "@assets/icons/claw_machine.svg";
+import { useNavigate } from "react-router-dom";
 import backButton from "@assets/icons/backButton.svg";
 import searchButton from "@assets/icons/searchButton.svg";
 import timeIcon from "@assets/icons/time_icon.svg";
@@ -7,6 +8,7 @@ import closeButton from "@assets/icons/closeButton.svg";
 import filterIcon from "@assets/icons/filter.svg";
 import filterActiveIcon from "@assets/icons/filter_active.svg";
 import filterMiniActiveIcon from "@assets/icons/filter_mini_active.svg";
+import { fetchMovieSearch, fetchUserSearch } from "@api/user"; // API 호출 함수 import
 import {
   containerStyle,
   headerStyle,
@@ -29,16 +31,6 @@ import {
   emptyTextStyle,
 } from "@pages/search/index.styles";
 import SEO from "@components/seo";
-
-const suggestions = [
-  { text: "어벤져스 어셈블", type: "영화" },
-  { text: "어벤져스 컨피덴셜", type: "영화" },
-  { text: "벤자민 버튼의 시간은 거꾸로 간다", type: "영화" },
-  { text: "스칼렛 요한슨", type: "배우" },
-  { text: "로버트 다우니 주니어", type: "배우" },
-  { text: "사용자123", type: "유저" },
-  { text: "프로필 설정", type: "유저" },
-];
 
 const highlightSearchTerm = (text: string, searchTerm: string) => {
   if (!searchTerm.trim()) {
@@ -78,12 +70,27 @@ const highlightSearchTerm = (text: string, searchTerm: string) => {
   );
 };
 
+interface Movie {
+  movieId: number;
+  movieTittle: string;
+  moviePosterUrl: string;
+}
+
+interface User {
+  userId: number;
+  nickname: string;
+}
+
 export default function SearchPage() {
+  const navigate = useNavigate(); 
   const [searchText, setSearchText] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isFilterActive, setIsFilterActive] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<string | null>("영화");
+  const [selectedFilter, setSelectedFilter] = useState<string>("영화");
   const [isSearchInputFocused, setIsSearchInputFocused] = useState(false);
+  const [searchResults, setSearchResults] = useState<
+    { id: number; title?: string; nickname?: string; poster?: string }[]
+  >([]);
 
   const filterRef = useRef<HTMLDivElement>(null);
 
@@ -92,6 +99,7 @@ export default function SearchPage() {
     if (storedSearches) {
       setRecentSearches(JSON.parse(storedSearches));
     }
+
     const handleOutsideClick = (e: MouseEvent) => {
       if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
         setIsFilterActive(false);
@@ -108,18 +116,39 @@ export default function SearchPage() {
     localStorage.setItem("recentSearches", JSON.stringify(searches));
   };
 
-  const matchingSuggestions = suggestions.filter((item) => {
-    if (selectedFilter) {
-      return (
-        item.type === selectedFilter &&
-        item.text.toLowerCase().startsWith(searchText.toLowerCase())
-      );
+  const fetchSearchResults = async () => {
+    if (!searchText.trim()) return;
+
+    try {
+      if (selectedFilter === "영화") {
+        const movies = await fetchMovieSearch(searchText);
+        setSearchResults(
+          movies.map((movie: Movie) => ({
+            id: movie.movieId,
+            title: movie.movieTittle,
+            poster: movie.moviePosterUrl,
+          }))
+        );
+      } else if (selectedFilter === "유저") {
+        const users = await fetchUserSearch(searchText);
+        setSearchResults(
+          users.map((user: User) => ({
+            id: user.userId,
+            nickname: user.nickname,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("검색 결과를 가져오는 중 오류 발생:", error);
     }
-    return item.text.toLowerCase().startsWith(searchText.toLowerCase());
-  });
+  };
+
+  useEffect(() => {
+    fetchSearchResults();
+  }, [searchText, selectedFilter]);
 
   const handleSearch = () => {
-    if (searchText.trim() === "") return;
+    if (!searchText.trim()) return;
     const updatedSearches = [...new Set([searchText, ...recentSearches])];
     setRecentSearches(updatedSearches);
     saveToLocalStorage(updatedSearches);
@@ -153,7 +182,7 @@ export default function SearchPage() {
       <div css={containerStyle}>
         <div css={headerStyle}>
           <button css={backButtonStyle}>
-            <img src={backButton} alt="backButton" width="12" height="25" />
+            <img src={backButton} alt="backButton" width="12" height="25" onClick={() => navigate(-1)}/>
           </button>
           <div css={searchInputContainerStyle(isSearchInputFocused)}>
             <div
@@ -212,7 +241,7 @@ export default function SearchPage() {
 
         <div css={recentSearchHeaderStyle}>
           <div css={titleStyle}>
-            {searchText.trim() === "" ? "최근검색어" : "연관검색어"}
+            {searchText.trim() === "" ? "최근검색어" : "검색결과"}
           </div>
           <button css={clearAllButtonStyle} onClick={handleClearAll}>
             전체 삭제
@@ -233,17 +262,23 @@ export default function SearchPage() {
           </div>
         )}
 
-        {searchText.trim() !== "" && matchingSuggestions.length > 0 && (
+        {searchText.trim() !== "" && searchResults.length > 0 && (
           <ul css={suggestionListStyle}>
-            {matchingSuggestions.map((suggestion, index) => (
-              <li
-                key={index}
-                onClick={() => handleSuggestionClick(suggestion.text)}
-              >
-                <img src={searchButton} alt="searchButton" />
-                <span>{highlightSearchTerm(suggestion.text, searchText)}</span>
-              </li>
-            ))}
+            {searchResults.map((result, index) => {
+              const suggestionText = result.title || result.nickname || ""; // undefined일 경우 빈 문자열로 처리
+              return (
+                <li
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestionText)} // 항상 string 전달
+                >
+                  <img src={searchButton} alt="searchButton" />
+                  <span>
+                    {highlightSearchTerm(suggestionText, searchText)}{" "}
+                    {/* 항상 string 사용 */}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         )}
 

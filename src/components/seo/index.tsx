@@ -9,14 +9,15 @@ interface SEOProps {
 }
 
 function SEO({ title = "PICKY", description, image, url }: SEOProps) {
-  const defaultImage = "/src/assets/images/logo.png";
+  const defaultImage =
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:5173/public/images/picky.jpeg"
+      : "https://www.picky-movie.com/images/picky.jpeg";
+
   const defaultURL =
     process.env.NODE_ENV === "development"
       ? "http://localhost:5173"
       : "https://www.picky-movie.com";
-
-  console.log(defaultURL + url);
-  console.log(image);
 
   return (
     <Helmet>
@@ -30,7 +31,7 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
       {description && <meta property="og:description" content={description} />}
 
       <meta property="og:image" content={image || defaultImage} />
-      <meta property="og:url" content={defaultURL + url || defaultURL} />
+      <meta property="og:url" content={url ? defaultURL + url : defaultURL} />
 
       {/* Kakao Meta Data */}
       <meta property="kakao:title" content={title} />
@@ -47,7 +48,10 @@ function SEO({ title = "PICKY", description, image, url }: SEOProps) {
         <meta property="twitter:description" content={description} />
       )}
       <meta property="twitter:image" content={image || defaultImage} />
-      <meta property="twitter:url" content={defaultURL + url || defaultURL} />
+      <meta
+        property="twitter:url"
+        content={url ? defaultURL + url : defaultURL}
+      />
     </Helmet>
   );
 }

@@ -1,6 +1,6 @@
 import apiClient from "@api";
 
-// 닉네임 중복 체크를 위한 GEÍT API
+// 닉네임 중복 체크를 위한 GET API
 export async function fetchNicknameValidation(nickname: string) {
   const { data } = await apiClient.get("/user/nickname-validation", {
     params: {
@@ -51,5 +51,35 @@ export async function fetchProfileUser(formData: FormData) {
     },
   });
 
+  return data;
+}
+
+// 마이페이지 (게시글 수, 팔로워 수, 팔로잉 수)를 가져오는 GET API
+export async function fetchUserInfo(nickname: string) {
+  const { data } = await apiClient.get(`/user/mypage/${nickname}`);
+  return data;
+}
+
+// 회원탈퇴 DELETE API
+export async function cancelMembership(platform: string, oAuth2Token: any) {
+    const response = await apiClient.delete(`/oauth/${platform}/user`, {
+        data: { oAuth2Token }, // DELETE 메서드의 경우, data로 payload를 전달해야 합니다.
+    });
+    return response.data;
+}
+
+/** 영화 검색 API */
+export async function fetchMovieSearch(keyword: string) {
+  const { data } = await apiClient.get("/movie/search", {
+    params: { keyword },
+  });
+  return data;
+}
+
+/** 사용자 검색 API */
+export async function fetchUserSearch(keyword: string) {
+  const { data } = await apiClient.get("/user/search", {
+    params: { keyword },
+  });
   return data;
 }
