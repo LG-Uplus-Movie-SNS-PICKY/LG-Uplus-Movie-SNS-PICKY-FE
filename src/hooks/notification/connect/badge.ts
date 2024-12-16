@@ -8,7 +8,7 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 function NotificationBadge() {
   const { isLoginState, isAuthUser } = useRecoilValue(isLogin);
 
-  if (!isLoginState || isAuthUser) return null;
+  // if (!isLoginState || isAuthUser) return null;
 
   const setUnreadCount = useSetRecoilState(unreadCountState);
   const { data: unreadNotificationData, isLoading } =
