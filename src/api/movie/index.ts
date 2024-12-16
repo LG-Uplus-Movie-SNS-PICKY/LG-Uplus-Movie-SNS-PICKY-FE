@@ -190,8 +190,7 @@ export const createBoard = async (
   boardContext: string,
   movieId: number,
   isSpoiler: boolean,
-  images: File[],
-  videos: File[]
+  mediaFiles: File[]
 ) => {
   const formData = new FormData();
 
@@ -208,8 +207,20 @@ export const createBoard = async (
   );
 
   // 이미지 및 비디오 파일 추가
-  images.forEach((image) => formData.append("image", image));
-  videos.forEach((video) => formData.append("video", video));
+  if (mediaFiles.length > 0) {
+    mediaFiles.forEach((file) => {
+      const types = file.type;
+
+      if (types.startsWith("image/")) formData.append("image", file);
+      if (types.startsWith("video/")) formData.append("video", file);
+    });
+  }
+
+  console.log("Current formData is Images:");
+  console.log(formData.getAll("image"));
+
+  console.log("Current formData is Videos:");
+  console.log(formData.getAll("video"));
 
   // API 요청
   const response = await apiClient.post("/board", formData, {

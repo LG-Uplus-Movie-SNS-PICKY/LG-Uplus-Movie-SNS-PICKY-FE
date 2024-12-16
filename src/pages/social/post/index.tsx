@@ -231,12 +231,11 @@ export default function SocialPost() {
         reviewText,
         1, // movieId를 실제 데이터로 교체 필요
         selectedSpoiler === "있음",
-        images,
-        videos
+        mediaFiles
       );
 
       alert("게시글이 성공적으로 생성되었습니다.");
-      navigate("/movie-log"); // 성공 후 메인 페이지로 이동
+      // navigate("/movie-log"); // 성공 후 메인 페이지로 이동
     } catch (error) {
       console.error("게시글 생성 중 오류 발생:", error);
       alert("게시글 생성에 실패했습니다.");
@@ -336,7 +335,7 @@ export default function SocialPost() {
           multiple
           ref={fileInputRef}
           style={{ display: "none" }}
-          onChange={handleFileChange}
+          onChange={             }
         /> */}
       </div>
 
