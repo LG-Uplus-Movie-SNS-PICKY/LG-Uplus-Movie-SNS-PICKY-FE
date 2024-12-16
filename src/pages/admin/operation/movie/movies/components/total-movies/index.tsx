@@ -43,7 +43,14 @@ function TotalMoviesSection() {
 
   return (
     <>
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "16px",
+          height: "100%",
+        }}
+      >
         {/* Title */}
         <div css={styles.titleHeaderContainer()}>
           {/* 장르 필터 */}
@@ -55,25 +62,28 @@ function TotalMoviesSection() {
 
         {/* Movies Container */}
         <div css={styles.movieContainer()}>
-          {Array.isArray(genreMovies?.pages) &&
-            genreMovies?.pages.map((page, index) => (
-              <React.Fragment key={index}>
-                {/* Playlist Data JSX Element Mapping  */}
-                {Array.isArray(page?.data.content) &&
-                  page?.data.content.map((movie: MovieDataTypes) => (
-                    <MovieCard
-                      key={movie.movieId}
-                      movie={movie}
-                      genres={
-                        loadable.state === "hasValue" && loadable.contents.data
-                      }
-                    />
-                  ))}
-              </React.Fragment>
-            ))}
-        </div>
+          <div className="movies">
+            {Array.isArray(genreMovies?.pages) &&
+              genreMovies?.pages.map((page, index) => (
+                <React.Fragment key={index}>
+                  {/* Playlist Data JSX Element Mapping  */}
+                  {Array.isArray(page?.data.content) &&
+                    page?.data.content.map((movie: MovieDataTypes) => (
+                      <MovieCard
+                        key={movie.movieId}
+                        movie={movie}
+                        genres={
+                          loadable.state === "hasValue" &&
+                          loadable.contents.data
+                        }
+                      />
+                    ))}
+                </React.Fragment>
+              ))}
+          </div>
 
-        <div ref={ref} style={{ height: "10px" }} />
+          <div ref={ref} style={{ height: "10px" }} />
+        </div>
       </div>
     </>
   );

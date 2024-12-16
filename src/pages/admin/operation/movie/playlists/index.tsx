@@ -147,7 +147,7 @@ function MoviePlaylistOperationPage() {
     <>
       {/* Header -> Total Playlist, Add Playlist Btn */}
       <div css={styles.titleHeaderContainer()}>
-        <h3>Total Playlists: {playlists.length}</h3>
+        {/* <h3>Playlists</h3> */}
         <button onClick={openModal} className="playlist-button">
           <AddCircleIcon width="16px" height="16px" />
           <span>추가</span>

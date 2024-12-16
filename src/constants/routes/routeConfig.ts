@@ -52,6 +52,20 @@ export const routeConfig: RouteConfigTypes[] = [
     margin: "60px 0 0 0",
   },
   {
+    path: "/admin/movie-management/playlists",
+    header: "title",
+    label: "Playlists",
+    gnb: false,
+    margin: "60px 0 0 0",
+  },
+  {
+    path: "/admin/movie-management/movies",
+    header: "title",
+    label: "Movies",
+    gnb: false,
+    margin: "60px 0 0 0",
+  },
+  {
     path: "/admin/*",
     header: "admin",
     gnb: false,

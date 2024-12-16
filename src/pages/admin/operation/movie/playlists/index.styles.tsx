@@ -10,7 +10,7 @@ export default {
       align-items: center;
 
       background-color: #fff;
-      padding: 4px 16px;
+      padding: 16px;
       border-radius: 4px;
 
       font-size: 14px;
@@ -36,6 +36,7 @@ export default {
   playlistContainer(): SerializedStyles {
     return css`
       width: 100%;
+      flex: 1;
       /* background-color: #f0f0f0; */
       padding: 16px;
       display: flex;
