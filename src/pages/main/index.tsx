@@ -6,12 +6,30 @@ import RecommendMovieSlider from "./components/recommend-slider";
 
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
+import { unreadCountState } from "@recoil/atoms/isNotificationState";
+import axios from "axios";
+import { getCookie } from "@util/cookie";
+import { useEffect } from "react";
 
 function Main() {
   const isLoginState = useRecoilValue(isLogin);
 
+  const count = useRecoilValue(unreadCountState);
+
   const onClick = async () => {
-    console.log();
+    const user = getCookie("user");
+
+    // reciverId = 17
+    // boardId = 61
+    // movieId = 11
+
+    const response = await axios.post(
+      `${
+        import.meta.env.VITE_SERVER_URL
+      }/api/v1/notification/alert?receiverId=${17}&boardId=${61}&movieId=${11}`,
+      {},
+      { headers: { Authorization: `Bearer ${user.localJwtDto.accessToken}` } }
+    );
   };
 
   return (
