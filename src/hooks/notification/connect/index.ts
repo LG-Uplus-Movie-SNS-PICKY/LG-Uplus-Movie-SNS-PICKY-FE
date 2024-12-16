@@ -5,8 +5,11 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 
 import { EventSourcePolyfill } from "event-source-polyfill";
 import { getCookie } from "@util/cookie";
+import { useQueryClient } from "@tanstack/react-query";
 
 function NotificationSSE() {
+  const queryClient = useQueryClient();
+
   const setNotifications = useSetRecoilState(notificationsState);
   const { isLoginState, isAuthUser } = useRecoilValue(isLogin);
 
@@ -20,11 +23,9 @@ function NotificationSSE() {
 
     // 사용자가 로그인을 했을 경우에 SSE랑 연결을 시도한다.
     if (isLoginState && !isAuthUser) {
-      // 1. 초기 데이터 구성을 위한 API 호출을 한다.
-
+      // 1. 읽지 않은 알림은 무한 스크롤링을 지원하는 것이기 때문에 React Query를 통해 데이터를 캐싱하고 무한 스크롤링 기능을 구현한다.
+      // 2. 프론트-서버 간의 SSE를 연결한다.
       const token = getCookie("user") || {};
-
-      // 2. 프론트-서버 SSE 연결
 
       // Header를 포함시켜야 하기 때문에 기존 EventSource가 아닌 EventSourcePolyfill 라이브러리를 사용한다.
       const eventSource = new EventSourcePolyfill(
@@ -40,7 +41,6 @@ function NotificationSSE() {
       eventSource.onmessage = (event) => {
         console.log("Received data:", event);
         console.log(event.data);
-
         // 3. 실시간으로 데이터 올 시 해당 데이터를 상태 관리를 한다.
         // const data = JSON.parse(event.data);
         // console.log(data);
@@ -53,9 +53,7 @@ function NotificationSSE() {
 
       // 컴포넌트 언마운트 시 SSE 연결 종료
       return () => {
-        if (eventSourceRef.current) {
-          eventSource.close();
-        }
+        eventSource.close();
       };
     }
   }, [isLoginState]);

@@ -1,6 +1,7 @@
 # PICKY - 영화 리뷰와 소셜플랫폼
 
 ### Getting Started
+
 [Devloper 배포 주소](https://d3hxz5yj62y98w.cloudfront.net/)<br />
 [피그마 페이지](https://www.figma.com/design/rpAlhiLds5pygwPfPpD4lp/PICKY-%EB%94%94%EC%9E%90%EC%9D%B8-%EC%99%84%EC%84%B1%EB%B3%B8?node-id=0-1&node-type=canvas&t=pwFCyVmMoN1a41le-0)<br />
 [문서화(Notion)](https://glass-joggers-e59.notion.site/PICKY-13c9fc77f3f6802ab7f1c2ee59b3aa8c?pvs=74)
@@ -10,6 +11,11 @@
 **서비스 소개**
 
 사용자가 선택한 영화 장르에 맞춰 영화를 추천받고, 영화 정보를 확인하며 리뷰를 남길 수 있는 플랫폼입니다. 또한, 영화를 사랑하는 사람들을 위한 소셜 기능을 제공하여, 특정 영화에 대한 관람평이나 관련 이야기를 다른 사용자들과 자유롭게 공유하고 소통할 수 있는 영화 리뷰 및 소셜 플랫폼 서비스입니다.
+
+**공통** <br />
+![PICKY-ERD](https://github.com/user-attachments/assets/a3426484-77e3-4729-bebb-c71f85675754)
+[피그마 페이지](https://www.figma.com/design/rpAlhiLds5pygwPfPpD4lp/PICKY-%EB%94%94%EC%9E%90%EC%9D%B8-%EC%99%84%EC%84%B1%EB%B3%B8?node-id=0-1&node-type=canvas&t=pwFCyVmMoN1a41le-0)<br />
+[요구사항 정의서](https://docs.google.com/spreadsheets/d/1puQoU2lwXWyVLx6mc33PdlVW_YVREmc3yd3hdZeMDHE/edit?usp=sharing)<br />
 
 <br />
 
@@ -23,12 +29,12 @@
 
 **기술 스택**
 
-|  |  |  |  |
-|-----------------|----------------|----------------|----------------|
-| <img src="https://i.namu.wiki/i/EY559r31H-um8uTtptPIbCZoBGxsumSlwEH0T_rA6WmxQq1UwqyAf3cJQJXN7Fv5CoEz0kv5CBXzjkkPU_XWig.svg" alt="TypeScript" width="100"> | <img src="https://github.com/user-attachments/assets/e3b49dbb-981b-4804-acf9-012c854a2fd2" alt="React" width="100"> | <img src="https://ko.vite.dev/logo.svg" alt="Vite" width="100"> | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSii2UcY9fK5WXXPfa2z7urgqOcq63L5SObJQ&s" alt="Recoil" width="100"> |
-| TypeScript | React | Vite | Recoil |
-| <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKIe10L8m6JqDfjl_5BFRTz8yHoowQUgW6cA&s" alt="Emotion" width="100"> | <img src="https://blog.kakaocdn.net/dn/997rV/btsIkARkTej/PdtiBI82EnMzFQjgHkbuI1/img.png" alt="Storybook" width="100"> | <img src="https://t1.kakaocdn.net/kakao_tech/image/2022/06/images/01.png" alt="React Query" width="100"> |  |
-| Emotion | Storybook | React Query |  |
+|                                                                                                                                                           |                                                                                                                       |                                                                                                          |                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://i.namu.wiki/i/EY559r31H-um8uTtptPIbCZoBGxsumSlwEH0T_rA6WmxQq1UwqyAf3cJQJXN7Fv5CoEz0kv5CBXzjkkPU_XWig.svg" alt="TypeScript" width="100"> | <img src="https://github.com/user-attachments/assets/e3b49dbb-981b-4804-acf9-012c854a2fd2" alt="React" width="100">   | <img src="https://ko.vite.dev/logo.svg" alt="Vite" width="100">                                          | <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSii2UcY9fK5WXXPfa2z7urgqOcq63L5SObJQ&s" alt="Recoil" width="100"> |
+| TypeScript                                                                                                                                                | React                                                                                                                 | Vite                                                                                                     | Recoil                                                                                                                            |
+| <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKIe10L8m6JqDfjl_5BFRTz8yHoowQUgW6cA&s" alt="Emotion" width="100">                        | <img src="https://blog.kakaocdn.net/dn/997rV/btsIkARkTej/PdtiBI82EnMzFQjgHkbuI1/img.png" alt="Storybook" width="100"> | <img src="https://t1.kakaocdn.net/kakao_tech/image/2022/06/images/01.png" alt="React Query" width="100"> |                                                                                                                                   |
+| Emotion                                                                                                                                                   | Storybook                                                                                                             | React Query                                                                                              |                                                                                                                                   |
 
 <br />
 
@@ -38,7 +44,7 @@
 LG-Uplus-Movie-SNS-PICKY-FE/
 │
 ├── public/                         // 정적 파일 (HTML, 이미지 등)
-│   
+│
 ├── src/                            // 소스 코드 폴더
 │   ├── api/                        // 서버 API 관리
 │   │
