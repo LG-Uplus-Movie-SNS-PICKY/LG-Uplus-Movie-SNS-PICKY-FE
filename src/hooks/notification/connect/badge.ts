@@ -11,7 +11,7 @@ function NotificationBadge() {
   const setUnreadCount = useSetRecoilState(unreadCountState);
 
   const { data: unreadNotificationData, isLoading } =
-    useUnreadNotificationQuery();
+    useUnreadNotificationQuery(isLoginState && !isAuthUser);
 
   useEffect(() => {
     if (!isLoading && isLoginState && !isAuthUser) {

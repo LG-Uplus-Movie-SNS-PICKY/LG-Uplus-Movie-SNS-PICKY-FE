@@ -79,11 +79,11 @@ function NotificationRander({
         // 캐싱 데이터에서 읽음 처리된 알림 업데이트
         return {
           ...oldData,
-          pages: oldData.pages.map((page) => ({
+          pages: oldData?.pages?.map((page) => ({
             ...page,
             data: {
-              ...page.data,
-              content: page.data.content.map((notif: NotificationTypes) => {
+              ...page?.data,
+              content: page?.data?.content?.map((notif: NotificationTypes) => {
                 return notif.notificationId === notificationId
                   ? { ...notif, isRead: true }
                   : notif;
