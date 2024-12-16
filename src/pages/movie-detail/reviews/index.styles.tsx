@@ -37,6 +37,7 @@ export const Title = styled.div`
 `;
 
 export const DetailContainer = styled.div`
+    color: #5e5e5e;
     display: flex;
     flex-direction: row;
     justify-content: center;

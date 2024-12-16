@@ -29,6 +29,7 @@ import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
+import { fetchNicknameValidation, fetchUserInfo } from "@api/user";
 
 function My() {
   const { nickname } = useParams(); // URL에서 nickname 추출
@@ -46,6 +47,99 @@ function My() {
   // 로그인 상태에서 사용자 정보 가져오기
   const loginState = useRecoilValue(isLogin);
   const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
+
+  const [isValid, setIsValid] = useState<boolean | null>(null); // 닉네임 유효성 상태
+  const [userData, setUserData] = useState<{
+    userId: number;
+    boardCount: number;
+    followerCount: number;
+    followingCount: number | null;
+  } | null>(null); // 전체 사용자 정보를 객체로 관리
+
+  const [boardCount, setBoardCount] = useState(0); // 게시글 수 상태
+  const [followersCount, setFollowersCount] = useState(0); // 팔로워 수 상태
+  const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수 상태
+
+  const [error, setError] = useState<string | null>(null); // 에러 상태
+  const [loading, setLoading] = useState(true); // 로딩 상태
+
+  // // 닉네임 검증 함수
+  // async function checkNickname(nickname: string) {
+  //   try {
+  //     const response = await fetchNicknameValidation(nickname);
+  //     setIsValid(response.isValid); // 상태 업데이트
+  //   } catch (error) {
+  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
+  //   }
+  // }
+
+  // // 닉네임 검증 함수
+  // async function checkNickname(nickname: string) {
+  //   try {
+  //     const response = await fetchNicknameValidation(nickname);
+  //     setIsValid(response.isValid); // API에서 받은 값을 상태로 설정
+  //   } catch (error) {
+  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
+  //     setIsValid(false); // 오류가 발생한 경우 기본값으로 false 설정 -> 서버 오류로 일단 임시로 처리
+  //   }
+  // }
+
+  // // 닉네임 검증 후 사용자 정보 로드
+  // useEffect(() => {
+  //   if (nickname) {
+  //     checkNickname(nickname); // 닉네임 검증
+  //   }
+  // }, [nickname]);
+
+  // useEffect(() => {
+  //   if (isValid === false) {
+  //     // 닉네임이 사용 가능할 때만 사용자 정보 로드
+  //     const loadUserInfo = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const data = await fetchUserInfo(nickname as string);
+
+  //         setUserData(data);
+  //         setBoardCount(data.boardCount ?? 0);
+  //         setFollowersCount(data.followerCount ?? 0);
+  //         setFollowingCount(data.followingCount ?? 0);
+  //       } catch (err) {
+  //         console.error(err);
+  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
+
+  //     loadUserInfo();
+  //   }
+  // }, [isValid, nickname]);
+
+  // 사용자 정보 로드
+  useEffect(() => {
+    if (nickname) {
+      const loadUserInfo = async () => {
+        try {
+          setLoading(true);
+          const data = await fetchUserInfo(nickname as string);
+          
+          console.log("Fetched User Data:", data); // 콘솔에 사용자 정보 출력
+          
+          setUserData(data);
+          setBoardCount(data.boardCount ?? 0);
+          setFollowersCount(data.followerCount ?? 0);
+          setFollowingCount(data.followingCount ?? 0);
+        } catch (err) {
+          console.error("Error fetching user info:", err); // 오류 발생 시 출력
+          setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      loadUserInfo();
+    }
+  }, [nickname]);
 
   const dummyData = {
     id: 1,
@@ -84,10 +178,6 @@ function My() {
     ],
   };
 
-  const [followersCount, setFollowersCount] = useState(
-    dummyData.followers.length
-  );
-
   const toggleModal = () => {
     setIsModalOpen((prev) => !prev);
   };
@@ -102,8 +192,10 @@ function My() {
 
   const handleFollowClick = () => {
     if (isFollowing) {
+      console.log("팔로우 취소");
       setFollowersCount((prev) => prev - 1);
     } else {
+      console.log("팔로우 완료 - 팔로잉");
       setFollowersCount((prev) => prev + 1);
     }
     setIsFollowing((prev) => !prev);
@@ -154,14 +246,26 @@ function My() {
   //   fetchUserInfo();
   // }, []);
 
+  if (loading) {
+    return <div>로딩 중...</div>; // 로딩 상태 표시
+  }
+
+  if (error) {
+    return <div>{error}</div>; // 에러 메시지 표시
+  }
+
+  if (!userData) {
+    return <div>사용자 정보를 찾을 수 없습니다.</div>; // 데이터가 없을 경우
+  }
+
   return (
     <>
-      {/* <SEO
-        title={`PICKY: ${dummyData.nickname}`}
-        description={`${dummyData.nickname}님의 프로필(팔로워: ${dummyData.followers.length}명, 팔로잉: ${dummyData.followings.length}명)`}
+      <SEO
+        title={`PICKY: ${nickname}`}
+        description={`${nickname}님의 프로필(팔로워: ${followersCount}명, 팔로잉: ${followingCount}명)`}
         image={dummyData.profileImage}
         url={`http://localhost:5173/${location.pathname}`}
-      /> */}
+      />
 
       <Wrapper ref={wrapperRef}>
         <ProfileContainer>
@@ -173,15 +277,15 @@ function My() {
 
           <ProfileInfoContainer>
             <ProfileInfo>
-              <BoldText isZero={dummyData.reviews === 0}>
-                {dummyData.reviews}
+              <BoldText isZero={boardCount === 0}>
+                {boardCount}
               </BoldText>
               <Text>게시글</Text>
             </ProfileInfo>
             <ProfileInfo onClick={() => openFollowersModal("followers")}>
               {" "}
               {/* 팔로워 클릭 시 */}
-              <BoldText isZero={dummyData.followers.length === 0}>
+              <BoldText isZero={followersCount === 0}>
                 {followersCount}
               </BoldText>
               <Text>팔로워</Text>
@@ -189,8 +293,8 @@ function My() {
             <ProfileInfo onClick={() => openFollowersModal("followings")}>
               {" "}
               {/* 팔로잉 클릭 시 */}
-              <BoldText isZero={dummyData.followings.length === 0}>
-                {dummyData.followings.length}
+              <BoldText isZero={followingCount === 0}>
+                {followingCount}
               </BoldText>
               <Text>팔로잉</Text>
             </ProfileInfo>
@@ -198,8 +302,8 @@ function My() {
         </ProfileContainer>
 
         <NickNameContainer>
-          <NickName>{myNickname}</NickName>
-          {dummyData.role === "critic" && <CriticBadge />}{" "}
+          <NickName>{nickname}</NickName>
+          {/* {dummyData.role === "critic" && <CriticBadge />}{" "} */}
           {/* critic일 때만 렌더링 */}
         </NickNameContainer>
 
@@ -232,7 +336,7 @@ function My() {
         </div>
       )}
 
-      {/* 팔로워/팔로잉 리스트 모달 */}
+      {/* 팔로워/팔로잉 리스트 모달
       {isFollowersModalOpen && (
         <FollowersModal
           onClose={closeFollowersModal}
@@ -240,7 +344,7 @@ function My() {
           followings={dummyData.followings}
           activeTab={activeTab} // 현재 활성화된 탭 전달
         />
-      )}
+      )} */}
     </>
   );
 }

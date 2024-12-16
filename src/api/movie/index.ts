@@ -26,7 +26,7 @@ export async function fetchMovieDetailUpdate(
   movieId: number,
   movieInfo: MovieDetailTypes
 ) {
-  console.log(movieInfo);
+  // console.log(movieInfo);
   const { data } = await apiClient.patch(`/movie/${movieId}`, movieInfo);
   return data;
 }
@@ -240,3 +240,23 @@ export const updateBoard = async (
     throw error;
   }
 };
+
+// 좋아요한 영화 목록 조회 API
+export async function fetchLikedMovies(nickname: string) {
+  try {
+    const { data } = await apiClient.get(`/movie/user/${nickname}`);
+    
+    // 응답 데이터 가공
+    const movies = data?.data?.content?.map((movie: any) => ({
+      movie_id: movie.movieId,
+      movie_title: movie.movieTitle,
+      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.moviePosterUrl}`, // 포스터 URL 완성
+      movie_total_rating: movie.movieTotalRating,
+    }));
+
+    return movies || []; // 결과가 없으면 빈 배열 반환
+  } catch (error) {
+    console.error("좋아요한 영화 조회 중 오류 발생:", error);
+    throw error;
+  }
+}

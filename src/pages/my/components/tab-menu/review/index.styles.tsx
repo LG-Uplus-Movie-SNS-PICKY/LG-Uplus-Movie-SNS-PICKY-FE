@@ -144,6 +144,17 @@ export default {
     `;
   },
 
+  emptyState(): SerializedStyles {
+    return css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 120px;
+    `;
+  },
+
   // reviewDeleteBtn(): SerializedStyles {
   //   return css`
   //     position: absolute;

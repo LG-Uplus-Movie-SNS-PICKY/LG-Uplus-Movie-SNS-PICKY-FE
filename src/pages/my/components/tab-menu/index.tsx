@@ -90,45 +90,6 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
     }
   }, []);
 
-  const likeMovies: LikeMovieData[] = [
-    {
-      movie_id: 1,
-      movie_poster_url:
-        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      movie_title: "타이타닉",
-    },
-    {
-      movie_id: 2,
-      movie_poster_url:
-        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      movie_title: "타이타닉",
-    },
-    {
-      movie_id: 3,
-      movie_poster_url:
-        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      movie_title: "타이타닉",
-    },
-    {
-      movie_id: 4,
-      movie_poster_url:
-        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      movie_title: "타이타닉",
-    },
-    {
-      movie_id: 5,
-      movie_poster_url:
-        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      movie_title: "타이타닉",
-    },
-    {
-      movie_id: 6,
-      movie_poster_url:
-        "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      movie_title: "타이타닉",
-    },
-  ];
-
   return (
     <div css={styles.tabMenuContainer()}>
       {/* Tab Menus */}
@@ -165,7 +126,7 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
           <SwiperSlide key={idx}>
             {idx === 0 && <MovieLogContnent data={Array.from({ length: 4 })} />}
             {idx === 1 && <LineReviewContent />}
-            {idx === 2 && <LikeMovieContent data={likeMovies} />}
+            {idx === 2 && <LikeMovieContent />}
           </SwiperSlide>
 
           // <div

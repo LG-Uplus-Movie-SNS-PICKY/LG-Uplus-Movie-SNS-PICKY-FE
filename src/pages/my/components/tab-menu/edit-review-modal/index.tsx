@@ -26,7 +26,7 @@ import { LineReviewData } from '../review';
 interface EditReviewModalProps {
     review: LineReviewData;
     onClose: () => void;
-    onSave: (updatedReview: LineReviewData) => void;
+    onSave: (updatedReview: { context: string; isSpoiler: boolean }) => void;
 }
 
 const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
@@ -38,31 +38,6 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
 
     const [context, setContext] = useState(review.context);
     const [isSpoiler, setIsSpoiler] = useState(review.isSpoiler || false);
-
-    const handleSave = async () => {
-        if (!context.trim()) {
-            showToast("감상평을 입력해주세요.", "up");
-            return;
-        }
-
-        try {
-            const { data } = await axios.patch(
-                `${import.meta.env.VITE_SERVER_URL}/api/v1/linereview/${review.id}`,
-                {
-                    context,
-                    isSpoiler,
-                },
-                {
-                    headers: { Authorization: `Bearer ${accessToken}` },
-                }
-            );
-
-            onSave({ ...review, context: context, isSpoiler: isSpoiler });
-            showToast("수정이 완료되었습니다.", "up");
-        } catch (err) {
-            showToast("수정 중 오류가 발생했습니다.", "down");
-        }
-    };
 
     const showToast = (message: string, direction: 'none' | 'up' | 'down') => {
         setToast({ message, direction });
@@ -81,7 +56,7 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // 기본 Enter 키 동작 방지
             if (hasChanges()) {
-                handleSave();
+                onSave({ context, isSpoiler }); // 부모로 저장 이벤트 전달
             }
         }
     };
@@ -124,7 +99,7 @@ const EditReviewModal = ({ review, onClose, onSave }: EditReviewModalProps) => {
                         placeholder="한줄평을 작성해주세요."
                     />
                     <EditButton
-                        onClick={handleSave}
+                        onClick={() => onSave({ context, isSpoiler })}
                         active={hasChanges()} // 스타일 조정
                     >
                         수정
