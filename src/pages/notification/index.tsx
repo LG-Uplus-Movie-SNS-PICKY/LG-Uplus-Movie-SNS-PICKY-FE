@@ -76,8 +76,8 @@ function NotificationPage() {
     // 변경이 감지되고 데이터를 가지고 오기 위한 isLoading 상태값이 false가 될 경우
     if (!isLoading && notificaitons?.pages) {
       const allNotifications: NotificationTypes[] = notificaitons.pages
-        .map((page) => page.data?.content)
-        .flat();
+        ?.map((page) => page?.data?.content)
+        ?.flat();
 
       // 상태 변수에 리액트 쿼리를 통해 얻어온 데이터를 날짜별로 그룹화 시킨 뒤 값을 저장한다.
       setGroupNotifications(groupNotificationsByDate(allNotifications));

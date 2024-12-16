@@ -6,22 +6,19 @@ import { isEmpty } from "lodash";
 export const fetchUnreadNotification = async (lastNotificationId: number) => {
   const user = getCookie("user") || {};
 
-  if (isEmpty(user)) return;
-  else {
-    const params = new URLSearchParams();
+  const params = new URLSearchParams();
 
-    // lastNotificationId가 Truthy 값일 경우 param을 추가한다.
-    if (lastNotificationId) {
-      params.append("lastNotificationId", lastNotificationId.toString());
-    }
-
-    // 요청을 보내고 읽지 않은 알림을 조회한다.
-    const { data } = await apiClient.get(
-      `/notification/notifications?${params.toString()}`
-    );
-
-    return data;
+  // lastNotificationId가 Truthy 값일 경우 param을 추가한다.
+  if (lastNotificationId) {
+    params.append("lastNotificationId", lastNotificationId.toString());
   }
+
+  // 요청을 보내고 읽지 않은 알림을 조회한다.
+  const { data } = await apiClient.get(
+    `/notification/notifications?${params.toString()}`
+  );
+
+  return data;
 };
 
 // 사용자 알림 읽음 처리 PATCH API
