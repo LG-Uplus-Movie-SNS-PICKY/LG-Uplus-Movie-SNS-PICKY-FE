@@ -33,6 +33,7 @@ function NotificationSSE() {
           headers: {
             Authorization: `Bearer ${token.localJwtDto.accessToken}`,
           },
+          heartbeatTimeout: 1000 * 60 * 10, // 10분으로 타임아웃 연장
         }
       );
 
@@ -76,6 +77,11 @@ function NotificationSSE() {
       // 에러 처리
       eventSource.onerror = (error) => {
         console.log("SSE Error:", error);
+
+        // 상태 확인 -> 연결이 중단된 경우
+        if (eventSource.readyState === EventSourcePolyfill.CLOSED) {
+          console.log("SSE 연결이 닫혔습니다. 재연결 시도 중...");
+        }
       };
 
       // 컴포넌트 언마운트 시 SSE 연결 종료

@@ -62,8 +62,6 @@ function NotificationRander({
 
   const queryClient = useQueryClient();
 
-  // console.log(section);
-
   // 알림을 클릭할 경우 -> 해당 알림 게시물로 이동 + 알림 읽음 업데이트
   const onReadNotifiaction = async (
     boardId: number,
