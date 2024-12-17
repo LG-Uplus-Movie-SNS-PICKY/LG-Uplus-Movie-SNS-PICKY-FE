@@ -70,6 +70,21 @@ export default {
 
         & > .active-icon-btn {
           cursor: pointer;
+
+          /* Notification Badge */
+          & > .notification {
+            position: relative;
+
+            & > .notification-badge {
+              position: absolute;
+              width: 6px;
+              height: 6px;
+              background-color: #ff0000;
+              border-radius: 50%;
+              top: 0px;
+              right: 3px;
+            }
+          }
         }
       }
 

@@ -47,6 +47,7 @@ export function useHeaderConfig(
       <AddCircle onClick={() => navigate && navigate("/movie-log/add")} />,
       <div className="notification">
         <Notification onClick={() => navigate && navigate("/notification")} />
+        <div className="notification-badge" />
       </div>,
       <Search onClick={() => navigate && navigate("/search")} />,
     ];
