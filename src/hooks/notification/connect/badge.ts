@@ -26,9 +26,6 @@ function NotificationBadge() {
         ) // 각 페이지의 읽지 않은 알림 수 추출
         .reduce((total, count) => (total += count), 0); // 합산
 
-      console.log("This Count: " + count);
-      console.log("This?");
-
       // 알림 개수를 전역 상태로 관리
       setUnreadCount(count);
     }

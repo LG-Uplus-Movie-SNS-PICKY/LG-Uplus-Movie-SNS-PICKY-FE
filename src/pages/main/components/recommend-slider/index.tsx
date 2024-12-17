@@ -36,10 +36,6 @@ function RecommendMovieSlider() {
     }
   }, [isLoading, data]);
 
-  useEffect(() => {
-    if (!isLoading) console.log(data);
-  }, [isLoading]);
-
   return (
     <Swiper
       onSwiper={(swipper) => (swiperRef.current = swipper)}

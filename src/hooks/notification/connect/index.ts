@@ -75,9 +75,6 @@ function NotificationSSE() {
             };
           }
         );
-
-        // 알림 수 카운팅
-        // setUnreadCount((prev) => prev + 1);
       };
 
       // 에러 처리
