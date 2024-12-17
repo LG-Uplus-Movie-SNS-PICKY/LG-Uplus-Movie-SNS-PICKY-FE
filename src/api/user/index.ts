@@ -52,19 +52,15 @@ export async function fetchGetUserInfo() {
   let accessToken;
 
   if (!isEmpty(token) && isEmpty(user)) {
-    console.log("Token -> AccessToken!!");
     accessToken = token.localJwtDto.accessToken;
+    console.log("Token -> AccessToken!!" + accessToken);
   }
 
   if (isEmpty(token) && !isEmpty(user)) {
-    console.log("User -> AccessToken!!");
+    console.log("Hello");
     accessToken = user.localJwtDto.accessToken;
-  }
-
-  if (!isEmpty(token)) {
-    const { data } = await apiClient.get("/user", {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    console.log("User -> AccessToken!!" + accessToken);
+    const { data } = await apiClient.get("/user");
     return data;
   }
 
