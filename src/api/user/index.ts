@@ -51,12 +51,15 @@ export async function fetchGetUserInfo() {
   const user = getCookie("user") || {};
   let accessToken;
 
-  if (!isEmpty(token) && isEmpty(user))
+  if (!isEmpty(token) && isEmpty(user)) {
+    console.log("Token -> AccessToken!!");
     accessToken = token.localJwtDto.accessToken;
-  if (isEmpty(token) && !isEmpty(user))
-    accessToken = user.localJwtDto.accessToken;
+  }
 
-  console.log("Access Token: " + accessToken);
+  if (isEmpty(token) && !isEmpty(user)) {
+    console.log("User -> AccessToken!!");
+    accessToken = user.localJwtDto.accessToken;
+  }
 
   if (!isEmpty(token)) {
     const { data } = await apiClient.get("/user", {
