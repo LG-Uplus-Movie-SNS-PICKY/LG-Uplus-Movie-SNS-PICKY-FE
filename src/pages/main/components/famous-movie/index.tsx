@@ -12,7 +12,7 @@ import { MovieItem } from "@stories/movie-item";
 
 import { useTopMovieQuery } from "@hooks/movie";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MovieDataTypes } from "@type/api/movie";
 import Loading from "@components/loading";
 
@@ -24,8 +24,10 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
   const { data, isLoading } = useTopMovieQuery();
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   return (
-    <div css={styles.famousContainer()}>
+    <div css={styles.famousContainer(location.pathname === "/picky")}>
       {/* Title */}
       <div css={styles.titleWrapper()}>
         <div className="title">
