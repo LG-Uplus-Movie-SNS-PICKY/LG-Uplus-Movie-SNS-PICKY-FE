@@ -71,11 +71,13 @@ export const validateName = (name: string): boolean => {
 };
 
 export const validateProfileImage = (
-  profileImagePreview: string | undefined
+  profileImagePreview: string | null | undefined
 ): boolean => {
-  return (
-    typeof profileImagePreview === "string" && profileImagePreview.trim() !== ""
-  );
+  if (profileImagePreview === null || profileImagePreview === undefined) {
+    return false;
+  }
+
+  return profileImagePreview.trim() !== "";
 };
 
 export const validateNicknames = (isNicknameValid: boolean): boolean => {

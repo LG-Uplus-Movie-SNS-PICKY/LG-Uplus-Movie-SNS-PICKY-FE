@@ -33,7 +33,6 @@ import {
   slideContent,
 } from "./index.styles";
 import SEO from "@components/seo";
-// import { Cookies } from "react-cookie";
 import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
 import { getCookie, removeCookie, setCookie } from "@util/cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
@@ -104,10 +103,6 @@ export default function Signup() {
     const requiredFields = steps[step].requiredFields;
     return requiredFields.every((field) => {
       let value = inputData[field as keyof typeof inputData];
-
-      // if (field === "profileImage") {
-      //   value = inputData.profileImagePreview || "";
-      // }
       if (value === null || value instanceof FormData) {
         value = "";
       }
@@ -280,15 +275,7 @@ export default function Signup() {
                 <p>뒤로</p>
               </button>
             )}
-            <div
-              css={totalPage}
-              // style={{
-              //   marginLeft: "auto",
-              //   marginRight: "12px", // 오른쪽 여백 추가
-              //   fontSize: "16px",
-              //   color: "#ff084a",
-              // }}
-            >
+            <div css={totalPage}>
               {step + 1}/{steps.length}
             </div>
           </div>
