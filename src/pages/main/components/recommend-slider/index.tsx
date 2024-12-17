@@ -53,7 +53,7 @@ function RecommendMovieSlider() {
     >
       {isLoading && <Loading />}
       {!isLoading &&
-        data.data.map((movie: RecommendMovieDataTypes) => (
+        data.data.slice(0, 5).map((movie: RecommendMovieDataTypes) => (
           <SwiperSlide key={movie.movieId}>
             <div
               css={styles.sliderItem(
@@ -77,12 +77,11 @@ function RecommendMovieSlider() {
                     src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
                       movie.posterUrl
                     }`}
+                    alt={movie.title}
                     onLoad={() => setImageLoad(true)}
                     onError={() => setImageLoad(false)}
                   />
                   {!imageLoad && <span>{movie.title}</span>}
-
-                  <img src={movie.posterUrl} alt="image" />
                 </div>
 
                 {/* Movie Info Section */}
