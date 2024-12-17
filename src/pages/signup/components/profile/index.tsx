@@ -30,11 +30,11 @@ export default function InputProfile() {
   const handleProfileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = ""; // 파일 선택 초기화
-  
+
     if (file) {
       const formData = new FormData();
       formData.append("profile", file); // FormData에 파일 추가
-  
+
       const imageUrl = URL.createObjectURL(file); // 미리보기 URL 생성
       setUserInfo((prev) => {
         const updatedUserInfo = { ...prev, profileImagePreview: imageUrl }; // 업데이트된 userInfo
@@ -53,24 +53,41 @@ export default function InputProfile() {
       showToastMessage("이미지가 성공적으로 업로드되었습니다.");
     }
   };
-  
-  const setDefaultImage = () => {
+
+  const setDefaultImage = async () => {
     if (userInfo.profileImagePreview !== defaultUserImage) {
-      setUserInfo((prev) => {
-        const updatedUserInfo = { ...prev, profileImagePreview: defaultUserImage }; // 업데이트된 userInfo
-        console.log("Default userInfo set:", updatedUserInfo); // 로그 추가
-        return updatedUserInfo;
-      });
-      setInputData((prev) => {
-        const updatedInputData = {
-          ...prev,
-          profileImageData: null, // FormData 초기화
-          profileImagePreview: defaultUserImage, // 기본 이미지 URL 설정
-        };
-        console.log("Default inputData set:", updatedInputData); // 로그 추가
-        return updatedInputData;
-      });
-      showToastMessage("기본 이미지가 설정되었습니다.");
+      try {
+        // 로컬 이미지 파일을 fetch로 Blob 변환
+        const response = await fetch(defaultUserImage);
+        const blob = await response.blob();
+
+        const formData = new FormData();
+        formData.append("profile", blob, "default_userImage.png");
+
+        setUserInfo((prev) => {
+          const updatedUserInfo = {
+            ...prev,
+            profileImagePreview: defaultUserImage,
+          };
+          console.log("Default userInfo set:", updatedUserInfo);
+          return updatedUserInfo;
+        });
+
+        setInputData((prev) => {
+          const updatedInputData = {
+            ...prev,
+            profileImageData: formData, // FormData에 Blob 저장
+            profileImagePreview: defaultUserImage, // 이미지 URL 저장
+          };
+          console.log("Default inputData set:", updatedInputData);
+          return updatedInputData;
+        });
+
+        showToastMessage("기본 이미지가 설정되었습니다.");
+      } catch (error) {
+        console.error("기본 이미지 설정 중 오류 발생:", error);
+        showToastMessage("기본 이미지 설정에 실패했습니다.");
+      }
     } else {
       showToastMessage("이미 기본 이미지가 설정되어 있습니다.");
     }
