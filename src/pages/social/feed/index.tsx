@@ -190,7 +190,11 @@ export default function SocialFeed() {
             return (
               <>
                 <div key={board.boardId} css={feedItem}>
-                  <div css={infoSection}>
+                  <div
+                    css={infoSection}
+                    onClick={() => navigate(`/user/${board.writerNickname}`)} // 마이페이지로 이동
+                    style={{ cursor: "pointer" }} // 클릭 가능한 UI 스타일 추가
+                  >
                     <div css={profileSection}>
                       <img
                         src={board.writerProfileUrl || "/default-profile.png"}
@@ -267,7 +271,7 @@ export default function SocialFeed() {
                   <div css={reactionsSection}>
                     <span onClick={() => handleToggleLike(board.boardId)}>
                       {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
-                      {board.likesCount}
+                      <span className="like-number">{board.likesCount}</span>
                     </span>
                     <span
                       onClick={() =>
@@ -277,9 +281,12 @@ export default function SocialFeed() {
                       }
                     >
                       <CommentFeed />
-                      {board.commentsCount}
+                      <span className="comment-number">
+                        {board.commentsCount}
+                      </span>
                     </span>
                   </div>
+
                   <div
                     css={moreOptions}
                     onClick={() => handleOptionsModal(board)}

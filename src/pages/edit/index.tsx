@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { debounce } from "lodash";
 import profileIcon from "@assets/icons/profile.svg";
+import defaultUserImage from "@assets/images/default_userImage.png"
 import {
   containerStyle,
   headerStyle,
@@ -148,46 +149,55 @@ export default function ProfileEditPage() {
   };
 
   const handleSetDefaultImage = () => {
-    setProfileImage(null);
+    setProfileImage(defaultUserImage); // 상태에 기본 이미지 설정
+    setImageError(null); // 이미지 에러 초기화
     showToast("기본 이미지로 설정되었습니다.");
   };
 
   const handleSave = async () => {
     const isUnchanged =
       nickname === userData.nickname && profileImage === userData.profile;
-
+  
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
       return;
     }
-
+  
     if (nicknameError || imageError || isNicknameValid === false) {
       showToast("입력을 확인해주세요.");
       return;
     }
-
+  
     const formData = new FormData();
     formData.append("nickname", nickname);
-
-    // 기본 이미지 설정
-    if (profileImage === null) {
-      formData.append("profile", "");
-    } else if (profileImage !== userData.profile) {
-      try {
-        const response = await fetch(profileImage);
-        if (!response.ok)
-          throw new Error("이미지를 Blob으로 변환하는 데 실패했습니다.");
-        const blob = await response.blob();
-        formData.append("profile", blob, "profileImage.jpg");
-      } catch (error) {
-        console.error("이미지 변환 중 오류 발생:", error);
-        showToast("이미지를 업로드하는 중 문제가 발생했습니다.");
-        return;
-      }
-    }
-
+  
     try {
-      const data = await fetchProfileUser(formData); // `fetchProfileUser` 사용
+      // 이미지 URL 또는 Base64를 처리
+      if (profileImage) {
+        let imageBlob: Blob | null = null;
+  
+        if (profileImage.startsWith("data:image")) {
+          // Base64 이미지를 Blob으로 변환
+          const base64Response = await fetch(profileImage);
+          imageBlob = await base64Response.blob();
+        } else if (profileImage.startsWith("http")) {
+          // 이미지 URL을 Blob으로 변환
+          const response = await fetch(profileImage, { mode: "cors" });
+          if (!response.ok) {
+            throw new Error("이미지를 가져오는 중 문제가 발생했습니다.");
+          }
+          imageBlob = await response.blob();
+        }
+  
+        // Blob을 FormData에 추가
+        if (imageBlob) {
+          formData.append("profile", imageBlob, "profileImage.jpg");
+        }
+      }
+  
+      // 서버로 데이터 전송
+      const data = await fetchProfileUser(formData);
+  
       if (data) {
         showToast("프로필이 성공적으로 수정되었습니다.");
         setUserData({ ...userData, nickname, profile: profileImage });

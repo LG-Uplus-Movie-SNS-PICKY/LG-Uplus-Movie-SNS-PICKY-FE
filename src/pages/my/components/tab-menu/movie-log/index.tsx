@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import EmptyFeed from "@assets/icons/my-page/empty-feed.svg?react";
 import styles from "./index.styles";
 import { fetchUserMovieLogs } from "@api/movie";
+import { useNavigate } from "react-router-dom";
 
 export interface MovieLogData {
   boardId: number;
@@ -36,11 +37,12 @@ function EmptyMovieLog() {
 function MovieLogContent({ nickname }: MovieLogContentProps) {
   const [data, setData] = useState<MovieLogData[]>([]);
   const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
+  const navigate = useNavigate();
 
   const loadMovieLogs = async () => {
     try {
       const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
-      const newLogs = response.content || [];
+      const newLogs = response.data.content || [];
       setData((prev) => [...prev, ...newLogs]);
 
       // 마지막 boardId 업데이트
@@ -56,6 +58,11 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
     loadMovieLogs();
   }, [nickname]);
 
+  // 게시글 클릭 시 상세 페이지로 이동
+  const handleNavigateMovieLog = (boardId: number) => {
+    navigate(`/movie-log/detail/${boardId}`);
+  };
+
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyMovieLog />}
@@ -68,12 +75,17 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
             )?.contentUrl || "";
 
           return (
-            <div key={element.boardId} className="movie-log">
+            <div
+              key={element.boardId}
+              className="movie-log"
+              onClick={() => handleNavigateMovieLog(element.boardId)} // boardId 전달
+              style={{ cursor: "pointer" }} // 클릭 가능한 UI 추가
+            >
               {posterUrl ? (
                 <img
                   src={posterUrl}
                   alt="movie-poster"
-                  style={{ width: "100px", height: "150px" }}
+                  style={{ width: "100%", height: "100%" }}
                 />
               ) : (
                 <EmptyFeed /> // 포스터가 없으면 대체 이미지
@@ -81,11 +93,6 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
             </div>
           );
         })}
-      {data.length > 0 && (
-        <button onClick={loadMovieLogs} style={{ marginTop: "20px" }}>
-          더 불러오기
-        </button>
-      )}
     </div>
   );
 }
