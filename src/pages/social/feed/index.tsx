@@ -65,8 +65,9 @@ export default function SocialFeed() {
   const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
   const navigate = useNavigate();
   const myUserId = 7; // 현재 사용자 ID 설정
-  const [showToast, setShowToast] = useState(false); // 토스트 메시지 상태
+  const [showToast, setShowToast] = useState(false);
   const queryClient = useQueryClient();
+  const [toastMessage, setToastMessage] = useState("");
 
   const {
     data: board,
@@ -136,21 +137,30 @@ export default function SocialFeed() {
   // 게시글 삭제 처리
   const confirmDeletePost = async () => {
     if (!selectedBoard || !selectedBoard.isAuthor) {
-      alert("권한이 없습니다. 삭제할 수 없습니다.");
+      setToastMessage("권한이 없습니다. 삭제할 수 없습니다."); // 토스트 메시지 설정
+      setShowToast(true); // 토스트 표시
       return;
     }
 
     try {
       await deletePost(selectedBoard.boardId);
 
-      // 삭제 후 React Query 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+      setToastMessage("게시글이 삭제되었습니다."); // 삭제 완료 메시지
       setShowToast(true);
     } catch (error) {
       console.error("게시글 삭제 중 오류 발생:", error);
+      setToastMessage("게시글 삭제 중 오류가 발생했습니다."); // 오류 메시지
+      setShowToast(true);
     } finally {
       setIsDeleteModalOpen(false);
     }
+  };
+
+  const handleReport = (type: "욕설" | "스포일러") => {
+    setToastMessage(`${type} 신고가 접수되었습니다!`);
+    setShowToast(true);
+    setIsOptionsModalOpen(false); // 모달창 닫기
   };
 
   // 스포일러 표시 처리
@@ -330,13 +340,6 @@ export default function SocialFeed() {
                             <ReportButton />
                           </div>
                         </div>
-
-                        <div
-                          css={moreOptions}
-                          onClick={() => handleOptionsModal(board)}
-                        >
-                          <ReportButton />
-                        </div>
                       </>
                     );
                   })}
@@ -374,12 +377,8 @@ export default function SocialFeed() {
               </>
             ) : (
               <>
-                <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
-                  욕설 신고
-                </button>
-                <button
-                  onClick={() => alert("스포일러 신고가 접수되었습니다!")}
-                >
+                <button onClick={() => handleReport("욕설")}>욕설 신고</button>
+                <button onClick={() => handleReport("스포일러")}>
                   스포일러 신고
                 </button>
               </>
@@ -399,7 +398,7 @@ export default function SocialFeed() {
           />
         </div>
       )}
-      {showToast && <Toast message="게시글이 삭제되었습니다." direction="up" />}
+      {showToast && <Toast message={toastMessage} direction="up" />}
     </>
   );
 }
