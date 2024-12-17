@@ -167,43 +167,31 @@ export default function FeedComment() {
     }
   };
 
-  const handleDeleteComment = async (commentId: string, isAuthor: boolean) => {
-    if (isAuthor == false) {
-      setToastMessage("다른 유저의 댓글은 삭제할 수 없습니다.");
+  const handleDeleteComment = (commentId: number, isAuthor: boolean) => {
+    if (!isAuthor) {
+      setToastMessage("다른 사용자의 댓글은 삭제할 수 없습니다.");
       setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000); // 3초 후 토스트 메시지 숨기기
       return;
     }
-    setSelectedCommentId(commentId);
-    setIsCommentDeleteModalOpen(true);
 
-    try {
-      await deleteComment(Number(boardId), Number(commentId));
-      setComments((prevComments) =>
-        prevComments.filter(
-          (comment) => comment.commentId !== Number(commentId)
-        )
-      );
-      setToastMessage("댓글이 성공적으로 삭제되었습니다.");
-      setShowToast(true);
-    } catch (error) {
-      console.error("댓글 삭제 중 오류 발생:", error);
-      setToastMessage("댓글 삭제에 실패했습니다.");
-      setShowToast(true);
-    }
-    console.log("isCommentDeleteModalOpen:", isCommentDeleteModalOpen); // 상태 확인
+    setSelectedCommentId(commentId.toString());
+    setIsCommentDeleteModalOpen(true);
   };
 
   const confirmDeleteComment = async () => {
     if (!selectedCommentId || !boardId) return;
 
     try {
-      await deleteComment(Number(boardId), Number(selectedCommentId)); // API 호출
+      // API 호출
+      await deleteComment(Number(boardId), Number(selectedCommentId));
+
+      // 상태 업데이트: 삭제된 댓글 제거
       setComments((prevComments) =>
         prevComments.filter(
           (comment) => comment.commentId.toString() !== selectedCommentId
         )
-      ); // 로컬 상태에서 삭제
+      );
+
       setToastMessage("댓글이 성공적으로 삭제되었습니다.");
       setShowToast(true);
     } catch (error) {
@@ -303,10 +291,7 @@ export default function FeedComment() {
                 {comment.isAuthor && (
                   <CommentReportButton
                     onClick={() =>
-                      handleDeleteComment(
-                        comment.commentId.toString(),
-                        comment.isAuthor
-                      )
+                      handleDeleteComment(comment.commentId, comment.isAuthor)
                     }
                   />
                 )}
