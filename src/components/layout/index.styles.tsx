@@ -45,6 +45,13 @@ export const Flex = styled.div<FlexProps>`
   /* 브라우저 크기에 따라 가로 크기 변경 */
   width: 100%; /* 기본적으로 부모 요소의 100% */
 
+  scrollbar-width: none; /* Firefox: 스크롤바 숨김 */
+  -ms-overflow-style: none; /* IE: 스크롤바 숨김 */
+
+  &::-webkit-scrollbar {
+    display: none; /* Webkit (Chrome, Safari): 스크롤바 숨김 */
+  }
+
   @media (max-width: 480px) {
     width: 100%; /* 모바일 크기 이하 */
   }

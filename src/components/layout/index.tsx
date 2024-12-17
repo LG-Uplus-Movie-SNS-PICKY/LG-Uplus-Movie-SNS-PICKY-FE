@@ -37,7 +37,11 @@ function Layout({ children }: LayoutProps): JSX.Element {
   // 현재 경로에 맞는 Header와 Navbar의 타입 정의
   useEffect(() => {
     const token = getCookie("token") || {};
-    if (!isEmpty(token)) removeCookie("token");
+    const user = getCookie("user") || {};
+    if (isEmpty(token) && !isEmpty(user)) {
+      console.log("Layout!! Remove Cookie");
+      removeCookie("token");
+    }
 
     const config = routeConfig.find(
       (config) =>

@@ -92,6 +92,7 @@ const LoginCallback: React.FC = () => {
               isLoading: false,
             });
 
+            console.log("Naver Login is Success!!");
             removeCookie("token");
             setToastMessage("로그인에 성공했습니다!");
           } else {

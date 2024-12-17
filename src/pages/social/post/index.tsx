@@ -7,6 +7,7 @@ import BackPost from "@assets/icons/back_post.svg?react";
 import Review from "@assets/icons/review.svg?react";
 import { Button } from "@stories/button";
 import { Modal } from "@stories/modal";
+import { Toast } from "@stories/toast";
 import {
   wrapper,
   postContainer,
@@ -35,7 +36,6 @@ import {
   movieTitle,
   movieDetails,
   movieGenres,
-  highlightedText,
   modalContainer,
   movieCountry,
   activeAutocompleteItem,
@@ -97,6 +97,7 @@ export default function SocialPost() {
   const [fileUrl, setFileUrl] = useState<string>("asdasdasd"); // 파일 URL 저장
   const [images, setImages] = useState<File[]>([]); // 이미지 상태
   const [videos, setVideos] = useState<File[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null); // 토스트 메시지 상태
 
   const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
 
@@ -234,11 +235,11 @@ export default function SocialPost() {
         mediaFiles
       );
 
-      alert("게시글이 성공적으로 생성되었습니다.");
-      navigate("/movie-log"); // 성공 후 메인 페이지로 이동
+      setToastMessage("게시글이 성공적으로 생성되었습니다."); // 성공 메시지
+      setTimeout(() => navigate("/movie-log"), 1500);
     } catch (error) {
       console.error("게시글 생성 중 오류 발생:", error);
-      alert("게시글 생성에 실패했습니다.");
+      setToastMessage("게시글 생성에 실패했습니다.");
     }
   };
 
@@ -386,6 +387,9 @@ export default function SocialPost() {
           onClick={handleShareClick}
         />
       </div>
+
+      {/* 토스트 메시지 */}
+      {toastMessage && <Toast message={toastMessage} direction="up" />}
     </div>
   );
 }

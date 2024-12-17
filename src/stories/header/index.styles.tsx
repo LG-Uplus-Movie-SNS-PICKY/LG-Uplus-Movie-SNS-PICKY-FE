@@ -18,6 +18,7 @@ export default {
       background-color: #fff;
 
       box-sizing: border-box;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 
       & > .main-logo {
         width: 82px;
@@ -72,7 +73,7 @@ export default {
         }
       }
 
-      & > div.admin_btn {
+      div.admin_btn {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -82,6 +83,12 @@ export default {
         padding: 4px 16px;
 
         cursor: pointer;
+
+        & > span {
+          font-size: 12px;
+          font-weight: 400;
+          padding-top: 2px;
+        }
       }
     `;
   },

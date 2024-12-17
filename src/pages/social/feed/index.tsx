@@ -250,9 +250,9 @@ export default function SocialFeed() {
                         board_content_id: index, // index를 고유 ID로 사용 (숫자)
                         board_content_url: content.contentUrl, // URL
                         board_content_type:
-                          content.boardContentType === "Video"
-                            ? "Video"
-                            : "Image", // 타입 설정
+                          content.boardContentType === "VIDEO"
+                            ? "VIDEO"
+                            : "IMAGE", // 타입 설정
                       }))}
                     />
                   </div>

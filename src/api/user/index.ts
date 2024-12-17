@@ -4,10 +4,25 @@ import { isEmpty } from "lodash";
 
 // 닉네임 중복 체크를 위한 GET API
 export async function fetchNicknameValidation(nickname: string) {
+  const token = getCookie("token") || {};
+  const user = getCookie("user") || {};
+  let accessToken;
+
+  if (!isEmpty(token) && isEmpty(user)) {
+    accessToken = token.localJwtDto.accessToken;
+    console.log("Token -> AccessToken!!" + accessToken);
+  }
+
+  if (isEmpty(token) && !isEmpty(user)) {
+    console.log("User -> AccessToken!!");
+    accessToken = user.localJwtDto.accessToken;
+  }
+
   const { data } = await apiClient.get("/user/nickname-validation", {
     params: {
       nickname,
     },
+    headers: { Authorization: `Bearer ${accessToken}` },
   });
 
   return data;
@@ -21,32 +36,69 @@ export async function fetchGenres() {
 
 // 선택한 장르에 맞는 영화 정보를 가져오는 POST API
 export async function fetchMoviesByGenre(favoriteGenres: number[]) {
-  const { data } = await apiClient.post("/user/movies-by-genres", {
-    genreIds: favoriteGenres,
-  });
-
-  return data;
-}
-
-// 사용자의 정보를 가져오는 GET API
-export async function fetchGetUserInfo() {
   const token = getCookie("token") || {};
 
   if (!isEmpty(token)) {
-    const { data } = await apiClient.get("/user", {
-      headers: { Authorization: `Bearer ${token.localJwtDto.accessToken}` },
-    });
+    const { data } = await apiClient.post(
+      "/user/movies-by-genres",
+      {
+        genreIds: favoriteGenres,
+      },
+      { headers: { Authorization: `Bearer ${token.localJwtDto.accessToken}` } }
+    );
+
     return data;
   }
 
   return;
 }
 
+// 사용자의 정보를 가져오는 GET API
+export async function fetchGetUserInfo() {
+  const token = getCookie("token") || {};
+  const user = getCookie("user") || {};
+  let accessToken;
+
+  console.log("Token Cookie");
+  console.log(token);
+  console.log();
+
+  console.log("User Cookie");
+  console.log(user);
+  console.log();
+
+  if (!isEmpty(token) && isEmpty(user)) {
+    accessToken = token.localJwtDto.accessToken;
+    console.log("Token -> AccessToken!!" + accessToken);
+  }
+
+  if (isEmpty(token) && !isEmpty(user)) {
+    console.log("User -> AccessToken!!");
+    accessToken = user.localJwtDto.accessToken;
+  }
+
+  const { data } = await apiClient.get("/user", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
+}
+
 // 사용자의 모든 정보를 보내는 PATCH API
 export async function fetchSignUpUser(formData: FormData) {
+  const token = getCookie("token") || {};
+  const user = getCookie("user") || {};
+  let accessToken;
+
+  if (!isEmpty(token) && isEmpty(user))
+    accessToken = token.localJwtDto.accessToken;
+  if (isEmpty(token) && !isEmpty(user))
+    accessToken = user.localJwtDto.accessToken;
+
   const { data } = await apiClient.patch("/user", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 
