@@ -72,45 +72,56 @@ function Modal({
     }
   }, [inView, hasNextPage, isFetchingNextPage]);
 
-  useEffect(() => {
-    if (!isLoading) console.log(genreMovies);
-  }, [isLoading]);
-
   // 플레이리스트 추가 이벤트 핸들러
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // 플레이리스트 제목 And 영화를 하나도 선택하지 않은 경우
-    if (!title && !selectMovie.length) {
-      setToastMessage("플레이리스트 제목과 영화를 선택해주세요.");
-    } else if (!title) {
-      // 플레이리스트 제목을 작성하지 않은 경우
-      setToastMessage("플레이리스트 제목을 작성해주세요.");
-    } else if (!selectMovie.length) {
-      // 아무런 영화도 선택하지 않을 경우
-      setToastMessage("플레이리스트에 추가하고 싶은 영화를 선택해주세요.");
-    } else if (selectMovie.length < 3 || selectMovie.length > 10) {
+    // Common Exception #1. 추가, 수정 상관 없이 선택한 영화의 개수가 부족할 경우
+    if (selectMovie.length < 3 || selectMovie.length > 10) {
       setToastMessage("영화는 최소 3개에서 최대 10만 선택해주세요.");
-    } else {
-      // 플레이리스트 제목과 영화를 선택했을 경우
+    }
+
+    // Common Exception #2. 추가, 수정 상관 없이 선택한 영화의 개수가 부족할 경우
+    else if (!title && !selectMovie.length) {
+      setToastMessage(
+        "플레이리스트 제목을 작성하고, 추가할 영화를 선택해주세요."
+      );
+    }
+
+    // Common Exception #3. 플레이리스트 제목을 작성하지 않은 경우
+    else if (!title && selectMovie.length) {
+      setToastMessage("플레이리스트 제목을 작성해주세요.");
+    }
+
+    // Common Exception #4. 플레이리스트에 아무런 영화도 선택하지 않을 경우
+    else if (title && !selectMovie.length) {
+      setToastMessage("플레이리스트에 추가할 영화를 선택해주세요.");
+    }
+
+    // 현재 모달 Type이 Create 모달이면서 모든 예외에 통과한 경우
+    if (isCreate) {
+      // 모든 예외에 통과한 경우
       await fetchCreatePlaylist(selectMovie, title);
       setToastMessage("플레이리스트가 추가되었습니다!!");
-
-      setTimeout(() => {
-        setOpenModal({
-          type: "create",
-          open: false,
-          title: "",
-          movieIds: [],
-        });
-      }, 2000);
     }
 
-    if (toastMessage) {
-      setTimeout(() => {
-        setToastMessage("");
-      }, 100);
+    // 현재 모달 Type이 Edit 모달이면서, 공통 예외를 모두 통과한 경우
+    else {
+      // Exception. 수정할 영화가 같을 경우
+      console.log(selectMovie.toString() === initialMovies.toString());
     }
+
+    // setTimeout(() => {
+    //   setToastMessage("");
+    //   setOpenModal({
+    //     type: "create",
+    //     open: false,
+    //     title: "",
+    //     movieIds: [],
+    //   });
+
+    //   window.location.reload();
+    // }, 2000);
   };
 
   return (
@@ -196,11 +207,10 @@ function Modal({
                       ))}
                   </React.Fragment>
                 ))}
+
               {/* Movies 마지막 영역 */}
               <div ref={ref} style={{ height: "10px" }} />
             </div>
-
-            {/* <div ref={ref} style={{ height: "10px" }} /> */}
           </div>
         </div>
       </form>

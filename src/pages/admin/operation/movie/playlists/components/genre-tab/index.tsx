@@ -31,38 +31,36 @@ function GenreTab({ onClick, selectedGenres }: GenreButtonsProps) {
   const genres = loadable.contents.data;
 
   return (
-    genres.length > 0 && (
-      <Swiper
-        key={crypto.randomUUID()}
-        slidesPerView={"auto"}
-        spaceBetween={10}
-        direction="horizontal"
-        freeMode={true}
-        modules={[FreeMode, Mousewheel]}
-        mousewheel={{
-          forceToAxis: true,
-        }}
-        css={styles.swiperContainer()}
-      >
-        {genres.map((genre: GenreDataType) => (
-          <SwiperSlide key={genre.genreId}>
-            <GenreTabButton
-              label={genre.name}
-              emoji={genre.name}
-              btnType="Rectangle"
-              selected={
-                Array.isArray(selectedGenres)
-                  ? selectedGenres.includes(genre.genreId)
-                  : !selectedGenres
-                  ? loadable.contents.data[0].genreId === genre.genreId
-                  : selectedGenres === genre.genreId
-              }
-              onClick={() => onClick(genre.genreId)}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    )
+    <Swiper
+      key={crypto.randomUUID()}
+      slidesPerView={"auto"}
+      spaceBetween={10}
+      direction="horizontal"
+      freeMode={true}
+      modules={[FreeMode, Mousewheel]}
+      mousewheel={{
+        forceToAxis: true,
+      }}
+      css={styles.swiperContainer()}
+    >
+      {genres.map((genre: GenreDataType) => (
+        <SwiperSlide key={genre.genreId}>
+          <GenreTabButton
+            label={genre.name}
+            emoji={genre.name}
+            btnType="Rectangle"
+            selected={
+              Array.isArray(selectedGenres)
+                ? selectedGenres.includes(genre.genreId)
+                : !selectedGenres
+                ? loadable.contents.data[0].genreId === genre.genreId
+                : selectedGenres === genre.genreId
+            }
+            onClick={() => onClick(genre.genreId)}
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }
 
