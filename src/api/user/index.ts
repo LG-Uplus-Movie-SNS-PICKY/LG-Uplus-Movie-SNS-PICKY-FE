@@ -48,10 +48,19 @@ export async function fetchMoviesByGenre(favoriteGenres: number[]) {
 // 사용자의 정보를 가져오는 GET API
 export async function fetchGetUserInfo() {
   const token = getCookie("token") || {};
+  const user = getCookie("user") || {};
+  let accessToken;
+
+  if (!isEmpty(token) && isEmpty(user))
+    accessToken = token.localJwtDto.accessToken;
+  if (isEmpty(token) && !isEmpty(user))
+    accessToken = user.localJwtDto.accessToken;
+
+  console.log("Access Token: " + accessToken);
 
   if (!isEmpty(token)) {
     const { data } = await apiClient.get("/user", {
-      headers: { Authorization: `Bearer ${token.localJwtDto.accessToken}` },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     return data;
   }
