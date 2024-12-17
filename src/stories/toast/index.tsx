@@ -3,16 +3,17 @@ import styles from "./index.styles";
 
 interface ToastProps {
   message: string;
-  direction?: 'none' | 'up' | 'down';
+  direction?: "none" | "up" | "down";
+  setToastMessage?: React.Dispatch<React.SetStateAction<string>>;
 }
-
 
 export function Toast({
   message,
-  direction = 'none'
+  direction = "none",
+  setToastMessage,
 }: ToastProps) {
   const [style, setStyle] = useState({
-    opacity: 1, 
+    opacity: 1,
     transform:
       direction === "up"
         ? "translate(-50%, 0)"
@@ -25,11 +26,15 @@ export function Toast({
     const timer = setTimeout(() => {
       setStyle({
         opacity: 0,
-        transform: `translate(-50%, ${direction === 'up' ? '-100%' : direction === 'down' ? '100%' : '-50%'})`
+        transform: `translate(-50%, ${
+          direction === "up" ? "-100%" : direction === "down" ? "100%" : "-50%"
+        })`,
       });
     }, 1000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [direction]);
 
   return (
