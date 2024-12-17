@@ -12,6 +12,7 @@ import {
   Title,
   ReviewCountContainer,
   ReviewCount,
+  EmptyText
 } from "./index.styles";
 import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
@@ -122,7 +123,7 @@ function MovieDetail(props: MovieDetailProps) {
 
   useEffect(() => {
     if (!lineReviewsIsLoading) {
-      const allReviews = lineReviews?.pages[0].data.content as Review[];
+      const allReviews = lineReviews?.pages?.[0]?.data?.content || []; // 기본값으로 빈 배열 설정
 
       // 전체 리뷰 개수를 allReviews의 길이로 설정
       setTotalReviews(allReviews.length);
@@ -144,22 +145,19 @@ function MovieDetail(props: MovieDetailProps) {
     movieData && (
       <>
         <SEO
-          title={`${movieData.title}(${
-            movieData.release_date.split("-")[0]
-          })`}
+          title={`${movieData.title}(${movieData.release_date.split("-")[0]
+            })`}
           description={movieData.overview}
-          image={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
-            movieData.poster_path
-          }`}
+          image={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${movieData.poster_path
+            }`}
           url={location.pathname}
         />
 
         <MovieDetailContainer>
           <MovieHeader />
           <MoviePoster
-            imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
-              movieData.backdrop_path
-            }`}
+            imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${movieData.backdrop_path
+              }`}
             title={movieData.title}
             year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
             // nation="N/A" // nation 정보가 없다면 기본값 설정
@@ -203,7 +201,7 @@ function MovieDetail(props: MovieDetailProps) {
           />
 
           <ReviewHeader>
-            <Title>관람평</Title>
+            <Title>한줄평</Title>
             <ReviewCountContainer>
               <ReviewCount>{totalReviews}</ReviewCount>{" "}
               {/* 전체 리뷰 개수 출력 */}
@@ -211,12 +209,27 @@ function MovieDetail(props: MovieDetailProps) {
             </ReviewCountContainer>
           </ReviewHeader>
 
-          <MovieReview reviews={reviews} />
-          <Button
-            btnType="More"
-            label="모두 보기"
-            onClick={handleReviewClick}
-          />
+          {/* 리뷰가 없을 때 문구 표시 */}
+          {reviews.length === 0 ? (
+            <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
+          ) : (
+            <MovieReview reviews={reviews} />
+          )}
+
+          {/* 전체 리뷰 개수가 0이 아닐 때만 버튼 렌더링 */}
+          {totalReviews > 0 ? (
+            <Button
+              btnType="More"
+              label="모두 보기"
+              onClick={handleReviewClick}
+            />
+          ) : (
+            <Button
+              btnType="More"
+              label="작성하러 가기"
+              onClick={handleReviewClick}
+            />
+          )}
 
           <MovieFooter
             year={movieData.release_date.split("-")[0]}

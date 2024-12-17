@@ -18,7 +18,8 @@ import {
   SpoilerToggleContainer,
   SpoilerToggleText,
   SpoilerToggleButton,
-  LoadingContainer
+  LoadingContainer,
+  EmptyText
 } from "./index.styles";
 import SpoilerToggleSvg from "@assets/icons/spoiler_toggle.svg?react";
 import SpoilerToggleActiveSvg from "@assets/icons/spoiler_toggle_active.svg?react";
@@ -268,7 +269,7 @@ const ReviewsPage = () => {
             <ReviewRegist movieId={movieId} refetch={refetch} onAddReview={handleAddReview} />
 
             <ReviewsWrapper>
-              
+
               <FilterContainer>
                 <SortContainer>
                   <SortOption
@@ -296,7 +297,12 @@ const ReviewsPage = () => {
                 </SpoilerToggleContainer>
               </FilterContainer>
 
-              <MovieReview reviews={sortedReviews} />
+              {/* 리뷰가 없을 때 문구 표시 */}
+              {sortedReviews.length === 0 ? (
+                <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
+              ) : (
+                <MovieReview reviews={sortedReviews} />
+              )}
             </ReviewsWrapper>
           </MovieReviewContainer>
 
