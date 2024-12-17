@@ -116,7 +116,7 @@ export async function fetchProfileUser(formData: FormData) {
   return data;
 }
 
-// 마이페이지 (게시글 수, 팔로워 수, 팔로잉 수)를 가져오는 GET API
+// 마이페이지에서 유저 정보를 가져오는 GET API
 export async function fetchUserInfo(nickname: string) {
   const { data } = await apiClient.get(`/user/mypage/${nickname}`);
   return data;
@@ -145,3 +145,52 @@ export async function fetchUserSearch(keyword: string) {
   });
   return data;
 }
+
+// 팔로우 신청/삭제 API
+export async function toggleFollow(followingId: number) {
+  const tokenString = getCookie("user");
+  let accessToken = "";
+
+  if (tokenString) {
+    const token = typeof tokenString === "string" ? JSON.parse(tokenString) : tokenString;
+    accessToken = token.localJwtDto?.accessToken;
+    if (!accessToken) throw new Error("유효한 액세스 토큰이 없습니다.");
+  } else {
+    throw new Error("인증 정보가 없습니다.");
+  }
+
+  const { data } = await apiClient.post(
+    "/follow",
+    {}, // 본문 비움
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      params: { followingId }, // 쿼리 파라미터로 followingId 전달
+    }
+  );
+
+  return data;
+}
+
+// 사용자의 팔로워 목록을 가져오는 API
+export const fetchFollowersList = async (nickname: string) => {
+  try {
+    const response = await apiClient.get(`/follow/followers/${nickname}`);
+    return response.data;
+  } catch (error) {
+    console.error('팔로잉 목록 불러오기 실패:', error);
+    throw error;
+  }
+};
+
+// 사용자의 팔로잉 목록을 가져오는 API
+export const fetchFollowingsList = async (nickname: string) => {
+  try {
+    const response = await apiClient.get(`/follow/followings/${nickname}`);
+    return response.data;
+  } catch (error) {
+    console.error('팔로잉 목록 불러오기 실패:', error);
+    throw error;
+  }
+};

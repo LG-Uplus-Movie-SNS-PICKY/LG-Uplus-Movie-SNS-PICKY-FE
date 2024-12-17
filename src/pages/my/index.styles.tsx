@@ -45,6 +45,7 @@ export const ProfileInfo = styled.div`
   padding: 0 16px;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const Text = styled.span`

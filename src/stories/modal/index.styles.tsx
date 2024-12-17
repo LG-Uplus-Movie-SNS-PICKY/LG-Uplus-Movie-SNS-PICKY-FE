@@ -23,6 +23,7 @@ export default {
         text-align: center;
         padding: 16px 36px;
         border-bottom: 1px solid #D9D9D9;
+        width: 100%;
         `;
     },
     confirmButton(): SerializedStyles {

@@ -18,7 +18,8 @@ export const ModalWrapper = styled.div`
     display: flex;
     flex-direction: column;
     gap: 16px;
-    width: 350px;
+    max-width: 350px;
+    width: 80%;
     background: #FFFFFF;
     border-radius: 8px;
     padding: 12px 16px;
@@ -52,7 +53,8 @@ export const UserList = styled.div`
 export const UserItem = styled.div`
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    cursor: pointer;
 `;
 
 export const ProfileImage = styled.img`
@@ -62,9 +64,12 @@ export const ProfileImage = styled.img`
 `;
 
 export const UserName = styled.div`
-    font-size: 12px;
-    font-weight: 500;
-    color: #000000;
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+    font-size: 16px;
 `;
 
 export const CloseButton = styled.button`
@@ -75,4 +80,16 @@ export const CloseButton = styled.button`
     padding: 16px;
     text-align: center;
     cursor: pointer;
+`;
+
+export const EmptyContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px 0 0 0;
+    font-size: 16px;
+    text-align: center;
 `;

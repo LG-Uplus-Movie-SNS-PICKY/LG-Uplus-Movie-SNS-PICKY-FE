@@ -129,3 +129,12 @@ export const LoadingContainer = styled.div`
   width: 150px;
   margin: 0 auto;
 `;
+
+export const EmptyText = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  padding: 20px 0 36px 0;
+`

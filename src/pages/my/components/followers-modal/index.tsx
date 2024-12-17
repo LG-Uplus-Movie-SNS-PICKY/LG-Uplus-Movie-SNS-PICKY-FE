@@ -9,20 +9,30 @@ import {
     UserItem,
     ProfileImage,
     UserName,
-    CloseButton
+    CloseButton,
+    EmptyContainer
 } from './index.styles';
+import ClawMachineSvg from "@assets/icons/claw_machine.svg?react";
+import CriticBadge from "@assets/icons/critic_badge.svg?react"
+import { useNavigate } from 'react-router-dom';
 
 interface FollowersModalProps {
     onClose: () => void;
-    followers: { id: number; name: string; profileImage?: string }[];
-    followings: { id: number; name: string; profileImage?: string }[];
-    activeTab: 'followers' | 'followings'; // activeTab 추가
-}
+    followers: { userId: number; userNickname: string; userProfileUrl?: string; userRole?: string }[];
+    followings: { userId: number; userNickname: string; userProfileUrl?: string; userRole?: string }[];
+    activeTab: "followers" | "followings";
+  }
 
 function FollowersModal({ onClose, followers, followings, activeTab: initialTab }: FollowersModalProps) {
     const [activeTab, setActiveTab] = useState<'followers' | 'followings'>(initialTab);
-
     const userList = activeTab === 'followers' ? followers : followings;
+    const navigate = useNavigate();
+
+    // 프로필 클릭 시 해당 사용자의 페이지로 이동
+    const handleProfileClick = (nickname: string) => {
+        onClose(); // 모달 닫기
+        navigate(`/user/${nickname}`); // 페이지 이동
+    };
 
     return (
         <ModalContainer onClick={onClose}>
@@ -41,14 +51,32 @@ function FollowersModal({ onClose, followers, followings, activeTab: initialTab 
                         {followings.length} 팔로잉
                     </TabItem>
                 </TabContainer>
-                <UserList>
-                    {userList.map((user) => (
-                        <UserItem key={user.id}>
-                            <ProfileImage src={user.profileImage || '/default-profile.png'} />
-                            <UserName>{user.name}</UserName>
-                        </UserItem>
-                    ))}
-                </UserList>
+                {userList.length > 0 ? (
+                    <UserList>
+                        {userList.map((user) => (
+                            <UserItem
+                                key={user.userId}
+                                onClick={() => handleProfileClick(user.userNickname)} // 클릭 시 이동
+                            >
+                                <ProfileImage src={user.userProfileUrl} />
+                                <UserName>
+                                    {user.userNickname}
+                                    {user.userRole === "CRITIC" && <CriticBadge />} {/* CRITIC 뱃지 렌더링 */}
+                                </UserName>
+                            </UserItem>
+                        ))}
+                    </UserList>
+                ) : activeTab === "followers" ? (
+                    <EmptyContainer>
+                        <ClawMachineSvg />
+                        팔로워가 존재하지 않습니다.
+                    </EmptyContainer>
+                ) : (
+                    <EmptyContainer>
+                        <ClawMachineSvg />
+                        팔로잉이 존재하지 않습니다.
+                    </EmptyContainer>
+                )}
                 <CloseButton onClick={onClose}>닫기</CloseButton>
             </ModalWrapper>
         </ModalContainer>

@@ -39,3 +39,12 @@ export const ReviewCount = styled.div`
   font-size: 22px;
   color: #9d9d9d;
 `;
+
+export const EmptyText = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  padding: 20px 0 36px 0;
+`
