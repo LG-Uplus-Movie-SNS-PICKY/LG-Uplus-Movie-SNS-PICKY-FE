@@ -20,6 +20,7 @@ import { useInView } from "react-intersection-observer";
 import { MovieItem } from "@stories/movie-item";
 import { useNavigate } from "react-router-dom";
 import { PlaylistDataTypes } from "@type/api/playlist";
+import DeleteModal from "./components/delete-modal";
 
 function MoviePlaylistOperationPage() {
   const [playlists, setPlaylists] = useState<
@@ -34,6 +35,10 @@ function MoviePlaylistOperationPage() {
   const [title, setTitle] = useState<string>("");
 
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState({
+    open: false,
+    playlistId: 0,
+  });
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -114,19 +119,6 @@ function MoviePlaylistOperationPage() {
     }
   };
 
-  // 플레이리스트 삭제
-  const deletePlaylist = async (id: number) => {
-    if (!window.confirm("정말로 이 플레이리스트를 삭제하시겠습니까?")) return;
-    try {
-      await fetchDeletePlaylist(id);
-      setPlaylists((prev) => prev.filter((playlist) => playlist.id !== id));
-      alert("플레이리스트가 성공적으로 삭제되었습니다.");
-    } catch (error) {
-      console.error("플레이리스트 삭제 중 오류 발생:", error);
-      alert("플레이리스트를 삭제하지 못했습니다.");
-    }
-  };
-
   // 추가 또는 수정 처리
   const handleSavePlaylist = async () => {
     if (!title.trim() || selectedMovies.length === 0) {
@@ -194,7 +186,16 @@ function MoviePlaylistOperationPage() {
                       <h3>우진이가 추천하는 영화 모음집</h3>
                       <div className="buttons">
                         <button>수정</button>
-                        <button>삭제</button>
+                        <button
+                          onClick={() =>
+                            setDeleteModalOpen({
+                              open: true,
+                              playlistId: playlist.playlistId,
+                            })
+                          }
+                        >
+                          삭제
+                        </button>
                       </div>
                     </div>
 
@@ -236,6 +237,12 @@ function MoviePlaylistOperationPage() {
       </div>
 
       {createModalOpen && <Modal setCreateModalOpen={setCreateModalOpen} />}
+      {deleteModalOpen.open && (
+        <DeleteModal
+          deleteModalOpen={deleteModalOpen}
+          setDeleteModalOpen={setDeleteModalOpen}
+        />
+      )}
     </>
   );
 }
