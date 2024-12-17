@@ -51,20 +51,29 @@ export async function fetchGetUserInfo() {
   const user = getCookie("user") || {};
   let accessToken;
 
+  console.log("Token Cookie");
+  console.log(token);
+  console.log();
+
+  console.log("User Cookie");
+  console.log(user);
+  console.log();
+
   if (!isEmpty(token) && isEmpty(user)) {
     accessToken = token.localJwtDto.accessToken;
     console.log("Token -> AccessToken!!" + accessToken);
   }
 
   if (isEmpty(token) && !isEmpty(user)) {
-    console.log("Hello");
+    console.log("User -> AccessToken!!");
     accessToken = user.localJwtDto.accessToken;
-    console.log("User -> AccessToken!!" + accessToken);
-    const { data } = await apiClient.get("/user");
-    return data;
   }
 
-  return;
+  const { data } = await apiClient.get("/user", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
 }
 
 // 사용자의 모든 정보를 보내는 PATCH API
