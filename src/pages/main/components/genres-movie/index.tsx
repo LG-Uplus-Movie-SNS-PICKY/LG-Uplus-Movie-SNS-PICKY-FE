@@ -13,7 +13,7 @@ import Loading from "@components/loading";
 import { MovieDataTypes } from "@type/api/movie";
 import { useNavigate } from "react-router-dom";
 
-function GenresMovie() {
+function GenresMovie({ isLogin }: { isLogin: boolean }) {
   const navigate = useNavigate();
   const [selectButton, setSelectButton] = useState<number>(0);
   const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
@@ -64,7 +64,7 @@ function GenresMovie() {
                 .map((movie: MovieDataTypes) => (
                   <MovieItem
                     key={movie.movieId}
-                    type="all"
+                    type={isLogin ? "all" : "rate"}
                     src={movie.posterUrl}
                     title={movie.title}
                     name={movie.title}

@@ -53,7 +53,7 @@ function Main() {
       <FamousMovie isLogin={isLoginState.isLoginState} />
 
       {/* Genre Movie Section */}
-      <GenresMovie />
+      <GenresMovie isLogin={isLoginState.isLoginState} />
     </>
   );
 }
