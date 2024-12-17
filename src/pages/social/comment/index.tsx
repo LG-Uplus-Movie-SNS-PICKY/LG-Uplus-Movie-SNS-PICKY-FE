@@ -182,10 +182,8 @@ export default function FeedComment() {
     if (!selectedCommentId || !boardId) return;
 
     try {
-      // API 호출
-      await deleteComment(Number(boardId), Number(selectedCommentId));
+      await deleteComment(Number(boardId), Number(selectedCommentId)); // API 호출
 
-      // 상태 업데이트: 삭제된 댓글 제거
       setComments((prevComments) =>
         prevComments.filter(
           (comment) => comment.commentId.toString() !== selectedCommentId
@@ -199,8 +197,8 @@ export default function FeedComment() {
       setToastMessage("댓글 삭제에 실패했습니다.");
       setShowToast(true);
     } finally {
-      setIsCommentDeleteModalOpen(false); // 모달 닫기
-      setSelectedCommentId(null); // 선택된 댓글 ID 초기화
+      setIsCommentDeleteModalOpen(false);
+      setSelectedCommentId(null);
     }
   };
 
@@ -210,6 +208,7 @@ export default function FeedComment() {
   useEffect(() => {
     console.log("댓글 데이터 업데이트:", comments);
   }, [comments]);
+
   return (
     <div css={wrapper}>
       <div css={feedContainer}>
