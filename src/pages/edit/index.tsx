@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { debounce } from "lodash";
 import profileIcon from "@assets/icons/profile.svg";
+import defaultUserImage from "@assets/images/default_userImage.png";
 import {
   containerStyle,
   headerStyle,
@@ -32,7 +33,7 @@ export default function ProfileEditPage() {
   const [userData, setUserData] = useState({
     name: "",
     nickname: "",
-    profile: "" as string | null,
+    profile: "",
     birthdate: "",
     gender: "",
     nationality: "",
@@ -147,9 +148,36 @@ export default function ProfileEditPage() {
     }
   };
 
-  const handleSetDefaultImage = () => {
-    setProfileImage(null);
-    showToast("기본 이미지로 설정되었습니다.");
+  const handleSetDefaultImage = async () => {
+    try {
+      // 로컬 이미지 파일을 fetch로 불러와 Blob으로 변환
+      const response = await fetch(defaultUserImage);
+      if (!response.ok) {
+        throw new Error("기본 이미지를 불러오는 데 실패했습니다.");
+      }
+      const blob = await response.blob();
+
+      // 상태 업데이트
+      setProfileImage(defaultUserImage);
+      setImageError(null);
+
+      showToast("기본 이미지로 설정되었습니다.");
+
+      // FormData에 기본 이미지 추가
+      const formData = new FormData();
+      formData.append("profile", blob, "default_userImage.png");
+
+      // FormData를 사용하여 프로필 API 호출
+      const result = await fetchProfileUser(formData);
+      if (result) {
+        showToast("기본 이미지가 성공적으로 저장되었습니다.");
+      } else {
+        throw new Error("기본 이미지 저장 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      console.error("기본 이미지 설정 오류:", error);
+      showToast("기본 이미지 설정 중 문제가 발생했습니다.");
+    }
   };
 
   const handleSave = async () => {
