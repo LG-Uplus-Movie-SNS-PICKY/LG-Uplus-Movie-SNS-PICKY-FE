@@ -30,7 +30,7 @@ export async function fetchMoviesByGenre(favoriteGenres: number[]) {
 
 // 사용자의 정보를 가져오는 GET API
 export async function fetchGetUserInfo() {
-  const token = getCookie("user") || {};
+  const token = getCookie("token") || {};
 
   if (!isEmpty(token)) {
     const { data } = await apiClient.get("/user", {
