@@ -38,7 +38,10 @@ function Layout({ children }: LayoutProps): JSX.Element {
   useEffect(() => {
     const token = getCookie("token") || {};
     const user = getCookie("user") || {};
-    if (!isEmpty(token) && isEmpty(user)) removeCookie("token");
+    if (!isEmpty(token) && isEmpty(user)) {
+      console.log("Layout!! Remove Cookie");
+      removeCookie("token");
+    }
 
     const config = routeConfig.find(
       (config) =>

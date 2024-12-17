@@ -202,7 +202,6 @@ export default function Signup() {
         sameSite: "strict", // 보안 설정
         secure: true, // HTTPS 필요 여부 (개발 시 false)
       });
-      removeCookie("token");
 
       // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
       setIsLoginState({
@@ -213,6 +212,9 @@ export default function Signup() {
       });
 
       showToast("회원가입이 완료되었습니다!");
+
+      console.log("This Pages is Sigin-Up!!");
+      removeCookie("token");
       navigate("/");
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
