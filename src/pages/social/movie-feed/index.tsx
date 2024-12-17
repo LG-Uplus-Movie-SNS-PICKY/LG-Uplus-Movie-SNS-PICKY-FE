@@ -60,7 +60,7 @@ export default function MovieFeed() {
                 board_content_id: index,
                 board_content_url: content.contentUrl,
                 board_content_type:
-                  content.boardContentType === "VIDEO" ? "Video" : "Image",
+                  content.boardContentType === "VIDEO" ? "VIDEO" : "IMAGE",
               }))}
             />
           </div>

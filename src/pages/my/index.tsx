@@ -29,7 +29,11 @@ import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
-import { fetchGetUserInfo, fetchNicknameValidation, fetchUserInfo } from "@api/user";
+import {
+  fetchGetUserInfo,
+  fetchNicknameValidation,
+  fetchUserInfo,
+} from "@api/user";
 
 function My() {
   const { nickname } = useParams(); // URL에서 nickname 추출
@@ -116,97 +120,97 @@ function My() {
   //   }
   // }, [isValid, nickname]);
 
-//   // 사용자 정보 로드
-//   useEffect(() => {
-//     const loadUserProfile = async () => {
-//       try {
-//         setLoading(true);
-//         const userInfo = await fetchGetUserInfo(); // GET API 호출
-//         console.log("유저 데이터:", userInfo); // API 응답 데이터 로그 출력
-  
-//         // API 응답 데이터에서 profileUrl 설정
-//         setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
-//       } catch (err) {
-//         console.error("Error fetching user info:", err);
-//         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-  
-//     if (nickname) {
-//       loadUserProfile();
-//     }
-//   }, [nickname]); // nickname이 변경될 때마다 실행
+  //   // 사용자 정보 로드
+  //   useEffect(() => {
+  //     const loadUserProfile = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const userInfo = await fetchGetUserInfo(); // GET API 호출
+  //         console.log("유저 데이터:", userInfo); // API 응답 데이터 로그 출력
 
-//   // 게시글/팔로워/팔로잉 수 가져오기
-//   useEffect(() => {
-//     const loadUserInfo = async () => {
-//         if (!nickname) {
-//             console.error("닉네임이 없습니다.");
-//             setError("닉네임이 제공되지 않았습니다.");
-//             return;
-//         }
+  //         // API 응답 데이터에서 profileUrl 설정
+  //         setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
+  //       } catch (err) {
+  //         console.error("Error fetching user info:", err);
+  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
 
-//         try {
-//             setLoading(true);
-//             const data = await fetchUserInfo(nickname); // nickname은 string으로 보장됨
-//             console.log("게시글/팔로워/팔로잉 수:", data);
+  //     if (nickname) {
+  //       loadUserProfile();
+  //     }
+  //   }, [nickname]); // nickname이 변경될 때마다 실행
 
-//             // 상태 업데이트
-//             setUserData(data);
-//             setBoardCount(data.boardCount ?? 0);
-//             setFollowersCount(data.followerCount ?? 0);
-//             setFollowingCount(data.followingCount ?? 0);
-//         } catch (err) {
-//             console.error("Error fetching user info:", err);
-//             setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
+  //   // 게시글/팔로워/팔로잉 수 가져오기
+  //   useEffect(() => {
+  //     const loadUserInfo = async () => {
+  //         if (!nickname) {
+  //             console.error("닉네임이 없습니다.");
+  //             setError("닉네임이 제공되지 않았습니다.");
+  //             return;
+  //         }
 
-//     loadUserInfo();
-// }, [nickname]);
+  //         try {
+  //             setLoading(true);
+  //             const data = await fetchUserInfo(nickname); // nickname은 string으로 보장됨
+  //             console.log("게시글/팔로워/팔로잉 수:", data);
 
-useEffect(() => {
-  const loadUserProfileAndInfo = async () => {
-    if (!nickname) {
-      console.error("닉네임이 없습니다.");
-      setError("닉네임이 제공되지 않았습니다.");
-      return;
-    }
+  //             // 상태 업데이트
+  //             setUserData(data);
+  //             setBoardCount(data.boardCount ?? 0);
+  //             setFollowersCount(data.followerCount ?? 0);
+  //             setFollowingCount(data.followingCount ?? 0);
+  //         } catch (err) {
+  //             console.error("Error fetching user info:", err);
+  //             setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+  //         } finally {
+  //             setLoading(false);
+  //         }
+  //     };
 
-    // 상태 초기화
-    setUserData(null);
-    setProfileImage("");
-    setBoardCount(0);
-    setFollowersCount(0);
-    setFollowingCount(0);
+  //     loadUserInfo();
+  // }, [nickname]);
 
-    try {
-      setLoading(true);
-      const data = await fetchUserInfo(nickname); // 특정 닉네임 정보 가져오기
-      const userInfo = await fetchGetUserInfo(); // 유저 정보 가져오기
-      console.log("닉네임:", nickname);
-      console.log("게시글/팔로워/팔로잉 수:", data);
-      console.log("프로필 사진:", userInfo.data.profileUrl);
+  useEffect(() => {
+    const loadUserProfileAndInfo = async () => {
+      if (!nickname) {
+        console.error("닉네임이 없습니다.");
+        setError("닉네임이 제공되지 않았습니다.");
+        return;
+      }
 
-      setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
-      setBoardCount(data.boardCount ?? 0);
-      setFollowersCount(data.followerCount ?? 0);
-      setFollowingCount(data.followingCount ?? 0);
-      setUserData(data);
-    } catch (err) {
-      console.error("Error fetching user info:", err);
-      setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-    } finally {
-      setLoading(false);
-    }
-  };
+      // 상태 초기화
+      setUserData(null);
+      setProfileImage("");
+      setBoardCount(0);
+      setFollowersCount(0);
+      setFollowingCount(0);
 
-  loadUserProfileAndInfo();
-}, [nickname]); // nickname이 변경될 때만 실행
+      try {
+        setLoading(true);
+        const data = await fetchUserInfo(nickname); // 특정 닉네임 정보 가져오기
+        const userInfo = await fetchGetUserInfo(); // 유저 정보 가져오기
+        console.log("닉네임:", nickname);
+        console.log("게시글/팔로워/팔로잉 수:", data);
+        console.log("프로필 사진:", userInfo.data.profileUrl);
+
+        setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
+        setBoardCount(data.boardCount ?? 0);
+        setFollowersCount(data.followerCount ?? 0);
+        setFollowingCount(data.followingCount ?? 0);
+        setUserData(data);
+      } catch (err) {
+        console.error("Error fetching user info:", err);
+        setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUserProfileAndInfo();
+  }, [nickname]); // nickname이 변경될 때만 실행
 
   // const dummyData = {
   //   id: 1,
@@ -332,9 +336,7 @@ useEffect(() => {
 
           <ProfileInfoContainer>
             <ProfileInfo>
-              <BoldText isZero={boardCount === 0}>
-                {boardCount}
-              </BoldText>
+              <BoldText isZero={boardCount === 0}>{boardCount}</BoldText>
               <Text>게시글</Text>
             </ProfileInfo>
             <ProfileInfo onClick={() => openFollowersModal("followers")}>
@@ -385,7 +387,7 @@ useEffect(() => {
         </ButtonContainer>
 
         {/* 탭 메뉴 */}
-        <TabMenu wrapperRef={wrapperRef} />
+        <TabMenu wrapperRef={wrapperRef} nickname={nickname || "guest_user"} />
       </Wrapper>
 
       {/* 로그아웃 or 탈퇴 확인 모달 */}
