@@ -3,6 +3,8 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   swiperContainer(): SerializedStyles {
     return css`
+      margin-top: 16px;
+
       width: 100%;
       min-height: fit-content;
       overflow: hidden;
