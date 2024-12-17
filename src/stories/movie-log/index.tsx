@@ -36,9 +36,14 @@ export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
       {boardContent.map((content, idx) => (
         <SwiperSlide key={content.board_content_id}>
           {content.board_content_type === "VIDEO" ? (
-            <video src={content.board_content_url} controls>
-              Your browser does not support the video tag.
-            </video>
+            <video
+              src={content.board_content_url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           ) : (
             <img
               src={content.board_content_url}
