@@ -36,6 +36,10 @@ function RecommendMovieSlider() {
     }
   }, [isLoading, data]);
 
+  useEffect(() => {
+    if (!isLoading) console.log(data);
+  }, [isLoading]);
+
   return (
     <Swiper
       onSwiper={(swipper) => (swiperRef.current = swipper)}
@@ -92,9 +96,7 @@ function RecommendMovieSlider() {
                     <div className="movie-sub-info">
                       <span className="rate">별점: ★ {movie.totalRating}</span>
                       <span className="genres">
-                        {movie.genres
-                          .map((genre) => genre.genre_name)
-                          .join(", ")}
+                        {movie.genres.map((genre) => genre.name).join(", ")}
                       </span>
                     </div>
                   </div>
