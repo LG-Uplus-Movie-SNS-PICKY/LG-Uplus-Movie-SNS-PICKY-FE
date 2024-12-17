@@ -31,8 +31,8 @@ export async function fetchUpdatePlaylist(
 ) {
   const { data } = await apiClient.patch("/admin/playlist", {
     playlistId,
-    title,
     movieIds,
+    title,
   });
 
   return data;

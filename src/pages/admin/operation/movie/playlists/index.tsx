@@ -23,6 +23,7 @@ function MoviePlaylistOperationPage() {
     title: "",
     movieIds: [],
     open: false,
+    playlistId: 0,
   });
 
   // 삭제 Popup 값 정의
@@ -56,6 +57,7 @@ function MoviePlaylistOperationPage() {
       title: playlist.title,
       type: "edit",
       movieIds: playlist.getSimpleMovieResps.map((movie) => movie.movieId),
+      playlistId: playlist.playlistId,
     });
   };
 
@@ -149,6 +151,7 @@ function MoviePlaylistOperationPage() {
       {openModal.open && openModal.type === "edit" && (
         <Modal
           type="edit"
+          openModal={openModal}
           setOpenModal={setOpenModal}
           initialTitle={openModal.title}
           initialMovies={openModal.movieIds}

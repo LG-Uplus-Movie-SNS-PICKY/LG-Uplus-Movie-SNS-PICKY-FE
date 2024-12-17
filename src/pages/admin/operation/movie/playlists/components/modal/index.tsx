@@ -11,10 +11,11 @@ import { MovieItem } from "@stories/movie-item";
 
 import Checked from "@assets/icons/checked-movie.svg?react";
 import { Toast } from "@stories/toast";
-import { fetchCreatePlaylist } from "@api/playlist";
+import { fetchCreatePlaylist, fetchUpdatePlaylist } from "@api/playlist";
 
 export interface ModalStateTypes {
   type: "create" | "edit";
+  playlistId: number;
   title: string;
   movieIds: number[];
   open: boolean;
@@ -22,6 +23,7 @@ export interface ModalStateTypes {
 
 interface ModalProps {
   type: "create" | "edit";
+  openModal?: ModalStateTypes;
   setOpenModal: React.Dispatch<React.SetStateAction<ModalStateTypes>>;
   initialTitle?: string;
   initialMovies?: number[];
@@ -29,6 +31,7 @@ interface ModalProps {
 
 function Modal({
   type,
+  openModal,
   setOpenModal,
   initialTitle = "",
   initialMovies = [],
@@ -76,6 +79,8 @@ function Modal({
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    let isFlag = false;
+
     // Common Exception #1. 추가, 수정 상관 없이 선택한 영화의 개수가 부족할 경우
     if (selectMovie.length < 3 || selectMovie.length > 10) {
       setToastMessage("영화는 최소 3개에서 최대 10만 선택해주세요.");
@@ -103,25 +108,38 @@ function Modal({
       // 모든 예외에 통과한 경우
       await fetchCreatePlaylist(selectMovie, title);
       setToastMessage("플레이리스트가 추가되었습니다!!");
+      isFlag = true;
     }
 
     // 현재 모달 Type이 Edit 모달이면서, 공통 예외를 모두 통과한 경우
     else {
       // Exception. 수정할 영화가 같을 경우
-      console.log(selectMovie.toString() === initialMovies.toString());
+      if (selectMovie.toString() === initialMovies.toString()) {
+        setToastMessage(
+          "플레이리스트에 등록된 영화과 기존에 있던 항목들과 동일합니다."
+        );
+      }
+
+      if (openModal?.playlistId) {
+        await fetchUpdatePlaylist(openModal.playlistId, title, selectMovie);
+        setToastMessage("플레이리스트가 수정되었습니다!!");
+        isFlag = true;
+      }
     }
 
-    // setTimeout(() => {
-    //   setToastMessage("");
-    //   setOpenModal({
-    //     type: "create",
-    //     open: false,
-    //     title: "",
-    //     movieIds: [],
-    //   });
+    if (isFlag) {
+      setTimeout(() => {
+        setOpenModal({
+          type: "create",
+          open: false,
+          title: "",
+          movieIds: [],
+          playlistId: 0,
+        });
 
-    //   window.location.reload();
-    // }, 2000);
+        window.location.reload();
+      }, 1000);
+    }
   };
 
   return (
@@ -134,6 +152,7 @@ function Modal({
           open: false,
           title: "",
           movieIds: [],
+          playlistId: 0,
         })
       }
     >
@@ -215,7 +234,13 @@ function Modal({
         </div>
       </form>
 
-      {toastMessage && <Toast message={toastMessage} direction="none" />}
+      {toastMessage && (
+        <Toast
+          message={toastMessage}
+          direction="none"
+          setToastMessage={setToastMessage}
+        />
+      )}
     </div>
   );
 }
