@@ -388,11 +388,6 @@ export const movieGenres = css`
   }
 `;
 
-export const highlightedText = css`
-  color: red;
-  font-weight: bold;
-`;
-
 export const activeAutocompleteItem = css`
   background-color: #f0f0f0;
   cursor: pointer;

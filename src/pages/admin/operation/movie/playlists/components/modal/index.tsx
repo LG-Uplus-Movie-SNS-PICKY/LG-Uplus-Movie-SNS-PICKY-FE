@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./index.styles";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
-import GenreTab from "./genre-tab";
+import GenreTab from "../genre-tab";
 import { useGenreMovieQuery } from "@hooks/movie";
 import { useInView } from "react-intersection-observer";
 import Loading from "@components/loading";

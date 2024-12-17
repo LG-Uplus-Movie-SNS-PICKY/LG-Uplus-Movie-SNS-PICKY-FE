@@ -33,7 +33,6 @@ import {
   slideContent,
 } from "./index.styles";
 import SEO from "@components/seo";
-// import { Cookies } from "react-cookie";
 import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
 import { getCookie, removeCookie, setCookie } from "@util/cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
@@ -104,10 +103,6 @@ export default function Signup() {
     const requiredFields = steps[step].requiredFields;
     return requiredFields.every((field) => {
       let value = inputData[field as keyof typeof inputData];
-
-      // if (field === "profileImage") {
-      //   value = inputData.profileImagePreview || "";
-      // }
       if (value === null || value instanceof FormData) {
         value = "";
       }
@@ -202,7 +197,6 @@ export default function Signup() {
         sameSite: "strict", // 보안 설정
         secure: true, // HTTPS 필요 여부 (개발 시 false)
       });
-      removeCookie("token");
 
       // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
       setIsLoginState({
@@ -213,6 +207,9 @@ export default function Signup() {
       });
 
       showToast("회원가입이 완료되었습니다!");
+
+      console.log("This Pages is Sigin-Up!!");
+      removeCookie("token");
       navigate("/");
     } catch (error) {
       console.error("회원가입 요청 중 오류 발생:", error);
@@ -278,15 +275,7 @@ export default function Signup() {
                 <p>뒤로</p>
               </button>
             )}
-            <div
-              css={totalPage}
-              // style={{
-              //   marginLeft: "auto",
-              //   marginRight: "12px", // 오른쪽 여백 추가
-              //   fontSize: "16px",
-              //   color: "#ff084a",
-              // }}
-            >
+            <div css={totalPage}>
               {step + 1}/{steps.length}
             </div>
           </div>

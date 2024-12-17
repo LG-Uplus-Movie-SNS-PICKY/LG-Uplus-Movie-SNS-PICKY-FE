@@ -48,10 +48,12 @@ export function useHeaderConfig(
         className="active-icon-btn"
         onClick={() => navigate && navigate("/movie-log/add")}
       />,
-      <Notification
-        className="active-icon-btn"
-        onClick={() => navigate && navigate("/notification")}
-      />,
+      <div>
+        <Notification
+          className="active-icon-btn"
+          onClick={() => navigate && navigate("/notification")}
+        />
+      </div>,
       <Search
         className="active-icon-btn"
         onClick={() => navigate && navigate("/search")}

@@ -8,10 +8,13 @@ import { data as OverviewItems } from "./components/list-container/constant";
 // import useDashboardData from "./components/info-container/hook";
 import { DashboardInfoListProps } from "@hooks/admin/info/types";
 import DashboardInfoContainer from "@components/pages/admin/info";
+import SEO from "@components/seo";
 
 function AdminDashboardPage({ data }: DashboardInfoListProps) {
   return (
     <>
+      <SEO title="ADMIN" />
+
       {/* Dashboard Overview Wrapper */}
       <div css={styles.dashboardWrapper()}>
         <h1 className="dashboard-title">dashboard</h1>

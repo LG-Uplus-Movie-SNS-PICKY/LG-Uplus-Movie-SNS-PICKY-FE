@@ -17,23 +17,18 @@ import MovieLogContent from "./movie-log";
 import LineReviewContent from "./review";
 import LikeMovieContent from "./like-movie";
 
-import { isLogin } from "@/recoil/atoms/isLoginState"; // Recoil 상태 가져오기
-
 interface TabMenuProps {
   wrapperRef: React.MutableRefObject<HTMLDivElement | null>;
+  nickname: string; // nickname을 props로 받음
 }
 
-function TabMenu({ wrapperRef }: TabMenuProps) {
+function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
   const [activeTab, setActiveTab] = useState(0);
   const [isSticky, setIsSticky] = useState(false);
 
   const tabBtnRefs = useRef<HTMLDivElement[]>([]);
   const lineRef = useRef<HTMLDivElement | null>(null);
   const swiperRef = useRef<SwiperClass | null>(null);
-
-  // Recoil 상태에서 닉네임 가져오기
-  const loginState = useRecoilValue(isLogin);
-  const nickname = loginState.isLoginInfo.nickname || "guest_user"; // 기본값 설정
 
   useEffect(() => {
     const parentElement = wrapperRef.current;
@@ -90,7 +85,6 @@ function TabMenu({ wrapperRef }: TabMenuProps) {
 
   return (
     <div css={styles.tabMenuContainer()}>
-      {/* Tab Menus */}
       <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
         {Array.from({ length: 3 }, (_, idx) => (
           <div
