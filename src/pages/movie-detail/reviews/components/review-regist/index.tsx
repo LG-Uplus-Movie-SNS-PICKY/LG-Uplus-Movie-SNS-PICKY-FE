@@ -64,7 +64,7 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
         if (event.target.value.length <= 50) {
             setReview(event.target.value);
         } else {
-            showToast("감상평은 최대 50자까지 입력 가능합니다.", 'none');
+            showToast("한줄평은 최대 50자까지 입력 가능합니다.", 'none');
         }
     };
 

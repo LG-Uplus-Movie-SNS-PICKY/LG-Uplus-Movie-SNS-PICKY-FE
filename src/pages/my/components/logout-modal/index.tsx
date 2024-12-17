@@ -1,6 +1,5 @@
 // pages/my/components/logout-modal/index.tsx
 import React, { useEffect, useState } from 'react';
-import { Modal } from '@stories/modal'
 import {
     ModalContainer,
     ModalWrapper,
@@ -8,6 +7,7 @@ import {
     ModalBackground
 } from './index.styles';
 import { Toast } from '@stories/toast'
+import { Modal } from '@stories/modal'
 import { cancelMembership } from '@api/user';
 
 interface LogoutModalProps {
