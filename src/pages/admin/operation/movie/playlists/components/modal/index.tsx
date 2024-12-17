@@ -13,6 +13,12 @@ import Checked from "@assets/icons/checked-movie.svg?react";
 import { Toast } from "@stories/toast";
 import { fetchCreatePlaylist, fetchUpdatePlaylist } from "@api/playlist";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
 export interface ModalStateTypes {
   type: "create" | "edit";
   playlistId: number;
@@ -45,11 +51,6 @@ function Modal({
 
   const [selectButton, setSelectButton] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
-
-  // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
-  const GenreOnClick = (movieId: number) => {
-    setSelectButton(movieId);
-  };
 
   useEffect(() => {
     if (loadable.state === "hasValue" && loadable.contents.data.length > 0) {
@@ -175,7 +176,7 @@ function Modal({
         <div style={{ boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)" }}>
           {/* 영화 장르 선택 */}
           <GenreTab
-            onClick={GenreOnClick}
+            setSelectButton={setSelectButton}
             selectedGenres={selectButton ?? -1}
           />
         </div>
@@ -193,7 +194,10 @@ function Modal({
                     {/* Playlist Data JSX Element Mapping  */}
                     {Array.isArray(page?.data.content) &&
                       page?.data.content.map((movie: MovieDataTypes) => (
-                        <div style={{ position: "relative" }}>
+                        <div
+                          style={{ position: "relative" }}
+                          key={movie.movieId}
+                        >
                           {selectMovie.includes(movie.movieId) && (
                             <div
                               css={styles.select()}
@@ -209,7 +213,6 @@ function Modal({
                             </div>
                           )}
                           <MovieItem
-                            key={movie.movieId}
                             type="basic"
                             src={movie.posterUrl}
                             name={movie.title}
