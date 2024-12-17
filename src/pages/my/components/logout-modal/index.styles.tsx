@@ -48,3 +48,9 @@ export const ModalBackground = styled.div`
     background-color: rgba(0, 0, 0, 0.1);
     z-index: 10001; /* LogoutModal보다 높은 값 설정 */
 `;
+
+export const ModalWidth = styled.div`
+    display: flex;
+    max-width: 220px;
+    width: 100%;
+`;
