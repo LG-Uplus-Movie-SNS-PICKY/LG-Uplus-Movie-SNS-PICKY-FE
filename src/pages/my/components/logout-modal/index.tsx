@@ -1,14 +1,14 @@
 // pages/my/components/logout-modal/index.tsx
-import React, { useEffect, useState } from "react";
-import { Modal } from "@stories/modal";
+import React, { useEffect, useState } from 'react';
 import {
-  ModalContainer,
-  ModalWrapper,
-  ModalItem,
-  ModalBackground,
-} from "./index.styles";
-import { Toast } from "@stories/toast";
-import { cancelMembership } from "@api/user";
+    ModalContainer,
+    ModalWrapper,
+    ModalItem,
+    ModalBackground
+} from './index.styles';
+import { Toast } from '@stories/toast'
+import { Modal } from '@stories/modal'
+import { cancelMembership } from '@api/user';
 import { removeCookie } from "@util/cookie";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
