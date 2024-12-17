@@ -10,7 +10,7 @@ export interface BoardContentTypes {
   [key: string]: unknown; // 지정한 값 이외의 정보가 올 경우
   board_content_id: number;
   board_content_url: string;
-  board_content_type: "Image" | "Video";
+  board_content_type: "IMAGE" | "VIDEO";
 }
 
 interface MovieLogProps {
@@ -18,6 +18,7 @@ interface MovieLogProps {
 }
 
 export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
+  console.log(boardContent);
   return (
     <Swiper
       slidesPerView={"auto"}
@@ -34,7 +35,7 @@ export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
     >
       {boardContent.map((content, idx) => (
         <SwiperSlide key={content.board_content_id}>
-          {content.board_content_type === "Video" ? (
+          {content.board_content_type === "VIDEO" ? (
             <video src={content.board_content_url} controls>
               Your browser does not support the video tag.
             </video>

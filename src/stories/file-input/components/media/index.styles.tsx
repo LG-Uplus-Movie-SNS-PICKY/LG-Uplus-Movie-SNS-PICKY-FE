@@ -7,10 +7,10 @@ export default {
       /* width: 361px; */
       /* max-width: 361px; */
       height: 361px;
-      background-color: #fff;
+      background: ${isFile ? "#f5f5f5" : "#fff"};
 
       border: ${isFile ? "" : "1px solid #d9d9d9"};
-      border-radius: ${isFile ? "" : "16px"};
+      border-radius: 16px;
 
       cursor: ${isFile ? "" : "pointer"};
       overflow: ${isFile ? "" : "hidden"};
