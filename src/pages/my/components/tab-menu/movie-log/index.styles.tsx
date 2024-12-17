@@ -27,8 +27,9 @@ export default {
 
       & > .movie-log {
         width: 100%;
+        height: 100%;
         aspect-ratio: 1;
-        background-color: black;
+        background-color: transparent;
       }
     `;
   },
