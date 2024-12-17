@@ -99,8 +99,32 @@ export async function fetchMovieDetailInfo(movieId: number) {
 }
 
 // 모든 게시글 조회 API
-export async function fetchAllData() {
-  const { data } = await apiClient.get("/board/all");
+// lastBoardId -> 마지막 게시물 아이디 값을
+export async function fetchAllData(lastBoardId: number) {
+  const param = new URLSearchParams(); // ?id=${id}
+
+  // lastBoardId가 존재한다면 params에 추가하겠습니다.
+  if (lastBoardId) {
+    param.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(`/board/all?${param.toString()}`); // /board/all? //board/adll?last={}
+  return data;
+}
+
+export async function fetchMovieLogs(
+  movieId: number,
+  size: number = 10,
+  lastBoardId?: number
+) {
+  const params = new URLSearchParams();
+
+  params.append("size", size.toString());
+  if (lastBoardId) {
+    params.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(`board/${movieId}?${params.toString()}`);
   return data;
 }
 
@@ -270,4 +294,22 @@ export async function fetchLikedMovies(nickname: string) {
     console.error("좋아요한 영화 조회 중 오류 발생:", error);
     throw error;
   }
+}
+
+// 닉네임으로 해당 사용자가 작성한 게시글 조회 API
+export async function fetchUserMovieLogs(
+  nickname: string,
+  size: number = 10,
+  lastBoardId?: number
+) {
+  const params = new URLSearchParams();
+  params.append("size", size.toString());
+  if (lastBoardId) {
+    params.append("lastBoardId", lastBoardId.toString());
+  }
+
+  const { data } = await apiClient.get(
+    `/board/user/${nickname}?${params.toString()}`
+  );
+  return data;
 }

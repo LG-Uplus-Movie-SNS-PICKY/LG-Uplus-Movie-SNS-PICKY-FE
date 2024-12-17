@@ -5,7 +5,7 @@ import { useSetRecoilState } from "recoil";
 import { userState } from "../../../review/atoms";
 import { Toast } from "@stories/toast";
 import { isLogin } from "@recoil/atoms/isLoginState";
-import { getCookie, setCookie } from "@util/cookie";
+import { getCookie, removeCookie, setCookie } from "@util/cookie";
 import { fetchGetUserInfo } from "@api/user";
 
 const LoginCallback: React.FC = () => {
@@ -38,8 +38,9 @@ const LoginCallback: React.FC = () => {
           response.data.data;
 
         if (oAuth2Token?.access_token && localJwtDto?.accessToken) {
+          // oAuth2 기본 정보 저장 -> user가 아닌 다른걸로 변경 필요
           setCookie(
-            "user",
+            "token",
             JSON.stringify({
               oAuth2Token,
               localJwtDto,
@@ -55,7 +56,7 @@ const LoginCallback: React.FC = () => {
           );
 
           if (isRegistrationDone) {
-            const currentUserCookie = getCookie("user");
+            const currentUserCookie = getCookie("token");
 
             // User GET API 모듈로 분리
             const userResponse = await fetchGetUserInfo();
@@ -64,12 +65,8 @@ const LoginCallback: React.FC = () => {
             const newUserData = {
               ...currentUserCookie,
               user: {
-                // birthdate: userResponse.data.birthdate,
-                // name: userResponse.data.name,
                 nickname: userResponse.data.nickname,
                 gender: userResponse.data.gender,
-                // nationality: userResponse.data.nationality,
-                // email: userResponse.data.email,
                 profileUrl: userResponse.data.profileUrl,
               },
             };
@@ -90,6 +87,7 @@ const LoginCallback: React.FC = () => {
               isLoading: false,
             });
 
+            removeCookie("token");
             setToastMessage("로그인에 성공했습니다!");
           } else {
             // 유저 정보가 등록되지 않았을 경우

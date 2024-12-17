@@ -35,7 +35,7 @@ import {
 import SEO from "@components/seo";
 // import { Cookies } from "react-cookie";
 import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
-import { getCookie, setCookie } from "@util/cookie";
+import { getCookie, removeCookie, setCookie } from "@util/cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
 
 export default function Signup() {
@@ -168,7 +168,6 @@ export default function Signup() {
         "registerUserReq",
         new Blob([JSON.stringify(jsonPayload)], { type: "application/json" })
       );
-      console.log(jsonPayload);
 
       // 이미지를 FormData에 추가 (파일이 존재할 경우)
       if (inputData.profileImageData) {
@@ -181,8 +180,8 @@ export default function Signup() {
       // 유저 정보 업데이트
       await fetchSignUpUser(formData);
 
-      // 유저 정보 가져온 후 쿠키를 업데이트 시켜서 쿠키에 유저 정보 유지
-      const currentUserCookie = getCookie("user");
+      // 토큰 정보 가져온 후 쿠키를 업데이트 시켜서 쿠키에 유저 정보 유지
+      const currentUserCookie = getCookie("token");
 
       // User GET API 모듈로 분리
       const userResponse = await fetchGetUserInfo();
@@ -191,12 +190,8 @@ export default function Signup() {
       const newUserData = {
         ...currentUserCookie,
         user: {
-          birthdate: userResponse.data.birthdate,
-          name: userResponse.data.name,
           nickname: userResponse.data.nickname,
           gender: userResponse.data.gender,
-          nationality: userResponse.data.nationality,
-          email: userResponse.data.email,
           profileUrl: userResponse.data.profileUrl,
         },
       };
@@ -205,8 +200,9 @@ export default function Signup() {
         path: "/", // 모든 경로에서 접근 가능
         maxAge: 60 * 60 * 24, // 1일 (초 단위)
         sameSite: "strict", // 보안 설정
-        secure: false, // HTTPS 필요 여부 (개발 시 false)
+        secure: true, // HTTPS 필요 여부 (개발 시 false)
       });
+      removeCookie("token");
 
       // 전역 상태로 관리할 유저의 정보 -> 중요하지 않은 정보
       setIsLoginState({

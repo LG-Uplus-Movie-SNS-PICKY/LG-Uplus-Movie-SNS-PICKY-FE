@@ -9,120 +9,150 @@ import {
 import { Toast } from '@stories/toast'
 import { Modal } from '@stories/modal'
 import { cancelMembership } from '@api/user';
+import { removeCookie } from "@util/cookie";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { useNavigate } from "react-router-dom";
 
 interface LogoutModalProps {
-    onClose: () => void;
-    targetRef: React.RefObject<HTMLButtonElement>; // SettingsButton의 ref 전달
+  onClose: () => void;
+  targetRef: React.RefObject<HTMLButtonElement>; // SettingsButton의 ref 전달
 }
 
 function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
-    const [modalPosition, setModalPosition] = useState({ top: 0, right: 0 });
+  const [modalPosition, setModalPosition] = useState({ top: 0, right: 0 });
 
-    useEffect(() => {
-        if (targetRef?.current) {
-          const rect = targetRef.current.getBoundingClientRect();
-          const rightOffset = window.innerWidth - rect.right;
-          setModalPosition({
-            top: rect.bottom + window.scrollY + 4,
-            right: rightOffset,
-          });
-        }
-      }, [targetRef]);
-    
+  const resetLoginState = useResetRecoilState(isLogin);
+  const setLoginState = useSetRecoilState(isLogin);
 
-    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState<string>('');
-    const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
+  const navigate = useNavigate();
 
-    const showToast = (message: string, direction: 'none' | 'up' | 'down'): Promise<void> => {
-        return new Promise((resolve) => {
-            setToast({ message, direction });
-            setTimeout(() => {
-                setToast(null);
-                resolve();
-            }, 1500);
-        });
-    };
+  useEffect(() => {
+    if (targetRef?.current) {
+      const rect = targetRef.current.getBoundingClientRect();
+      const rightOffset = window.innerWidth - rect.right;
+      setModalPosition({
+        top: rect.bottom + window.scrollY + 4,
+        right: rightOffset,
+      });
+    }
+  }, [targetRef]);
 
-    const handleLogoutClick = () => {
-        setModalMessage('로그아웃하시겠습니까?');
-        setIsConfirmModalOpen(true);
-    };
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState<string>("");
+  const [toast, setToast] = useState<{
+    message: string;
+    direction: "none" | "up" | "down";
+  } | null>(null);
 
-    const handleConfirmLogout = async () => {
-        await showToast('로그아웃이 완료되었습니다.', 'up');
-        window.location.reload();
-    };
+  const showToast = (
+    message: string,
+    direction: "none" | "up" | "down"
+  ): Promise<void> => {
+    return new Promise((resolve) => {
+      setToast({ message, direction });
+      setTimeout(() => {
+        setToast(null);
+        resolve();
+      }, 1500);
+    });
+  };
 
-    const handleCancelMembershipClick = () => {
-        setModalMessage('회원탈퇴하시겠습니까?');
-        setIsConfirmModalOpen(true);
-    };
+  const handleLogoutClick = () => {
+    setModalMessage("로그아웃하시겠습니까?");
+    setIsConfirmModalOpen(true);
+  };
 
-    // const handleConfirmCancelMembership = async () => {
-    //     await showToast('회원탈퇴가 완료되었습니다.', 'up');
-    //     window.location.reload();
-    // };
+  const handleConfirmLogout = async () => {
+    await showToast("로그아웃이 완료되었습니다.", "up");
+    removeCookie("user");
+    resetLoginState();
 
-    const handleConfirmCancelMembership = async () => {
-        try {
-            const platform = "kakao"; // 플랫폼 정보 (예: kakao, google 등)
-            const oAuth2Token = {
-                access_token: "string", // 실제 토큰으로 교체
-                refresh_token: "string",
-                token_type: "string",
-                expires_in: "string",
-            };
+    setLoginState((prev) => ({
+      ...prev,
+      isLoading: false,
+    }));
 
-            const response = await cancelMembership(platform, oAuth2Token);
-            console.log("회원탈퇴 성공:", response);
+    navigate("/");
 
-            await showToast("회원탈퇴가 완료되었습니다.", "up");
-            window.location.replace("/"); // 탈퇴 후 메인 페이지로 이동
-        } catch (error: any) {
-            console.error("회원탈퇴 실패:", error);
-            await showToast("회원탈퇴에 실패했습니다. 다시 시도해주세요.", "down");
-        }
-    };
+    // window.location.reload();
+  };
 
-    const handleCancel = () => {
-        setIsConfirmModalOpen(false);
-    };
+  const handleCancelMembershipClick = () => {
+    setModalMessage("회원탈퇴하시겠습니까?");
+    setIsConfirmModalOpen(true);
+  };
 
-    return (
-        <>
-            {/* 기존 모달 */}
-            <ModalContainer onClick={onClose}>
-                <ModalWrapper
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        position: 'absolute',
-                        top: modalPosition.top,
-                        right: modalPosition.right,
-                      }}
-                >
-                    <ModalItem onClick={handleLogoutClick}>로그아웃</ModalItem>
-                    <ModalItem onClick={handleCancelMembershipClick}>탈퇴하기</ModalItem>
-                </ModalWrapper>
-            </ModalContainer>
+  // const handleConfirmCancelMembership = async () => {
+  //     await showToast('회원탈퇴가 완료되었습니다.', 'up');
+  //     window.location.reload();
+  // };
 
-            {/* 확인 모달 */}
-            {isConfirmModalOpen && (
-                <ModalBackground onClick={() => setIsConfirmModalOpen(false)}>
-                    <Modal
-                        message={modalMessage}
-                        confirmText={modalMessage === '로그아웃하시겠습니까?' ? '로그아웃' : '회원탈퇴'}
-                        cancelText="취소"
-                        onConfirm={modalMessage === '로그아웃하시겠습니까?' ? handleConfirmLogout : handleConfirmCancelMembership}
-                        onCancel={handleCancel}
-                    />
-                </ModalBackground>
-            )}
+  const handleConfirmCancelMembership = async () => {
+    try {
+      const platform = "kakao"; // 플랫폼 정보 (예: kakao, google 등)
+      const oAuth2Token = {
+        access_token: "string", // 실제 토큰으로 교체
+        refresh_token: "string",
+        token_type: "string",
+        expires_in: "string",
+      };
 
-            {/* Toast 메시지 */}
-            {toast && <Toast message={toast.message} direction={toast.direction} />}
-        </>
-    );
+      const response = await cancelMembership(platform, oAuth2Token);
+      console.log("회원탈퇴 성공:", response);
+
+      await showToast("회원탈퇴가 완료되었습니다.", "up");
+      window.location.replace("/"); // 탈퇴 후 메인 페이지로 이동
+    } catch (error: any) {
+      console.error("회원탈퇴 실패:", error);
+      await showToast("회원탈퇴에 실패했습니다. 다시 시도해주세요.", "down");
+    }
+  };
+
+  const handleCancel = () => {
+    setIsConfirmModalOpen(false);
+  };
+
+  return (
+    <>
+      {/* 기존 모달 */}
+      <ModalContainer onClick={onClose}>
+        <ModalWrapper
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: "absolute",
+            top: modalPosition.top,
+            right: modalPosition.right,
+          }}
+        >
+          <ModalItem onClick={handleLogoutClick}>로그아웃</ModalItem>
+          <ModalItem onClick={handleCancelMembershipClick}>탈퇴하기</ModalItem>
+        </ModalWrapper>
+      </ModalContainer>
+
+      {/* 확인 모달 */}
+      {isConfirmModalOpen && (
+        <ModalBackground onClick={() => setIsConfirmModalOpen(false)}>
+          <Modal
+            message={modalMessage}
+            confirmText={
+              modalMessage === "로그아웃하시겠습니까?" ? "로그아웃" : "회원탈퇴"
+            }
+            cancelText="취소"
+            onConfirm={
+              modalMessage === "로그아웃하시겠습니까?"
+                ? handleConfirmLogout
+                : handleConfirmCancelMembership
+            }
+            onCancel={handleCancel}
+          />
+        </ModalBackground>
+      )}
+
+      {/* Toast 메시지 */}
+      {toast && <Toast message={toast.message} direction={toast.direction} />}
+    </>
+  );
 }
 
 export default LogoutModal;

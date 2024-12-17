@@ -235,7 +235,7 @@ export default function SocialPost() {
       );
 
       alert("게시글이 성공적으로 생성되었습니다.");
-      // navigate("/movie-log"); // 성공 후 메인 페이지로 이동
+      navigate("/movie-log"); // 성공 후 메인 페이지로 이동
     } catch (error) {
       console.error("게시글 생성 중 오류 발생:", error);
       alert("게시글 생성에 실패했습니다.");
