@@ -73,6 +73,7 @@ export const contentSection = css`
   font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.64px;
+  cursor: pointer;
 `;
 
 export const carouselWrapper = css`
@@ -99,29 +100,26 @@ export const reactionsSection = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  /* gap: 16px; */
 
   span {
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 8px;
     color: #000;
     font-size: 16px;
     font-weight: 600;
-    line-height: normal;
     letter-spacing: -0.64px;
     cursor: pointer;
 
-    &.reaction {
-      min-width: 58px; /* 좋아요와 댓글 버튼 각각의 최소 너비를 고정 */
-      justify-content: space-between; /* 버튼 내용 간 간격 유지 */
-    }
+    /* 숫자와 아이콘 사이 최소 너비 설정 */
+    min-width: 58px; /* 최소 너비 고정 */
+    justify-content: space-between;
 
     .like-number,
     .comment-number {
-      min-width: 24px; /* 숫자의 최소 너비를 고정 */
-      text-align: center; /* 숫자를 중앙 정렬 */
+      min-width: 24px; /* 숫자의 최소 너비 */
+      text-align: center; /* 숫자 중앙 정렬 */
     }
   }
 `;
