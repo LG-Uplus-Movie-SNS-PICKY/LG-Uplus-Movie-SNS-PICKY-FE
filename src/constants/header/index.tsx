@@ -9,8 +9,8 @@ import Notification from "@assets/icons/notification.svg?react";
 import Search from "@assets/icons/search.svg?react";
 import UesrLogo from "@assets/icons/user_circle.svg?react";
 import { removeCookie } from "@util/cookie";
-import { Resetter, SetterOrUpdater } from "recoil";
-import { LoginStateTypes } from "@recoil/atoms/isLoginState";
+import { Resetter, SetterOrUpdater, useSetRecoilState } from "recoil";
+import { isLogin, LoginStateTypes } from "@recoil/atoms/isLoginState";
 
 export type HeaderConfigReturn = Array<ReactNode> | undefined;
 

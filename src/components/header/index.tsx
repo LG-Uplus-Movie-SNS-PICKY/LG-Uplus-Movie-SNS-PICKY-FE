@@ -28,7 +28,7 @@ function GlobalHeader({ headerType, label, location, navigate }: HeaderProps) {
       notificationCount
     );
     setActiveBtn(headerType);
-  }, [notificationCount, isLoginState, location]);
+  }, [notificationCount, isLoginState, location.pathname]);
 
   // 로그인과 주소에 따라서 헤더가 보이지 않아야 함
   // 주소는 헤더 타입 정의할 때 해놓은 상태

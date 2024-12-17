@@ -12,6 +12,8 @@ import {
 } from "@type/api/notification";
 import { fetchReadNotification } from "@api/notification";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSetRecoilState } from "recoil";
+import { unreadCountState } from "@recoil/atoms/isNotificationState";
 
 interface NotificationRanderProps {
   title: string;
@@ -59,6 +61,8 @@ function NotificationRander({
 
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [movieImageLoading, setMovieImageLoading] = useState(false);
+
+  const setUnreadCount = useSetRecoilState(unreadCountState);
 
   const queryClient = useQueryClient();
 
@@ -110,6 +114,12 @@ function NotificationRander({
 
       return updatedGroups;
     });
+
+    // // 알림 수 카운팅
+    // setUnreadCount((prev) => {
+    //   const updatedCount = prev - 1;
+    //   return updatedCount < 0 ? 0 : updatedCount;
+    // });
 
     // 해당 무비로그 게시물로 이동
     navigate(`/movie-log/detail/${boardId}`);
