@@ -5,19 +5,27 @@ import { isEmpty } from "lodash";
 // 닉네임 중복 체크를 위한 GET API
 export async function fetchNicknameValidation(nickname: string) {
   const token = getCookie("token") || {};
+  const user = getCookie("user") || {};
+  let accessToken;
 
-  if (!isEmpty(token)) {
-    const { data } = await apiClient.get("/user/nickname-validation", {
-      params: {
-        nickname,
-      },
-      headers: { Authorization: `Bearer ${token.localJwtDto.accessToken}` },
-    });
-
-    return data;
+  if (!isEmpty(token) && isEmpty(user)) {
+    accessToken = token.localJwtDto.accessToken;
+    console.log("Token -> AccessToken!!" + accessToken);
   }
 
-  return;
+  if (isEmpty(token) && !isEmpty(user)) {
+    console.log("User -> AccessToken!!");
+    accessToken = user.localJwtDto.accessToken;
+  }
+
+  const { data } = await apiClient.get("/user/nickname-validation", {
+    params: {
+      nickname,
+    },
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+
+  return data;
 }
 
 // 장르 정보를 가져오는 GET API
