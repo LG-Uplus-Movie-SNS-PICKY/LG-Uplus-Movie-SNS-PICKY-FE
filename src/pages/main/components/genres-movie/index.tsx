@@ -27,15 +27,8 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
 
   // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
   const GenreOnClick = (movieId: number) => {
-    console.log(movieId);
     setSelectButton(movieId);
   };
-
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     console.log(genreMovies?.pages[0].data.content);
-  //   }
-  // }, [isLoading]);
 
   return (
     <div css={styles.genreContainer()}>
@@ -75,6 +68,15 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
                 ))
             : null}
         </div>
+
+        {isLogin && (
+          <button
+            className="more-genre-movies"
+            onClick={() => navigate(`/genre/${selectButton}`)}
+          >
+            더보기
+          </button>
+        )}
       </div>
     </div>
   );

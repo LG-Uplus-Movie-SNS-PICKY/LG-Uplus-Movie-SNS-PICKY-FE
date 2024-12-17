@@ -48,17 +48,21 @@ export default {
         width: 100%;
 
         display: grid;
-        /* grid-template-columns: repeat(3, 1fr); */
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 12px;
 
         box-sizing: border-box;
         overflow: hidden;
+      }
 
-        /* display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between; */
-        /* gap: 12px; */
+      & > .more-genre-movies {
+        cursor: pointer;
+        padding: 5px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        border-radius: 6px;
+        background-color: #f6f8fa;
+        border: 1px solid #d1d9e0;
       }
 
       margin-bottom: 24px;
