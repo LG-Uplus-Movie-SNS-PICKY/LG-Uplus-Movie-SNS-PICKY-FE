@@ -46,7 +46,11 @@ export function Header({
         {!["basic", "login", "admin"].includes(type) && (
           <div>
             {activeBtn &&
-              activeBtn.map((btn, idx) => <div key={idx}>{btn}</div>)}
+              activeBtn.map((btn, idx) => (
+                <div key={idx} className="active-icon-btn">
+                  {btn}
+                </div>
+              ))}
           </div>
         )}
 
