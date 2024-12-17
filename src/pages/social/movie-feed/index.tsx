@@ -1,15 +1,42 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchMovieLogs } from "@api/movie"; // 새로 만든 API 함수
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useFetchMovieLogByIdQuery } from "@hooks/movie-log";
+import { useInView } from "react-intersection-observer";
+import LikeFeed from "@assets/icons/like_feed.svg?react";
+import LikeFeedActive from "@assets/icons/like_feed_active.svg?react";
+import CommentFeed from "@assets/icons/comment_feed.svg?react";
+import ReportButton from "@assets/icons/report_button.svg?react";
+import Loading from "@components/loading";
 import { MovieLog } from "@stories/movie-log";
+import { Toast } from "@stories/toast";
+import {
+  wrapper,
+  feedContainer,
+  feedItem,
+  profileSection,
+  textSection,
+  timeSection,
+  contentSection,
+  reactionsContainer,
+  moreOptions,
+  movieTitle,
+  spoilerText,
+  blurredContent,
+  blurredImage,
+  carouselWrapper,
+  reactionsSection,
+} from "./index.styles";
 
+// 게시글 데이터 타입
 interface BoardContent {
   boardId: number;
   writerNickname: string;
   writerProfileUrl: string;
+  movieTitle: string;
+  createdDate: string;
   context: string;
   isSpoiler: boolean;
-  createdDate: string;
+  isLike: boolean;
   likesCount: number;
   commentsCount: number;
   contents: {
@@ -18,55 +45,142 @@ interface BoardContent {
   }[];
 }
 
-export default function MovieFeed() {
-  const { movieId } = useParams<{ movieId: string }>(); // 라우터 파라미터에서 movieId 가져오기
-  const [logs, setLogs] = useState<BoardContent[]>([]);
-  const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
+export default function MovieLogList() {
+  const { movieId } = useParams<{ movieId: string }>();
+  const navigate = useNavigate();
+  const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const { ref, inView } = useInView({ threshold: 0.8 });
 
-  // 데이터 로딩
-  const loadMovieLogs = async () => {
-    try {
-      const response = await fetchMovieLogs(Number(movieId), 10, lastBoardId);
-      const newLogs = response.content || [];
-      setLogs((prev) => [...prev, ...newLogs]);
-
-      // 마지막 boardId 업데이트
-      if (newLogs.length > 0) {
-        setLastBoardId(newLogs[newLogs.length - 1].boardId);
-      }
-    } catch (error) {
-      console.error("무비로그 조회 중 오류 발생:", error);
-    }
-  };
+  const {
+    data: board,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    fetchNextPage,
+  } = useFetchMovieLogByIdQuery(Number(movieId));
 
   useEffect(() => {
-    if (movieId) loadMovieLogs();
-  }, [movieId]);
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
+  const revealSpoiler = (boardId: number) => {
+    setRevealedSpoilers((prev) => [...prev, boardId]);
+  };
 
   return (
-    <div>
-      <h1>Movie Logs</h1>
-      <div>
-        {logs.map((log) => (
-          <div key={log.boardId} style={{ marginBottom: "20px" }}>
-            <h3>{log.writerNickname}</h3>
-            <p>{log.context}</p>
-            <p>
-              Likes: {log.likesCount} | Comments: {log.commentsCount}
-            </p>
+    <div css={wrapper}>
+      <div css={feedContainer}>
+        {isLoading && <Loading />}
+        {board?.pages.flatMap((page) =>
+          page.content.map((log: BoardContent) => {
+            const isSpoilerRevealed = revealedSpoilers.includes(log.boardId);
+            return (
+              <div key={log.boardId} css={feedItem}>
+                {/* 프로필 및 사용자 정보 */}
+                <div
+                  css={profileSection}
+                  onClick={() => navigate(`/user/${log.writerNickname}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <img
+                    src={log.writerProfileUrl || "/default-profile.png"}
+                    alt="프로필"
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                  <div css={textSection}>
+                    {log.writerNickname}
+                    <span css={movieTitle}>{log.movieTitle}</span>
+                  </div>
+                </div>
 
-            <MovieLog
-              boardContent={log.contents.map((content, index) => ({
-                board_content_id: index,
-                board_content_url: content.contentUrl,
-                board_content_type:
-                  content.boardContentType === "VIDEO" ? "VIDEO" : "IMAGE",
-              }))}
-            />
-          </div>
-        ))}
+                {/* 작성 시간 */}
+                <div css={timeSection}>
+                  {new Date(log.createdDate).toLocaleDateString()}
+                </div>
+
+                {/* 게시글 내용 */}
+                <div
+                  css={[
+                    contentSection,
+                    log.isSpoiler && !isSpoilerRevealed && blurredContent,
+                  ]}
+                  onClick={() =>
+                    navigate(`/movie-log/detail/${log.boardId}`, { state: log })
+                  }
+                >
+                  {log.context}
+                </div>
+
+                {/* 미디어 콘텐츠 */}
+                <div
+                  css={carouselWrapper}
+                  onClick={() =>
+                    log.isSpoiler && !isSpoilerRevealed
+                      ? revealSpoiler(log.boardId)
+                      : navigate(`/movie-log/detail/${log.boardId}`, {
+                          state: log,
+                        })
+                  }
+                >
+                  <div
+                    css={[
+                      carouselWrapper,
+                      log.isSpoiler && !isSpoilerRevealed && blurredImage,
+                    ]}
+                  >
+                    <MovieLog
+                      boardContent={log.contents.map(
+                        (content, index: number) => ({
+                          board_content_id: index,
+                          board_content_url: content.contentUrl,
+                          board_content_type:
+                            content.boardContentType === "VIDEO"
+                              ? "VIDEO"
+                              : "IMAGE",
+                        })
+                      )}
+                    />
+                  </div>
+                  {/* 스포일러 알림 */}
+                  {log.isSpoiler && !isSpoilerRevealed && (
+                    <div css={spoilerText}>
+                      🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* 리액션 및 옵션 */}
+                <div css={reactionsContainer}>
+                  <div css={reactionsSection}>
+                    <span>
+                      {log.isLike ? <LikeFeedActive /> : <LikeFeed />}
+                      <span>{log.likesCount}</span>
+                    </span>
+                    <span>
+                      <CommentFeed />
+                      <span>{log.commentsCount}</span>
+                    </span>
+                  </div>
+                  <div css={moreOptions}>
+                    <ReportButton />
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+        {/* 로딩 감지기 */}
+        <div ref={ref} style={{ width: "100%", height: "10px" }} />
       </div>
-      <button onClick={loadMovieLogs}>더 불러오기</button>
+      {showToast && <Toast message={toastMessage} direction="up" />}
     </div>
   );
 }

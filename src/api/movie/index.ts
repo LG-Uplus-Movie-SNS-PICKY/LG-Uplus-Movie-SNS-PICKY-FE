@@ -316,3 +316,16 @@ export async function fetchUserMovieLogs(
   );
   return data;
 }
+
+export const fetchMovieLogsById = async (
+  movieId: number,
+  lastBoardId: number = 0
+) => {
+  const params = new URLSearchParams();
+  if (lastBoardId > 0) params.append("lastBoardId", lastBoardId.toString());
+
+  const { data } = await apiClient.get(
+    `/board/${movieId}?${params.toString()}`
+  );
+  return data;
+};
