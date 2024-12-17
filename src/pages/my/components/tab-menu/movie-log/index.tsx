@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import EmptyFeed from "@assets/icons/my-page/empty-feed.svg?react";
 import styles from "./index.styles";
 import { fetchUserMovieLogs } from "@api/movie";
@@ -27,13 +28,13 @@ function EmptyMovieLog() {
 function MovieLogContent({ nickname }: MovieLogContentProps) {
   const [data, setData] = useState<MovieLogData[]>([]);
   const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
-
+  const navigate = useNavigate();
   const loadMovieLogs = async () => {
     try {
       const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
-      const newLogs = response.content || [];
+      const newLogs = response.data.content || [];
       setData((prev) => [...prev, ...newLogs]);
-
+      console.log(newLogs);
       // 마지막 boardId 업데이트
       if (newLogs.length > 0) {
         setLastBoardId(newLogs[newLogs.length - 1].boardId);
@@ -59,12 +60,22 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
             )?.contentUrl || "";
 
           return (
-            <div key={element.boardId} className="movie-log">
+            <div
+              key={element.boardId}
+              className="movie-log"
+              onClick={() => {
+                console.log(element.boardId);
+                navigate(`/movie-log/detail/${element.boardId}`);
+              }}
+            >
               {posterUrl ? (
                 <img
                   src={posterUrl}
                   alt="movie-poster"
-                  style={{ width: "100px", height: "150px" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
                 />
               ) : (
                 <EmptyFeed /> // 포스터가 없으면 대체 이미지
@@ -72,11 +83,6 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
             </div>
           );
         })}
-      {data.length > 0 && (
-        <button onClick={loadMovieLogs} style={{ marginTop: "20px" }}>
-          더 불러오기
-        </button>
-      )}
     </div>
   );
 }
