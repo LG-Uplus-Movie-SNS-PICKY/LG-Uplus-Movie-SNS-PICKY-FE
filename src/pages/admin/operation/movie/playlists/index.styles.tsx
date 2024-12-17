@@ -37,7 +37,6 @@ export default {
     return css`
       width: 100%;
       flex: 1;
-      padding: 0 0 0 16px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -56,7 +55,7 @@ export default {
   playlistCardHeader(): SerializedStyles {
     return css`
       width: 100%;
-      padding-right: 16px;
+      padding: 0 16px;
       display: flex;
 
       justify-content: space-between;
@@ -83,6 +82,32 @@ export default {
 
           color: #333;
         }
+      }
+    `;
+  },
+
+  swiperContainer(): SerializedStyles {
+    return css`
+      width: 100%;
+      height: 100%;
+      padding: 0 16px;
+
+      & > .swiper-wrapper > .swiper-slide {
+        position: relative;
+
+        width: fit-content;
+        overflow: hidden;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      & > .swiper-wrapper > .swiper-slide > img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
     `;
   },

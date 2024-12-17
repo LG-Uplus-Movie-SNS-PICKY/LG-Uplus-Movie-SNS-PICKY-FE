@@ -25,7 +25,7 @@ function Main() {
     const response = await axios.post(
       `${
         import.meta.env.VITE_SERVER_URL
-      }/api/v1/notification/alert?receiverId=${32}&boardId=${61}&movieId=${11}`,
+      }/api/v1/notification/alert?receiverId=${35}&boardId=${61}&movieId=${11}`,
       {},
       { headers: { Authorization: `Bearer ${user.localJwtDto.accessToken}` } }
     );

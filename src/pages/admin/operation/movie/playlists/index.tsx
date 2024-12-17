@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import styles from "./index.styles";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Mousewheel } from "swiper/modules";
+
 import "swiper/css";
 import "swiper/css/pagination";
+
 import image3 from "@assets/images/dummy/image3.jpeg";
 import AddCircleIcon from "@assets/icons/add_circle_small.svg?react";
 import {
@@ -15,6 +17,9 @@ import {
 import Modal from "./components/modal";
 import { usePlaylist } from "@hooks/playlist";
 import { useInView } from "react-intersection-observer";
+import { MovieItem } from "@stories/movie-item";
+import { useNavigate } from "react-router-dom";
+import { PlaylistDataTypes } from "@type/api/playlist";
 
 function MoviePlaylistOperationPage() {
   const [playlists, setPlaylists] = useState<
@@ -31,7 +36,8 @@ function MoviePlaylistOperationPage() {
   const [createModalOpen, setCreateModalOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
-  const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
+
+  const navigate = useNavigate();
 
   const {
     data: playlistsData,
@@ -176,19 +182,57 @@ function MoviePlaylistOperationPage() {
 
       {/* Content -> Playlist(Title + Update / Delete Button) */}
       <div css={styles.playlistContainer()}>
-        {/* Playlist Card */}
-        <div css={styles.playlistCard}>
-          {/* Playlist - Header */}
-          <div css={styles.playlistCardHeader()}>
-            <h3>우진이가 추천하는 영화 모음집</h3>
-            <div className="buttons">
-              <button>수정</button>
-              <button>삭제</button>
-            </div>
-          </div>
+        {/* Playlist 스크롤링 */}
+        {Array.isArray(playlistsData?.pages) &&
+          playlistsData.pages.map((page, idx) => (
+            <React.Fragment key={idx}>
+              {Array.isArray(page.data.content) &&
+                page.data.content.map((playlist: PlaylistDataTypes) => (
+                  <div css={styles.playlistCard()} key={playlist.playlistId}>
+                    {/* Playlist - Header */}
+                    <div css={styles.playlistCardHeader()}>
+                      <h3>우진이가 추천하는 영화 모음집</h3>
+                      <div className="buttons">
+                        <button>수정</button>
+                        <button>삭제</button>
+                      </div>
+                    </div>
 
-          {/* Playlist - Content */}
-        </div>
+                    {/* Playlist에 속한 영화 슬라이드 효과 부여 */}
+                    <Swiper
+                      slidesPerView={3.8}
+                      spaceBetween={10}
+                      direction={"horizontal"}
+                      freeMode={true}
+                      modules={[FreeMode, Mousewheel]}
+                      mousewheel={{
+                        forceToAxis: true,
+                      }}
+                      css={styles.swiperContainer()}
+                    >
+                      {playlist.getSimpleMovieResps.length > 0 &&
+                        playlist.getSimpleMovieResps.map((movie) => {
+                          return (
+                            <SwiperSlide key={movie.movieId}>
+                              <MovieItem
+                                type="basic"
+                                src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                                  movie.posterUrl
+                                }`}
+                                title={movie.title}
+                                name={movie.title}
+                                disabled={true}
+                              />
+                            </SwiperSlide>
+                          );
+                        })}
+                    </Swiper>
+                  </div>
+                ))}
+            </React.Fragment>
+          ))}
+
+        <div ref={ref} style={{ height: "10px" }} />
       </div>
 
       {createModalOpen && <Modal setCreateModalOpen={setCreateModalOpen} />}
@@ -197,123 +241,3 @@ function MoviePlaylistOperationPage() {
 }
 
 export default MoviePlaylistOperationPage;
-
-// {playlists.map((playlist) => (
-//   <div key={playlist.id} css={styles.playlistCard()}>
-//     <h3
-//       style={{
-//         textAlign: "center",
-//         marginBottom: "15px",
-//         fontSize: "18px",
-//       }}
-//     >
-//       {playlist.title}
-//     </h3>
-//     <div css={styles.reportInfoContainer()}>
-//       <Swiper
-//         slidesPerView={"auto"}
-//         spaceBetween={16}
-//         direction={"horizontal"}
-//         freeMode={true}
-//         modules={[FreeMode, Mousewheel]}
-//         mousewheel={{
-//           forceToAxis: true,
-//         }}
-//         css={styles.swiperContainer()}
-//       >
-//         {playlist.movieIds.map((id) => {
-//           const movie = availableMovies.find(
-//             (movie) => movie.movieId === id
-//           );
-//           return (
-//             <SwiperSlide key={id}>
-//               <div style={{ textAlign: "center" }}>
-//                 <img
-//                   src={
-//                     movie?.posterUrl
-//                       ? `${TMDB_IMAGE_PREFIX}${movie.posterUrl}`
-//                       : image3
-//                   }
-//                   alt={movie?.title || `영화 ${id}`}
-//                   style={{
-//                     width: "120px",
-//                     height: "160px",
-//                     objectFit: "cover",
-//                     borderRadius: "8px",
-//                     marginBottom: "8px",
-//                     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-//                   }}
-//                 />
-//                 <p
-//                   style={{
-//                     fontSize: "12px",
-//                     marginTop: "5px",
-//                     whiteSpace: "nowrap",
-//                     overflow: "hidden",
-//                     textOverflow: "ellipsis",
-//                   }}
-//                 >
-//                   {movie?.title || `영화 ${id}`}
-//                 </p>
-//               </div>
-//             </SwiperSlide>
-//           );
-//         })}
-//       </Swiper>
-//     </div>
-//     <div
-//       style={{
-//         display: "flex",
-//         justifyContent: "space-between",
-//         marginTop: "20px",
-//       }}
-//     >
-//       <button
-//         style={{
-//           backgroundColor: "#007BFF",
-//           color: "#fff",
-//           border: "none",
-//           borderRadius: "5px",
-//           padding: "8px 12px",
-//           cursor: "pointer",
-//           transition: "background-color 0.3s",
-//         }}
-//         onClick={() =>
-//           handleEditPlaylist(
-//             playlist.id,
-//             playlist.title,
-//             playlist.movieIds
-//           )
-//         }
-//         onMouseEnter={(e) =>
-//           (e.currentTarget.style.backgroundColor = "#0056b3")
-//         }
-//         onMouseLeave={(e) =>
-//           (e.currentTarget.style.backgroundColor = "#007BFF")
-//         }
-//       >
-//         수정
-//       </button>
-//       <button
-//         style={{
-//           backgroundColor: "#dc3545",
-//           color: "#fff",
-//           border: "none",
-//           borderRadius: "5px",
-//           padding: "8px 12px",
-//           cursor: "pointer",
-//           transition: "background-color 0.3s",
-//         }}
-//         onClick={() => deletePlaylist(playlist.id)}
-//         onMouseEnter={(e) =>
-//           (e.currentTarget.style.backgroundColor = "#b02a37")
-//         }
-//         onMouseLeave={(e) =>
-//           (e.currentTarget.style.backgroundColor = "#dc3545")
-//         }
-//       >
-//         삭제
-//       </button>
-//     </div>
-//   </div>
-// ))}

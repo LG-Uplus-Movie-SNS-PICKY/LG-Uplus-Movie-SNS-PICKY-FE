@@ -23,8 +23,8 @@ export const useRecommnedMovieQuery = () => {
   return useQuery({
     queryKey: ["recommnedMovie"],
     queryFn: fetchRecommendMovie,
-    staleTime: 1000 * 60 * 30, // 추천 데이터 목록은 30분간 신선도 유지
-    gcTime: 1000 * 60 * 60, // 추천 데이터 데이터 캐싱 시간은 1시간으로 유지
+    staleTime: 1000 * 60 * 90, // 추천 데이터 목록은 1:30분간 신선도 유지
+    gcTime: 1000 * 60 * 60 * 2, // 추천 데이터 데이터 캐싱 시간은 2시간으로 유지
   });
 };
 
