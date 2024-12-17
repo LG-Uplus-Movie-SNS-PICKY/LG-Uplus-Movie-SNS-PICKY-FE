@@ -36,7 +36,7 @@ function DeleteModal({
             ...page.data,
             numberOfElements: page.data.numberOfElements - 1, // 플레이리시트 항목 수 감소
             content: page.data.content.filter(
-              (playlist) => playlist.playlistId === deleteModalOpen.playlistId
+              (playlist) => playlist.playlistId !== deleteModalOpen.playlistId
             ),
           },
         })),

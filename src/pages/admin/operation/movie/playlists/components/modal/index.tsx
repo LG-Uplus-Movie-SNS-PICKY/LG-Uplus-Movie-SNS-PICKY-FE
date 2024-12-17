@@ -13,17 +13,34 @@ import Checked from "@assets/icons/checked-movie.svg?react";
 import { Toast } from "@stories/toast";
 import { fetchCreatePlaylist } from "@api/playlist";
 
-interface ModalProps {
-  setCreateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+export interface ModalStateTypes {
+  type: "create" | "edit";
+  title: string;
+  movieIds: number[];
+  open: boolean;
 }
 
-function Modal({ setCreateModalOpen }: ModalProps) {
-  const [title, setTitle] = useState("");
+interface ModalProps {
+  type: "create" | "edit";
+  setOpenModal: React.Dispatch<React.SetStateAction<ModalStateTypes>>;
+  initialTitle?: string;
+  initialMovies?: number[];
+}
+
+function Modal({
+  type,
+  setOpenModal,
+  initialTitle = "",
+  initialMovies = [],
+}: ModalProps) {
+  const [title, setTitle] = useState<string>(initialTitle); // 초기 제목 설정
+  const [selectMovie, setSelectMovie] = useState<number[]>(initialMovies); // 초기 영화 설정
+
+  const isCreate = type === "create"; // 모달 타입 정의
 
   const loadable = useRecoilValueLoadable(genresSelector);
-  const [selectButton, setSelectButton] = useState<number | null>(null);
 
-  const [selectMovie, setSelectMovie] = useState<number[]>([]);
+  const [selectButton, setSelectButton] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState("");
 
   // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
@@ -80,7 +97,12 @@ function Modal({ setCreateModalOpen }: ModalProps) {
       setToastMessage("플레이리스트가 추가되었습니다!!");
 
       setTimeout(() => {
-        setCreateModalOpen(false);
+        setOpenModal({
+          type: "create",
+          open: false,
+          title: "",
+          movieIds: [],
+        });
       }, 2000);
     }
 
@@ -93,7 +115,17 @@ function Modal({ setCreateModalOpen }: ModalProps) {
 
   return (
     // 모달 외부
-    <div css={styles.modalOuter()} onClick={() => setCreateModalOpen(false)}>
+    <div
+      css={styles.modalOuter()}
+      onClick={() =>
+        setOpenModal({
+          type: "create",
+          open: false,
+          title: "",
+          movieIds: [],
+        })
+      }
+    >
       {/* 모달 컨테이너 */}
       <form
         css={styles.modalContainer()}
@@ -107,7 +139,7 @@ function Modal({ setCreateModalOpen }: ModalProps) {
             onChange={(event) => setTitle(event.target.value)}
             placeholder="플레이리스트 제목"
           />
-          <button type="submit">추가</button>
+          <button type="submit">{isCreate ? "추가" : "수정"}</button>
         </div>
 
         <div style={{ boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)" }}>
