@@ -22,53 +22,35 @@ import ThumbsDownSvg from "@assets/icons/thumbs_down_mini.svg?react";
 import ThumbsUpActiveSvg from "@assets/icons/thumbs_up_mini_active.svg?react";
 import ThumbsDownActiveSvg from "@assets/icons/thumbs_down_mini_active.svg?react";
 import { Toast } from "@stories/toast";
-import { toggleLineReviewLike } from "@api/linereview";
+import { fetchLineReviewMovie, toggleLineReviewLike } from "@api/linereview";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
 
-interface ReviewProps {
-  reviews: {
-    id: number;
-    writerNickname: string;
-    userId: number;
-    movieId: number;
-    rating: number;
-    context: string;
-    isSpoiler: boolean;
-    likes: number;
-    dislikes: number;
-    createdAt: string;
-  }[];
-  userId?: number; // 현재 로그인한 사용자 ID
-  lastReviewRef?: (node: HTMLElement | null) => void; // lastReviewRef 추가
-}
-
-interface ReviewInteraction {
+interface Review {
+  id: number;
+  writerNickname: string;
+  userId: number;
+  movieId: number;
+  rating: number;
+  context: string;
+  isSpoiler: boolean;
   likes: number;
   dislikes: number;
-  liked: boolean;
-  disliked: boolean;
+  createdAt: string;
+  isLiked?: boolean;
+  isDisliked?: boolean;
+  isAuthor?: boolean;
 }
 
-const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
-  const [reviewInteractions, setReviewInteractions] = useState<ReviewInteraction[]>([]);
+interface ReviewProps {
+  movieId: number;
+  reviews: Review[];
+  lastReviewRef?: (node: HTMLElement | null) => void;
+}
+
+const MovieReview = ({ movieId, reviews: initialReviews, lastReviewRef }: ReviewProps) => {
+  const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [toast, setToast] = useState<{ message: string; direction: "none" | "up" | "down" } | null>(null);
-
-  // 로그인 상태에서 사용자 정보 가져오기
-  const loginState = useRecoilValue(isLogin);
-  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
-
-  // 리뷰 데이터 초기화
-  useEffect(() => {
-    setReviewInteractions(
-      reviews.map((review) => ({
-        likes: review.likes,
-        dislikes: review.dislikes,
-        liked: false, // 초기값
-        disliked: false, // 초기값
-      }))
-    );
-  }, [reviews]);
 
   // 토스트 메시지 표시 함수
   const showToast = (message: string, direction: "none" | "up" | "down" = "none") => {
@@ -77,75 +59,87 @@ const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
     setTimeout(() => setToast(null), 1500); // 1.5초 후 메시지 사라짐
   };
 
-  // 좋아요/싫어요 처리
-  const handleInteraction = async (index: number, type: "like" | "dislike") => {
-    const review = reviews[index];
+  // 서버에서 최신 likes/dislikes 가져오기
+  const fetchLatestReview = async (reviewId: number) => {
+    try {
+      const data = await fetchLineReviewMovie(movieId);
+      const updatedReview = data.data.content.find((r: Review) => r.id === reviewId);
+      return updatedReview;
+    } catch (error) {
+      console.error("최신 리뷰 조회 실패:", error);
+      showToast("서버 요청 중 오류가 발생했습니다.");
+      return null;
+    }
+  };
+
+  // 좋아요/싫어요 클릭 이벤트
+  const handleInteraction = async (reviewId: number, type: "like" | "dislike") => {
+    const reviewIndex = reviews.findIndex((r) => r.id === reviewId);
+    if (reviewIndex === -1) return;
+  
+    const currentReview = reviews[reviewIndex];
+  
+    // 작성자 여부 확인
+    if (currentReview.isAuthor) {
+      showToast("본인이 작성한 한줄평에는 좋아요/싫어요를 할 수 없습니다.");
+      return;
+    }
+  
     const isLike = type === "like";
+    const wasLiked = currentReview.isLiked;
+    const wasDisliked = currentReview.isDisliked;
   
-    // 본인이 작성한 한줄평에 대한 처리 방지
-    if (review.writerNickname === myNickname) {
-      showToast("본인이 작성한 한줄평에 좋아요/싫어요를 할 수 없습니다.", "none");
-      return;
-    }
-  
-    // 현재 리뷰의 상태 가져오기
-    const currentInteraction = reviewInteractions[index];
-    if (!currentInteraction) {
-      console.error(`리뷰 상태를 찾을 수 없습니다: index ${index}`);
-      return;
-    }
-  
-    // 현재 상태를 콘솔에 출력
-    console.log(`현재 리뷰 상태 (index: ${index}):`, {
-      liked: currentInteraction.liked,
-      disliked: currentInteraction.disliked,
-      likes: currentInteraction.likes,
-      dislikes: currentInteraction.dislikes,
-    });
+    // UI 상태를 즉시 업데이트
+    setReviews((prev) =>
+      prev.map((r, idx) =>
+        idx === reviewIndex
+          ? {
+              ...r,
+              isLiked: isLike ? !wasLiked : false,
+              isDisliked: !isLike ? !wasDisliked : false,
+              likes: isLike
+                ? wasLiked
+                  ? r.likes - 1 // 좋아요 취소
+                  : wasDisliked
+                  ? r.likes + 1 // 싫어요에서 좋아요로 전환
+                  : r.likes + 1
+                : r.likes - (wasLiked ? 1 : 0), // 좋아요에서 싫어요로 전환 시 좋아요 감소
+              dislikes: !isLike
+                ? wasDisliked
+                  ? r.dislikes - 1 // 싫어요 취소
+                  : wasLiked
+                  ? r.dislikes + 1 // 좋아요에서 싫어요로 전환
+                  : r.dislikes + 1
+                : r.dislikes - (wasDisliked ? 1 : 0), // 싫어요에서 좋아요로 전환 시 싫어요 감소
+            }
+          : r
+      )
+    );
   
     try {
-      // API 요청 보내기
-      await toggleLineReviewLike(review.id, isLike ? "LIKE" : "DISLIKE");
+      // 서버에 좋아요/싫어요 요청
+      await toggleLineReviewLike(reviewId, isLike ? "LIKE" : "DISLIKE");
   
-      // 상태 업데이트
-      setReviewInteractions((prev) =>
-        prev.map((interaction, idx) => {
-          if (idx !== index) return interaction;
+      // 서버에서 최신 값 가져오기
+      const updatedReview = await fetchLatestReview(reviewId);
   
-          if (isLike) {
-            // 좋아요 버튼 클릭 처리
-            return currentInteraction.liked
-              ? { ...interaction, liked: false, likes: interaction.likes - 1 }
-              : {
-                  ...interaction,
-                  liked: true,
-                  disliked: false,
-                  likes: interaction.likes + 1,
-                  dislikes: currentInteraction.disliked ? interaction.dislikes - 1 : interaction.dislikes,
-                };
-          } else {
-            // 싫어요 버튼 클릭 처리
-            return currentInteraction.disliked
-              ? { ...interaction, disliked: false, dislikes: interaction.dislikes - 1 }
-              : {
-                  ...interaction,
-                  disliked: true,
-                  liked: false,
-                  dislikes: interaction.dislikes + 1,
-                  likes: currentInteraction.liked ? interaction.likes - 1 : interaction.likes,
-                };
-          }
-        })
+      // 서버로부터 받은 최신 상태로 업데이트
+      if (updatedReview) {
+        setReviews((prev) =>
+          prev.map((r) => (r.id === reviewId ? { ...updatedReview } : r))
+        );
+      }
+    } catch (error) {
+      console.error("좋아요/싫어요 처리 실패:", error);
+  
+      // 실패 시 이전 상태 복구
+      setReviews((prev) =>
+        prev.map((r, idx) => (idx === reviewIndex ? { ...currentReview } : r))
       );
-  
-      // 성공 메시지
-      showToast(isLike ? "좋아요를 등록했습니다." : "싫어요를 등록했습니다.", "none");
-    } catch (error: any) {
-      console.error("좋아요/싫어요 처리 중 오류:", error.response?.data || error.message);
       showToast("처리 중 오류가 발생했습니다.");
     }
   };
-  
+
   // 별점 렌더링
   const renderStars = (rating: number) => (
     <StarContainer>
@@ -168,11 +162,6 @@ const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
       hour12: false,
     });
   };
-
-  // 데이터 로딩 중 처리
-  if (reviews.length === 0 || reviewInteractions.length !== reviews.length) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <>
@@ -197,26 +186,18 @@ const MovieReview = ({ reviews, userId, lastReviewRef }: ReviewProps) => {
             </ReviewDetailsContainer>
             <ThumbsButtonWrapper>
               <ThumbsButton
-                onClick={() => handleInteraction(index, "like")}
-                active={reviewInteractions[index]?.liked || false}
+                onClick={() => handleInteraction(review.id, "like")}
+                active={review.isLiked}
               >
-                {reviewInteractions[index]?.liked ? (
-                  <ThumbsUpActiveSvg />
-                ) : (
-                  <ThumbsUpSvg />
-                )}
-                {reviewInteractions[index]?.likes}
+                {review.isLiked ? <ThumbsUpActiveSvg /> : <ThumbsUpSvg />}
+                {review.likes}
               </ThumbsButton>
               <ThumbsButton
-                onClick={() => handleInteraction(index, "dislike")}
-                active={reviewInteractions[index]?.disliked || false}
+                onClick={() => handleInteraction(review.id, "dislike")}
+                active={review.isDisliked}
               >
-                {reviewInteractions[index]?.disliked ? (
-                  <ThumbsDownActiveSvg />
-                ) : (
-                  <ThumbsDownSvg />
-                )}
-                {reviewInteractions[index]?.dislikes}
+                {review.isDisliked ? <ThumbsDownActiveSvg /> : <ThumbsDownSvg />}
+                {review.dislikes}
               </ThumbsButton>
             </ThumbsButtonWrapper>
           </ReviewBody>

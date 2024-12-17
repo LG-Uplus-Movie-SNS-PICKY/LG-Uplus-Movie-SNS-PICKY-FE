@@ -42,6 +42,9 @@ interface Review {
   likes: number;
   dislikes: number;
   createdAt: string;
+  isLiked?: boolean;
+  isDisliked?: boolean;
+  isAuthor?: boolean;
 }
 
 const defaultRatings: RatingsData = {
@@ -301,7 +304,7 @@ const ReviewsPage = () => {
               {sortedReviews.length === 0 ? (
                 <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
               ) : (
-                <MovieReview reviews={sortedReviews} />
+                <MovieReview movieId={movieId} reviews={sortedReviews} />
               )}
             </ReviewsWrapper>
           </MovieReviewContainer>

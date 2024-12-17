@@ -49,6 +49,9 @@ interface Review {
   likes: number;
   dislikes: number;
   createdAt: string;
+  isLiked: boolean;
+  isDisliked: boolean;
+  isAuthor: boolean;
 }
 
 function MovieDetail(props: MovieDetailProps) {
@@ -213,7 +216,8 @@ function MovieDetail(props: MovieDetailProps) {
           {reviews.length === 0 ? (
             <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
           ) : (
-            <MovieReview reviews={reviews} />
+            // movieData.id를 movieId로 전달
+            <MovieReview movieId={movieData.id} reviews={reviews} />
           )}
 
           {/* 전체 리뷰 개수가 0이 아닐 때만 버튼 렌더링 */}
