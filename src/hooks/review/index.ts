@@ -18,7 +18,8 @@ export const useLineReviewMovieQuery = (movieId: number) => {
           lastReviewId:
             lastPage?.data?.content[lastPage?.data?.content.length - 1].id,
           lastCreatedAt:
-            lastPage?.data?.content[lastPage?.data?.content.length - 1].createdAt,
+            lastPage?.data?.content[lastPage?.data?.content.length - 1]
+              .createdAt,
         };
       }
 
@@ -28,6 +29,6 @@ export const useLineReviewMovieQuery = (movieId: number) => {
     initialPageParam: { lastReviewId: 0, lastCreatedAt: "" },
     enabled: !!movieId,
     staleTime: 1000 * 60 * 10,
-    gcTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
   });
 };

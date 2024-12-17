@@ -1,7 +1,7 @@
 import { fetchAllData, fetchGenreMovie } from "@api/movie";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-// React Query를 이용한 무비로그 데이터 갱신신
+// React Query를 이용한 무비로그 데이터 갱신
 export const useFetchAllMovieLogQuery = () => {
   return useInfiniteQuery({
     queryKey: ["movie-log"],

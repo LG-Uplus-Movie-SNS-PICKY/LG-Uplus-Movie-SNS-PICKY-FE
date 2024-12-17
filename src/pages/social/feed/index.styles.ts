@@ -78,6 +78,7 @@ export const contentSection = css`
 
 export const carouselWrapper = css`
   position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
+  cursor: pointer;
 `;
 
 export const carouselSection = css`

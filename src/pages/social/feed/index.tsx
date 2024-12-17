@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   banner,
@@ -35,6 +35,8 @@ import { Toast } from "@stories/toast";
 import { useFetchAllMovieLogQuery } from "@hooks/movie-log";
 import { useInView } from "react-intersection-observer";
 import { MovieLog } from "@stories/movie-log";
+import Loading from "@components/loading";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface BoardContent {
   boardId: number;
@@ -64,6 +66,7 @@ export default function SocialFeed() {
   const navigate = useNavigate();
   const myUserId = 7; // 현재 사용자 ID 설정
   const [showToast, setShowToast] = useState(false); // 토스트 메시지 상태
+  const queryClient = useQueryClient();
 
   const {
     data: board,
@@ -73,13 +76,13 @@ export default function SocialFeed() {
     fetchNextPage,
   } = useFetchAllMovieLogQuery();
 
-  useEffect(() => {
-    if (!isLoading) console.log(board);
-  }, [isLoading]);
+  // useEffect(() => {
+  //   if (!isLoading) console.log(board);
+  // }, [isLoading]);
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
-    threshold: 1.0, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+    threshold: 0.8, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
   });
 
   useEffect(() => {
@@ -110,19 +113,9 @@ export default function SocialFeed() {
   const handleToggleLike = async (boardId: number) => {
     try {
       await toggleLike(boardId);
-      setBoardData((prevData) =>
-        prevData.map((board) =>
-          board.boardId === boardId
-            ? {
-                ...board,
-                likesCount: board.isLike
-                  ? board.likesCount - 1
-                  : board.likesCount + 1,
-                isLike: !board.isLike,
-              }
-            : board
-        )
-      );
+
+      // 좋아요 후 React Query 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
     } catch (error) {
       console.error("좋아요 요청 중 오류 발생:", error);
     }
@@ -149,9 +142,10 @@ export default function SocialFeed() {
 
     try {
       await deletePost(selectedBoard.boardId);
-      setBoardData((prevData) =>
-        prevData.filter((board) => board.boardId !== selectedBoard.boardId)
-      );
+
+      // 삭제 후 React Query 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+      setShowToast(true);
     } catch (error) {
       console.error("게시글 삭제 중 오류 발생:", error);
     } finally {
@@ -175,6 +169,17 @@ export default function SocialFeed() {
     return `${Math.floor(diff / 86400)}일 전`;
   };
 
+  useEffect(() => {
+    if (!isLoading) console.log(board);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (board?.pages) {
+      const newBoardData = board.pages.flatMap((page) => page.data.content);
+      setBoardData(newBoardData);
+    }
+  }, [board]);
+
   return (
     <>
       <SEO
@@ -185,122 +190,162 @@ export default function SocialFeed() {
       <div css={wrapper}>
         <div css={banner}></div>
         <div css={feedContainer}>
-          {boardData.map((board) => {
-            const isSpoilerRevealed = revealedSpoilers.includes(board.boardId);
-            return (
-              <>
-                <div key={board.boardId} css={feedItem}>
-                  <div
-                    css={infoSection}
-                    onClick={() => navigate(`/user/${board.writerNickname}`)} // 마이페이지로 이동
-                    style={{ cursor: "pointer" }} // 클릭 가능한 UI 스타일 추가
-                  >
-                    <div css={profileSection}>
-                      <img
-                        src={board.writerProfileUrl || "/default-profile.png"}
-                        alt="프로필"
-                        style={{
-                          width: "40px",
-                          height: "40px",
-                          borderRadius: "50%",
-                        }}
-                      />
-                    </div>
-                    <div css={textSection}>
-                      {board.writerNickname}
-                      <span css={movieTitle}>{board.movieTitle}</span>
-                    </div>
-                  </div>
-                  <div css={timeSection}>
-                    {calculateTimeAgo(board.createdDate)}
-                  </div>
-                </div>
+          {isLoading && <Loading />}
+          {Array.isArray(board?.pages) &&
+            board.pages.map((page, idx) => (
+              <React.Fragment key={idx}>
+                {Array.isArray(page.data.content) &&
+                  page.data.content.map((board: BoardContent) => {
+                    const isSpoilerRevealed = revealedSpoilers.includes(
+                      board.boardId
+                    );
 
-                <div
-                  css={[
-                    contentSection,
-                    board.isSpoiler && !isSpoilerRevealed && blurredContent,
-                  ]}
-                  onClick={() =>
-                    navigate(`/movie-log/detail/${board.boardId}`, {
-                      state: board,
-                    })
-                  }
-                >
-                  {board.context}
-                </div>
+                    return (
+                      <>
+                        <div key={board.boardId} css={feedItem}>
+                          <div
+                            css={infoSection}
+                            onClick={() =>
+                              navigate(`/user/${board.writerNickname}`)
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            <div css={profileSection}>
+                              <img
+                                src={
+                                  board.writerProfileUrl ||
+                                  "/default-profile.png"
+                                }
+                                alt="프로필"
+                                style={{
+                                  width: "40px",
+                                  height: "40px",
+                                  borderRadius: "50%",
+                                }}
+                              />
+                            </div>
+                            <div css={textSection}>
+                              {board.writerNickname}
+                              <span css={movieTitle}>{board.movieTitle}</span>
+                            </div>
+                          </div>
+                          <div css={timeSection}>
+                            {calculateTimeAgo(board.createdDate)}
+                          </div>
+                        </div>
 
-                <div
-                  css={carouselWrapper}
-                  onClick={() =>
-                    navigate(`/movie-log/detail/${board.boardId}`, {
-                      state: board,
-                    })
-                  }
-                >
-                  <div
-                    css={[
-                      carouselSection,
-                      board.isSpoiler && !isSpoilerRevealed && blurredImage,
-                    ]}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (board.isSpoiler && !isSpoilerRevealed)
-                        revealSpoiler(board.boardId);
-                    }}
-                  >
-                    <MovieLog
-                      boardContent={board.contents.map((content, index) => ({
-                        board_content_id: index, // index를 고유 ID로 사용 (숫자)
-                        board_content_url: content.contentUrl, // URL
-                        board_content_type:
-                          content.boardContentType === "VIDEO"
-                            ? "VIDEO"
-                            : "IMAGE", // 타입 설정
-                      }))}
-                    />
-                  </div>
-                  {board.isSpoiler && !isSpoilerRevealed && (
-                    <div css={spoilerText}>
-                      🚨스포주의🚨 <br /> <p>탭해서 보기</p>
-                    </div>
-                  )}
-                </div>
+                        <div
+                          css={[
+                            contentSection,
+                            board.isSpoiler &&
+                              !isSpoilerRevealed &&
+                              blurredContent,
+                          ]}
+                          onClick={() =>
+                            navigate(`/movie-log/detail/${board.boardId}`, {
+                              state: board,
+                            })
+                          }
+                        >
+                          {board.context}
+                        </div>
 
-                <div css={reactionsContainer}>
-                  <div css={reactionsSection}>
-                    <span onClick={() => handleToggleLike(board.boardId)}>
-                      {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
-                      <span className="like-number">{board.likesCount}</span>
-                    </span>
-                    <span
-                      onClick={() =>
-                        navigate(`/movie-log/detail/${board.boardId}`, {
-                          state: board,
-                        })
-                      }
-                    >
-                      <CommentFeed />
-                      <span className="comment-number">
-                        {board.commentsCount}
-                      </span>
-                    </span>
-                  </div>
+                        <div
+                          css={carouselWrapper}
+                          onClick={() => {
+                            // 스포일러가 가려져 있으면 먼저 해제
+                            if (
+                              board.isSpoiler &&
+                              !revealedSpoilers.includes(board.boardId)
+                            ) {
+                              revealSpoiler(board.boardId);
+                            } else {
+                              // 스포일러가 없으면 바로 페이지 이동
+                              navigate(`/movie-log/detail/${board.boardId}`, {
+                                state: board,
+                              });
+                            }
+                          }}
+                        >
+                          <div
+                            css={[
+                              carouselSection,
+                              board.isSpoiler &&
+                                !revealedSpoilers.includes(board.boardId) &&
+                                blurredImage,
+                            ]}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {/* MovieLog 컴포넌트 */}
+                            <MovieLog
+                              boardContent={board.contents.map(
+                                (content, index) => ({
+                                  board_content_id: index, // index를 고유 ID로 사용
+                                  board_content_url: content.contentUrl, // URL
+                                  board_content_type:
+                                    content.boardContentType === "VIDEO"
+                                      ? "VIDEO"
+                                      : "IMAGE", // 타입 설정
+                                })
+                              )}
+                            />
+                          </div>
 
-                  <div
-                    css={moreOptions}
-                    onClick={() => handleOptionsModal(board)}
-                  >
-                    <ReportButton />
-                  </div>
-                </div>
-              </>
-            );
-          })}
+                          {/* 스포일러 안내 텍스트 */}
+                          {board.isSpoiler &&
+                            !revealedSpoilers.includes(board.boardId) && (
+                              <div css={spoilerText}>
+                                🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+                              </div>
+                            )}
+                        </div>
+
+                        <div css={reactionsContainer}>
+                          <div css={reactionsSection}>
+                            <span
+                              onClick={() => handleToggleLike(board.boardId)}
+                            >
+                              {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
+                              <span className="like-number">
+                                {board.likesCount}
+                              </span>
+                            </span>
+                            <span
+                              onClick={() =>
+                                navigate(`/movie-log/detail/${board.boardId}`, {
+                                  state: board,
+                                })
+                              }
+                            >
+                              <CommentFeed />
+                              <span className="comment-number">
+                                {board.commentsCount}
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            css={moreOptions}
+                            onClick={() => handleOptionsModal(board)}
+                          >
+                            <ReportButton />
+                          </div>
+                        </div>
+
+                        <div
+                          css={moreOptions}
+                          onClick={() => handleOptionsModal(board)}
+                        >
+                          <ReportButton />
+                        </div>
+                      </>
+                    );
+                  })}
+              </React.Fragment>
+            ))}
+
+          <div ref={ref} style={{ width: "100%", height: "10px" }} />
         </div>
       </div>
-
-      <div ref={ref} style={{ height: "10px" }} />
 
       {isOptionsModalOpen && selectedBoard && (
         <div css={modalOverlay} onClick={() => setIsOptionsModalOpen(false)}>
