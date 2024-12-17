@@ -62,6 +62,7 @@ export default {
         width: 60px;
         border-radius: 4px;
         overflow: hidden;
+        cursor: pointer;
 
         & > img {
           width: 100%;
@@ -180,6 +181,7 @@ export default {
       position: absolute;
       top: 4px;
       right: 4px;
+      cursor: pointer;
     `;
   },
 
@@ -264,4 +266,11 @@ export const LoadingContainer = styled.div`
   height: 50px;
   width: 150px;
   margin: 0 auto;
+`;
+
+export const ModalWrapper = styled.div`
+  display: flex;
+  width: 200x;
+  justify-content: center;
+  align-items: center;
 `;

@@ -1,4 +1,4 @@
-import styles, { Star, StarContainer, StarRating, LoadingContainer } from "./index.styles";
+import styles, { Star, StarContainer, StarRating, LoadingContainer, ModalWrapper } from "./index.styles";
 import EmptyReview from "@assets/icons/my-page/empty-review.svg?react";
 
 import ThumbsUpSvg from "@assets/icons/thumbs_up_mini.svg?react";
@@ -169,23 +169,21 @@ function LineReviewContent() {
   };
 
   const confirmDelete = async () => {
-    if (!selectedReviewId) return;
+    if (!selectedReviewId) return; // 선택된 리뷰 ID가 없으면 반환
 
     try {
       // DELETE API 호출
       await deleteLineReview(selectedReviewId);
 
-      // 삭제 성공 시 리뷰 목록에서 제거
-      setReviews((prev) =>
-        prev.filter((review) => review.id !== selectedReviewId)
-      );
+      // 성공적으로 삭제되면 UI 상태 업데이트
+      setReviews((prev) => prev.filter((review) => review.id !== selectedReviewId));
 
-      await showToast("한줄평 삭제가 완료되었습니다.", "up");
+      await showToast("한줄평 삭제가 완료되었습니다.", "none");
     } catch (err) {
-      console.error("한줄평 삭제 중 오류 발생", err);
-      await showToast("한줄평 삭제에 실패했습니다.", "down");
+      console.error("한줄평 삭제 중 오류 발생:", err);
+      await showToast("한줄평 삭제에 실패했습니다.", "none");
     } finally {
-      handleModalClose();
+      handleModalClose(); // 모달 닫기
     }
   };
 
@@ -294,13 +292,15 @@ function LineReviewContent() {
       {isModalOpen &&
         ReactDOM.createPortal(
           <div css={styles.modalContainer()} onClick={handleModalClose}>
-            <Modal
-              message="삭제하시겠습니까?"
-              confirmText="삭제하기"
-              cancelText="취소"
-              onConfirm={confirmDelete}
-              onCancel={handleModalClose}
-            />
+            <ModalWrapper>
+              <Modal
+                message="삭제하시겠습니까?"
+                confirmText="삭제하기"
+                cancelText="취소"
+                onConfirm={confirmDelete}
+                onCancel={handleModalClose}
+              />
+            </ModalWrapper>
           </div>,
           document.body // body에 렌더링
         )}

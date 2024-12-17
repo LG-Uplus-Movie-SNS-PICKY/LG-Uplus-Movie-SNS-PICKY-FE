@@ -26,16 +26,19 @@ import { createLineReview } from '@api/linereview';
 import { getCookie } from '@util/cookie';
 
 interface Review {
-    id: number;
-    writerNickname: string;
-    userId: number;
-    movieId: number;
-    rating: number;
-    context: string;
-    isSpoiler: boolean;
-    likes: number;
-    dislikes: number;
-    createdAt: string;
+  id: number;
+  writerNickname: string;
+  userId: number;
+  movieId: number;
+  rating: number;
+  context: string;
+  isSpoiler: boolean;
+  likes: number;
+  dislikes: number;
+  createdAt: string;
+  isLiked?: boolean;
+  isDisliked?: boolean;
+  isAuthor?: boolean;
 }
 
 interface ReviewRegistProps {

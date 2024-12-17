@@ -119,7 +119,7 @@ export async function updateLineReview(
 // 한줄평 삭제 DELETE API
 export async function deleteLineReview(lineReviewId: number) {
   try {
-    const { data } = await apiClient.delete(`/linereview/${lineReviewId}`);
+    const { data } = await apiClient.delete(`/linereview/delete/${lineReviewId}`);
     return data;
   } catch (error) {
     console.error("한줄평 삭제 중 오류 발생:", error);
@@ -127,6 +127,7 @@ export async function deleteLineReview(lineReviewId: number) {
   }
 }
 
+// 특정 유저의 무비로그(게시글) 조회 GET API
 export const fetchUserBoards = async (
   nickname: string,
   size: number = 10,
