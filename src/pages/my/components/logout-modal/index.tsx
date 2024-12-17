@@ -1,10 +1,11 @@
 // pages/my/components/logout-modal/index.tsx
 import React, { useEffect, useState } from 'react';
 import {
-    ModalContainer,
-    ModalWrapper,
-    ModalItem,
-    ModalBackground
+  ModalContainer,
+  ModalWrapper,
+  ModalItem,
+  ModalBackground,
+  ModalWidth,
 } from './index.styles';
 import { Toast } from '@stories/toast'
 import { Modal } from '@stories/modal'
@@ -133,19 +134,21 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
       {/* 확인 모달 */}
       {isConfirmModalOpen && (
         <ModalBackground onClick={() => setIsConfirmModalOpen(false)}>
-          <Modal
-            message={modalMessage}
-            confirmText={
-              modalMessage === "로그아웃하시겠습니까?" ? "로그아웃" : "회원탈퇴"
-            }
-            cancelText="취소"
-            onConfirm={
-              modalMessage === "로그아웃하시겠습니까?"
-                ? handleConfirmLogout
-                : handleConfirmCancelMembership
-            }
-            onCancel={handleCancel}
-          />
+          <ModalWidth>
+            <Modal
+              message={modalMessage}
+              confirmText={
+                modalMessage === "로그아웃하시겠습니까?" ? "로그아웃" : "회원탈퇴"
+              }
+              cancelText="취소"
+              onConfirm={
+                modalMessage === "로그아웃하시겠습니까?"
+                  ? handleConfirmLogout
+                  : handleConfirmCancelMembership
+              }
+              onCancel={handleCancel}
+            />
+          </ModalWidth>
         </ModalBackground>
       )}
 
