@@ -52,7 +52,7 @@ export default function Login() {
         path: "/", // 모든 경로에서 접근 가능
         maxAge: 60 * 60 * 24, // 1일 (초 단위)
         sameSite: "strict", // 보안 설정
-        secure: false, // HTTPS 필요 여부 (개발 시 false)
+        secure: true, // HTTPS 필요 여부 (개발 시 false)
       });
 
       setIsLoginState({

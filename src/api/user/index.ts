@@ -1,4 +1,6 @@
 import apiClient from "@api";
+import { getCookie } from "@util/cookie";
+import { isEmpty } from "lodash";
 
 // 닉네임 중복 체크를 위한 GET API
 export async function fetchNicknameValidation(nickname: string) {
@@ -28,8 +30,16 @@ export async function fetchMoviesByGenre(favoriteGenres: number[]) {
 
 // 사용자의 정보를 가져오는 GET API
 export async function fetchGetUserInfo() {
-  const { data } = await apiClient.get("/user");
-  return data;
+  const token = getCookie("token") || {};
+
+  if (!isEmpty(token)) {
+    const { data } = await apiClient.get("/user", {
+      headers: { Authorization: `Bearer ${token.localJwtDto.accessToken}` },
+    });
+    return data;
+  }
+
+  return;
 }
 
 // 사용자의 모든 정보를 보내는 PATCH API
@@ -58,6 +68,14 @@ export async function fetchProfileUser(formData: FormData) {
 export async function fetchUserInfo(nickname: string) {
   const { data } = await apiClient.get(`/user/mypage/${nickname}`);
   return data;
+}
+
+// 회원탈퇴 DELETE API
+export async function cancelMembership(platform: string, oAuth2Token: any) {
+  const response = await apiClient.delete(`/oauth/${platform}/user`, {
+    data: { oAuth2Token }, // DELETE 메서드의 경우, data로 payload를 전달해야 합니다.
+  });
+  return response.data;
 }
 
 /** 영화 검색 API */

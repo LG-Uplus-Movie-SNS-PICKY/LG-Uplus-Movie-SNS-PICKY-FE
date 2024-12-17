@@ -177,10 +177,41 @@ const ReviewsPage = () => {
     : allReviews.filter((review) => !review.isSpoiler); // 스포일러 제거
 
   // 새로운 리뷰 추가 함수
-  const handleAddReview = (newReview: Review) => {
-    console.log("새로 추가된 리뷰 데이터:", newReview); // 전달된 리뷰 데이터 확인
-    setReviews((prevReviews) => [newReview, ...prevReviews]); // 새로운 리뷰를 앞에 추가
+  // const handleAddReview = (newReview: Review) => {
+  //   console.log("새로 추가된 리뷰 데이터:", newReview); // 전달된 리뷰 데이터 확인
+  //   setReviews((prevReviews) => [newReview, ...prevReviews]); // 새로운 리뷰를 앞에 추가
+  // };
+  const handleAddReview = async (newReview: Review) => {
+    console.log("새로 추가된 리뷰 데이터:", newReview);
+    setReviews((prevReviews) => [newReview, ...prevReviews]);
+
+    // 추가: ratings와 genders 데이터 다시 가져오기
+    try {
+      const updatedRatings = await fetchRatings(movieId);
+      const updatedGenders = await fetchGenders(movieId);
+      setRatings(updatedRatings);
+      setGenders(updatedGenders);
+      console.log("업데이트된 평점 데이터:", updatedRatings);
+      console.log("업데이트된 성별 데이터:", updatedGenders);
+    } catch (error) {
+      console.error("Error fetching updated ratings or genders:", error);
+    }
   };
+
+  useEffect(() => {
+    const fetchUpdatedData = async () => {
+      try {
+        const updatedRatings = await fetchRatings(movieId);
+        const updatedGenders = await fetchGenders(movieId);
+        setRatings(updatedRatings);
+        setGenders(updatedGenders);
+      } catch (error) {
+        console.error("Error fetching updated data:", error);
+      }
+    };
+
+    fetchUpdatedData();
+  }, [reviews]); // 리뷰가 변경될 때마다 실행
 
   // 정렬된 리뷰 데이터
   const sortedReviews = [...reviews]
@@ -237,6 +268,7 @@ const ReviewsPage = () => {
             <ReviewRegist movieId={movieId} refetch={refetch} onAddReview={handleAddReview} />
 
             <ReviewsWrapper>
+              
               <FilterContainer>
                 <SortContainer>
                   <SortOption
@@ -265,9 +297,11 @@ const ReviewsPage = () => {
               </FilterContainer>
 
               <MovieReview reviews={sortedReviews} />
+            </ReviewsWrapper>
+          </MovieReviewContainer>
 
-              {/* 리뷰 데이터 */}
-              {/* {isLoading ? (
+          {/* 리뷰 데이터 */}
+          {/* {isLoading ? (
                 <LoadingContainer>
                   <Loading />
                 </LoadingContainer>
@@ -276,9 +310,8 @@ const ReviewsPage = () => {
                   <MovieReview reviews={sortedReviews || []} />
                 </>
               )} */}
-            </ReviewsWrapper>
-          </MovieReviewContainer>
-          <div ref={ref} style={{ height: "20px" }} />
+
+          {/* <div ref={ref} style={{ height: "20px" }} />
           {isFetchingNextPage &&
             <LoadingContainer>
               <Loading />
@@ -288,7 +321,7 @@ const ReviewsPage = () => {
             <div style={{ textAlign: "center", margin: "16px", fontWeight: "600" }}>
               마지막 리뷰입니다.
             </div>
-          )}
+          )} */}
         </div>
       </>
     )

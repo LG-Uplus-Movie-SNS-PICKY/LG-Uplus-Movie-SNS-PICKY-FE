@@ -10,6 +10,7 @@ export const Container = styled.div`
   gap: 16px;
   background-color: #FFFFFF;
   border-radius: 20px;
+  max-width: 398px;
   width: 100%;
 `;
 
@@ -165,3 +166,35 @@ export const MaxText = styled.span`
   color: #9D9D9D;
   text-align: center;
 `;
+
+export const EditModalBackground = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 10001; /* LogoutModal보다 높은 값 설정 */
+`;
+
+export const ModalBackground = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 10002; /* LogoutModal보다 높은 값 설정 */
+`;
+
+export const ModalWrapper = styled.div`
+  display: flex;
+  max-width: 320px;
+  width: 100%;
+`

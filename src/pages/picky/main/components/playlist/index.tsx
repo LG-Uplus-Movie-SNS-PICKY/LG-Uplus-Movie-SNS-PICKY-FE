@@ -96,8 +96,6 @@ function PlayListSection() {
                   >
                     {playlist.getSimpleMovieResps.length > 0 &&
                       playlist.getSimpleMovieResps.map((movie) => {
-                        console.log(movie.posterUrl);
-
                         return (
                           <SwiperSlide key={movie.movieId}>
                             <MovieItem

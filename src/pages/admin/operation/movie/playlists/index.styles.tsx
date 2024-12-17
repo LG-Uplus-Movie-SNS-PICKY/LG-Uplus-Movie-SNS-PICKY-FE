@@ -4,44 +4,31 @@ export default {
   titleHeaderContainer(): SerializedStyles {
     return css`
       width: 100%;
+
       display: flex;
-      gap: 28px;
+      justify-content: space-between;
+      align-items: center;
 
       background-color: #fff;
-      padding: 12px 8px;
+      padding: 4px 16px;
       border-radius: 4px;
 
-      box-shadow: 0 0 4px rgba(193, 193, 193, 0.4);
+      font-size: 14px;
+      font-weight: 600;
 
-      & > .container {
-        width: 100%;
+      & > .playlist-button {
         display: flex;
+        gap: 4px;
+        border: 1px solid #aaa;
+        padding: 2px 8px;
+
+        border-radius: 16px;
+        background-color: transparent;
+
         align-items: center;
-        justify-content: space-between;
+        cursor: pointer;
 
-        font-size: 14px;
-        font-weight: 600;
-
-        & > .section {
-          display: flex;
-        }
-
-        & > .section.total {
-          gap: 4px;
-          color: #9d9d9d;
-        }
-
-        & > .section.add button {
-          display: flex;
-          border: 1px solid #aaa;
-
-          padding: 2px 8px;
-          border-radius: 16px;
-          background-color: transparent;
-          align-items: center;
-          gap: 4px;
-          cursor: pointer;
-        }
+        color: #333;
       }
     `;
   },
@@ -49,7 +36,7 @@ export default {
   playlistContainer(): SerializedStyles {
     return css`
       width: 100%;
-      background-color: #f0f0f0;
+      /* background-color: #f0f0f0; */
       padding: 16px;
       display: flex;
       flex-direction: column;

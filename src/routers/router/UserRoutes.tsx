@@ -12,7 +12,7 @@ import MovieReviews from "@pages/movie-detail/reviews";
 import { Feed, Comment } from "@pages";
 import Post from "@pages/social/post";
 import PostModify from "@pages/social/modify";
-
+import MovieFeed from "@pages/social/movie-feed";
 import PickyPage from "@pages/picky/main";
 import PickyGenreDetailPage from "@pages/picky/genre-detail";
 import Search from "@pages/search";
@@ -45,6 +45,7 @@ function UserRoutes() {
           <Route path="detail/:boardId" element={<Comment />} />
           <Route path="add" element={<Post />} />
           <Route path="edit/:boardId" element={<PostModify />} />
+          <Route path=":movieId" element={<MovieFeed />} />
         </Route>
 
         {/* 중첩 라우트를 사용하지 않아도 되는 이외 Routes */}

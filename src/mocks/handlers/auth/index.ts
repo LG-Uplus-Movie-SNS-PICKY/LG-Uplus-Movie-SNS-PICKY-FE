@@ -56,18 +56,15 @@ const authHandler: HttpHandler[] = [
           expires_in: "string",
         },
         localJwtDto: {
-          accessToken: userInfo.user_id,
+          accessToken:
+            "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MjYsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0Mzk0NTQ2LCJleHAiOjE3MzQ0ODA5NDZ9.zjwFoqqJykyVDrzFqKvhj8WjFtyh57T9gyMmhhdm8WE",
         },
         isAuthUser: userInfo.user_role === "Admin",
         isRegistrationDone: true,
         user: {
-          name: userInfo.user_name,
           nickname: userInfo.user_nickname,
           profile_url: userInfo.user_profile_url,
-          birthdate: userInfo.user_birthdate,
           gender: userInfo.user_gender,
-          nationality: userInfo.user_nationality,
-          genres: [],
         },
       };
 

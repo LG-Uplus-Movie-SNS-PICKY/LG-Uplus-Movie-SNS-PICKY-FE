@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import { fetchUserBoards } from "@api/linereview"; // API 파일에서 가져오기
+import { useNavigate } from "react-router-dom";
 import EmptyFeed from "@assets/icons/my-page/empty-feed.svg?react";
 import styles from "./index.styles";
+import { fetchUserMovieLogs } from "@api/movie";
 
 export interface MovieLogData {
-  id: number;
-  contentUrl: string;
+  boardId: number;
+  contents: {
+    contentUrl: string; // 영화 포스터 URL
+    boardContentType: string;
+  }[];
 }
 
 interface MovieLogContentProps {
-  nickname: string; // 닉네임을 외부에서 전달받도록 설정
+  nickname: string; // 닉네임을 프로퍼티로 전달
 }
 
 function EmptyMovieLog() {
@@ -23,51 +27,62 @@ function EmptyMovieLog() {
 
 function MovieLogContent({ nickname }: MovieLogContentProps) {
   const [data, setData] = useState<MovieLogData[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
+  const navigate = useNavigate();
+  const loadMovieLogs = async () => {
+    try {
+      const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
+      const newLogs = response.data.content || [];
+      setData((prev) => [...prev, ...newLogs]);
+      console.log(newLogs);
+      // 마지막 boardId 업데이트
+      if (newLogs.length > 0) {
+        setLastBoardId(newLogs[newLogs.length - 1].boardId);
+      }
+    } catch (error) {
+      console.error("게시글 조회 중 오류 발생:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetchUserBoards(nickname);
-        const fetchedData = response.content.map((item: any) => ({
-          id: item.boardId,
-          contentUrl: item.contents[0]?.contentUrl || "", // 첫 번째 이미지 URL
-        }));
-
-        setData(fetchedData);
-      } catch (error) {
-        console.error("데이터 가져오기 실패:", error);
-        setData([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
+    loadMovieLogs();
   }, [nickname]);
-
-  if (isLoading) {
-    return <div>로딩 중...</div>;
-  }
 
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyMovieLog />}
       {data.length > 0 &&
-        data.map((element) => (
-          <div key={element.id} className="movie-log">
-            {/* contentUrl 이미지를 렌더링 */}
-            {element.contentUrl ? (
-              <img
-                src={element.contentUrl}
-                alt={`게시글 ${element.id}`}
-                style={{ width: "100%", height: "auto", marginBottom: "10px" }}
-              />
-            ) : (
-              <p>이미지가 없습니다.</p>
-            )}
-          </div>
-        ))}
+        data.map((element) => {
+          // contents 중 첫 번째 이미지만 사용
+          const posterUrl =
+            element.contents.find(
+              (content) => content.boardContentType === "IMAGE"
+            )?.contentUrl || "";
+
+          return (
+            <div
+              key={element.boardId}
+              className="movie-log"
+              onClick={() => {
+                console.log(element.boardId);
+                navigate(`/movie-log/detail/${element.boardId}`);
+              }}
+            >
+              {posterUrl ? (
+                <img
+                  src={posterUrl}
+                  alt="movie-poster"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              ) : (
+                <EmptyFeed /> // 포스터가 없으면 대체 이미지
+              )}
+            </div>
+          );
+        })}
     </div>
   );
 }

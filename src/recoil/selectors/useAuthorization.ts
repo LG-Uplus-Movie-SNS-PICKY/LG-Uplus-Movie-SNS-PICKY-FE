@@ -32,11 +32,8 @@ export const useSyncLoginState = () => {
         isLoginState: false,
         isAuthUser: false,
         isLoginInfo: {
-          name: "",
           nickname: "",
           profile_url: "",
-          nationlity: "",
-          birthdate: "",
           gender: "",
         },
         isLoading: false,

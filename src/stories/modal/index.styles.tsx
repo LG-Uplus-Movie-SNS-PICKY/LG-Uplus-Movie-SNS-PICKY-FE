@@ -12,6 +12,8 @@ export default {
         text-align: center;
         white-space: normal;
         box-sizing: border-box;
+        max-width: 398px;
+        width: 100%;
         `;
     },
     modalMessage(): SerializedStyles {

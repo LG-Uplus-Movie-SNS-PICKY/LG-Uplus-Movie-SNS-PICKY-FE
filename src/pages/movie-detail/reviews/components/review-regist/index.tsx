@@ -64,13 +64,13 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
         if (event.target.value.length <= 50) {
             setReview(event.target.value);
         } else {
-            showToast("감상평은 최대 50자까지 입력 가능합니다.", 'none');
+            showToast("한줄평은 최대 50자까지 입력 가능합니다.", 'none');
         }
     };
 
     const handleSubmit = async () => {
         if (rating === 0 || spoiler === null || review.length === 0) {
-            showToast("모든 입력 필드를 채워주세요.", "up");
+            showToast("모든 입력 필드를 채워주세요.", "none");
             return;
         }
 
@@ -82,9 +82,6 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
             showToast("사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요.", "up");
             return;
         }
-
-        console.log("userInfo:", userInfo.localJwtDto.accessToken);
-        console.log("userInfo:", userInfo.user.nickname);
 
         const newReview = {
             id: Date.now(), // 임시 ID
@@ -106,13 +103,13 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
             // 새 리뷰 추가
             onAddReview(newReview);
 
-            showToast("한줄평 등록이 완료되었습니다.", "up");
+            showToast("한줄평 등록이 완료되었습니다.", "none");
             setRating(0);
             setReview("");
             setSpoiler(null);
         } catch (error) {
             console.error("등록 실패:", error);
-            showToast("한줄평 등록에 실패했습니다.", "down");
+            showToast("하나의 영화에 하나의 한줄평만 작성할 수 있습니다.", "none");
         }
     };
 

@@ -4,13 +4,18 @@ import QueryProvider from "./provider/QueryProvider";
 import NotificationSSE from "@hooks/notification/connect";
 
 import { HelmetProvider } from "react-helmet-async";
+import NotificationBadge from "@hooks/notification/connect/badge";
 
 function App() {
   return (
     <HelmetProvider>
       <RecoilRoot>
         <QueryProvider>
+          {/* 알림 연결 */}
           <NotificationSSE />
+
+          {/* 읽지 않은 알림 수 전역 상태 관리 */}
+          <NotificationBadge />
           <Router />
         </QueryProvider>
       </RecoilRoot>
