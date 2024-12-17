@@ -70,9 +70,17 @@ export default {
   movieContainer(): SerializedStyles {
     return css`
       width: 100%;
+      flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      /* gap: 24px; */
+
+      & > .movies {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
     `;
   },
 };
