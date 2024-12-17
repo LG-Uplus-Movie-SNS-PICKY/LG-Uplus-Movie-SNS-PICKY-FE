@@ -331,6 +331,12 @@ export default function FeedComment() {
             placeholder="댓글 추가..."
             value={comment}
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleCommentSubmit();
+              }
+            }}
           />
           {comment.trim() ? (
             <RegistCommentActive
@@ -342,6 +348,7 @@ export default function FeedComment() {
           )}
         </div>
       </div>
+
       {/* 모달 및 토스트 */}
       {showToast && <Toast message={toastMessage} direction="down" />}
     </div>

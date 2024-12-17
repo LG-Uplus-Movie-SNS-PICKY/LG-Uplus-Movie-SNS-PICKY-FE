@@ -1,6 +1,6 @@
 import { useState, useEffect, ChangeEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { updateBoard } from "@api/movie"; // 수정 API import
+import { updateBoard } from "@api/movie";
 import BackPost from "@assets/icons/back_post.svg?react";
 import Review from "@assets/icons/review.svg?react";
 import { Button } from "@stories/button";
@@ -34,11 +34,14 @@ export default function PostModify() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // 이전 페이지에서 넘어온 게시글 데이터
-  const { state } = location;
+  // 초기값 설정 및 유효성 검사
+  const { state } = location || {};
+  if (!state) {
+    return <div>잘못된 접근입니다. 데이터를 불러올 수 없습니다.</div>;
+  }
+
   const { boardId, movieTitle, contents, boardContext, isSpoiler } = state;
 
-  // 상태
   const [reviewText, setReviewText] = useState<string>(boardContext || "");
   const [selectedSpoiler, setSelectedSpoiler] = useState<string>(
     isSpoiler ? "있음" : "없음"
@@ -104,17 +107,9 @@ export default function PostModify() {
         {contents?.map((content: any, index: number) => (
           <div key={index} style={{ margin: "10px 0" }}>
             {content.boardContentType === "PHOTO" ? (
-              <img
-                src={content.contentUrl}
-                alt="게시물 사진"
-                style={{ width: "100%", borderRadius: "8px" }}
-              />
+              <img src={content.contentUrl} alt="게시물 사진" />
             ) : (
-              <video
-                controls
-                src={content.contentUrl}
-                style={{ width: "100%", borderRadius: "8px" }}
-              />
+              <video controls src={content.contentUrl} />
             )}
           </div>
         ))}
