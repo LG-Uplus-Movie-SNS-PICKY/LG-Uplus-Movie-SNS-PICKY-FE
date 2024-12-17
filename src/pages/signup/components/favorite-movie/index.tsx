@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
-import { ArrowLeft, ArrowRight, Checked } from "../../../../assets/svg";
+import { ArrowLeft, ArrowRight, Checked } from "@assets/svg";
 import {
   consentWrapper,
   wrapper,
