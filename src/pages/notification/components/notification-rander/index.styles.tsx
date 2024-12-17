@@ -55,6 +55,9 @@ export default {
           & > span:last-child {
             position: absolute;
 
+            width: 48px;
+            height: 48px;
+
             top: 50%;
             left: 50%;
 
@@ -62,12 +65,10 @@ export default {
 
             font-size: 8px;
             color: #5e5e5e;
-          }
 
-          & > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            & img {
+              width: 100%;
+            }
           }
         }
 
@@ -90,14 +91,31 @@ export default {
       }
 
       & > .movie-log-thumbnail {
+        position: relative;
+
         width: 48px;
         height: 48px;
         border-radius: 4px;
-        background-color: blue;
+        background-color: #191919;
         overflow: hidden;
 
-        & > img {
-          width: 100%;
+        & > span:last-child {
+          position: absolute;
+
+          width: 48px;
+          height: 48px;
+
+          top: 50%;
+          left: 50%;
+
+          transform: translate(-50%, -50%);
+
+          font-size: 8px;
+          color: #5e5e5e;
+
+          & img {
+            width: 100%;
+          }
         }
       }
     `;

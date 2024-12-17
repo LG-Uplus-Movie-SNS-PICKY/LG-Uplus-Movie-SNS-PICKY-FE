@@ -182,6 +182,7 @@ function NotificationRander({
                     src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
                       notif.moviePosterUrl
                     }`}
+                    effect="blur"
                     onLoad={() => setMovieImageLoading(true)}
                     onError={() => setMovieImageLoading(false)}
                   />
