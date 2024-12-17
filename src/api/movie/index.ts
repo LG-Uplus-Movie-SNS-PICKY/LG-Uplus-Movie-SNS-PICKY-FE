@@ -202,7 +202,10 @@ export async function deleteComment(
   commentId: number
 ): Promise<void> {
   try {
-    await apiClient.delete(`/board/${boardId}/comments/${commentId}`);
+    // commentId를 query 파라미터로 추가
+    await apiClient.delete(`/board/${boardId}/comments`, {
+      params: { commentId }, // Axios에서는 query 파라미터를 params에 설정
+    });
   } catch (error) {
     console.error("댓글 삭제 중 오류 발생:", error);
     throw error;
