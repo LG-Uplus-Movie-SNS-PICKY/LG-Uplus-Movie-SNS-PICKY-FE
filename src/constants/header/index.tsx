@@ -19,7 +19,8 @@ export function useHeaderConfig(
   isAuthUser: boolean,
   navigate: NavigateFunction,
   resetLoginState: Resetter,
-  setLoginState: SetterOrUpdater<LoginStateTypes>
+  setLoginState: SetterOrUpdater<LoginStateTypes>,
+  notificationCount: number
 ): HeaderConfigReturn {
   if (isLoginState) {
     if (isAuthUser) {
@@ -47,7 +48,7 @@ export function useHeaderConfig(
       <AddCircle onClick={() => navigate && navigate("/movie-log/add")} />,
       <div className="notification">
         <Notification onClick={() => navigate && navigate("/notification")} />
-        <div className="notification-badge" />
+        {notificationCount > 0 && <div className="notification-badge" />}
       </div>,
       <Search onClick={() => navigate && navigate("/search")} />,
     ];

@@ -14,8 +14,6 @@ import { useEffect } from "react";
 function Main() {
   const isLoginState = useRecoilValue(isLogin);
 
-  const count = useRecoilValue(unreadCountState);
-
   const onClick = async () => {
     const user = getCookie("user");
     // reciverId = 17
@@ -38,9 +36,9 @@ function Main() {
         description="PICKY는 영화 리뷰와 정보를 한곳에서 확인하고, 영화 팬들을 위한 최적의 커뮤니티 서비스입니다."
       />
 
-      {/* {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === "development" && (
         <button onClick={onClick}>Hello</button>
-      )} */}
+      )}
 
       {/* Slider or Banner Section */}
       {!isLoginState.isLoginState ? <LoginBanner /> : <RecommendMovieSlider />}
