@@ -47,6 +47,10 @@ export default {
       & > .select-genre {
         width: 100%;
 
+        &.is-loading {
+          display: flex;
+        }
+
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 12px;

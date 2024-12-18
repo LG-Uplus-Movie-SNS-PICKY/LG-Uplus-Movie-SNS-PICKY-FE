@@ -49,7 +49,7 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
         </div>
 
         {/* Select Genre Movies */}
-        <div className="select-genre">
+        <div className={`select-genre ${isLoading ? "is-loading" : ""}`}>
           {isLoading && (
             <div
               style={{
