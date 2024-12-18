@@ -23,6 +23,7 @@ import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/scrollbar";
 import { FreeMode, Mousewheel } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 
 interface CastMember {
   name: string;
@@ -36,6 +37,10 @@ interface MovieInfoProps {
 }
 
 const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
+  const handleFormClick = () => {
+    window.location.href = "https://forms.gle/b77FKmh6vrHA6Ck59";
+  };
+
   const groupedCast = castData.reduce<CastMember[][]>((acc, cast, index) => {
     const groupIndex = Math.floor(index / 3);
     if (!acc[groupIndex]) {
@@ -47,7 +52,7 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
 
   return (
     <MovieInfoContainer>
-      <AdBannerContainer />
+      <AdBannerContainer onClick={handleFormClick}/>
       <InfoContainer>
         <Title>줄거리</Title>
         <ContentText>{content}</ContentText>

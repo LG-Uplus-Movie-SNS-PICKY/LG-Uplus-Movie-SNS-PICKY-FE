@@ -7,7 +7,7 @@ export async function fetchLineReviewMovie(
   lastCreatedAt?: string,
   sortType: string = "LATEST",
 ) {
-  let params = new URLSearchParams({ sortType, size: "3" });
+  let params = new URLSearchParams({ sortType });
 
   if(lastReviewId && lastCreatedAt) {
     // 최신순으로 정렬을 할 경우
@@ -28,18 +28,6 @@ export async function fetchLineReviewMovie(
 
   return data;
 }
-// export async function fetchLineReviewMovie(
-//   movieId: number,
-//   includeSpoilers: boolean = false
-// ) {
-//   const params = new URLSearchParams();
-//   params.append("includeSpoilers", includeSpoilers.toString());
-
-//   const { data } = await apiClient.get(
-//     `/linereview/movie/${movieId}?${params.toString()}`
-//   );
-//   return data;
-// }
 
 // 한줄평 생성 API
 export async function createLineReview(reviewData: {
