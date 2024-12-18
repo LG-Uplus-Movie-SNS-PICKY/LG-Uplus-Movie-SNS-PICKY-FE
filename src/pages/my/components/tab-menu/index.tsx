@@ -9,7 +9,7 @@ import LikeIcon from "@assets/icons/my-page/like.svg?react";
 import styles from "./index.styles";
 
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel, Navigation } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -38,8 +38,7 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
     const handleScroll = throttle(() => {
       if (!buttonContainer) return;
 
-      const fixed =
-        buttonContainer.getBoundingClientRect().bottom - 60 + 16 < 0;
+      const fixed = buttonContainer.getBoundingClientRect().y < 80;
 
       setIsSticky(fixed);
     }, 100);
@@ -85,7 +84,11 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
 
   return (
     <div css={styles.tabMenuContainer()}>
-      <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
+      <div
+        id="button-container"
+        css={styles.tabMenu()}
+        className={isSticky ? "sticky" : ""}
+      >
         {Array.from({ length: 3 }, (_, idx) => (
           <div
             ref={(element) => {
@@ -105,7 +108,7 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
 
       {/* Swiper - Content Section */}
       <Swiper
-        spaceBetween={10}
+        spaceBetween={20}
         autoHeight={true}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => handleSlide(swiper.activeIndex)}
@@ -116,8 +119,12 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
         {Array.from({ length: 3 }, (_, idx) => (
           <SwiperSlide key={idx}>
             {idx === 0 && <MovieLogContent nickname={nickname} />}
-            {idx === 1 && <LineReviewContent />}
-            {idx === 2 && <LikeMovieContent />}
+            {idx === 1 && (
+              <LineReviewContent nickname={nickname} swiper={swiperRef} />
+            )}
+            {idx === 2 && (
+              <LikeMovieContent nickname={nickname} swiper={swiperRef} />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
