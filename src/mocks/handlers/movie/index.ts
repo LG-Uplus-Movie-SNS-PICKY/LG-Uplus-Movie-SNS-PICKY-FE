@@ -316,6 +316,8 @@ const movieHandlers: HttpHandler[] = [
         (preference) => preference.user_id === 7
       );
 
+      console.log(preference);
+
       // console.log(preference);
 
       const recommendMovies = movies
