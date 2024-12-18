@@ -14,7 +14,7 @@ export default {
       /* grid-template-rows: repeat(3, 1fr); // 한 행에 4개의 아이템 */
 
       gap: 3px;
-      /* height: 100%; */
+      padding: 2px;
 
       &.centered {
         display: flex;
