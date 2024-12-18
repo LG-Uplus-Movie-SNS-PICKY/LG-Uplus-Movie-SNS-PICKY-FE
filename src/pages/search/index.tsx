@@ -123,8 +123,9 @@ export default function SearchPage() {
     console.log("선택된 필터:", selectedFilter);
 
     try {
+      const lowerCaseSearchText = searchText.toLowerCase();
       if (selectedFilter === "영화") {
-        const movies = await fetchMovieSearch(searchText);
+        const movies = await fetchMovieSearch(lowerCaseSearchText);
         console.log("API 응답(영화):", movies);
 
         if (Array.isArray(movies)) {
@@ -137,7 +138,7 @@ export default function SearchPage() {
           );
         }
       } else if (selectedFilter === "유저") {
-        const users = await fetchUserSearch(searchText);
+        const users = await fetchUserSearch(lowerCaseSearchText);
         console.log("API 응답(유저):", users);
 
         if (Array.isArray(users)) {
