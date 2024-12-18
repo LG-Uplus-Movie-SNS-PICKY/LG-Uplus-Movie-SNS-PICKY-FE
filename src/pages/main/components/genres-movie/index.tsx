@@ -74,6 +74,7 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
                     name={movie.title}
                     rate={movie.totalRating}
                     like={movie.likes}
+                    comment={movie.lineReviews}
                     onClick={() => navigate(`/movie/${movie.movieId}`)}
                   />
                 ))
