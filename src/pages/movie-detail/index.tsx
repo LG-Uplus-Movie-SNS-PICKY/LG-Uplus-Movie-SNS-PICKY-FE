@@ -59,7 +59,7 @@ function MovieDetail(props: MovieDetailProps) {
   const { data: movieDetail, isLoading: movieDetailIsLoading } =
     useMovieDetailQuery(Number(id));
   const { data: lineReviews, isLoading: lineReviewsIsLoading } =
-    useLineReviewMovieQuery(Number(id));
+    useLineReviewMovieQuery(Number(id), "LATEST");
 
   const navigate = useNavigate();
 
@@ -126,19 +126,108 @@ function MovieDetail(props: MovieDetailProps) {
 
   useEffect(() => {
     if (!lineReviewsIsLoading) {
-      const allReviews = lineReviews?.pages?.[0]?.data?.content || []; // 기본값으로 빈 배열 설정
-
-      // 전체 리뷰 개수를 allReviews의 길이로 설정
-      setTotalReviews(allReviews.length);
-
-      const topLikedReviews = allReviews
+      const allReviews = lineReviews?.pages?.flatMap((page) => page.data.content) || []; // 모든 페이지 데이터 병합
+  
+      // 스포일러 제외하고 최신순으로 정렬한 후 상위 3개 가져오기
+      const latestNonSpoilerReviews = allReviews
         .filter((review: Review) => !review.isSpoiler) // 스포일러 제외
-        .sort((a: Review, b: Review) => b.likes - a.likes) // 공감순 정렬
-        .slice(0, 3); // 상위 3개 가져오기
-
-      setReviews(topLikedReviews); // 공감순 상위 3개 리뷰 설정
+        .sort((a: Review, b: Review) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
+        .slice(0, 3); // 최대 3개 가져오기
+  
+      // 상태 업데이트
+      setTotalReviews(allReviews.length); // 전체 리뷰 개수 설정
+      setReviews(latestNonSpoilerReviews); // 상위 3개 리뷰 설정
+      console.log("==================================");
+      console.log(latestNonSpoilerReviews);
     }
-  }, [lineReviewsIsLoading]);
+  }, [lineReviewsIsLoading, lineReviews]);
+
+  // useEffect(() => {
+  //   if (!lineReviewsIsLoading && lineReviews?.pages) {
+  //     // 스포일러 제외된 리뷰를 누적할 배열
+  //     const nonSpoilerReviews: Review[] = [];
+  
+  //     for (const page of lineReviews.pages) {
+  //       const pageReviews = page.data.content || [];
+  
+  //       // 현재 페이지의 리뷰에서 스포일러 제외된 것만 추가
+  //       for (const review of pageReviews) {
+  //         if (!review.isSpoiler) {
+  //           nonSpoilerReviews.push(review);
+  //         }
+  
+  //         // 최대 3개를 채우면 종료
+  //         if (nonSpoilerReviews.length >= 3) break;
+  //       }
+  
+  //       // 최대 3개를 채우면 바깥 루프 종료
+  //       if (nonSpoilerReviews.length >= 3) break;
+  //     }
+  
+  //     // 최신순 정렬 (createdAt 기준 내림차순)
+  //     const sortedReviews = nonSpoilerReviews
+  //       .sort(
+  //         (a: Review, b: Review) =>
+  //           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //       )
+  //       .slice(0, 3); // 최대 3개까지 가져오기
+  
+  //     // 상태 업데이트
+  //     setTotalReviews(nonSpoilerReviews.length);
+  //     setReviews(sortedReviews);
+  
+  //     console.log("✅ 스포일러 제외 최신순 리뷰 3개:", sortedReviews);
+  //   }
+  // }, [lineReviewsIsLoading, lineReviews]);
+
+  // useEffect(() => {
+  //   const fetchAllReviews = async () => {
+  //     const nonSpoilerReviews: Review[] = [];
+  //     let pageNumber = 0;
+  //     let hasNextPage = true;
+  //     const fetchedIds = new Set<number>();
+  
+  //     try {
+  //       while (nonSpoilerReviews.length < 3 && hasNextPage) {
+  //         console.log(`📢 Fetching page: ${pageNumber}`);
+          
+  //         const response = await fetchLineReviewMovie(Number(id), pageNumber, "", "LATEST");
+  
+  //         // 리뷰 데이터 가져오기
+  //         const reviews: Review[] = response.data.content || [];
+  //         console.log(`✅ Page ${pageNumber} data:`, reviews);
+  
+  //         // 스포일러 제외 및 중복 체크
+  //         reviews.forEach((review) => {
+  //           if (!fetchedIds.has(review.id) && !review.isSpoiler) {
+  //             fetchedIds.add(review.id);
+  //             nonSpoilerReviews.push(review);
+  //           }
+  //         });
+  
+  //         // 페이지 상태 업데이트
+  //         hasNextPage = !response.data.last; // 마지막 페이지 확인
+  //         pageNumber += 1;
+  
+  //         // 3개를 채우면 즉시 종료
+  //         if (nonSpoilerReviews.length >= 3) {
+  //           console.log("🎉 Fetched 3 non-spoiler reviews. Stopping.");
+  //           break;
+  //         }
+  //       }
+  
+  //       // 상태 업데이트
+  //       setReviews(nonSpoilerReviews.slice(0, 3));
+  //       setTotalReviews(fetchedIds.size);
+  
+  //       console.log("📋 Final non-spoiler reviews:", nonSpoilerReviews);
+  //     } catch (error) {
+  //       console.error("❌ 리뷰 데이터를 가져오는 중 오류 발생:", error);
+  //     }
+  //   };
+  
+  //   fetchAllReviews();
+  // }, [id]);
 
   useEffect(() => {
     console.log(movieDetail);
@@ -212,14 +301,19 @@ function MovieDetail(props: MovieDetailProps) {
             </ReviewCountContainer>
           </ReviewHeader>
 
-          {/* 리뷰가 없을 때 문구 표시 */}
+          {/* 리뷰 데이터 매핑 */}
           {reviews.length === 0 ? (
             <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
           ) : (
-            // movieData.id를 movieId로 전달
-            <MovieReview movieId={movieData.id} reviews={reviews} />
+            reviews.map((review, index) => (
+              <MovieReview
+                key={review.id}
+                movieId={Number(id)}
+                review={review} // 개별 review 객체 전달
+                noBorder={index === reviews.length - 1} // 마지막 리뷰인지 여부 전달
+              />
+            ))
           )}
-
           {/* 전체 리뷰 개수가 0이 아닐 때만 버튼 렌더링 */}
           {totalReviews > 0 ? (
             <Button

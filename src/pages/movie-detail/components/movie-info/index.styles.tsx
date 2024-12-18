@@ -50,7 +50,7 @@ export const Title = styled.span`
 export const ContentText = styled.span`
     font-size: 16px;
     font-weight: 400;
-    line-height: 18px;
+    line-height: 20px;
 `;
 
 {/*  Slides -> 최상위 부모 컴포넌트 */}
@@ -58,7 +58,7 @@ export const CastInfoContainer = styled.div`
     display: flex;
     flex-direction: column; // Title + CastContainer Column 배치
     align-items: flex-start;
-    padding: 16px;
+    padding: 16px 0 16px 16px;
     gap: 12px;
     width: 100%;
 `;

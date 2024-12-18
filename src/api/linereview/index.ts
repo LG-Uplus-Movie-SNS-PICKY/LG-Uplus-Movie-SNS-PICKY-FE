@@ -4,20 +4,42 @@ import apiClient from "@api";
 export async function fetchLineReviewMovie(
   movieId: number,
   lastReviewId?: number,
-  lastCreatedAt?: string
+  lastCreatedAt?: string,
+  sortType: string = "LATEST",
 ) {
-  let params = new URLSearchParams();
+  let params = new URLSearchParams({ sortType, size: "3" });
 
-  if (lastReviewId && lastCreatedAt) {
-    params.append("lastReviewId", lastReviewId.toString());
-    params.append("lastCreatedAt", lastCreatedAt.toString());
+  if(lastReviewId && lastCreatedAt) {
+    // 최신순으로 정렬을 할 경우
+    if (sortType === "LATEST") {
+      params.append("lastReviewId", lastReviewId.toString());
+      params.append("lastCreatedAt", lastCreatedAt.toString());
+    } 
+    
+    // 좋아요순으로 정렬을 할 경우
+    else {
+      params.append("lastReviewId", lastReviewId.toString());
+    }
   }
 
   const { data } = await apiClient.get(
     `/linereview/movie/${movieId}?${params.toString()}`
   );
+
   return data;
 }
+// export async function fetchLineReviewMovie(
+//   movieId: number,
+//   includeSpoilers: boolean = false
+// ) {
+//   const params = new URLSearchParams();
+//   params.append("includeSpoilers", includeSpoilers.toString());
+
+//   const { data } = await apiClient.get(
+//     `/linereview/movie/${movieId}?${params.toString()}`
+//   );
+//   return data;
+// }
 
 // 한줄평 생성 API
 export async function createLineReview(reviewData: {
