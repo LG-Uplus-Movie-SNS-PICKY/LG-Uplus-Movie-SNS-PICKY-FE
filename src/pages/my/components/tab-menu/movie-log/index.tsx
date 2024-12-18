@@ -39,24 +39,20 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
   const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
-  const loadMovieLogs = async () => {
-    try {
-      const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
-      const newLogs = response.data.content || [];
-      setData((prev) => [...prev, ...newLogs]);
+  // const loadMovieLogs = async () => {
+  //   try {
+  //     const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
+  //     const newLogs = response.data.content || [];
+  //     setData((prev) => [...prev, ...newLogs]);
 
-      // 마지막 boardId 업데이트
-      if (newLogs.length > 0) {
-        setLastBoardId(newLogs[newLogs.length - 1].boardId);
-      }
-    } catch (error) {
-      console.error("게시글 조회 중 오류 발생:", error);
-    }
-  };
-
-  useEffect(() => {
-    loadMovieLogs();
-  }, [nickname]);
+  //     // 마지막 boardId 업데이트
+  //     if (newLogs.length > 0) {
+  //       setLastBoardId(newLogs[newLogs.length - 1].boardId);
+  //     }
+  //   } catch (error) {
+  //     console.error("게시글 조회 중 오류 발생:", error);
+  //   }
+  // };
 
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
