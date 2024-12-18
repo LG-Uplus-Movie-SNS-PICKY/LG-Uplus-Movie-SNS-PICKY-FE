@@ -9,7 +9,6 @@ import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/pagination";
-import { fetchRecommendMovie } from "@api/movie";
 import { useRecommnedMovieQuery } from "@hooks/movie";
 import { useEffect, useRef, useState } from "react";
 import Loading from "@components/loading";
@@ -23,18 +22,18 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
  * @returns
  */
 function RecommendMovieSlider() {
-  const { data, isLoading } = useRecommnedMovieQuery();
+  const { data: recommendMovies, isLoading } = useRecommnedMovieQuery();
   const swiperRef = useRef<SwiperCore | null>(null);
   const navigate = useNavigate();
 
   const [imageLoad, setImageLoad] = useState(false);
 
   useEffect(() => {
-    if (!isLoading && data.data.length > 0) {
+    if (!isLoading && recommendMovies.data.length > 0) {
       swiperRef.current?.update();
       swiperRef.current?.slideTo(1);
     }
-  }, [isLoading, data]);
+  }, [isLoading, recommendMovies]);
 
   return (
     <Swiper
@@ -53,65 +52,69 @@ function RecommendMovieSlider() {
     >
       {isLoading && <Loading />}
       {!isLoading &&
-        data.data.slice(0, 5).map((movie: RecommendMovieDataTypes) => (
-          <SwiperSlide key={movie.movieId}>
-            <div
-              css={styles.sliderItem(
-                `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.posterUrl}`
-              )}
-              onClick={() => navigate(`/movie/${movie.movieId}`)}
-            >
-              {/* Background Image */}
-              <div className="background" />
+        recommendMovies?.data
+          .slice(0, 5)
+          .map((movie: RecommendMovieDataTypes) => (
+            <SwiperSlide key={movie.movieId}>
+              <div
+                css={styles.sliderItem(
+                  `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.posterUrl}`
+                )}
+                onClick={() => navigate(`/movie/${movie.movieId}`)}
+              >
+                {/* Background Image */}
+                <div className="background" />
 
-              {/* Content */}
-              <div css={styles.content()}>
-                {/* Badge Section */}
-                <div css={styles.badgeContainer()}>
-                  <div className="badge">PICKY 추천 영화</div>
-                </div>
-
-                {/* Movie Poster Section */}
-                <div css={styles.moviePosterContainer()}>
-                  <LazyLoadImage
-                    src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
-                      movie.posterUrl
-                    }`}
-                    alt={movie.title}
-                    onLoad={() => setImageLoad(true)}
-                    onError={() => setImageLoad(false)}
-                  />
-                  {!imageLoad && <span>{movie.title}</span>}
-                </div>
-
-                {/* Movie Info Section */}
-                <div css={styles.movieInfoContainer()}>
-                  {/* Info */}
-                  <div className="movie-info">
-                    <h3>{movie.title}</h3>
-                    <div className="movie-sub-info">
-                      <span className="rate">별점: ★ {movie.totalRating}</span>
-                      <span className="genres">
-                        {movie.genres.map((genre) => genre.name).join(", ")}
-                      </span>
-                    </div>
+                {/* Content */}
+                <div css={styles.content()}>
+                  {/* Badge Section */}
+                  <div css={styles.badgeContainer()}>
+                    <div className="badge">PICKY 추천 영화</div>
                   </div>
 
-                  {/* OTT Servie */}
-                  <div className="ott-service">
-                    <div className="badge">
-                      <Netflix width={18} height={18} />
+                  {/* Movie Poster Section */}
+                  <div css={styles.moviePosterContainer()}>
+                    <LazyLoadImage
+                      src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                        movie.posterUrl
+                      }`}
+                      alt={movie.title}
+                      onLoad={() => setImageLoad(true)}
+                      onError={() => setImageLoad(false)}
+                    />
+                    {!imageLoad && <span>{movie.title}</span>}
+                  </div>
+
+                  {/* Movie Info Section */}
+                  <div css={styles.movieInfoContainer()}>
+                    {/* Info */}
+                    <div className="movie-info">
+                      <h3>{movie.title}</h3>
+                      <div className="movie-sub-info">
+                        <span className="rate">
+                          별점: ★ {movie.totalRating}
+                        </span>
+                        <span className="genres">
+                          {movie.genres.map((genre) => genre.name).join(", ")}
+                        </span>
+                      </div>
                     </div>
-                    <div className="badge">
-                      <Watcha width={18} height={18} />
+
+                    {/* OTT Servie */}
+                    <div className="ott-service">
+                      <div className="badge">
+                        <Netflix width={18} height={18} />
+                      </div>
+                      <div className="badge">
+                        <Watcha width={18} height={18} />
+                      </div>
+                      <div className="badge more-service">2+</div>
                     </div>
-                    <div className="badge more-service">2+</div>
                   </div>
                 </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
+            </SwiperSlide>
+          ))}
     </Swiper>
   );
 }

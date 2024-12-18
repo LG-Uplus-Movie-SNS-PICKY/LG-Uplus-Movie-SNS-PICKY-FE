@@ -22,8 +22,7 @@ function Main() {
       />
 
       {/* Slider or Banner Section */}
-      {!isLoginState.isLoginState ? <LoginBanner /> : null}
-      {/* <RecommendMovieSlider /> */}
+      {!isLoginState.isLoginState ? <LoginBanner /> : <RecommendMovieSlider />}
 
       {/* Famous Movies Section */}
       <FamousMovie isLogin={isLoginState.isLoginState} />
