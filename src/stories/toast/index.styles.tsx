@@ -19,14 +19,14 @@ export default {
       white-space: normal;
       text-align: center;
       max-width: 90%;
-      white-space: nowrap;
+      /* white-space: nowrap; */
       transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
       z-index: 100000000;
 
       /* 위치 설정 */
-      ${direction === "up" && "top: 16px;"}
-      ${direction === "down" && "bottom: 16px;"}
-        ${direction === "none" && "top: 50%; transform: translate(-50%, -50%);"}
+      ${direction === "up" && "top: 76px;"}
+      ${direction === "down" && "bottom: 76px;"}
+      ${direction === "none" && "top: 50%; transform: translate(-50%, -50%);"}
     `;
   },
 };

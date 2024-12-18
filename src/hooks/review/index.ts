@@ -29,6 +29,6 @@ export const useLineReviewMovieQuery = (movieId: number, sortType: string) => {
     initialPageParam: { lastReviewId: 0, lastCreatedAt: "" },
     enabled: !!movieId,
     staleTime: 1000 * 60 * 10,
-    gcTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
   });
 };

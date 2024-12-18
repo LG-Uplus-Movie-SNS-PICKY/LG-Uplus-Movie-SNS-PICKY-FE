@@ -14,22 +14,7 @@ import { useInView } from "react-intersection-observer";
 import { usePlaylist } from "@hooks/playlist";
 import Loading from "@components/loading";
 import { useNavigate } from "react-router-dom";
-
-interface PlaylistItemTypes {
-  [key: string]: unknown;
-  movieId: number;
-  posterUrl: string;
-  title: string;
-  likes: number;
-  totalRating: number;
-  backdropUrl: string;
-}
-
-interface PlaylistDataTypes {
-  playlistId: number;
-  title: string;
-  getSimpleMovieResps: PlaylistItemTypes[];
-}
+import { PlaylistDataTypes } from "@type/api/playlist";
 
 // 리액트 쿼리 queryFn
 async function fetchMovies(pageParam: number) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { debounce } from "lodash";
 import profileIcon from "@assets/icons/profile.svg";
-import defaultUserImage from "@assets/images/default_userImage.png"
+import defaultUserImage from "@assets/images/default_userImage.png";
 import {
   containerStyle,
   headerStyle,
@@ -47,6 +47,7 @@ export default function ProfileEditPage() {
     userData.profile || ""
   );
   const [nicknameError, setNicknameError] = useState<string | null>(null);
+  const [nicknameSuccess, setNicknameSuccess] = useState<string | null>(null);
   const [imageError, setImageError] = useState<string | null>(null);
   const [isSaveDisabled, setIsSaveDisabled] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -90,6 +91,7 @@ export default function ProfileEditPage() {
       debounce(async (nickname: string) => {
         if (nickname === userData.nickname) {
           setNicknameError(null);
+          setNicknameSuccess(null);
           setIsNicknameValid(true);
           return;
         }
@@ -98,14 +100,17 @@ export default function ProfileEditPage() {
           const response = await fetchNicknameValidation(nickname);
           if (!response.data.isValid) {
             setNicknameError("이미 사용 중인 닉네임입니다.");
+            setNicknameSuccess(null);
             setIsNicknameValid(false);
           } else {
-            setNicknameError(null);
+            setIsNicknameValid(null);
+            setNicknameSuccess("사용 가능한 닉네임입니다.");
             setIsNicknameValid(true);
           }
         } catch (error) {
           console.error("닉네임 확인 중 오류 발생:", error);
           setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
+          setNicknameSuccess(null);
           setIsNicknameValid(false);
         }
       }, 300),
@@ -115,8 +120,16 @@ export default function ProfileEditPage() {
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
 
-    if (value.length > 10) return;
+    // 특수기호 검사 (알파벳, 숫자, 한글만 허용)
+    const specialCharRegex = /[^a-zA-Z0-9가-힣]/;
 
+    if (specialCharRegex.test(value)) {
+      setNicknameError("닉네임에 특수기호는 사용할 수 없습니다.");
+      setIsNicknameValid(false);
+      return;
+    }
+
+    if (value.length > 10) return;
     setNickname(value);
 
     if (value.length < 2 || value.length > 10) {
@@ -157,50 +170,45 @@ export default function ProfileEditPage() {
   const handleSave = async () => {
     const isUnchanged =
       nickname === userData.nickname && profileImage === userData.profile;
-  
+
     if (isUnchanged) {
       showToast("변경 사항이 없습니다.");
       return;
     }
-  
+
     if (nicknameError || imageError || isNicknameValid === false) {
       showToast("입력을 확인해주세요.");
       return;
     }
-  
-    const formData = new FormData();
-    formData.append("nickname", nickname);
-  
+
     try {
-      // 이미지 URL 또는 Base64를 처리
-      if (profileImage) {
-        let imageBlob: Blob | null = null;
-  
-        if (profileImage.startsWith("data:image")) {
-          // Base64 이미지를 Blob으로 변환
-          const base64Response = await fetch(profileImage);
-          imageBlob = await base64Response.blob();
-        } else if (profileImage.startsWith("http")) {
-          // 이미지 URL을 Blob으로 변환
-          const response = await fetch(profileImage, { mode: "cors" });
-          if (!response.ok) {
-            throw new Error("이미지를 가져오는 중 문제가 발생했습니다.");
-          }
-          imageBlob = await response.blob();
-        }
-  
-        // Blob을 FormData에 추가
-        if (imageBlob) {
-          formData.append("profile", imageBlob, "profileImage.jpg");
-        }
+      const formData = new FormData();
+      formData.append("nickname", nickname);
+
+      // 프로필 이미지가 변경되었을 경우에만 이미지 추가
+      if (profileImage && profileImage !== userData.profile) {
+        const response = await fetch(profileImage);
+        if (!response.ok)
+          throw new Error("이미지를 Blob으로 변환하는 데 실패했습니다.");
+        const imageBlob = await response.blob();
+        formData.append("profile", imageBlob, "profileImage.jpg");
       }
-  
-      // 서버로 데이터 전송
+
+      // API 호출
       const data = await fetchProfileUser(formData);
-  
+
       if (data) {
-        showToast("프로필이 성공적으로 수정되었습니다.");
-        setUserData({ ...userData, nickname, profile: profileImage });
+        showToast("프로필이 수정되었습니다.");
+
+        // 변경된 데이터 반영
+        setUserData((prev) => ({
+          ...prev,
+          nickname,
+          profile:
+            profileImage !== userData.profile ? profileImage : prev.profile,
+        }));
+        setNicknameSuccess(null); // 성공 메시지 초기화
+        setIsSaveDisabled(true); // 버튼 비활성화
       } else {
         throw new Error("프로필 수정 중 문제가 발생했습니다.");
       }
@@ -280,10 +288,13 @@ export default function ProfileEditPage() {
               <span
                 css={errorTextStyle}
                 style={{
-                  visibility: nicknameError ? "visible" : "hidden",
+                  visibility:
+                    nicknameError || nicknameSuccess ? "visible" : "hidden",
+                  // color: nicknameError ? "red" : "black",
+                  color: "red",
                 }}
               >
-                {nicknameError && nicknameError}
+                {nicknameError || nicknameSuccess}
               </span>
             </div>
           </div>

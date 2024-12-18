@@ -31,8 +31,8 @@ export async function fetchUpdatePlaylist(
 ) {
   const { data } = await apiClient.patch("/admin/playlist", {
     playlistId,
-    title,
     movieIds,
+    title,
   });
 
   return data;
@@ -40,6 +40,8 @@ export async function fetchUpdatePlaylist(
 
 // 플레이리스트 삭제 DELETE API
 export async function fetchDeletePlaylist(playlistId: number) {
-  const { data } = await apiClient.delete(`/admin/playlist/${playlistId}`);
+  const { data } = await apiClient.delete(
+    `/admin/playlist?playlistId=${playlistId}`
+  );
   return data;
 }

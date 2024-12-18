@@ -18,11 +18,11 @@ interface GenreDataType {
 }
 
 interface GenreButtonsProps {
-  onClick: (genreId: number) => void;
+  setSelectButton: (genreId: number) => void;
   selectedGenres?: number | number[];
 }
 
-function GenreTab({ onClick, selectedGenres }: GenreButtonsProps) {
+function GenreTab({ setSelectButton, selectedGenres }: GenreButtonsProps) {
   const loadable = useRecoilValueLoadable(genresSelector);
 
   if (loadable.state === "loading") return <></>;
@@ -30,39 +30,49 @@ function GenreTab({ onClick, selectedGenres }: GenreButtonsProps) {
 
   const genres = loadable.contents.data;
 
+  useEffect(() => {
+    console.log("loadable");
+  }, [loadable]);
+  useEffect(() => {
+    console.log("genres");
+  }, [genres]);
+  useEffect(() => {
+    console.log("setSelectButton");
+  }, [setSelectButton]);
+  useEffect(() => {
+    console.log("selectedGenres");
+  }, [selectedGenres]);
+
   return (
-    genres.length > 0 && (
-      <Swiper
-        key={crypto.randomUUID()}
-        slidesPerView={"auto"}
-        spaceBetween={10}
-        direction="horizontal"
-        freeMode={true}
-        modules={[FreeMode, Mousewheel]}
-        mousewheel={{
-          forceToAxis: true,
-        }}
-        css={styles.swiperContainer()}
-      >
-        {genres.map((genre: GenreDataType) => (
-          <SwiperSlide key={genre.genreId}>
-            <GenreTabButton
-              label={genre.name}
-              emoji={genre.name}
-              btnType="Rectangle"
-              selected={
-                Array.isArray(selectedGenres)
-                  ? selectedGenres.includes(genre.genreId)
-                  : !selectedGenres
-                  ? loadable.contents.data[0].genreId === genre.genreId
-                  : selectedGenres === genre.genreId
-              }
-              onClick={() => onClick(genre.genreId)}
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    )
+    <Swiper
+      slidesPerView={"auto"}
+      spaceBetween={10}
+      direction="horizontal"
+      freeMode={true}
+      modules={[FreeMode, Mousewheel]}
+      mousewheel={{
+        forceToAxis: true,
+      }}
+      css={styles.swiperContainer()}
+    >
+      {genres.map((genre: GenreDataType) => (
+        <SwiperSlide key={genre.genreId}>
+          <GenreTabButton
+            label={genre.name}
+            emoji={genre.name}
+            btnType="Rectangle"
+            selected={
+              Array.isArray(selectedGenres)
+                ? selectedGenres.includes(genre.genreId)
+                : !selectedGenres
+                ? loadable.contents.data[0].genreId === genre.genreId
+                : selectedGenres === genre.genreId
+            }
+            onClick={() => setSelectButton(genre.genreId)}
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 }
 
