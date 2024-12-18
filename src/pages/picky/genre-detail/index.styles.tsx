@@ -19,6 +19,8 @@ export default {
       width: 100%;
       padding: 0 16px;
 
+      margin: 16px 0;
+
       display: flex;
       flex-direction: column;
       align-items: center;

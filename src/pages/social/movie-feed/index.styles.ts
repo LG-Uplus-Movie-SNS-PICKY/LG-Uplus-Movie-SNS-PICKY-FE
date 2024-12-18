@@ -2,6 +2,7 @@ import { css } from "@emotion/react";
 
 export const wrapper = css`
   width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,7 +19,8 @@ export const banner = css`
 
 export const feedContainer = css`
   width: 100%;
-  padding: 16px 0;
+  flex: 1;
+  /* padding: 16px 0; */
   border: none;
 `;
 
@@ -26,6 +28,7 @@ export const feedItem = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  /* flex-direction: column; */
 `;
 
 export const infoSection = css`

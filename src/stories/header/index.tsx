@@ -1,6 +1,6 @@
 import styles from "./index.styles";
 
-import Logo from "@assets/icons/logo.svg?react";
+import Logo from "@assets/icons/main_logo.svg?react";
 import ArrowLeft from "@assets/icons/arrow_left.svg?react";
 import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom";
@@ -46,7 +46,11 @@ export function Header({
         {!["basic", "login", "admin"].includes(type) && (
           <div>
             {activeBtn &&
-              activeBtn.map((btn, idx) => <div key={idx}>{btn}</div>)}
+              activeBtn.map((btn, idx) => (
+                <div key={idx} className="active-icon-btn">
+                  {btn}
+                </div>
+              ))}
           </div>
         )}
 

@@ -3,6 +3,8 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   swiperContainer(): SerializedStyles {
     return css`
+      margin-top: 16px;
+
       width: 100%;
       min-height: fit-content;
       overflow: hidden;
@@ -121,11 +123,15 @@ export default {
       width: 140px;
       aspect-ratio: 2 / 3;
 
+      background-color: #262626;
+
       border-radius: 4px;
       overflow: hidden;
 
-      & > img {
+      & img {
+        display: block;
         width: 100%;
+        height: 100%;
       }
     `;
   },

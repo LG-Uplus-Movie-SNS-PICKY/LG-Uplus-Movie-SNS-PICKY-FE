@@ -15,6 +15,13 @@ export const Wrapper = styled.div`
   height: 100%;
   justify-content: flex-start;
   overflow-y: scroll;
+
+  scrollbar-width: none; /* Firefox: 스크롤바 숨김 */
+  -ms-overflow-style: none; /* IE: 스크롤바 숨김 */
+
+  &::-webkit-scrollbar {
+    display: none; /* Webkit (Chrome, Safari): 스크롤바 숨김 */
+  }
 `;
 
 export const ProfileContainer = styled.div`
@@ -111,7 +118,6 @@ export const EditButton = styled.div`
 `;
 
 export const SettingsButton = styled.button`
-
   position: relative;
 
   padding: 6px 8px;

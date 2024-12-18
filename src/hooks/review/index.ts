@@ -2,27 +2,27 @@ import { fetchLineReviewMovie } from "@api/linereview";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 // 특정 영화 한줄평 조회 React Query - Custom Hook
-export const useLineReviewMovieQuery = (movieId: number) => {
+export const useLineReviewMovieQuery = (movieId: number, sortType: string) => {
   return useInfiniteQuery({
-    queryKey: ["lineReview", movieId],
-    queryFn: ({ pageParam }) =>
-      fetchLineReviewMovie(
+    queryKey: ["lineReview", movieId, sortType],
+    queryFn: ({ pageParam }) => {
+      return fetchLineReviewMovie(
         movieId,
         pageParam.lastReviewId,
-        pageParam.lastCreatedAt
-      ),
+        pageParam.lastCreatedAt,
+        sortType,
+      );
+    },
 
     getNextPageParam: (lastPage) => {
       if (!lastPage?.data?.last) {
-        return {
-          lastReviewId:
-            lastPage?.data?.content[lastPage?.data?.content.length - 1].id,
-          lastCreatedAt:
-            lastPage?.data?.content[lastPage?.data?.content.length - 1]
-              .createdAt,
+        const lastContent = lastPage?.data?.content[lastPage?.data?.content.length - 1];
+        const nextPageParam = {
+          lastReviewId: lastContent?.id,
+          lastCreatedAt: lastContent?.createdAt,
         };
+        return nextPageParam;
       }
-
       return undefined;
     },
 
