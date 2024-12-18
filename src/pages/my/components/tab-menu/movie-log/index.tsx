@@ -9,9 +9,11 @@ import { MovieLogDataType } from "@type/api/profile/movie-log";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { useInView } from "react-intersection-observer";
+import { SwiperClass } from "swiper/react";
 
 interface MovieLogContentProps {
   nickname: string; // 닉네임을 프로퍼티로 전달
+  swiper: React.MutableRefObject<SwiperClass | null>;
 }
 
 function ImageWithFallback({ src, title }: { src: string; title: string }) {
@@ -49,7 +51,7 @@ function EmptyMovieLog() {
   );
 }
 
-function MovieLogContent({ nickname }: MovieLogContentProps) {
+function MovieLogContent({ nickname, swiper }: MovieLogContentProps) {
   const navigate = useNavigate();
 
   const {
@@ -63,6 +65,18 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
   const { ref, inView } = useInView({
     threshold: 0.8,
   });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    if (swiper.current) {
+      swiper.current.updateAutoHeight();
+    }
+  }, [movieLogs]);
 
   if (isLoading) {
     return (
@@ -78,12 +92,6 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <div
