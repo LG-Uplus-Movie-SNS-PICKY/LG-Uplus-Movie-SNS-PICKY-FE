@@ -14,12 +14,6 @@ export interface PageDataTypes {
   };
 }
 
-// 알림 무한 스크롤 데이터 타입
-export interface UnreadNotificationsTypes {
-  pageParams: { lastNotificationId: number }[];
-  pages: PageDataTypes[];
-}
-
 // 알림 데이터 타입
 export interface NotificationTypes {
   notificationId: number;
@@ -32,6 +26,12 @@ export interface NotificationTypes {
   senderNickname: string;
   createdAt: string;
   isRead: boolean;
+}
+
+// 알림 무한 스크롤 데이터 타입
+export interface UnreadNotificationsTypes {
+  pageParams: { lastNotificationId: number }[];
+  pages: PageDataTypes[];
 }
 
 // 날짜별 데이터 타입

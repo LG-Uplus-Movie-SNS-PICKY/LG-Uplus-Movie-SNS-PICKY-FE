@@ -11,25 +11,46 @@ import { MovieItem } from "@stories/movie-item";
 
 import Checked from "@assets/icons/checked-movie.svg?react";
 import { Toast } from "@stories/toast";
-import { fetchCreatePlaylist } from "@api/playlist";
+import { fetchCreatePlaylist, fetchUpdatePlaylist } from "@api/playlist";
 
-interface ModalProps {
-  setCreateModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode, Mousewheel } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/pagination";
+
+export interface ModalStateTypes {
+  type: "create" | "edit";
+  playlistId: number;
+  title: string;
+  movieIds: number[];
+  open: boolean;
 }
 
-function Modal({ setCreateModalOpen }: ModalProps) {
-  const [title, setTitle] = useState("");
+interface ModalProps {
+  type: "create" | "edit";
+  openModal?: ModalStateTypes;
+  setOpenModal: React.Dispatch<React.SetStateAction<ModalStateTypes>>;
+  initialTitle?: string;
+  initialMovies?: number[];
+}
+
+function Modal({
+  type,
+  openModal,
+  setOpenModal,
+  initialTitle = "",
+  initialMovies = [],
+}: ModalProps) {
+  const [title, setTitle] = useState<string>(initialTitle); // 초기 제목 설정
+  const [selectMovie, setSelectMovie] = useState<number[]>(initialMovies); // 초기 영화 설정
+
+  const isCreate = type === "create"; // 모달 타입 정의
 
   const loadable = useRecoilValueLoadable(genresSelector);
+
   const [selectButton, setSelectButton] = useState<number | null>(null);
-
-  const [selectMovie, setSelectMovie] = useState<number[]>([]);
   const [toastMessage, setToastMessage] = useState("");
-
-  // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
-  const GenreOnClick = (movieId: number) => {
-    setSelectButton(movieId);
-  };
 
   useEffect(() => {
     if (loadable.state === "hasValue" && loadable.contents.data.length > 0) {
@@ -55,45 +76,87 @@ function Modal({ setCreateModalOpen }: ModalProps) {
     }
   }, [inView, hasNextPage, isFetchingNextPage]);
 
-  useEffect(() => {
-    if (!isLoading) console.log(genreMovies);
-  }, [isLoading]);
-
   // 플레이리스트 추가 이벤트 핸들러
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // 플레이리스트 제목 And 영화를 하나도 선택하지 않은 경우
-    if (!title && !selectMovie.length) {
-      setToastMessage("플레이리스트 제목과 영화를 선택해주세요.");
-    } else if (!title) {
-      // 플레이리스트 제목을 작성하지 않은 경우
-      setToastMessage("플레이리스트 제목을 작성해주세요.");
-    } else if (!selectMovie.length) {
-      // 아무런 영화도 선택하지 않을 경우
-      setToastMessage("플레이리스트에 추가하고 싶은 영화를 선택해주세요.");
-    } else if (selectMovie.length < 3 || selectMovie.length > 10) {
-      setToastMessage("영화는 최소 3개에서 최대 10만 선택해주세요.");
-    } else {
-      // 플레이리스트 제목과 영화를 선택했을 경우
-      await fetchCreatePlaylist(selectMovie, title);
-      setToastMessage("플레이리스트가 추가되었습니다!!");
+    let isFlag = false;
 
-      setTimeout(() => {
-        setCreateModalOpen(false);
-      }, 2000);
+    // Common Exception #1. 추가, 수정 상관 없이 선택한 영화의 개수가 부족할 경우
+    if (selectMovie.length < 3 || selectMovie.length > 10) {
+      setToastMessage("영화는 최소 3개에서 최대 10만 선택해주세요.");
     }
 
-    if (toastMessage) {
+    // Common Exception #2. 추가, 수정 상관 없이 선택한 영화의 개수가 부족할 경우
+    else if (!title && !selectMovie.length) {
+      setToastMessage(
+        "플레이리스트 제목을 작성하고, 추가할 영화를 선택해주세요."
+      );
+    }
+
+    // Common Exception #3. 플레이리스트 제목을 작성하지 않은 경우
+    else if (!title && selectMovie.length) {
+      setToastMessage("플레이리스트 제목을 작성해주세요.");
+    }
+
+    // Common Exception #4. 플레이리스트에 아무런 영화도 선택하지 않을 경우
+    else if (title && !selectMovie.length) {
+      setToastMessage("플레이리스트에 추가할 영화를 선택해주세요.");
+    }
+
+    // 현재 모달 Type이 Create 모달이면서 모든 예외에 통과한 경우
+    if (isCreate) {
+      // 모든 예외에 통과한 경우
+      await fetchCreatePlaylist(selectMovie, title);
+      setToastMessage("플레이리스트가 추가되었습니다!!");
+      isFlag = true;
+    }
+
+    // 현재 모달 Type이 Edit 모달이면서, 공통 예외를 모두 통과한 경우
+    else {
+      // Exception. 수정할 영화가 같을 경우
+      if (selectMovie.toString() === initialMovies.toString()) {
+        setToastMessage(
+          "플레이리스트에 등록된 영화과 기존에 있던 항목들과 동일합니다."
+        );
+      }
+
+      if (openModal?.playlistId) {
+        await fetchUpdatePlaylist(openModal.playlistId, title, selectMovie);
+        setToastMessage("플레이리스트가 수정되었습니다!!");
+        isFlag = true;
+      }
+    }
+
+    if (isFlag) {
       setTimeout(() => {
-        setToastMessage("");
-      }, 100);
+        setOpenModal({
+          type: "create",
+          open: false,
+          title: "",
+          movieIds: [],
+          playlistId: 0,
+        });
+
+        window.location.reload();
+      }, 1000);
     }
   };
 
   return (
     // 모달 외부
-    <div css={styles.modalOuter()} onClick={() => setCreateModalOpen(false)}>
+    <div
+      css={styles.modalOuter()}
+      onClick={() =>
+        setOpenModal({
+          type: "create",
+          open: false,
+          title: "",
+          movieIds: [],
+          playlistId: 0,
+        })
+      }
+    >
       {/* 모달 컨테이너 */}
       <form
         css={styles.modalContainer()}
@@ -107,13 +170,13 @@ function Modal({ setCreateModalOpen }: ModalProps) {
             onChange={(event) => setTitle(event.target.value)}
             placeholder="플레이리스트 제목"
           />
-          <button type="submit">추가</button>
+          <button type="submit">{isCreate ? "추가" : "수정"}</button>
         </div>
 
         <div style={{ boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)" }}>
           {/* 영화 장르 선택 */}
           <GenreTab
-            onClick={GenreOnClick}
+            setSelectButton={setSelectButton}
             selectedGenres={selectButton ?? -1}
           />
         </div>
@@ -131,7 +194,10 @@ function Modal({ setCreateModalOpen }: ModalProps) {
                     {/* Playlist Data JSX Element Mapping  */}
                     {Array.isArray(page?.data.content) &&
                       page?.data.content.map((movie: MovieDataTypes) => (
-                        <div style={{ position: "relative" }}>
+                        <div
+                          style={{ position: "relative" }}
+                          key={movie.movieId}
+                        >
                           {selectMovie.includes(movie.movieId) && (
                             <div
                               css={styles.select()}
@@ -147,7 +213,6 @@ function Modal({ setCreateModalOpen }: ModalProps) {
                             </div>
                           )}
                           <MovieItem
-                            key={movie.movieId}
                             type="basic"
                             src={movie.posterUrl}
                             name={movie.title}
@@ -164,16 +229,21 @@ function Modal({ setCreateModalOpen }: ModalProps) {
                       ))}
                   </React.Fragment>
                 ))}
+
               {/* Movies 마지막 영역 */}
               <div ref={ref} style={{ height: "10px" }} />
             </div>
-
-            {/* <div ref={ref} style={{ height: "10px" }} /> */}
           </div>
         </div>
       </form>
 
-      {toastMessage && <Toast message={toastMessage} direction="none" />}
+      {toastMessage && (
+        <Toast
+          message={toastMessage}
+          direction="none"
+          setToastMessage={setToastMessage}
+        />
+      )}
     </div>
   );
 }

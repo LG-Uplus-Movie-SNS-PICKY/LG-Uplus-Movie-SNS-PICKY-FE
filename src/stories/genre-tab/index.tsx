@@ -1,6 +1,7 @@
 import { GENRE_EMOJI } from "@constants/genre";
 
 import styles from "./index.styles";
+import { useEffect } from "react";
 
 export interface GenreTabProps {
   primary?: boolean;
@@ -35,7 +36,7 @@ export function GenreTabButton({
       ]}
       style={{
         backgroundColor: selected ? "#000" : backgroundColor,
-        color: selected ? "#fff" : "#000", 
+        color: selected ? "#fff" : "#000",
       }}
       {...props}
     >

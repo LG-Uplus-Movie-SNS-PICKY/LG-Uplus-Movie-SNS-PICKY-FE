@@ -167,31 +167,15 @@ export default function FeedComment() {
     }
   };
 
-  const handleDeleteComment = async (commentId: string, isAuthor: boolean) => {
-    if (isAuthor == false) {
-      setToastMessage("다른 유저의 댓글은 삭제할 수 없습니다.");
+  const handleDeleteComment = (commentId: number, isAuthor: boolean) => {
+    if (!isAuthor) {
+      setToastMessage("다른 사용자의 댓글은 삭제할 수 없습니다.");
       setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000); // 3초 후 토스트 메시지 숨기기
       return;
     }
-    setSelectedCommentId(commentId);
-    setIsCommentDeleteModalOpen(true);
 
-    try {
-      await deleteComment(Number(boardId), Number(commentId));
-      setComments((prevComments) =>
-        prevComments.filter(
-          (comment) => comment.commentId !== Number(commentId)
-        )
-      );
-      setToastMessage("댓글이 성공적으로 삭제되었습니다.");
-      setShowToast(true);
-    } catch (error) {
-      console.error("댓글 삭제 중 오류 발생:", error);
-      setToastMessage("댓글 삭제에 실패했습니다.");
-      setShowToast(true);
-    }
-    console.log("isCommentDeleteModalOpen:", isCommentDeleteModalOpen); // 상태 확인
+    setSelectedCommentId(commentId.toString());
+    setIsCommentDeleteModalOpen(true);
   };
 
   const confirmDeleteComment = async () => {
@@ -199,11 +183,13 @@ export default function FeedComment() {
 
     try {
       await deleteComment(Number(boardId), Number(selectedCommentId)); // API 호출
+
       setComments((prevComments) =>
         prevComments.filter(
           (comment) => comment.commentId.toString() !== selectedCommentId
         )
-      ); // 로컬 상태에서 삭제
+      );
+
       setToastMessage("댓글이 성공적으로 삭제되었습니다.");
       setShowToast(true);
     } catch (error) {
@@ -211,8 +197,8 @@ export default function FeedComment() {
       setToastMessage("댓글 삭제에 실패했습니다.");
       setShowToast(true);
     } finally {
-      setIsCommentDeleteModalOpen(false); // 모달 닫기
-      setSelectedCommentId(null); // 선택된 댓글 ID 초기화
+      setIsCommentDeleteModalOpen(false);
+      setSelectedCommentId(null);
     }
   };
 
@@ -222,6 +208,7 @@ export default function FeedComment() {
   useEffect(() => {
     console.log("댓글 데이터 업데이트:", comments);
   }, [comments]);
+
   return (
     <div css={wrapper}>
       <div css={feedContainer}>
@@ -303,10 +290,7 @@ export default function FeedComment() {
                 {comment.isAuthor && (
                   <CommentReportButton
                     onClick={() =>
-                      handleDeleteComment(
-                        comment.commentId.toString(),
-                        comment.isAuthor
-                      )
+                      handleDeleteComment(comment.commentId, comment.isAuthor)
                     }
                   />
                 )}
@@ -347,6 +331,12 @@ export default function FeedComment() {
             placeholder="댓글 추가..."
             value={comment}
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleCommentSubmit();
+              }
+            }}
           />
           {comment.trim() ? (
             <RegistCommentActive
@@ -358,6 +348,7 @@ export default function FeedComment() {
           )}
         </div>
       </div>
+
       {/* 모달 및 토스트 */}
       {showToast && <Toast message={toastMessage} direction="down" />}
     </div>
