@@ -6,9 +6,12 @@ import LikeFeed from "@assets/icons/like_feed.svg?react";
 import LikeFeedActive from "@assets/icons/like_feed_active.svg?react";
 import CommentFeed from "@assets/icons/comment_feed.svg?react";
 import ReportButton from "@assets/icons/report_button.svg?react";
+import EditPost from "@assets/icons/edit_post.svg?react";
+import DeletePost from "@assets/icons/delete_post.svg?react";
 import Loading from "@components/loading";
 import { MovieLog } from "@stories/movie-log";
 import { Toast } from "@stories/toast";
+import { Modal } from "@stories/modal";
 import {
   wrapper,
   feedContainer,
@@ -27,6 +30,8 @@ import {
   reactionsSection,
   banner,
   infoSection,
+  modalOverlay,
+  modalContent,
 } from "./index.styles";
 import { toggleLike, deletePost } from "@api/movie";
 import { useQueryClient } from "@tanstack/react-query";
@@ -58,6 +63,8 @@ export default function MovieLogList() {
   const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
+  const [selectedBoard, setSelectedBoard] = useState<BoardContent | null>(null);
   const { ref, inView } = useInView({ threshold: 0.8 });
 
   const {
@@ -98,15 +105,20 @@ export default function MovieLogList() {
     }
   };
 
-  const handleDeletePost = async (boardId: number, isAuthor: boolean) => {
-    if (!isAuthor) {
+  const handleOptionsModal = (board: BoardContent) => {
+    setSelectedBoard(board);
+    setIsOptionsModalOpen(true);
+  };
+
+  const handleDeletePost = async () => {
+    if (!selectedBoard || !selectedBoard.isAuthor) {
       setToastMessage("삭제 권한이 없습니다.");
       setShowToast(true);
       return;
     }
 
     try {
-      await deletePost(boardId);
+      await deletePost(selectedBoard.boardId);
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });
       setToastMessage("게시글이 삭제되었습니다.");
       setShowToast(true);
@@ -114,6 +126,8 @@ export default function MovieLogList() {
       console.error("게시글 삭제 중 오류 발생:", error);
       setToastMessage("게시글 삭제 중 오류가 발생했습니다.");
       setShowToast(true);
+    } finally {
+      setIsOptionsModalOpen(false);
     }
   };
 
@@ -231,24 +245,26 @@ export default function MovieLogList() {
                         <div css={reactionsSection}>
                           <span onClick={() => handleToggleLike(board.boardId)}>
                             {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
-                            {board.likesCount}
+                            <span className="like-number">
+                              {board.likesCount}
+                            </span>
                           </span>
                           <span
-                            onClick={() => {
+                            onClick={() =>
                               navigate(`/movie-log/detail/${board.boardId}`, {
                                 state: board,
-                              });
-                            }}
+                              })
+                            }
                           >
                             <CommentFeed />
-                            {board.commentsCount}
+                            <span className="comment-number">
+                              {board.commentsCount}
+                            </span>
                           </span>
                         </div>
                         <div
                           css={moreOptions}
-                          onClick={() =>
-                            handleDeletePost(board.boardId, board.isAuthor)
-                          }
+                          onClick={() => handleOptionsModal(board)}
                           style={{ cursor: "pointer" }}
                         >
                           <ReportButton />
@@ -263,6 +279,60 @@ export default function MovieLogList() {
         {/* 로딩 감지기 */}
         <div ref={ref} style={{ width: "100%", height: "20px" }} />
       </div>
+
+      {isOptionsModalOpen && selectedBoard && (
+        <div css={modalOverlay} onClick={() => setIsOptionsModalOpen(false)}>
+          <div css={modalContent} onClick={(e) => e.stopPropagation()}>
+            {selectedBoard.isAuthor ? (
+              <>
+                <button
+                  onClick={() =>
+                    navigate(`/movie-log/edit/${selectedBoard.boardId}`, {
+                      state: {
+                        boardId: selectedBoard.boardId,
+                        movieTitle: selectedBoard.movieTitle,
+                        contents: selectedBoard.contents,
+                        boardContext: selectedBoard.context,
+                        isSpoiler: selectedBoard.isSpoiler,
+                      },
+                    })
+                  }
+                  style={{ color: "#000" }}
+                >
+                  <EditPost /> 수정하기
+                </button>
+                <button onClick={handleDeletePost} style={{ color: "#000" }}>
+                  <DeletePost /> 삭제하기
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setToastMessage("욕설 신고가 접수되었습니다.");
+                    setShowToast(true);
+                    setIsOptionsModalOpen(false);
+                  }}
+                  style={{ color: "#000" }}
+                >
+                  욕설 신고
+                </button>
+                <button
+                  onClick={() => {
+                    setToastMessage("스포일러 신고가 접수되었습니다.");
+                    setShowToast(true);
+                    setIsOptionsModalOpen(false);
+                  }}
+                  style={{ color: "#000" }}
+                >
+                  스포일러 신고
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {showToast && <Toast message={toastMessage} direction="up" />}
     </div>
   );
