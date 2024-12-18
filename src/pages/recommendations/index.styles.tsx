@@ -1,8 +1,11 @@
 import { css } from "@emotion/react";
 
 export const containerStyle = css`
-  height: 100vh;
-  max-width: 768px;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
 `;
 
 export const headerWrapperStyle = css`
@@ -122,4 +125,10 @@ export const movieContainerStyle = css`
   align-items: center;
   gap: 16px;
   align-self: stretch;
+
+  flex: 1;
+
+  & > .empty {
+    /* margin-top: 64px; */
+  }
 `;
