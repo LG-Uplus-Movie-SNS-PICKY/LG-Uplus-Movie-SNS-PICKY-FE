@@ -31,15 +31,20 @@ export const useFetchMovieLogByIdQuery = (movieId: number) => {
       fetchMovieLogsById(movieId, pageParam?.lastBoardId),
 
     getNextPageParam: (lastPage) => {
-      if (!lastPage?.last) {
+      console.log(lastPage);
+
+      if (!lastPage?.data?.last) {
         return {
-          lastBoardId: lastPage?.content[lastPage?.content.length - 1]?.boardId,
+          lastBoardId:
+            lastPage?.data?.content[lastPage?.data?.content.length - 1]
+              ?.boardId,
         };
       }
       return undefined;
     },
 
     initialPageParam: { lastBoardId: 0 },
+    enabled: !!movieId,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 60,
   });
