@@ -154,7 +154,11 @@ export default function SocialPost() {
     setFilteredMovies([]);
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (e.target.value.length > 500) {
+      setToastMessage("리뷰는 500자까지만 작성 가능합니다."); // 토스트 메시지 설정
+      return;
+    }
     setReviewText(e.target.value);
   };
 
@@ -231,9 +235,6 @@ export default function SocialPost() {
           <h2 css={movieTitleStyle}>{selectedMovie.movieTitle}</h2>
           <div css={movieDetails}>
             <p>🕑 {selectedMovie.releaseDate}</p>
-          </div>
-          <div css={movieCountry}>
-            <p>{selectedMovie.country}</p>
           </div>
           <div css={movieGenres}>
             {selectedMovie?.genres?.length > 0 ? (
