@@ -1,4 +1,8 @@
-import { fetchAllData, fetchMovieLogsById } from "@api/movie";
+import {
+  fetchAllData,
+  fetchMovieLogsById,
+  fetchUserMovieLogs,
+} from "@api/movie";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 // React Query를 이용한 무비로그 데이터 갱신
@@ -46,6 +50,30 @@ export const useFetchMovieLogByIdQuery = (movieId: number) => {
     initialPageParam: { lastBoardId: 0 },
     enabled: !!movieId,
     staleTime: 1000 * 60 * 10,
+    gcTime: 1000 * 60 * 60,
+  });
+};
+
+// 특정 사용자가 작성한 무비로그 조회 React Query - Custom Hook
+export const useFetchUserMovieLogsQuery = (nickname: string) => {
+  return useInfiniteQuery({
+    queryKey: ["movie-log", nickname],
+    queryFn: ({ pageParam }) =>
+      fetchUserMovieLogs(nickname, pageParam.lastBoardId),
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.data?.last) {
+        return {
+          lastBoardId:
+            lastPage?.data?.content[lastPage?.data?.content.length - 1]
+              ?.boardId,
+        };
+      }
+    },
+
+    initialPageParam: { lastBoardId: 0 },
+    enabled: !!nickname,
+    staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 60,
   });
 };
