@@ -50,7 +50,6 @@ export const globalStyle = css`
     -moz-osx-font-smoothing: grayscale;
     /* background-color: #f8f8f8; */
     width: 100%;
-    min-height: 100vh;
     letter-spacing: -0.4px; //자간 -4%
 
     background-color: #f5f5f5;
