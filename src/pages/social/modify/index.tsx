@@ -22,7 +22,7 @@ import {
   shareButton,
   backButton,
   movieInfo,
-  movieTitle,
+  movieTitleText,
   movieDetails,
   movieGenres,
   modalContainer,
@@ -72,32 +72,37 @@ export default function PostModify() {
 
   return (
     <div css={wrapper}>
-      {isBackModalOpen && (
-        <>
-          <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
-          <div css={modalContainer}>
-            <Modal
-              message="수정을 취소하고 나가시겠습니까?"
-              confirmText="나가기"
-              cancelText="취소"
-              onConfirm={() => navigate(-1)}
-              onCancel={() => setIsBackModalOpen(false)}
-            />
-          </div>
-        </>
-      )}
-
+      <div css={wrapper}>
+        {isBackModalOpen && (
+          <>
+            <div css={modalOverlay} onClick={() => setIsBackModalOpen(false)} />
+            <div css={modalContainer}>
+              <Modal
+                message="수정을 취소하고 나가시겠습니까?"
+                confirmText="나가기"
+                cancelText="취소"
+                onConfirm={() => navigate(-1)}
+                onCancel={() => setIsBackModalOpen(false)}
+              />
+            </div>
+          </>
+        )}
+      </div>
       <div css={movieInfo}>
         <div css={backButton} onClick={handleBackClick}>
           <BackPost />
         </div>
-        <h2 css={movieTitle}>{movieTitle}</h2>
+
+        <h2 css={movieTitleText}>{movieTitle}</h2>
+
         <div css={movieDetails}>
           <p>🕑 {contents?.[0]?.boardContentType || "기타"}</p>
         </div>
+
         <div css={movieCountry}>
           <p>영화 상세</p>
         </div>
+
         <div css={movieGenres}>
           <span>스포일러 {isSpoiler ? "있음" : "없음"}</span>
         </div>

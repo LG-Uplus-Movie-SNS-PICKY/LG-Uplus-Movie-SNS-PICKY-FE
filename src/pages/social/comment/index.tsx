@@ -145,7 +145,6 @@ export default function FeedComment() {
 
       // 댓글 생성 후, 로컬 상태 업데이트
       setComments((prevComments) => [
-        ...prevComments,
         {
           commentId: response.commentId,
           writerId: 1,
@@ -156,6 +155,7 @@ export default function FeedComment() {
           updatedDate: new Date().toISOString(),
           isAuthor: true,
         },
+        ...prevComments,
       ]);
       setComment("");
       setToastMessage("댓글이 성공적으로 작성되었습니다.");

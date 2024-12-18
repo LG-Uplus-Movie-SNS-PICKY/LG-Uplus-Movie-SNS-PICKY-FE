@@ -230,7 +230,7 @@ export default function SocialPost() {
     try {
       await createBoard(
         reviewText,
-        11, // movieId를 실제 데이터로 교체 필요
+        635302, // movieId를 실제 데이터로 교체 필요
         selectedSpoiler === "있음",
         mediaFiles
       );

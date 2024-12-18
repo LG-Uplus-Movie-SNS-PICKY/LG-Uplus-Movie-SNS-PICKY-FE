@@ -9,7 +9,7 @@ export default {
       & > .swiper-wrapper > .swiper-slide {
         position: relative;
 
-        max-width: 360px;
+        /* max-width: 360px; */
         height: 360px;
         /* max-height: 360px; */
 

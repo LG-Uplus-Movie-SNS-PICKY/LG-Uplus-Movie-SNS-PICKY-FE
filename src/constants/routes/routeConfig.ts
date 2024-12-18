@@ -26,7 +26,7 @@ export const routeConfig: RouteConfigTypes[] = [
     margin: "0 0 60px 0",
   },
   { path: "/movie-log", header: "main", gnb: true, margin: "60px 0" },
-  // { path: "/movie-log/:id", header: "main", gnb: true, margin: "60px 0" },
+  { path: "/movie-log/:id", header: "main", gnb: true, margin: "60px 0" },
   {
     path: "/movie-log/detail/:boardId",
     header: "title",
