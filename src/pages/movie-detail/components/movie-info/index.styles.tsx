@@ -1,16 +1,16 @@
 // pages/MovieDetail/components/MovieInfo/index.styles.tsx
-import styled from '@emotion/styled';
-import { css, SerializedStyles } from '@emotion/react';
-import adBanner from "@assets/images/adBanner.jpg"
+import styled from "@emotion/styled";
+import { css, SerializedStyles } from "@emotion/react";
+import adBanner from "@assets/images/adBanner.jpg";
 
 export const MovieInfoContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-top: 16px;
-    align-items: center;
-    background-color: #FFFFFF;
-    margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px;
+  align-items: center;
+  background-color: #ffffff;
+  margin-bottom: 8px;
 `;
 
 export const AdBannerContainer = styled.div`
@@ -24,6 +24,7 @@ export const AdBannerContainer = styled.div`
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  cursor: pointer;
 `;
 
 export const AdBannerImage = styled.img`
@@ -33,12 +34,12 @@ export const AdBannerImage = styled.img`
 `;
 
 export const InfoContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    gap: 12px;
-    align-items: flex-start;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
 `;
 
 export const Title = styled.span`
@@ -48,19 +49,21 @@ export const Title = styled.span`
 `;
 
 export const ContentText = styled.span`
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
 `;
 
-{/*  Slides -> 최상위 부모 컴포넌트 */}
+{
+  /*  Slides -> 최상위 부모 컴포넌트 */
+}
 export const CastInfoContainer = styled.div`
-    display: flex;
-    flex-direction: column; // Title + CastContainer Column 배치
-    align-items: flex-start;
-    padding: 16px 0 16px 16px;
-    gap: 12px;
-    width: 100%;
+  display: flex;
+  flex-direction: column; // Title + CastContainer Column 배치
+  align-items: flex-start;
+  padding: 16px 0 16px 16px;
+  gap: 12px;
+  width: 100%;
 `;
 
 export const styles = {
@@ -73,7 +76,7 @@ export const styles = {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        width: fit-content ;
+        width: fit-content;
       }
     `;
   },
@@ -86,7 +89,7 @@ export const styles = {
       height: 100px;
       background-color: green;
     `;
-  }
+  },
 
   // CastSlide(): SerializedStyles {
   //   return css`
@@ -97,10 +100,11 @@ export const styles = {
   //     margin-right: 16px;
   //   `
   // }
+};
+
+{
+  /* 슬라이더 부모 컨테이너 */
 }
-
-
-{/* 슬라이더 부모 컨테이너 */}
 // export const CastContainer = styled.div`
 //   display: flex;
 //   flex-direction: row;
@@ -144,7 +148,7 @@ export const CastDetails = styled.div`
   /* width: 100%; */
   flex: 1;
   height: 48px;
-  border-bottom: 1px solid #C8C8C8;
+  border-bottom: 1px solid #c8c8c8;
 `;
 
 export const CastName = styled.span`
@@ -153,5 +157,5 @@ export const CastName = styled.span`
 
 export const CastRole = styled.span`
   font-size: 12px;
-  color: #9D9D9D;
+  color: #9d9d9d;
 `;
