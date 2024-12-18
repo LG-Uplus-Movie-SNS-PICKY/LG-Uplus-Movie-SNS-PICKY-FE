@@ -250,7 +250,7 @@ export default function SearchPage() {
 
         {isFilterActive && (
           <div css={filterModalStyle} ref={filterRef}>
-            {["영화", "배우", "유저"].map((filter) => (
+            {["영화", "유저"].map((filter) => (
               <div
                 key={filter}
                 css={filterOptionStyle}
