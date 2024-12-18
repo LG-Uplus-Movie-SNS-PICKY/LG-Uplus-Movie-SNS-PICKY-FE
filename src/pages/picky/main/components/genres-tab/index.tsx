@@ -34,7 +34,6 @@ function GenreTab() {
         spaceBetween={10}
         direction="horizontal"
         freeMode={true}
-        loop={true}
         modules={[FreeMode, Mousewheel]}
         mousewheel={{
           forceToAxis: true,

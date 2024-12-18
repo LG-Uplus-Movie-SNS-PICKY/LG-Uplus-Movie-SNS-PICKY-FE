@@ -54,7 +54,19 @@ function PlayListSection() {
     if (!isLoading) console.log(playlists);
   }, [isLoading]);
 
-  if (isLoading) return <Loading />;
+  if (isLoading)
+    return (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loading />
+      </div>
+    );
 
   return (
     <div css={styles.container()}>
