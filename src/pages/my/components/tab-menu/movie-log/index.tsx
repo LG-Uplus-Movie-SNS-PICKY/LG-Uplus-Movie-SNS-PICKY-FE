@@ -58,11 +58,6 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
     loadMovieLogs();
   }, [nickname]);
 
-  // 게시글 클릭 시 상세 페이지로 이동
-  const handleNavigateMovieLog = (boardId: number) => {
-    navigate(`/movie-log/detail/${boardId}`);
-  };
-
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyMovieLog />}
@@ -78,7 +73,15 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
             <div
               key={element.boardId}
               className="movie-log"
-              onClick={() => handleNavigateMovieLog(element.boardId)} // boardId 전달
+              onClick={() => {
+                // http://localhost:5173/movie-log/detail/24}
+                console.log(element);
+                console.log(element.boardId);
+
+                navigate(`/movie-log/detail/${element.boardId}`, {
+                  state: element,
+                });
+              }} // boardId 전달
               style={{ cursor: "pointer" }} // 클릭 가능한 UI 추가
             >
               {posterUrl ? (
