@@ -59,28 +59,24 @@ export async function fetchGetUserInfo() {
   const user = getCookie("user") || {};
   let accessToken;
 
-  console.log("Token Cookie");
-  console.log(token);
-  console.log();
-
-  console.log("User Cookie");
-  console.log(user);
-  console.log();
-
   if (!isEmpty(token) && isEmpty(user)) {
     accessToken = token.localJwtDto.accessToken;
-    console.log("Token -> AccessToken!!" + accessToken);
   }
 
   if (isEmpty(token) && !isEmpty(user)) {
     console.log("User -> AccessToken!!");
-    accessToken = user.localJwtDto.accessToken;
   }
 
   const { data } = await apiClient.get("/user", {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
+  return data;
+}
+
+// 회원가입 완료 후 사용자에게 감사 이메일 발송 POST API
+export async function fetchPostRegisterUserEmail() {
+  const { data } = await apiClient.post("/email/register");
   return data;
 }
 
