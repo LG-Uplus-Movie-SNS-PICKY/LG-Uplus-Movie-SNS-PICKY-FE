@@ -28,6 +28,10 @@ import {
   fetchProfileUser,
   fetchNicknameValidation,
 } from "@api/user"; // API 호출 모듈
+import { useSetRecoilState } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { getCookie, setCookie } from "@util/cookie";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileEditPage() {
   const [userData, setUserData] = useState({
@@ -53,7 +57,8 @@ export default function ProfileEditPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
 
-  const [isComposing, setIsComposing] = useState(false);
+  const setUserInfoUpdate = useSetRecoilState(isLogin);
+  const navigate = useNavigate();
 
   const regex = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
 
@@ -150,19 +155,6 @@ export default function ProfileEditPage() {
     }
   };
 
-  // // 한글 조합 이벤트 핸들러
-  // const handleCompositionStart = () => {
-  //   setIsComposing(true); // 한글 조합 시작
-  // };
-
-  // // 한글 조합 완료 이벤트 핸들러
-  // const handleCompositionEnd = (
-  //   event: React.CompositionEvent<HTMLInputElement>
-  // ) => {
-  //   setIsComposing(false);
-  //   handleNicknameChange(event);
-  // };
-
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -225,8 +217,53 @@ export default function ProfileEditPage() {
           profile:
             profileImage !== userData.profile ? profileImage : prev.profile,
         }));
+
+        console.log(profileImage);
+        console.log(userData.profile);
+
+        // 쿠키와 전역 상태로 저장해 둔 사용자 정보 변환
+
+        // 전역 상태 업데이트
+        setUserInfoUpdate((prev) => ({
+          ...prev,
+          isLoginInfo: {
+            ...prev.isLoginInfo,
+            nickname,
+            profile_url:
+              profileImage !== userData.profile
+                ? profileImage
+                : userData.profile,
+          },
+          isLoading: false,
+        }));
+
+        // 쿠키 상태 업데이트
+        const userCookie = getCookie("user");
+        setCookie(
+          "user",
+          {
+            ...userCookie,
+            user: {
+              ...userCookie.user,
+              nickname,
+              profile_url:
+                profileImage !== userData.profile
+                  ? profileImage
+                  : userData.profile,
+            },
+          },
+          {
+            path: "/", // 모든 경로에서 접근 가능
+            maxAge: 60 * 60 * 24, // 1일 (초 단위)
+            sameSite: "strict", // 보안 설정
+            secure: true, // HTTPS 필요 여부 (개발 시 false)
+          }
+        );
+
         setNicknameSuccess(null); // 성공 메시지 초기화
         setIsSaveDisabled(true); // 버튼 비활성화
+
+        navigate(`/user/${nickname}`);
       } else {
         throw new Error("프로필 수정 중 문제가 발생했습니다.");
       }

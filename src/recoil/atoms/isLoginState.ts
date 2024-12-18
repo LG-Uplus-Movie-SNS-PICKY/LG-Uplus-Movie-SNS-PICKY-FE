@@ -3,7 +3,7 @@ import { atom, selector } from "recoil";
 export interface LoginUserInfoTypes {
   [key: string]: unknown;
   nickname: string;
-  profile_url: string;
+  profile_url: string | null;
   gender: string;
 }
 
