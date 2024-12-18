@@ -30,6 +30,7 @@ import {
   recentSearchListStyle,
   emptyTextStyle,
 } from "@pages/search/index.styles";
+
 import SEO from "@components/seo";
 
 const highlightSearchTerm = (text: string, searchTerm: string) => {
@@ -82,7 +83,7 @@ interface User {
 }
 
 export default function SearchPage() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isFilterActive, setIsFilterActive] = useState(false);
@@ -179,32 +180,69 @@ export default function SearchPage() {
     <>
       <SEO title="PICKY: SEARCH" />
 
-      <div css={containerStyle}>
-        <div css={headerStyle}>
+      {/* 헤더 컨테이너 */}
+      <div css={headerStyle}>
+        {/* 뒤로가기 버튼 */}
+        <div>
           <button css={backButtonStyle}>
-            <img src={backButton} alt="backButton" width="12" height="25" onClick={() => navigate(-1)}/>
+            <img
+              src={backButton}
+              alt="backButton"
+              width="12"
+              height="25"
+              onClick={() => navigate(-1)}
+            />
           </button>
-          <div css={searchInputContainerStyle(isSearchInputFocused)}>
-            <div
-              css={filterButtonStyle}
-              onClick={() => setIsFilterActive((prev) => !prev)}
-            >
-              <div css={filterContainerStyle}>
-                <img
-                  src={
-                    selectedFilter
-                      ? filterMiniActiveIcon
-                      : isFilterActive
-                      ? filterActiveIcon
-                      : filterIcon
-                  }
-                  alt="filterIcon"
-                />
-                <span css={filterLabelStyle}>{selectedFilter}</span>
-              </div>
+        </div>
+
+        {/* 입력창 */}
+        <div css={searchInputContainerStyle(isSearchInputFocused)}>
+          {/* 필터링 select btn */}
+          <div
+            css={filterButtonStyle}
+            onClick={() => setIsFilterActive((prev) => !prev)}
+          >
+            <div css={filterContainerStyle}>
+              <img
+                src={
+                  selectedFilter
+                    ? filterMiniActiveIcon
+                    : isFilterActive
+                    ? filterActiveIcon
+                    : filterIcon
+                }
+                alt="filterIcon"
+              />
+              <span css={filterLabelStyle}>{selectedFilter}</span>
             </div>
+
+            {isFilterActive && (
+              <div css={filterModalStyle(isFilterActive)} ref={filterRef}>
+                {["영화", "배우", "유저"].map((filter) => (
+                  <div
+                    key={filter}
+                    css={filterOptionStyle}
+                    onClick={() => handleFilterSelect(filter)}
+                  >
+                    {filter}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 입력창 */}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <input
               css={searchInputStyle}
+              type="text"
               placeholder="영화, 배우, 유저를 검색해보세요."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
@@ -222,23 +260,15 @@ export default function SearchPage() {
                 height="16"
               />
             </button>
+            {/* <input
+              
+              
+            /> */}
           </div>
         </div>
+      </div>
 
-        {isFilterActive && (
-          <div css={filterModalStyle} ref={filterRef}>
-            {["영화", "배우", "유저"].map((filter) => (
-              <div
-                key={filter}
-                css={filterOptionStyle}
-                onClick={() => handleFilterSelect(filter)}
-              >
-                {filter}
-              </div>
-            ))}
-          </div>
-        )}
-
+      <div css={containerStyle}>
         <div css={recentSearchHeaderStyle}>
           <div css={titleStyle}>
             {searchText.trim() === "" ? "최근검색어" : "검색결과"}
