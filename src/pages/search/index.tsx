@@ -8,7 +8,7 @@ import closeButton from "@assets/icons/closeButton.svg";
 import filterIcon from "@assets/icons/filter.svg";
 import filterActiveIcon from "@assets/icons/filter_active.svg";
 import filterMiniActiveIcon from "@assets/icons/filter_mini_active.svg";
-import { fetchMovieSearch, fetchUserSearch } from "@api/user"; // API 호출 함수 import
+import { fetchMovieSearch, fetchUserSearch } from "@api/user";
 import {
   containerStyle,
   headerStyle,
@@ -72,7 +72,7 @@ const highlightSearchTerm = (text: string, searchTerm: string) => {
 
 interface Movie {
   movieId: number;
-  movieTittle: string;
+  movieTitle: string;
   moviePosterUrl: string;
 }
 
@@ -82,7 +82,7 @@ interface User {
 }
 
 export default function SearchPage() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [searchText, setSearchText] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isFilterActive, setIsFilterActive] = useState(false);
@@ -119,27 +119,44 @@ export default function SearchPage() {
   const fetchSearchResults = async () => {
     if (!searchText.trim()) return;
 
+    console.log("fetchSearchResults 호출됨 - 검색어:", searchText);
+    console.log("선택된 필터:", selectedFilter);
+
     try {
       if (selectedFilter === "영화") {
         const movies = await fetchMovieSearch(searchText);
-        setSearchResults(
-          movies.map((movie: Movie) => ({
-            id: movie.movieId,
-            title: movie.movieTittle,
-            poster: movie.moviePosterUrl,
-          }))
-        );
+        console.log("API 응답(영화):", movies);
+
+        if (Array.isArray(movies)) {
+          setSearchResults(
+            movies.map((movie: Movie) => ({
+              id: movie.movieId,
+              title: movie.movieTitle,
+              poster: movie.moviePosterUrl,
+            }))
+          );
+        }
       } else if (selectedFilter === "유저") {
         const users = await fetchUserSearch(searchText);
-        setSearchResults(
-          users.map((user: User) => ({
-            id: user.userId,
-            nickname: user.nickname,
-          }))
-        );
+        console.log("API 응답(유저):", users);
+
+        if (Array.isArray(users)) {
+          setSearchResults(
+            users.map((user: User) => ({
+              id: user.userId,
+              nickname: user.nickname,
+            }))
+          );
+        }
       }
     } catch (error) {
       console.error("검색 결과를 가져오는 중 오류 발생:", error);
+
+      if (error instanceof Error) {
+        console.error("에러 메시지:", error.message);
+      }
+
+      setSearchResults([]);
     }
   };
 
@@ -182,7 +199,13 @@ export default function SearchPage() {
       <div css={containerStyle}>
         <div css={headerStyle}>
           <button css={backButtonStyle}>
-            <img src={backButton} alt="backButton" width="12" height="25" onClick={() => navigate(-1)}/>
+            <img
+              src={backButton}
+              alt="backButton"
+              width="12"
+              height="25"
+              onClick={() => navigate(-1)}
+            />
           </button>
           <div css={searchInputContainerStyle(isSearchInputFocused)}>
             <div
@@ -227,7 +250,7 @@ export default function SearchPage() {
 
         {isFilterActive && (
           <div css={filterModalStyle} ref={filterRef}>
-            {["영화", "배우", "유저"].map((filter) => (
+            {["영화", "유저"].map((filter) => (
               <div
                 key={filter}
                 css={filterOptionStyle}
@@ -269,7 +292,20 @@ export default function SearchPage() {
               return (
                 <li
                   key={index}
-                  onClick={() => handleSuggestionClick(suggestionText)} // 항상 string 전달
+                  onClick={() => {
+                    if (result.id) {
+                      // 선택된 필터에 따라 경로를 동적으로 설정
+                      if (selectedFilter === "영화") {
+                        navigate(`/movie/${result.id}`); // 영화 경로로 이동
+                      } else if (selectedFilter === "유저") {
+                        navigate(`/user/${result.id}`); // 유저 경로로 이동
+                      } else {
+                        console.error("알 수 없는 필터 선택: ", selectedFilter);
+                      }
+                    } else {
+                      console.error("ID가 없거나 유효하지 않습니다.");
+                    }
+                  }}
                 >
                   <img src={searchButton} alt="searchButton" />
                   <span>
