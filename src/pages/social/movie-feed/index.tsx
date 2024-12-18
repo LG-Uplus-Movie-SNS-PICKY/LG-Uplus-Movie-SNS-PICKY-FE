@@ -28,7 +28,8 @@ import {
   banner,
   infoSection,
 } from "./index.styles";
-import axios, { AxiosError } from "axios";
+import { toggleLike, deletePost } from "@api/movie";
+import { useQueryClient } from "@tanstack/react-query";
 import MovieLogBanner from "@assets/images/banner.jpg";
 
 // 게시글 데이터 타입
@@ -41,6 +42,7 @@ interface BoardContent {
   context: string;
   isSpoiler: boolean;
   isLike: boolean;
+  isAuthor: boolean;
   likesCount: number;
   commentsCount: number;
   contents: {
@@ -52,11 +54,12 @@ interface BoardContent {
 export default function MovieLogList() {
   const { movieId } = useParams<{ movieId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const { ref, inView } = useInView({ threshold: 0.8 });
-  console.log(movieId);
+
   const {
     data: board,
     hasNextPage,
@@ -74,14 +77,6 @@ export default function MovieLogList() {
   const revealSpoiler = (boardId: number) => {
     setRevealedSpoilers((prev) => [...prev, boardId]);
   };
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("Loading is End");
-      console.log(board);
-    } else {
-      console.log("none");
-    }
-  }, [isLoading]);
 
   const calculateTimeAgo = (createdDate: string) => {
     const now = new Date();
@@ -92,6 +87,34 @@ export default function MovieLogList() {
     if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
     return `${Math.floor(diff / 86400)}일 전`;
+  };
+
+  const handleToggleLike = async (boardId: number) => {
+    try {
+      await toggleLike(boardId);
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+    } catch (error) {
+      console.error("좋아요 요청 중 오류 발생:", error);
+    }
+  };
+
+  const handleDeletePost = async (boardId: number, isAuthor: boolean) => {
+    if (!isAuthor) {
+      setToastMessage("삭제 권한이 없습니다.");
+      setShowToast(true);
+      return;
+    }
+
+    try {
+      await deletePost(boardId);
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+      setToastMessage("게시글이 삭제되었습니다.");
+      setShowToast(true);
+    } catch (error) {
+      console.error("게시글 삭제 중 오류 발생:", error);
+      setToastMessage("게시글 삭제 중 오류가 발생했습니다.");
+      setShowToast(true);
+    }
   };
 
   return (
@@ -206,16 +229,28 @@ export default function MovieLogList() {
                       {/* 리액션 및 옵션 */}
                       <div css={reactionsContainer}>
                         <div css={reactionsSection}>
-                          <span>
+                          <span onClick={() => handleToggleLike(board.boardId)}>
                             {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
-                            <span>{board.likesCount}</span>
+                            {board.likesCount}
                           </span>
-                          <span>
+                          <span
+                            onClick={() => {
+                              navigate(`/movie-log/detail/${board.boardId}`, {
+                                state: board,
+                              });
+                            }}
+                          >
                             <CommentFeed />
-                            <span>{board.commentsCount}</span>
+                            {board.commentsCount}
                           </span>
                         </div>
-                        <div css={moreOptions}>
+                        <div
+                          css={moreOptions}
+                          onClick={() =>
+                            handleDeletePost(board.boardId, board.isAuthor)
+                          }
+                          style={{ cursor: "pointer" }}
+                        >
                           <ReportButton />
                         </div>
                       </div>
@@ -232,16 +267,3 @@ export default function MovieLogList() {
     </div>
   );
 }
-
-// {
-//   board?.pages.flatMap((page) =>
-//     page.content.map((log: BoardContent) => {
-//       const isSpoilerRevealed = revealedSpoilers.includes(log.boardId);
-//       return (
-//         <div key={log.boardId} css={feedItem}>
-
-//         </div>
-//       );
-//     })
-//   );
-// }
