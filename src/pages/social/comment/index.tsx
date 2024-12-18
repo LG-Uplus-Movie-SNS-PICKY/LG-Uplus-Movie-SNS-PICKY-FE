@@ -81,6 +81,14 @@ export default function FeedComment() {
   const [boardData, setBoardData] = useState<BoardContent | null>(
     location.state || null
   );
+
+  useEffect(() => {
+    if (boardData) {
+      console.log("Board Data");
+      console.log(boardData);
+    }
+  }, [boardData]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] =

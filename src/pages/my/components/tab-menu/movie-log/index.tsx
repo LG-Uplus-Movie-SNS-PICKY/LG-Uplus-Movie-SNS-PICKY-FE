@@ -78,7 +78,15 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
             <div
               key={element.boardId}
               className="movie-log"
-              onClick={() => handleNavigateMovieLog(element.boardId)} // boardId 전달
+              onClick={() => {
+                // http://localhost:5173/movie-log/detail/24}
+                console.log(element);
+                console.log(element.boardId);
+
+                navigate(`/movie-log/detail/${element.boardId}`, {
+                  state: element,
+                });
+              }} // boardId 전달
               style={{ cursor: "pointer" }} // 클릭 가능한 UI 추가
             >
               {posterUrl ? (

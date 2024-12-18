@@ -56,7 +56,8 @@ const authHandler: HttpHandler[] = [
           expires_in: "string",
         },
         localJwtDto: {
-          accessToken: 1,
+          accessToken:
+            "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6OCwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQ1MjY5NTYsImV4cCI6MTczNDYxMzM1Nn0.OJBfmtBA5Tn7neZLmYMur_7A5noXFbmWdiKxORMT4t0",
         },
         isAuthUser: userInfo.user_role === "Admin",
         isRegistrationDone: true,
