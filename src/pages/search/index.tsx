@@ -298,7 +298,7 @@ export default function SearchPage() {
                       if (selectedFilter === "영화") {
                         navigate(`/movie/${result.id}`); // 영화 경로로 이동
                       } else if (selectedFilter === "유저") {
-                        navigate(`/user/${result.id}`); // 유저 경로로 이동
+                        navigate(`/user/${result.nickname}`); // 유저 경로로 이동
                       } else {
                         console.error("알 수 없는 필터 선택: ", selectedFilter);
                       }
