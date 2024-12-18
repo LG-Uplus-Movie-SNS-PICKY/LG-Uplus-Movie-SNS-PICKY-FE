@@ -291,7 +291,7 @@ export async function fetchLikedMovies(
   }
 
   const { data } = await apiClient.get(
-    `/movie/user/${nickname}?${param.toString}`
+    `/movie/user/${nickname}?${param.toString()}`
   );
   return data;
 }

@@ -6,6 +6,7 @@ import "react-lazy-load-image-component/src/effects/blur.css";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchLikedMovies } from "@api/movie";
+import { useUserLikedMovies } from "@hooks/movie";
 
 export interface LikeMovieData {
   movie_id: number;
@@ -47,6 +48,18 @@ function LikeMovieContent() {
   const { nickname } = useParams<{ nickname: string }>(); // URL에서 닉네임 가져오기
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
   const [movies, setMovies] = useState<LikeMovieData[]>([]);
+
+  const {
+    data: likeMovies,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    isLoading,
+  } = useUserLikedMovies(nickname ? nickname : "");
+
+  useEffect(() => {
+    if (!isLoading) console.log(likeMovies);
+  }, [isLoading]);
 
   const handleMovieClick = (movieId: number) => {
     navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
