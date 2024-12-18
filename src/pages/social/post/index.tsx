@@ -43,6 +43,7 @@ import {
   reviewIcon,
 } from "./index.styles";
 import { FileInput } from "@stories/file-input";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface MovieData {
   movieId: number;
@@ -66,6 +67,7 @@ export default function SocialPost() {
   const [videos, setVideos] = useState<File[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null); // 토스트 메시지 상태
   const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
+  const queryClient = useQueryClient();
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -197,6 +199,8 @@ export default function SocialPost() {
       );
 
       setToastMessage("게시글이 성공적으로 생성되었습니다."); // 성공 메시지
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+
       setTimeout(() => navigate("/movie-log"), 1500);
     } catch (error) {
       console.error("게시글 생성 중 오류 발생:", error);
