@@ -8,7 +8,7 @@ export async function fetchBehindVideos(playlistId: string, apiKey: string): Pro
         part: "snippet",
         playlistId,
         key: apiKey,
-        maxResults: 50,
+        maxResults: 5,
       },
     });
 
@@ -42,7 +42,7 @@ export async function fetchOstVideos(playlistId: string, apiKey: string): Promis
         part: "snippet",
         playlistId,
         key: apiKey,
-        maxResults: 50,
+        maxResults: 10,
       },
     });
 

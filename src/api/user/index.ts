@@ -132,18 +132,26 @@ export async function cancelMembership(platform: string, oAuth2Token: any) {
 
 /** 영화 검색 API */
 export async function fetchMovieSearch(keyword: string) {
-  const { data } = await apiClient.get("/movie/search", {
+  console.log("fetchMovieSearch 호출됨 - keyword:", keyword);
+
+  const { data } = await apiClient.get(`/movie/search`, {
     params: { keyword },
   });
-  return data;
+
+  console.log("fetchMovieSearch 응답 - data:", data);
+  return data.data;
 }
 
-/** 사용자 검색 API */
+/** 유저 검색 API */
 export async function fetchUserSearch(keyword: string) {
-  const { data } = await apiClient.get("/user/search", {
-    params: { keyword },
+  console.log("fetchUserSearch 호출됨 - keyword:", keyword);
+
+  const { data } = await apiClient.get(`/user/search`, {
+    params: { keyword }, // 인코딩하지 않고 전달
   });
-  return data;
+
+  console.log("fetchUserSearch 응답 - data:", data);
+  return data.data;
 }
 
 // 팔로우 신청/삭제 API
@@ -152,7 +160,8 @@ export async function toggleFollow(followingId: number) {
   let accessToken = "";
 
   if (tokenString) {
-    const token = typeof tokenString === "string" ? JSON.parse(tokenString) : tokenString;
+    const token =
+      typeof tokenString === "string" ? JSON.parse(tokenString) : tokenString;
     accessToken = token.localJwtDto?.accessToken;
     if (!accessToken) throw new Error("유효한 액세스 토큰이 없습니다.");
   } else {
@@ -179,7 +188,7 @@ export const fetchFollowersList = async (nickname: string) => {
     const response = await apiClient.get(`/follow/followers/${nickname}`);
     return response.data;
   } catch (error) {
-    console.error('팔로잉 목록 불러오기 실패:', error);
+    console.error("팔로잉 목록 불러오기 실패:", error);
     throw error;
   }
 };
@@ -190,7 +199,7 @@ export const fetchFollowingsList = async (nickname: string) => {
     const response = await apiClient.get(`/follow/followings/${nickname}`);
     return response.data;
   } catch (error) {
-    console.error('팔로잉 목록 불러오기 실패:', error);
+    console.error("팔로잉 목록 불러오기 실패:", error);
     throw error;
   }
 };

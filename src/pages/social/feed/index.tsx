@@ -234,11 +234,13 @@ export default function SocialFeed() {
                                 }}
                               />
                             </div>
+
                             <div css={textSection}>
                               {board.writerNickname}
                               <span css={movieTitle}>{board.movieTitle}</span>
                             </div>
                           </div>
+
                           <div css={timeSection}>
                             {calculateTimeAgo(board.createdDate)}
                           </div>

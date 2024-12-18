@@ -21,8 +21,8 @@ export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
   // console.log(boardContent);
   return (
     <Swiper
-      slidesPerView={"auto"}
-      spaceBetween={4}
+      slidesPerView={1}
+      // spaceBetween={4}
       direction="horizontal"
       modules={[Pagination, Mousewheel]}
       pagination={{

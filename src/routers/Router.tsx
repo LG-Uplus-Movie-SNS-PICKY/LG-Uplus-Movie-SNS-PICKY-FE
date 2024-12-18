@@ -14,7 +14,8 @@ import { useEffect } from "react";
 import { useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
 import { isEmpty } from "lodash";
-import DomainGoogle from "@pages/google";
+import DomainGoogle from "@pages/google/index";
+import GoogleImage from "@pages/google/google";
 import ProtectedRoute from "./router/ProtectedRoute";
 
 // Routes Import
@@ -70,6 +71,10 @@ function Router() {
           <Route
             path="/google626ac0bef2281c75.html"
             element={<DomainGoogle />}
+          />
+             <Route
+            path="/privacy"
+            element={<GoogleImage />}
           />
         </Routes>
       </Layout>

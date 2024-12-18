@@ -190,15 +190,11 @@ function My() {
       setBoardCount(0);
       setFollowersCount(0);
       setFollowingCount(0);
+      setIsFollowing(false);
 
       try {
         setLoading(true);
         const data = await fetchUserInfo(nickname); // 특정 닉네임 정보 가져오기
-
-        console.log("유저 정보:", data);
-
-        console.log("유저 프로필 사진: ", data.data.userProfileUrl);
-        console.log("유저 아이디: ", data.data.userId);
 
         setUserId(data.data.userId ?? 0);
         setProfileImage(data.data.userProfileUrl || defaultProfileImage);
@@ -206,6 +202,7 @@ function My() {
         setBoardCount(data.data.boardCount ?? 0);
         setFollowersCount(data.data.followerCount ?? 0);
         setFollowingCount(data.data.followingCount ?? 0);
+        setIsFollowing(data.data.isFollowing ?? false);
         setUserData(data);
       } catch (err) {
         console.error("Error fetching user info:", err);
@@ -214,7 +211,6 @@ function My() {
         setLoading(false);
       }
     };
-
 
     loadUserProfileAndInfo();
   }, [nickname]); // nickname이 변경될 때만 실행

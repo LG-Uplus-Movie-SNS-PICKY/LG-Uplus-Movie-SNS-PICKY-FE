@@ -87,11 +87,8 @@ const ReviewsPage = () => {
 
   const { data: movieDetail, isLoading: movieDetailIsLoading } =
     useMovieDetailQuery(Number(id));
-  // const { data: lineReviews, isLoading: lineReviewsIsLoading } =
-  //   useLineReviewMovieQuery(Number(id));
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [includeSpoilers, setIncludeSpoilers] = useState(false);
-  const [sortBy, setSortBy] = useState("likes");
+
   const [movieData, setMovieData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -99,27 +96,46 @@ const ReviewsPage = () => {
   const [ratings, setRatings] = useState<RatingsData>(defaultRatings);
   const [genders, setGenders] = useState<GendersData>(defaultGenders);
 
+  const [sortType, setSortType] = useState("LATEST"); // 최신순, 공감순 정렬 타입
+  const [includeSpoilers, setIncludeSpoilers] = useState(false); // 스포일러 포함 여부
+
+  const { ref, inView } = useInView({ threshold: 1.0 });
+
   const {
-    data,
+    data: lineReviewState, // React Query 데이터 상태를 lineReviewState로 변경
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
     refetch,
-  } = useLineReviewMovieQuery(Number(id));
+  } = useLineReviewMovieQuery(movieId, sortType);
 
-  const { ref, inView } = useInView({
-    threshold: 1.0,
-  });
+  // 모든 리뷰 데이터 병합
+  const allReviews = lineReviewState?.pages?.flatMap((page) => page.data.content) || [];
 
+  // 스포일러 상태에 따라 필터링
+  const filteredReviews = includeSpoilers
+    ? allReviews // 스포일러 포함 시 전체 데이터를 보여줌
+    : allReviews.filter((review) => !review.isSpoiler); // isSpoiler === false인 리뷰만 필터링
+
+  // 무한스크롤 트리거
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  // 병합된 모든 리뷰 데이터
-  const allReviews = data?.pages?.flatMap((page) => page.data.content) || []; // 병합된 데이터
+  // 정렬 방식 변경
+  const handleSortChange = (newSortType: string) => {
+    setSortType(newSortType);
+    refetch(); // 새로운 정렬 방식으로 API 다시 호출
+  };
+
+  // 스포일러 토글
+  const handleToggleSpoilers = () => {
+    setIncludeSpoilers((prev) => !prev);
+    refetch();
+  };
 
   // 영화 데이터 가져오기
   useEffect(() => {
@@ -148,9 +164,7 @@ const ReviewsPage = () => {
         const ratingsData = await fetchRatings(movieId);
         const gendersData = await fetchGenders(movieId);
         setRatings(ratingsData);
-        console.log("평점 데이터:", ratingsData);
         setGenders(gendersData);
-        console.log("성별 데이터:", gendersData);
       } catch (error) {
         console.error("Error fetching ratings or genders:", error);
       }
@@ -159,34 +173,7 @@ const ReviewsPage = () => {
     fetchData();
   }, [movieId]);
 
-  // 한줄평 데이터 가져오기
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const data = await fetchLineReviewMovie(Number(id));
-        const allReviews = data?.data?.content || [];
-        setReviews(allReviews);
-      } catch (err) {
-        console.error(err);
-        setError("Failed to load reviews.");
-      }
-    };
-
-    fetchReviews();
-  }, [id, sortBy]);
-
-  // 스포일러 포함 여부 필터링
-  const filteredReviews = includeSpoilers
-    ? allReviews // 모든 데이터 반환
-    : allReviews.filter((review) => !review.isSpoiler); // 스포일러 제거
-
-  // 새로운 리뷰 추가 함수
-  // const handleAddReview = (newReview: Review) => {
-  //   console.log("새로 추가된 리뷰 데이터:", newReview); // 전달된 리뷰 데이터 확인
-  //   setReviews((prevReviews) => [newReview, ...prevReviews]); // 새로운 리뷰를 앞에 추가
-  // };
   const handleAddReview = async (newReview: Review) => {
-    console.log("새로 추가된 리뷰 데이터:", newReview);
     setReviews((prevReviews) => [newReview, ...prevReviews]);
 
     // 추가: ratings와 genders 데이터 다시 가져오기
@@ -195,8 +182,6 @@ const ReviewsPage = () => {
       const updatedGenders = await fetchGenders(movieId);
       setRatings(updatedRatings);
       setGenders(updatedGenders);
-      console.log("업데이트된 평점 데이터:", updatedRatings);
-      console.log("업데이트된 성별 데이터:", updatedGenders);
     } catch (error) {
       console.error("Error fetching updated ratings or genders:", error);
     }
@@ -217,24 +202,6 @@ const ReviewsPage = () => {
     fetchUpdatedData();
   }, [reviews]); // 리뷰가 변경될 때마다 실행
 
-  // 정렬된 리뷰 데이터
-  const sortedReviews = [...reviews]
-    .filter((review) => (includeSpoilers ? true : !review.isSpoiler)) // 스포일러 필터링
-    .sort((a, b) => {
-      if (sortBy === "likes") return b.likes - a.likes; // 좋아요 순 정렬
-      if (sortBy === "latest")
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // 최신 순 정렬
-      return 0;
-    });
-
-  useEffect(() => {
-    console.log("현재 정렬된 리뷰 데이터:", sortedReviews);
-  }, [sortedReviews]);
-
-  const handleToggleSpoilers = () => {
-    setIncludeSpoilers((prev) => !prev);
-  };
-
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
@@ -246,7 +213,7 @@ const ReviewsPage = () => {
       <>
         <SEO
           title={`${movieData.title}(${new Date(movieData.release_date).getFullYear()})`}
-          description={`${movieData.title}의 ${filteredReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
+          description={`${movieData.title}의 ${allReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
           image={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
           url={`http://localhost:5173/${location.pathname}`}
         />
@@ -272,20 +239,20 @@ const ReviewsPage = () => {
             <ReviewRegist movieId={movieId} refetch={refetch} onAddReview={handleAddReview} />
 
             <ReviewsWrapper>
-
+              {/* 최신순, 공감순 필터링 */}
               <FilterContainer>
                 <SortContainer>
                   <SortOption
-                    onClick={() => setSortBy("likes")}
-                    active={sortBy === "likes"}
-                  >
-                    공감순
-                  </SortOption>
-                  <SortOption
-                    onClick={() => setSortBy("latest")}
-                    active={sortBy === "latest"}
+                    onClick={() => handleSortChange("LATEST")}
+                    active={sortType === "LATEST"}
                   >
                     최신순
+                  </SortOption>
+                  <SortOption
+                    onClick={() => handleSortChange("LIKES")}
+                    active={sortType === "LIKES"}
+                  >
+                    공감순
                   </SortOption>
                 </SortContainer>
                 <SpoilerToggleContainer>
@@ -300,11 +267,31 @@ const ReviewsPage = () => {
                 </SpoilerToggleContainer>
               </FilterContainer>
 
-              {/* 리뷰가 없을 때 문구 표시 */}
-              {sortedReviews.length === 0 ? (
+              {/* 리뷰 데이터 매핑 */}
+              {filteredReviews.length === 0 ? (
                 <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
               ) : (
-                <MovieReview movieId={movieId} reviews={sortedReviews} />
+                filteredReviews.map((review, index) => (
+                  <MovieReview
+                    key={review.id}
+                    movieId={movieId}
+                    review={review}
+                    ref={index === filteredReviews.length - 1 ? ref : null}
+                  />
+                ))
+              )}
+
+              {/* 무한스크롤 감지 */}
+              <div ref={ref} style={{ height: "20px" }} />
+              {isFetchingNextPage &&
+                <LoadingContainer>
+                  <Loading />
+                </LoadingContainer>
+              }
+              {!hasNextPage && allReviews.length > 0 && (
+                <div style={{ textAlign: "center", marginBottom: "16px", fontWeight: "600" }}>
+                  마지막 리뷰입니다.
+                </div>
               )}
             </ReviewsWrapper>
           </MovieReviewContainer>
@@ -332,6 +319,11 @@ const ReviewsPage = () => {
             </div>
           )} */}
         </div>
+
+        {/* 토스트 메시지
+      <ToastContainer>
+        {toast && <Toast message={toast.message} direction={toast.direction} />}
+      </ToastContainer> */}
       </>
     )
   );

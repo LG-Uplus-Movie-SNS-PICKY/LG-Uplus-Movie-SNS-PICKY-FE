@@ -324,8 +324,8 @@ export const fetchMovieLogsById = async (
   const params = new URLSearchParams();
   if (lastBoardId > 0) params.append("lastBoardId", lastBoardId.toString());
 
-  const { data } = await apiClient.get(
-    `/board/${movieId}?${params.toString()}`
-  );
+  const { data } = await apiClient.get(`/board/${movieId}`);
+  console.log("APIs fetchMovieLogsById");
+  console.log(data);
   return data;
 };
