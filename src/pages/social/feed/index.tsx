@@ -203,7 +203,19 @@ export default function SocialFeed() {
           />
         </div>
         <div css={feedContainer}>
-          {isLoading && <Loading />}
+          {isLoading && (
+            <div
+              style={{
+                width: "100%",
+                flex: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
+            </div>
+          )}
           {Array.isArray(board?.pages) &&
             board.pages.map((page, idx) => (
               <React.Fragment key={idx}>

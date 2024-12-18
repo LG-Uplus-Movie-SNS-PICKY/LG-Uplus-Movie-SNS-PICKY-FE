@@ -159,7 +159,6 @@ export const emptyStateContainerStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 140px;
   flex: 1;
   color: #c8c8c8;
   text-align: center;

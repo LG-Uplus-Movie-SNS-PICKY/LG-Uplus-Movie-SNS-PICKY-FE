@@ -70,12 +70,11 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
         </div>
 
         {isLogin && (
-          <button
-            className="more-genre-movies"
-            onClick={() => navigate(`/genre/${selectButton}`)}
-          >
-            더보기
-          </button>
+          <div className="more-genre-movies">
+            <button onClick={() => navigate(`/genre/${selectButton}`)}>
+              더보기
+            </button>
+          </div>
         )}
       </div>
     </div>
