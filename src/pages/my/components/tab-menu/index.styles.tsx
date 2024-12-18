@@ -31,7 +31,7 @@ export default {
       &.sticky {
         position: sticky;
 
-        top: 0;
+        top: -16px;
         max-width: 722.37px;
 
         z-index: 10;

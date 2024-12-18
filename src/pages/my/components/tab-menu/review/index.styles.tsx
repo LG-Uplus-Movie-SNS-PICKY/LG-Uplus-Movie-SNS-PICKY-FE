@@ -37,7 +37,7 @@ export default {
       align-items: center;
 
       gap: 16px;
-      padding: 16px 0;
+      padding: 16px;
 
       &.centered {
         justify-content: center;
@@ -188,39 +188,39 @@ export default {
   reviewEditBtn(): SerializedStyles {
     return css`
       text-align: center;
-      color: #FFFFFF;
+      color: #ffffff;
       font-size: 10px;
       font-weight: 600;
       border-radius: 4px;
-      background-color: #FF084A;
+      background-color: #ff084a;
       padding: 2px 4px;
       margin-bottom: 8px;
-      border: 1px solid #FF084A;
-      
+      border: 1px solid #ff084a;
+
       &:hover {
-      color: #FF084A;
-      background-color: #FFFFFF;
-      border-radius: 4px;
-    }
+        color: #ff084a;
+        background-color: #ffffff;
+        border-radius: 4px;
+      }
     `;
   },
 
   reviewDeleteBtn(): SerializedStyles {
     return css`
       text-align: center;
-      color: #FF084A;
+      color: #ff084a;
       font-size: 10px;
       font-weight: 600;
       border-radius: 4px;
-      background-color: #FFFFFF;
+      background-color: #ffffff;
       padding: 2px 4px;
-      border: 1px solid #FF084A;
+      border: 1px solid #ff084a;
 
       &:hover {
-      color: #FFFFFF;
-      background-color: #FF084A;
-      border: 1px solid #FF084A;
-    }
+        color: #ffffff;
+        background-color: #ff084a;
+        border: 1px solid #ff084a;
+      }
     `;
   },
 
@@ -256,7 +256,7 @@ export default {
     return css`
       z-index: 10001;
     `;
-  }
+  },
 };
 
 export const LoadingContainer = styled.div`

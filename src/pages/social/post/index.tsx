@@ -195,12 +195,7 @@ export default function SocialPost() {
     console.log("전송될 movieId:", selectedMovie?.movieId);
 
     try {
-      await createBoard(
-        reviewText,
-        selectedMovie.movieId,
-        selectedSpoiler === "있음",
-        mediaFiles
-      );
+      await createBoard(reviewText, 13, selectedSpoiler === "있음", mediaFiles);
 
       setToastMessage("게시글이 성공적으로 생성되었습니다."); // 성공 메시지
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });

@@ -4,8 +4,6 @@ import { isEmpty } from "lodash";
 
 // 사용자 로그인 시 알림 초기 데이터를 받는 GET API
 export const fetchUnreadNotification = async (lastNotificationId: number) => {
-  const user = getCookie("user") || {};
-
   const params = new URLSearchParams();
 
   // lastNotificationId가 Truthy 값일 경우 param을 추가한다.
