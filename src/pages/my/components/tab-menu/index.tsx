@@ -38,8 +38,7 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
     const handleScroll = throttle(() => {
       if (!buttonContainer) return;
 
-      const fixed =
-        buttonContainer.getBoundingClientRect().bottom - 60 + 16 < 0;
+      const fixed = buttonContainer.getBoundingClientRect().y < 80;
 
       setIsSticky(fixed);
     }, 100);
@@ -85,7 +84,11 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
 
   return (
     <div css={styles.tabMenuContainer()}>
-      <div css={styles.tabMenu()} className={isSticky ? "sticky" : ""}>
+      <div
+        id="button-container"
+        css={styles.tabMenu()}
+        className={isSticky ? "sticky" : ""}
+      >
         {Array.from({ length: 3 }, (_, idx) => (
           <div
             ref={(element) => {
