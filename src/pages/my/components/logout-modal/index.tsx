@@ -1,15 +1,15 @@
 // pages/my/components/logout-modal/index.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   ModalContainer,
   ModalWrapper,
   ModalItem,
   ModalBackground,
   ModalWidth,
-} from './index.styles';
-import { Toast } from '@stories/toast'
-import { Modal } from '@stories/modal'
-import { cancelMembership } from '@api/user';
+} from "./index.styles";
+import { Toast } from "@stories/toast";
+import { Modal } from "@stories/modal";
+import { cancelMembership } from "@api/user";
 import { removeCookie } from "@util/cookie";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
@@ -73,6 +73,9 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
       ...prev,
       isLoading: false,
     }));
+
+    // 세션 스토리지 초기화
+    sessionStorage.clear();
 
     navigate("/");
 
@@ -138,7 +141,9 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
             <Modal
               message={modalMessage}
               confirmText={
-                modalMessage === "로그아웃하시겠습니까?" ? "로그아웃" : "회원탈퇴"
+                modalMessage === "로그아웃하시겠습니까?"
+                  ? "로그아웃"
+                  : "회원탈퇴"
               }
               cancelText="취소"
               onConfirm={
