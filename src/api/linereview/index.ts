@@ -5,17 +5,17 @@ export async function fetchLineReviewMovie(
   movieId: number,
   lastReviewId?: number,
   lastCreatedAt?: string,
-  sortType: string = "LATEST",
+  sortType: string = "LATEST"
 ) {
   let params = new URLSearchParams({ sortType });
 
-  if(lastReviewId && lastCreatedAt) {
+  if (lastReviewId && lastCreatedAt) {
     // 최신순으로 정렬을 할 경우
     if (sortType === "LATEST") {
       params.append("lastReviewId", lastReviewId.toString());
       params.append("lastCreatedAt", lastCreatedAt.toString());
-    } 
-    
+    }
+
     // 좋아요순으로 정렬을 할 경우
     else {
       params.append("lastReviewId", lastReviewId.toString());
@@ -76,12 +76,10 @@ export async function fetchGenders(movieId: number) {
 // 특정 유저의 한줄평 조회 GET API
 export async function fetchLineReviewsByUser(
   nickname: string,
-  size: number = 10,
   lastReviewId?: number,
   lastCreatedAt?: string
 ) {
-  const params = new URLSearchParams();
-  params.append("size", size.toString());
+  const params = new URLSearchParams({ size: "10" });
 
   if (lastReviewId) {
     params.append("lastReviewId", lastReviewId.toString());
@@ -90,26 +88,10 @@ export async function fetchLineReviewsByUser(
     params.append("lastCreatedAt", lastCreatedAt);
   }
 
-  try {
-    const { data } = await apiClient.get(
-      `/linereview/user/${nickname}?${params.toString()}`
-    );
-    console.log("API Response:", data);
-
-    // 응답 데이터 구조 확인 및 파싱
-    if (data?.data?.content) {
-      return {
-        context: data.data.content, // 리뷰 데이터
-        lastCursor: data.data.pageable, // 페이징 정보
-      };
-    } else {
-      console.error("API 응답 구조가 예상과 다릅니다:", data);
-      throw new Error("API 응답 오류");
-    }
-  } catch (error) {
-    console.error("API 호출 실패:", error);
-    throw error;
-  }
+  const { data } = await apiClient.get(
+    `/linereview/user/${nickname}?${params.toString()}`
+  );
+  return data;
 }
 
 // 한줄평 수정 PATCH API
@@ -118,7 +100,10 @@ export async function updateLineReview(
   updatedData: { context: string; isSpoiler: boolean }
 ) {
   try {
-    const response = await apiClient.patch(`/linereview/${linereviewId}`, updatedData);
+    const response = await apiClient.patch(
+      `/linereview/${linereviewId}`,
+      updatedData
+    );
     return response.data; // 서버 응답 데이터 반환
   } catch (error: any) {
     console.error("PATCH 요청 오류:", error.response?.data || error.message);
@@ -129,7 +114,9 @@ export async function updateLineReview(
 // 한줄평 삭제 DELETE API
 export async function deleteLineReview(lineReviewId: number) {
   try {
-    const { data } = await apiClient.delete(`/linereview/delete/${lineReviewId}`);
+    const { data } = await apiClient.delete(
+      `/linereview/delete/${lineReviewId}`
+    );
     return data;
   } catch (error) {
     console.error("한줄평 삭제 중 오류 발생:", error);

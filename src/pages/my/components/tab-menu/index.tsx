@@ -9,7 +9,7 @@ import LikeIcon from "@assets/icons/my-page/like.svg?react";
 import styles from "./index.styles";
 
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
-import { FreeMode, Mousewheel, Navigation } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
@@ -108,7 +108,7 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
 
       {/* Swiper - Content Section */}
       <Swiper
-        spaceBetween={10}
+        spaceBetween={20}
         autoHeight={true}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         onSlideChange={(swiper) => handleSlide(swiper.activeIndex)}
@@ -120,7 +120,9 @@ function TabMenu({ wrapperRef, nickname }: TabMenuProps) {
           <SwiperSlide key={idx}>
             {idx === 0 && <MovieLogContent nickname={nickname} />}
             {idx === 1 && <LineReviewContent />}
-            {idx === 2 && <LikeMovieContent />}
+            {idx === 2 && (
+              <LikeMovieContent nickname={nickname} swiper={swiperRef} />
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

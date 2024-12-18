@@ -66,7 +66,7 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
   return (
     <div css={styles.container()} className={data.length ? "" : "centered"}>
       {data.length === 0 && <EmptyMovieLog />}
-      {data.length > 0 &&
+      {/* {data.length > 0 &&
         data.map((element) => {
           // contents 중 첫 번째 이미지만 사용
           const posterUrl =
@@ -92,7 +92,7 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
               )}
             </div>
           );
-        })}
+        })} */}
     </div>
   );
 }

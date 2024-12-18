@@ -1,18 +1,16 @@
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import styles from "./index.styles";
 
 import EmptyLike from "@assets/icons/my-page/empty-like.svg?react";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchLikedMovies } from "@api/movie";
 import { useUserLikedMovies } from "@hooks/movie";
 import { useInView } from "react-intersection-observer";
 import Loading from "@components/loading";
-import {
-  LikeMovieDataType,
-  QueryLikeMoviesDataTypes,
-} from "@type/api/profile/likes";
+
+import { LikeMovieDataType } from "@type/api/profile/likes";
+import { SwiperClass } from "swiper/react";
 
 export interface LikeMovieData {
   movie_id: number;
@@ -21,7 +19,7 @@ export interface LikeMovieData {
 }
 
 interface LikeMovieContentProps {
-  data: LikeMovieData[];
+  swiper: React.MutableRefObject<SwiperClass | null>;
 }
 
 // 사용자가 좋아요를 누른 영화가 하나도 등록하지 않았을 경우
@@ -44,16 +42,16 @@ function ImageWithFallback({ src, title }: { src: string; title: string }) {
         effect="blur"
         onLoad={() => setIsLoaded(true)}
         onError={() => setIsLoaded(false)}
+        threshold={50}
       />
       {!isLoaded && <span>{title}</span>}
     </>
   );
 }
 
-function LikeMovieContent() {
+function LikeMovieContent({ swiper }: LikeMovieContentProps) {
   const { nickname } = useParams<{ nickname: string }>(); // URL에서 닉네임 가져오기
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
-  const [movies, setMovies] = useState<LikeMovieData[]>([]);
 
   const {
     data: likeMovies,
@@ -64,7 +62,7 @@ function LikeMovieContent() {
   } = useUserLikedMovies(nickname ? nickname : "");
 
   const { ref, inView } = useInView({
-    threshold: 1.0,
+    threshold: 0.9,
   });
 
   const handleMovieClick = (movieId: number) => {
@@ -72,14 +70,16 @@ function LikeMovieContent() {
   };
 
   useEffect(() => {
-    if (!isLoading) console.log(likeMovies);
-  }, [isLoading]);
-
-  useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    if (swiper.current) {
+      swiper.current.updateAutoHeight();
+    }
+  }, [likeMovies]);
 
   if (isLoading)
     return (
