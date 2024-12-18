@@ -30,6 +30,7 @@ import {
   recentSearchListStyle,
   emptyTextStyle,
 } from "@pages/search/index.styles";
+
 import SEO from "@components/seo";
 
 const highlightSearchTerm = (text: string, searchTerm: string) => {
@@ -197,8 +198,10 @@ export default function SearchPage() {
     <>
       <SEO title="PICKY: SEARCH" />
 
-      <div css={containerStyle}>
-        <div css={headerStyle}>
+      {/* 헤더 컨테이너 */}
+      <div css={headerStyle}>
+        {/* 뒤로가기 버튼 */}
+        <div>
           <button css={backButtonStyle}>
             <img
               src={backButton}
@@ -208,27 +211,56 @@ export default function SearchPage() {
               onClick={() => navigate(-1)}
             />
           </button>
-          <div css={searchInputContainerStyle(isSearchInputFocused)}>
-            <div
-              css={filterButtonStyle}
-              onClick={() => setIsFilterActive((prev) => !prev)}
-            >
-              <div css={filterContainerStyle}>
-                <img
-                  src={
-                    selectedFilter
-                      ? filterMiniActiveIcon
-                      : isFilterActive
-                      ? filterActiveIcon
-                      : filterIcon
-                  }
-                  alt="filterIcon"
-                />
-                <span css={filterLabelStyle}>{selectedFilter}</span>
-              </div>
+        </div>
+
+        {/* 입력창 */}
+        <div css={searchInputContainerStyle(isSearchInputFocused)}>
+          {/* 필터링 select btn */}
+          <div
+            css={filterButtonStyle}
+            onClick={() => setIsFilterActive((prev) => !prev)}
+          >
+            <div css={filterContainerStyle}>
+              <img
+                src={
+                  selectedFilter
+                    ? filterMiniActiveIcon
+                    : isFilterActive
+                    ? filterActiveIcon
+                    : filterIcon
+                }
+                alt="filterIcon"
+              />
+              <span css={filterLabelStyle}>{selectedFilter}</span>
             </div>
+
+            {isFilterActive && (
+              <div css={filterModalStyle(isFilterActive)} ref={filterRef}>
+                {["영화", "유저"].map((filter) => (
+                  <div
+                    key={filter}
+                    css={filterOptionStyle}
+                    onClick={() => handleFilterSelect(filter)}
+                  >
+                    {filter}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 입력창 */}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <input
               css={searchInputStyle}
+              type="text"
               placeholder="영화, 배우, 유저를 검색해보세요."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
@@ -246,110 +278,101 @@ export default function SearchPage() {
                 height="16"
               />
             </button>
+            {/* <input
+              
+              
+            /> */}
           </div>
         </div>
+      </div>
 
-        {isFilterActive && (
-          <div css={filterModalStyle} ref={filterRef}>
-            {["영화", "유저"].map((filter) => (
-              <div
-                key={filter}
-                css={filterOptionStyle}
-                onClick={() => handleFilterSelect(filter)}
-              >
-                {filter}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div css={recentSearchHeaderStyle}>
-          <div css={titleStyle}>
-            {searchText.trim() === "" ? "최근검색어" : "검색결과"}
-          </div>
-          <button css={clearAllButtonStyle} onClick={handleClearAll}>
-            전체 삭제
-          </button>
+      <div css={recentSearchHeaderStyle}>
+        <div css={titleStyle}>
+          {searchText.trim() === "" ? "최근검색어" : "검색결과"}
         </div>
+        <button css={clearAllButtonStyle} onClick={handleClearAll}>
+          전체 삭제
+        </button>
+      </div>
 
-        {searchText.trim() === "" && recentSearches.length === 0 && (
-          <div css={emptyStateContainerStyle}>
-            <div css={emptyIconStyle}>
-              <img
-                src={ClawMachine}
-                alt="Claw Machine"
-                width="100"
-                height="100"
-              />
-            </div>
-            <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
+      {searchText.trim() === "" && recentSearches.length === 0 && (
+        <div css={emptyStateContainerStyle}>
+          <div css={emptyIconStyle}>
+            <img
+              src={ClawMachine}
+              alt="Claw Machine"
+              width="100"
+              height="100"
+            />
           </div>
-        )}
+          <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
+        </div>
+      )}
 
-        {searchText.trim() !== "" && searchResults.length > 0 && (
-          <ul css={suggestionListStyle}>
-            {searchResults.map((result, index) => {
-              const suggestionText = result.title || result.nickname || ""; // undefined일 경우 빈 문자열로 처리
-              return (
-                <li
-                  key={index}
-                  onClick={() => {
-                    if (result.id) {
-                      // 선택된 필터에 따라 경로를 동적으로 설정
-                      if (selectedFilter === "영화") {
-                        navigate(`/movie/${result.id}`); // 영화 경로로 이동
-                      } else if (selectedFilter === "유저") {
-                        navigate(`/user/${result.nickname}`); // 유저 경로로 이동
-                      } else {
-                        console.error("알 수 없는 필터 선택: ", selectedFilter);
-                      }
+      {searchText.trim() !== "" && searchResults.length > 0 && (
+        <ul css={suggestionListStyle}>
+          {searchResults.map((result, index) => {
+            const suggestionText = result.title || result.nickname || ""; // undefined일 경우 빈 문자열로 처리
+            return (
+              <li
+                key={index}
+                onClick={() => {
+                  if (result.id) {
+                    // 선택된 필터에 따라 경로를 동적으로 설정
+                    if (selectedFilter === "영화") {
+                      navigate(`/movie/${result.id}`); // 영화 경로로 이동
+                    } else if (selectedFilter === "유저") {
+                      navigate(`/user/${result.nickname}`); // 유저 경로로 이동
                     } else {
-                      console.error("ID가 없거나 유효하지 않습니다.");
+                      console.error("알 수 없는 필터 선택: ", selectedFilter);
                     }
+                  } else {
+                    console.error("알 수 없는 필터 선택: ", selectedFilter);
+                    console.error("ID가 없거나 유효하지 않습니다.");
+                  }
+                }}
+              >
+                <img src={searchButton} alt="searchButton" />
+                <span>
+                  {highlightSearchTerm(suggestionText, searchText)}{" "}
+                  {/* 항상 string 사용 */}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {searchText.trim() === "" && recentSearches.length > 0 && (
+        <ul css={recentSearchListStyle}>
+          {recentSearches.map((search, index) => (
+            <li key={index} onClick={() => handleSuggestionClick(search)}>
+              <div>
+                <img src={timeIcon} alt="timeIcon" />
+                <span
+                  style={{
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#9D9D9D",
                   }}
                 >
-                  <img src={searchButton} alt="searchButton" />
-                  <span>
-                    {highlightSearchTerm(suggestionText, searchText)}{" "}
-                    {/* 항상 string 사용 */}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-
-        {searchText.trim() === "" && recentSearches.length > 0 && (
-          <ul css={recentSearchListStyle}>
-            {recentSearches.map((search, index) => (
-              <li key={index} onClick={() => handleSuggestionClick(search)}>
-                <div>
-                  <img src={timeIcon} alt="timeIcon" />
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      color: "#9D9D9D",
-                    }}
-                  >
-                    {search}
-                  </span>
-                </div>
-                <div>
-                  <img
-                    src={closeButton}
-                    alt="closeButton"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteSearch(search);
-                    }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                  {search}
+                </span>
+              </div>
+              <div>
+                <img
+                  src={closeButton}
+                  alt="closeButton"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeleteSearch(search);
+                  }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   );
 }

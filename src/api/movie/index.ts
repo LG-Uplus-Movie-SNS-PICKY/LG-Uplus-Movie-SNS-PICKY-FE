@@ -47,13 +47,13 @@ export async function fetchRecommendMovie() {
 export async function fetchGenreMovie(
   genreId: number,
   lastMovieId: number,
-  lastLikeCount: number
+  createdAt: string
 ) {
   const params = new URLSearchParams({ genreId: genreId.toString() });
 
-  if (lastMovieId && lastLikeCount) {
+  if (lastMovieId && createdAt) {
     params.append("lastMovieId", lastMovieId.toString());
-    params.append("lastLikeCount", lastLikeCount.toString());
+    params.append("createdAt", createdAt.toString());
   }
 
   const { data } = await apiClient.get(`/movie/genre?${params.toString()}`);

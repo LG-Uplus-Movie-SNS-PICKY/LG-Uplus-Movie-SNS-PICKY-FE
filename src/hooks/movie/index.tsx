@@ -33,22 +33,23 @@ export const useGenreMovieQuery = (genreId: number) => {
   return useInfiniteQuery({
     queryKey: ["genreMovie", genreId],
     queryFn: ({ pageParam }) =>
-      fetchGenreMovie(genreId, pageParam.lastMovidId, pageParam.lastLikeCount),
+      fetchGenreMovie(genreId, pageParam.lastMovidId, pageParam.createdAt),
 
     getNextPageParam: (lastPage) => {
       if (!lastPage?.data?.last) {
         return {
           lastMovidId:
             lastPage?.data?.content[lastPage?.data?.content.length - 1].movieId,
-          lastLikeCount:
-            lastPage?.data?.content[lastPage?.data?.content.length - 1].likes,
+          createdAt:
+            lastPage?.data?.content[lastPage?.data?.content.length - 1]
+              .createdAt,
         };
       }
 
       return undefined;
     },
 
-    initialPageParam: { lastMovidId: 0, lastLikeCount: 0 },
+    initialPageParam: { lastMovidId: 0, createdAt: "" },
     enabled: !!genreId,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
