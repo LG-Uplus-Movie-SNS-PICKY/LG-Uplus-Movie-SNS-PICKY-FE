@@ -45,15 +45,19 @@ function EmptyLineReview() {
   );
 }
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleString("ko-KR", {
+// 날짜 포맷팅 함수 - 한국 시간 (KST) 기준
+const formatToKST = (dateString: string) => {
+  const date = new Date(dateString); // UTC 기준
+  const KST_OFFSET = 9 * 60 * 60 * 1000; // 9시간(밀리초 단위)
+  const kstDate = new Date(date.getTime() + KST_OFFSET);
+
+  return kstDate.toLocaleString("ko-KR", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
-    hour12: false, // 24시간 형식
+    hour12: false,
   });
 };
 
@@ -106,7 +110,7 @@ function LineReviewContent() {
   }, [nickname]);
 
   const handleMovieClick = (movieId: number) => {
-    navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
+    navigate(`/movie/${movieId}/review`); // 클릭 시 영화 상세 페이지로 이동
   };
 
   const showToast = (message: string, direction: "none" | "up" | "down"): Promise<void> => {
@@ -252,7 +256,7 @@ function LineReviewContent() {
               <div className="sub-info">
                 <span>{review.movie?.movieTitle || "제목 없음"}</span>
                 <div className="round" />
-                <span>{formatDate(review.createdAt)}</span>
+                <span>{formatToKST(review.createdAt)}</span>
               </div>
 
               {/* 한줄평 좋아요, 싫어요 개수 */}

@@ -21,7 +21,6 @@ import SEO from "@components/seo";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import { useMovieDetailQuery } from "@hooks/movie";
-import { fetchLineReviewMovie } from "@api/linereview";
 import { useLineReviewMovieQuery } from "@hooks/review";
 
 interface MovieDetailProps {
@@ -59,7 +58,7 @@ function MovieDetail(props: MovieDetailProps) {
   const { data: movieDetail, isLoading: movieDetailIsLoading } =
     useMovieDetailQuery(Number(id));
   const { data: lineReviews, isLoading: lineReviewsIsLoading } =
-    useLineReviewMovieQuery(Number(id));
+    useLineReviewMovieQuery(Number(id), "LATEST");
 
   const navigate = useNavigate();
 
@@ -85,7 +84,7 @@ function MovieDetail(props: MovieDetailProps) {
         throw new Error("Invalid API response: Missing data");
       }
 
-      const { movie_info, like, rating, streaming_platform } = movieDetail.data;
+      const { movie_info, like, rating, streaming_platform, linereviewCount } = movieDetail.data;
 
       if (!movie_info) {
         throw new Error("Invalid API response: Missing movie_info");
@@ -120,25 +119,27 @@ function MovieDetail(props: MovieDetailProps) {
         },
         availablePlatforms,
         rating: rating || 0,
+        linereviewCount: linereviewCount || 0,
       });
     }
   }, [movieDetailIsLoading]);
 
   useEffect(() => {
     if (!lineReviewsIsLoading) {
-      const allReviews = lineReviews?.pages?.[0]?.data?.content || []; // 기본값으로 빈 배열 설정
-
-      // 전체 리뷰 개수를 allReviews의 길이로 설정
-      setTotalReviews(allReviews.length);
-
-      const topLikedReviews = allReviews
+      const allReviews = lineReviews?.pages?.flatMap((page) => page.data.content) || []; // 모든 페이지 데이터 병합
+  
+      // 스포일러 제외하고 최신순으로 정렬한 후 상위 3개 가져오기
+      const latestNonSpoilerReviews = allReviews
         .filter((review: Review) => !review.isSpoiler) // 스포일러 제외
-        .sort((a: Review, b: Review) => b.likes - a.likes) // 공감순 정렬
-        .slice(0, 3); // 상위 3개 가져오기
-
-      setReviews(topLikedReviews); // 공감순 상위 3개 리뷰 설정
+        .sort((a: Review, b: Review) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
+        .slice(0, 3); // 최대 3개 가져오기
+  
+      // 상태 업데이트
+      setTotalReviews(allReviews.length); // 전체 리뷰 개수 설정
+      setReviews(latestNonSpoilerReviews); // 상위 3개 리뷰 설정
+      console.log("✅ 최신순 리뷰 3개:", latestNonSpoilerReviews);
     }
-  }, [lineReviewsIsLoading]);
+  }, [lineReviewsIsLoading, lineReviews]);
 
   useEffect(() => {
     console.log(movieDetail);
@@ -206,20 +207,25 @@ function MovieDetail(props: MovieDetailProps) {
           <ReviewHeader>
             <Title>한줄평</Title>
             <ReviewCountContainer>
-              <ReviewCount>{totalReviews}</ReviewCount>{" "}
+              <ReviewCount>{movieData.linereviewCount}</ReviewCount>{" "}
               {/* 전체 리뷰 개수 출력 */}
               <PlusSvg />
             </ReviewCountContainer>
           </ReviewHeader>
 
-          {/* 리뷰가 없을 때 문구 표시 */}
+          {/* 리뷰 데이터 매핑 */}
           {reviews.length === 0 ? (
             <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
           ) : (
-            // movieData.id를 movieId로 전달
-            <MovieReview movieId={movieData.id} reviews={reviews} />
+            reviews.map((review, index) => (
+              <MovieReview
+                key={review.id}
+                movieId={Number(id)}
+                review={review} // 개별 review 객체 전달
+                noBorder={index === reviews.length - 1} // 마지막 리뷰인지 여부 전달
+              />
+            ))
           )}
-
           {/* 전체 리뷰 개수가 0이 아닐 때만 버튼 렌더링 */}
           {totalReviews > 0 ? (
             <Button

@@ -136,5 +136,5 @@ export const EmptyText = styled.div`
   text-align: center;
   justify-content: center;
   background-color: #FFFFFF;
-  padding: 20px 0 36px 0;
+  padding: 20px 0;
 `
