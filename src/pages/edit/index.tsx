@@ -121,13 +121,13 @@ export default function ProfileEditPage() {
     const value = e.target.value;
 
     // 특수기호 검사 (알파벳, 숫자, 한글만 허용)
-    const specialCharRegex = /[^a-zA-Z0-9가-힣]/;
+    // const specialCharRegex = /[^a-zA-Z0-9가-힣]/;
 
-    if (specialCharRegex.test(value)) {
-      setNicknameError("닉네임에 특수기호는 사용할 수 없습니다.");
-      setIsNicknameValid(false);
-      return;
-    }
+    // if (specialCharRegex.test(value)) {
+    //   setNicknameError("닉네임에 특수기호는 사용할 수 없습니다.");
+    //   setIsNicknameValid(false);
+    //   return;
+    // }
 
     if (value.length > 10) return;
     setNickname(value);
