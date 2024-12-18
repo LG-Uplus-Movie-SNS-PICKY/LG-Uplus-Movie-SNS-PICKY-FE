@@ -46,21 +46,21 @@ export default {
   // 헤더 버튼 Container
   headerActivesBtn(isLogin: boolean): SerializedStyles {
     return css`
+      & .login-action-btn {
+        border: ${isLogin ? "1px solid #D9D9D9" : ""};
+        border-radius: ${isLogin ? "20px" : ""};
+        padding: ${isLogin ? "4px 8px" : ""};
+
+        cursor: ${isLogin ? "pointer" : ""};
+      }
+
       & > div,
       & .login-action-btn {
         display: flex;
         justify-content: center;
         align-items: center;
 
-        ${isLogin ? "" : ""}
-
-        gap: ${!isLogin ? "4px" : "8px"};
-
-        border: ${!isLogin ? "1px solid #D9D9D9" : ""};
-        border-radius: ${!isLogin ? "20px" : ""};
-        padding: ${!isLogin ? "8px 12px" : ""};
-
-        cursor: ${!isLogin ? "pointer" : ""};
+        gap: ${isLogin ? "4px" : "8px"};
 
         & > span {
           font-size: 12px;
@@ -70,6 +70,21 @@ export default {
 
         & > .active-icon-btn {
           cursor: pointer;
+
+          /* Notification Badge */
+          & > .notification {
+            position: relative;
+
+            & > .notification-badge {
+              position: absolute;
+              width: 6px;
+              height: 6px;
+              background-color: #ff0000;
+              border-radius: 50%;
+              top: 0px;
+              right: 3px;
+            }
+          }
         }
       }
 

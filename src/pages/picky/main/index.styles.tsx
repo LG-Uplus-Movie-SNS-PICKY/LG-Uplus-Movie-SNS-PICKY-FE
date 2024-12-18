@@ -7,7 +7,7 @@ export default {
 
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      /* gap: 24px; */
     `;
   },
 };

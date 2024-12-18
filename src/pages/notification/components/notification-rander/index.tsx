@@ -12,6 +12,8 @@ import {
 } from "@type/api/notification";
 import { fetchReadNotification } from "@api/notification";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSetRecoilState } from "recoil";
+import { unreadCountState } from "@recoil/atoms/isNotificationState";
 
 interface NotificationRanderProps {
   title: string;
@@ -60,13 +62,12 @@ function NotificationRander({
   const [profileImageLoading, setProfileImageLoading] = useState(false);
   const [movieImageLoading, setMovieImageLoading] = useState(false);
 
+  const setUnreadCount = useSetRecoilState(unreadCountState);
+
   const queryClient = useQueryClient();
 
   // 알림을 클릭할 경우 -> 해당 알림 게시물로 이동 + 알림 읽음 업데이트
-  const onReadNotifiaction = async (
-    boardId: number,
-    notificationId: number
-  ) => {
+  const onReadNotifiaction = async (notificationId: number, path: string) => {
     // 알림 읽음 처리
     await fetchReadNotification(notificationId);
 
@@ -112,7 +113,7 @@ function NotificationRander({
     });
 
     // 해당 무비로그 게시물로 이동
-    navigate(`/movie-log/detail/${boardId}`);
+    navigate(path);
   };
 
   return (
@@ -126,13 +127,22 @@ function NotificationRander({
                 key={notif.notificationId}
                 css={styles.notificationCard()}
                 onClick={() =>
-                  onReadNotifiaction(notif.boardId, notif.notificationId)
+                  onReadNotifiaction(
+                    notif.notificationId,
+                    `/movie-log/detail/${notif.boardId}`
+                  )
                 }
               >
                 <div className="req-user">
                   <div
                     className="profile"
-                    onClick={() => navigate(`/user/${notif.senderNickname}`)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      onReadNotifiaction(
+                        notif.notificationId,
+                        `/user/${notif.senderNickname}`
+                      );
+                    }}
                   >
                     <LazyLoadImage
                       src={notif.senderProfileUrl}
@@ -149,14 +159,26 @@ function NotificationRander({
                   <p className="content">
                     <span
                       className="bold"
-                      onClick={() => navigate(`/user/${notif.senderNickname}`)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onReadNotifiaction(
+                          notif.notificationId,
+                          `/user/${notif.senderNickname}`
+                        );
+                      }}
                     >
                       {notif.senderNickname}
                     </span>
                     님이{" "}
                     <span
                       className="bold"
-                      onClick={() => navigate(`/movie/${notif.movieId}`)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onReadNotifiaction(
+                          notif.notificationId,
+                          `/movie/${notif.movieId}`
+                        );
+                      }}
                     >
                       {notif.movieTitle}
                     </span>
@@ -172,6 +194,7 @@ function NotificationRander({
                     src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
                       notif.moviePosterUrl
                     }`}
+                    effect="blur"
                     onLoad={() => setMovieImageLoading(true)}
                     onError={() => setMovieImageLoading(false)}
                   />

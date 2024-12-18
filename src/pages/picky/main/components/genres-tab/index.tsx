@@ -9,7 +9,7 @@ import "swiper/css/pagination";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import { GenreTabButton } from "@stories/genre-tab";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // API로 호출된 장르 데이터 타입 정의
 interface GenreDataType {

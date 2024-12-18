@@ -28,9 +28,6 @@ interface Movie {
 }
 
 export default function MovieRecommendationPage() {
-  // const username = "최우진";
-  // const TMDB_IMAGE_PREFIX = "https://image.tmdb.org/t/p/w185";
-
   const { data, isLoading } = useRecommnedMovieQuery();
   const { isLoginInfo } = useRecoilValue(isLogin);
 

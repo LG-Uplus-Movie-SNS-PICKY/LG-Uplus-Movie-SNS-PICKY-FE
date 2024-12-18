@@ -13,7 +13,7 @@ import Loading from "@components/loading";
 import { MovieDataTypes } from "@type/api/movie";
 import { useNavigate } from "react-router-dom";
 
-function GenresMovie() {
+function GenresMovie({ isLogin }: { isLogin: boolean }) {
   const navigate = useNavigate();
   const [selectButton, setSelectButton] = useState<number>(0);
   const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
@@ -27,15 +27,8 @@ function GenresMovie() {
 
   // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
   const GenreOnClick = (movieId: number) => {
-    console.log(movieId);
     setSelectButton(movieId);
   };
-
-  // useEffect(() => {
-  //   if (!isLoading) {
-  //     console.log(genreMovies?.pages[0].data.content);
-  //   }
-  // }, [isLoading]);
 
   return (
     <div css={styles.genreContainer()}>
@@ -64,7 +57,7 @@ function GenresMovie() {
                 .map((movie: MovieDataTypes) => (
                   <MovieItem
                     key={movie.movieId}
-                    type="all"
+                    type={isLogin ? "all" : "rate"}
                     src={movie.posterUrl}
                     title={movie.title}
                     name={movie.title}
@@ -75,6 +68,15 @@ function GenresMovie() {
                 ))
             : null}
         </div>
+
+        {isLogin && (
+          <button
+            className="more-genre-movies"
+            onClick={() => navigate(`/genre/${selectButton}`)}
+          >
+            더보기
+          </button>
+        )}
       </div>
     </div>
   );

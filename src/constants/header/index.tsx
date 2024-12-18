@@ -9,8 +9,8 @@ import Notification from "@assets/icons/notification.svg?react";
 import Search from "@assets/icons/search.svg?react";
 import UesrLogo from "@assets/icons/user_circle.svg?react";
 import { removeCookie } from "@util/cookie";
-import { Resetter, SetterOrUpdater } from "recoil";
-import { LoginStateTypes } from "@recoil/atoms/isLoginState";
+import { Resetter, SetterOrUpdater, useSetRecoilState } from "recoil";
+import { isLogin, LoginStateTypes } from "@recoil/atoms/isLoginState";
 
 export type HeaderConfigReturn = Array<ReactNode> | undefined;
 
@@ -19,7 +19,8 @@ export function useHeaderConfig(
   isAuthUser: boolean,
   navigate: NavigateFunction,
   resetLoginState: Resetter,
-  setLoginState: SetterOrUpdater<LoginStateTypes>
+  setLoginState: SetterOrUpdater<LoginStateTypes>,
+  notificationCount: number
 ): HeaderConfigReturn {
   if (isLoginState) {
     if (isAuthUser) {
@@ -44,20 +45,12 @@ export function useHeaderConfig(
     }
 
     return [
-      <AddCircle
-        className="active-icon-btn"
-        onClick={() => navigate && navigate("/movie-log/add")}
-      />,
-      <div>
-        <Notification
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/notification")}
-        />
+      <AddCircle onClick={() => navigate && navigate("/movie-log/add")} />,
+      <div className="notification">
+        <Notification onClick={() => navigate && navigate("/notification")} />
+        {notificationCount > 0 && <div className="notification-badge" />}
       </div>,
-      <Search
-        className="active-icon-btn"
-        onClick={() => navigate && navigate("/search")}
-      />,
+      <Search onClick={() => navigate && navigate("/search")} />,
     ];
   }
 
