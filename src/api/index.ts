@@ -35,11 +35,11 @@ apiClient.interceptors.response.use(
     // 공통 에러 처리 로직
     console.log(error);
 
-    if (error.response) {
-      if (error.response.status === 404) {
-        setRecoil(isErrorState, "/error/404?type=NotUser");
-      }
-    }
+    // if (error.response) {
+    //   if (error.response.status === 404) {
+    //     setRecoil(isErrorState, "/error/404?type=NotUser");
+    //   }
+    // }
 
     // if (error.response) {
     //   // 서버에서 받은 응답(Response) 에러 처리

@@ -109,6 +109,7 @@ function My() {
         setIsFollowing(data.data.isFollowing ?? false);
         setUserData(data);
       } catch (err) {
+        navigate("/error/404?type=NotUser");
         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
       } finally {
         setLoading(false);
