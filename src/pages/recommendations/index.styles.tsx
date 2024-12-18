@@ -74,7 +74,8 @@ export const movieGridStyle = css`
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 16px;
   justify-content: center;
-  padding: 0px 32px;
+  padding: 0px 20px;
+  margin-bottom: 16px;
 `;
 
 export const movieCardStyle = css`

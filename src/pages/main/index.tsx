@@ -14,8 +14,6 @@ import { useEffect } from "react";
 function Main() {
   const isLoginState = useRecoilValue(isLogin);
 
-  const count = useRecoilValue(unreadCountState);
-
   const onClick = async () => {
     const user = getCookie("user");
     // reciverId = 17
@@ -43,17 +41,13 @@ function Main() {
       )}
 
       {/* Slider or Banner Section */}
-      {process.env.NODE_ENV !== "development" || !isLoginState.isLoginState ? (
-        <LoginBanner />
-      ) : (
-        <RecommendMovieSlider />
-      )}
+      {!isLoginState.isLoginState ? <LoginBanner /> : <RecommendMovieSlider />}
 
       {/* Famous Movies Section */}
       <FamousMovie isLogin={isLoginState.isLoginState} />
 
       {/* Genre Movie Section */}
-      <GenresMovie />
+      <GenresMovie isLogin={isLoginState.isLoginState} />
     </>
   );
 }

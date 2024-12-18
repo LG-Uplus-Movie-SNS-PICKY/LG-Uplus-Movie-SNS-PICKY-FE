@@ -11,6 +11,13 @@ export const MovieDetailContainer = styled.div`
   flex: 1;
   overflow-y: auto;
   padding-bottom: 8px;
+
+  scrollbar-width: none; /* Firefox: 스크롤바 숨김 */
+  -ms-overflow-style: none; /* IE: 스크롤바 숨김 */
+
+  &::-webkit-scrollbar {
+    display: none; /* Webkit (Chrome, Safari): 스크롤바 숨김 */
+  }
 `;
 
 export const ReviewHeader = styled.div`
@@ -45,6 +52,6 @@ export const EmptyText = styled.div`
   font-weight: 600;
   text-align: center;
   justify-content: center;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 20px 0 36px 0;
-`
+`;

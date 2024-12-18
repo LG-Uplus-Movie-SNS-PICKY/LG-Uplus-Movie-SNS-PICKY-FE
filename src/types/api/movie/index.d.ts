@@ -21,7 +21,7 @@ export interface RecommendMovieDataTypes {
 
 export interface GenresMovieDataTypes {
   genre_id: number;
-  genre_name: string;
+  name: string;
 }
 
 export interface PlatformDataTypes {

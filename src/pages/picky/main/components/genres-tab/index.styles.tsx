@@ -6,6 +6,8 @@ export default {
       width: 100%;
       padding: 0 16px;
 
+      margin-top: 12px;
+
       & > .swiper-wrapper > .swiper-slide {
         position: relative;
 

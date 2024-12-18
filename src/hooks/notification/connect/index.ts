@@ -6,11 +6,13 @@ import { EventSourcePolyfill } from "event-source-polyfill";
 import { getCookie } from "@util/cookie";
 import { useQueryClient } from "@tanstack/react-query";
 import { UnreadNotificationsTypes } from "@type/api/notification";
+import { unreadCountState } from "@recoil/atoms/isNotificationState";
 
 function NotificationSSE() {
   const queryClient = useQueryClient();
 
   const { isLoginState, isAuthUser } = useRecoilValue(isLogin);
+  const setUnreadCount = useSetRecoilState(unreadCountState);
 
   const eventSourceRef = useRef<EventSourcePolyfill | null>(null);
 
@@ -46,6 +48,7 @@ function NotificationSSE() {
         }
 
         const newNotification = JSON.parse(event.data);
+        console.log(newNotification);
 
         // React Query 캐시 업데이트
         queryClient.setQueryData<UnreadNotificationsTypes>(

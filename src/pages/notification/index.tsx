@@ -88,7 +88,8 @@ function NotificationPage() {
     <>
       <SEO title="PICKY: NOTIFICATION" />
 
-      <div style={{ flex: 1 }}>
+      <div style={{ width: "100%", flex: 1 }}>
+        {/* <div>Hello</div> */}
         {groupNotifications.today.length > 0 && (
           <NotificationRander
             title="오늘"
