@@ -1,16 +1,10 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import EmptyFeed from "@assets/icons/my-page/empty-feed.svg?react";
 import styles from "./index.styles";
-import { fetchUserMovieLogs } from "@api/movie";
 import { useNavigate } from "react-router-dom";
-
-export interface MovieLogData {
-  boardId: number;
-  contents: {
-    contentUrl: string; // 영화 포스터 URL
-    boardContentType: string;
-  }[];
-}
+import { useFetchUserMovieLogsQuery } from "@hooks/movie-log";
+import Loading from "@components/loading";
+import { MovieLogDataType } from "@type/api/profile/movie-log";
 
 interface MovieLogContentProps {
   nickname: string; // 닉네임을 프로퍼티로 전달
@@ -35,28 +29,55 @@ function EmptyMovieLog() {
 }
 
 function MovieLogContent({ nickname }: MovieLogContentProps) {
-  const [data, setData] = useState<MovieLogData[]>([]);
+  // const [data, setData] = useState<MovieLogData[]>([]);
   const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
-  // const loadMovieLogs = async () => {
-  //   try {
-  //     const response = await fetchUserMovieLogs(nickname, 10, lastBoardId);
-  //     const newLogs = response.data.content || [];
-  //     setData((prev) => [...prev, ...newLogs]);
+  const {
+    data: movieLogs,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+  } = useFetchUserMovieLogsQuery(nickname);
 
-  //     // 마지막 boardId 업데이트
-  //     if (newLogs.length > 0) {
-  //       setLastBoardId(newLogs[newLogs.length - 1].boardId);
-  //     }
-  //   } catch (error) {
-  //     console.error("게시글 조회 중 오류 발생:", error);
-  //   }
-  // };
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loading />
+      </div>
+    );
+  }
+
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(movieLogs);
+      console.log(movieLogs?.pages[0]?.data?.content?.length);
+    }
+  }, [isLoading]);
 
   return (
-    <div css={styles.container()} className={data.length ? "" : "centered"}>
-      {data.length === 0 && <EmptyMovieLog />}
+    <div
+      css={styles.container()}
+      className={
+        movieLogs?.pages[0]?.data?.content?.length !== 0 ? "" : "centered"
+      }
+    >
+      {movieLogs?.pages[0]?.data?.content?.length === 0 && <EmptyMovieLog />}
+      {Array.isArray(movieLogs?.pages) &&
+        movieLogs.pages.map((page, idx) => (
+          <React.Fragment key={idx}>
+            {Array.isArray(page.data.content) &&
+              page.data.content.map((movieLog: MovieLogDataType) => <></>)}
+          </React.Fragment>
+        ))}
       {/* {data.length > 0 &&
         data.map((element) => {
           // contents 중 첫 번째 이미지만 사용
