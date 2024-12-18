@@ -47,27 +47,6 @@ function LikeMovieContent() {
   const { nickname } = useParams<{ nickname: string }>(); // URL에서 닉네임 가져오기
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
   const [movies, setMovies] = useState<LikeMovieData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!nickname) return;
-
-    const loadLikedMovies = async () => {
-      try {
-        setLoading(true);
-        const likedMovies = await fetchLikedMovies(nickname);
-        setMovies(likedMovies);
-      } catch (err) {
-        setError("좋아요한 영화를 불러오는 중 오류가 발생했습니다.");
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadLikedMovies();
-  }, [nickname]);
 
   const handleMovieClick = (movieId: number) => {
     navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
@@ -75,7 +54,7 @@ function LikeMovieContent() {
 
   return (
     <div css={styles.container()} className={movies.length ? "" : "centered"}>
-      {movies.length === 0 && <EmptyLikeMovie />}
+      {/* {movies.length === 0 && <EmptyLikeMovie />}
       {movies.length > 0 &&
         movies.map((movie) => (
           <div
@@ -88,7 +67,7 @@ function LikeMovieContent() {
               title={movie.movie_title}
             />
           </div>
-        ))}
+        ))} */}
     </div>
   );
 }

@@ -278,25 +278,22 @@ export const updateBoard = async (
 };
 
 // 좋아요한 영화 목록 조회 API
-export async function fetchLikedMovies(nickname: string) {
-  try {
-    const { data } = await apiClient.get(`/movie/user/${nickname}`);
+export async function fetchLikedMovies(
+  nickname: string,
+  lastMovieLikeId: number
+) {
+  // 사용자가 좋아요 누른 영화들의 사이즌 9로 정의한다.
+  const param = new URLSearchParams({ size: "9" });
 
-    // 응답 데이터 가공
-    const movies = data?.data?.content?.map((movie: any) => ({
-      movie_id: movie.movieId,
-      movie_title: movie.movieTitle,
-      movie_poster_url: `${import.meta.env.VITE_TMDB_IMAGE_URL}${
-        movie.moviePosterUrl
-      }`, // 포스터 URL 완성
-      movie_total_rating: movie.movieTotalRating,
-    }));
-
-    return movies || []; // 결과가 없으면 빈 배열 반환
-  } catch (error) {
-    console.error("좋아요한 영화 조회 중 오류 발생:", error);
-    throw error;
+  // 다음 스크롤이 있을 경우 커서 기반 스크롤링이기 때문에 lastMovieLikeId를 Query String에 추가한다.
+  if (lastMovieLikeId) {
+    param.append("lastMovieLikeId", lastMovieLikeId.toString());
   }
+
+  const { data } = await apiClient.get(
+    `/movie/user/${nickname}?${param.toString}`
+  );
+  return data;
 }
 
 // 닉네임으로 해당 사용자가 작성한 게시글 조회 API
