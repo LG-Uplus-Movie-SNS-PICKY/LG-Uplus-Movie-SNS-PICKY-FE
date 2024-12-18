@@ -299,11 +299,10 @@ export async function fetchLikedMovies(
 // 닉네임으로 해당 사용자가 작성한 게시글 조회 API
 export async function fetchUserMovieLogs(
   nickname: string,
-  size: number = 10,
   lastBoardId?: number
 ) {
-  const params = new URLSearchParams();
-  params.append("size", size.toString());
+  const params = new URLSearchParams({ size: "9" });
+
   if (lastBoardId) {
     params.append("lastBoardId", lastBoardId.toString());
   }
