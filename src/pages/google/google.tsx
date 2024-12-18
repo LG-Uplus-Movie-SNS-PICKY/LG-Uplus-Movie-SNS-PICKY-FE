@@ -31,7 +31,7 @@ const textStyle = css`
 `;
 
 const highlightStyle = css`
-  color: #0077cc; // 예를 들어, 밝은 파란색으로 설정
+  color: #FF084A;
   font-style: normal;
   font-weight: 400px;
 `;
@@ -48,7 +48,7 @@ const listItemStyle = css`
   padding: 15px; // 패딩 증가
   margin-bottom: 10px; // 여백 증가
   border-radius: 8px; // 테두리 둥글게
-  border-left: 5px solid #0056b3; // 왼쪽 테두리 강조
+  border-left: 5px solid #FF084A; // 왼쪽 테두리 강조
   text-align: left; // 텍스트 정렬
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); // 아이템 그림자 추가
 `;
