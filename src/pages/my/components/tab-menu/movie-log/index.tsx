@@ -8,6 +8,7 @@ import { MovieLogDataType } from "@type/api/profile/movie-log";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useInView } from "react-intersection-observer";
 
 interface MovieLogContentProps {
   nickname: string; // 닉네임을 프로퍼티로 전달
@@ -59,6 +60,10 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
     isLoading,
   } = useFetchUserMovieLogsQuery(nickname);
 
+  const { ref, inView } = useInView({
+    threshold: 0.8,
+  });
+
   if (isLoading) {
     return (
       <div
@@ -73,6 +78,12 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
       </div>
     );
   }
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
     <div
@@ -121,6 +132,8 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
               })}
           </React.Fragment>
         ))}
+
+      <div ref={ref} style={{ width: "100%", height: "10px" }} />
     </div>
   );
 }
