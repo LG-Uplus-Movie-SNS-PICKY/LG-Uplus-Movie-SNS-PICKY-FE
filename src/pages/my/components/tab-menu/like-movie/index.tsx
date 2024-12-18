@@ -43,7 +43,6 @@ function ImageWithFallback({ src, title }: { src: string; title: string }) {
         effect="blur"
         onLoad={() => setIsLoaded(true)}
         onError={() => setIsLoaded(false)}
-        threshold={50}
       />
       {!isLoaded && <span>{title}</span>}
     </>
@@ -99,14 +98,10 @@ function LikeMovieContent({ nickname, swiper }: LikeMovieContentProps) {
     <div
       css={styles.container()}
       className={
-        likeMovies?.pages[0]?.data?.content?.numberOfElements !== 0
-          ? ""
-          : "centered"
+        likeMovies?.pages[0]?.data?.content?.length !== 0 ? "" : "centered"
       }
     >
-      {likeMovies?.pages[0]?.data?.content?.numberOfElements === 0 && (
-        <EmptyLikeMovie />
-      )}
+      {likeMovies?.pages[0]?.data?.content?.length === 0 && <EmptyLikeMovie />}
       {Array.isArray(likeMovies?.pages) &&
         likeMovies.pages.map((page, idx) => (
           <React.Fragment key={idx}>

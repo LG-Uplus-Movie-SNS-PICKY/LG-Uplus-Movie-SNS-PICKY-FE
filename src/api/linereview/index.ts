@@ -76,16 +76,12 @@ export async function fetchGenders(movieId: number) {
 // 특정 유저의 한줄평 조회 GET API
 export async function fetchLineReviewsByUser(
   nickname: string,
-  lastReviewId?: number,
-  lastCreatedAt?: string
+  lastReviewId?: number
 ) {
   const params = new URLSearchParams({ size: "10" });
 
   if (lastReviewId) {
     params.append("lastReviewId", lastReviewId.toString());
-  }
-  if (lastCreatedAt) {
-    params.append("lastCreatedAt", lastCreatedAt);
   }
 
   const { data } = await apiClient.get(

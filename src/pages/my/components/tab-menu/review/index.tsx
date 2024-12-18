@@ -15,7 +15,7 @@ import { Toast } from "@stories/toast";
 import EditReviewModal from "../edit-review-modal";
 import Loading from "@components/loading";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
@@ -26,6 +26,12 @@ import {
 } from "@api/linereview";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
+import { useLineReviewsByUserQuery } from "@hooks/review";
+import { LineReviewType } from "@type/api/profile/reviews";
+
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+import { SwiperClass } from "swiper/react";
 
 export interface LineReviewData {
   [key: string]: unknown;
@@ -71,7 +77,13 @@ const formatToKST = (dateString: string) => {
   });
 };
 
-function LineReviewContent({ nickname }: { nickname: string }) {
+function LineReviewContent({
+  nickname,
+  swiper,
+}: {
+  nickname: string;
+  swiper: React.MutableRefObject<SwiperClass | null>;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false); // 삭제 모달 상태 관리
   const [selectedReviewId, setSelectedReviewId] = useState<number | null>(null); // 선택된 리뷰 ID 관리
   const [toast, setToast] = useState<{
@@ -81,14 +93,17 @@ function LineReviewContent({ nickname }: { nickname: string }) {
 
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
-  const [lastCursor, setLastCursor] = useState<{
-    lastCreatedAt: string;
-    lastReviewId: number;
-  } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  const {
+    data: lineReviews,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    isLoading,
+  } = useLineReviewsByUserQuery(nickname);
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // 수정 모달 상태 관리
-  const [selectedReview, setSelectedReview] = useState<LineReviewData | null>(
+  const [selectedReview, setSelectedReview] = useState<LineReviewType | null>(
     null
   );
 
@@ -109,7 +124,7 @@ function LineReviewContent({ nickname }: { nickname: string }) {
     });
   };
 
-  const openEditModal = (review: LineReviewData) => {
+  const openEditModal = (review: LineReviewType) => {
     setSelectedReview(review);
     setIsEditModalOpen(true);
   };
@@ -194,6 +209,22 @@ function LineReviewContent({ nickname }: { nickname: string }) {
     );
   };
 
+  const { ref, inView } = useInView({
+    threshold: 0.8,
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    if (swiper.current) {
+      swiper.current.updateAutoHeight();
+    }
+  }, [lineReviews]);
+
   if (isLoading) {
     return (
       <div
@@ -210,13 +241,101 @@ function LineReviewContent({ nickname }: { nickname: string }) {
   }
 
   return (
-    <div css={styles.container()} className={reviews.length ? "" : "centered"}>
+    <div
+      css={styles.container()}
+      className={lineReviews?.pages[0]?.data?.content?.length ? "" : "centered"}
+    >
       {/* 리뷰 데이터가 없는 경우 EmptyLineReview를 렌더링 */}
-      {reviews.length === 0 && (
+      {lineReviews?.pages[0]?.data?.content?.length === 0 && (
         <div>
           <EmptyLineReview />
         </div>
       )}
+
+      {Array.isArray(lineReviews?.pages) &&
+        lineReviews?.pages.map((page, idx) => (
+          <React.Fragment key={idx}>
+            {Array.isArray(page.data.content) &&
+              page.data.content.map((review: LineReviewType) => (
+                <div key={review.id} css={styles.reviewCard()}>
+                  {/* 영화 포스터 이미지 */}
+                  <div
+                    className="poster"
+                    onClick={() => handleMovieClick(review.movie.movieId)}
+                  >
+                    {review.movie?.moviePosterUrl ? (
+                      <LazyLoadImage
+                        src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                          review.movie.moviePosterUrl
+                        }`}
+                        alt={review.movie.movieTitle || "제목 없음"}
+                      />
+                    ) : (
+                      <div
+                        className="poster"
+                        style={{
+                          backgroundColor: "#D9D9D9",
+                          width: "60px",
+                          height: "100%",
+                        }}
+                      >
+                        포스터 없음
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 리뷰 정보 */}
+                  <div css={styles.reviewInfo()}>
+                    {/* 사용자가 남긴 평점 */}
+                    {renderStars(review.rating)}
+
+                    {/* 한줄평 정보 */}
+                    <div className="line-review-info">
+                      <div>한줄평</div>
+                      <p>{review.context}</p>
+                    </div>
+
+                    {/* 영화 | 등록 날짜  */}
+                    <div className="sub-info">
+                      <span>{review.movie?.movieTitle || "제목 없음"}</span>
+                      <div className="round" />
+                      <span>{formatToKST(review.createdAt)}</span>
+                    </div>
+
+                    {/* 한줄평 좋아요, 싫어요 개수 */}
+                    <div className="reaction-info">
+                      <div className="reaction-buttons">
+                        <ThumbsUpSvg />
+                        <span>{review.likes}</span>
+                      </div>
+                      <div className="reaction-buttons">
+                        <ThumbsDownSvg />
+                        <span>{review.dislikes}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 수정/삭제 버튼 렌더링 조건 */}
+                  {review.isAuthor === true ? (
+                    <div css={styles.reviewBtnContainer()}>
+                      <div
+                        css={styles.reviewEditBtn()}
+                        onClick={() => openEditModal(review)}
+                      >
+                        수정
+                      </div>
+                      <div
+                        css={styles.reviewDeleteBtn()}
+                        onClick={() => handleDeleteClick(review.id)}
+                      >
+                        삭제
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+          </React.Fragment>
+        ))}
 
       {/* 삭제 모달 */}
       {isModalOpen &&
@@ -266,6 +385,8 @@ function LineReviewContent({ nickname }: { nickname: string }) {
           </div>,
           document.body // body에 렌더링
         )}
+
+      <div ref={ref} style={{ height: "10px" }} />
     </div>
   );
 }
@@ -277,74 +398,4 @@ export default LineReviewContent;
 }
 // {reviews.length > 0 &&
 //   reviews.map((review) => (
-//     <div key={review.id} css={styles.reviewCard()}>
-//       {/* 영화 포스터 이미지 */}
-//       <div className="poster" onClick={() => handleMovieClick(review.movie.movieId)}>
-//         {review.movie?.moviePosterUrl ? (
-//           <img
-//             src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${review.movie.moviePosterUrl}`}
-//             alt={review.movie.movieTitle || "제목 없음"}
-//           />
-//         ) : (
-//           <div className="poster"
-//             style={{
-//               backgroundColor: "#D9D9D9",
-//               width: "60px",
-//               height: "100%"
-//             }}
-//           >
-//             포스터 없음
-//           </div>
-//         )}
-//       </div>
-
-//       {/* 리뷰 정보 */}
-//       <div css={styles.reviewInfo()}>
-//         {/* 사용자가 남긴 평점 */}
-//         {renderStars(review.rating)}
-
-//         {/* 한줄평 정보 */}
-//         <div className="line-review-info">
-//           <div>한줄평</div>
-//           <p>{review.context}</p>
-//         </div>
-
-//         {/* 영화 | 등록 날짜  */}
-//         <div className="sub-info">
-//           <span>{review.movie?.movieTitle || "제목 없음"}</span>
-//           <div className="round" />
-//           <span>{formatToKST(review.createdAt)}</span>
-//         </div>
-
-//         {/* 한줄평 좋아요, 싫어요 개수 */}
-//         <div className="reaction-info">
-//           <div className="reaction-buttons">
-//             <ThumbsUpSvg />
-//             <span>{review.likes}</span>
-//           </div>
-//           <div className="reaction-buttons">
-//             <ThumbsDownSvg />
-//             <span>{review.dislikes}</span>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* 수정/삭제 버튼 렌더링 조건 */}
-//       {review.isAuthor === true ? (
-//         <div css={styles.reviewBtnContainer()}>
-//           <div
-//             css={styles.reviewEditBtn()}
-//             onClick={() => openEditModal(review)}
-//           >
-//             수정
-//           </div>
-//           <div
-//             css={styles.reviewDeleteBtn()}
-//             onClick={() => handleDeleteClick(review.id)}
-//           >
-//             삭제
-//           </div>
-//         </div>
-//       ) : null}
-//     </div>
 //   ))}
