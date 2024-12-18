@@ -27,12 +27,42 @@ export default {
         font-weight: 600;
         color: #191919;
       }
+    `;
+  },
 
-      & > .movie-log {
+  movieLog(): SerializedStyles {
+    return css`
+      position: relative;
+
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background-color: #262626;
+      cursor: pointer;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      color: #b3b3b3;
+      font-weight: 600;
+      font-size: 14px;
+
+      & > span.empty {
+        font-size: 12px;
+      }
+
+      & .lazy-load-image-background {
         width: 100%;
-        aspect-ratio: 1;
-        background-color: black;
-        cursor: pointer;
+        height: 100%;
+
+        & > img {
+          width: 100%;
+        }
+      }
+
+      & > span.alt {
+        position: absolute;
       }
     `;
   },

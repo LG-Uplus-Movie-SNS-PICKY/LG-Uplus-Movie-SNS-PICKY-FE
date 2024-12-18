@@ -6,8 +6,28 @@ import { useFetchUserMovieLogsQuery } from "@hooks/movie-log";
 import Loading from "@components/loading";
 import { MovieLogDataType } from "@type/api/profile/movie-log";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 interface MovieLogContentProps {
   nickname: string; // 닉네임을 프로퍼티로 전달
+}
+
+function ImageWithFallback({ src, title }: { src: string; title: string }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  return (
+    <>
+      <LazyLoadImage
+        src={src}
+        effect="blur"
+        onLoad={() => setIsLoaded(true)}
+        onError={() => setIsLoaded(false)}
+        className="images"
+      />
+      {!isLoaded && <span className="alt">{title}</span>}
+    </>
+  );
 }
 
 function EmptyMovieLog() {
@@ -43,7 +63,7 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
     return (
       <div
         style={{
-          width: "100%",
+          marginTop: "120px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -53,13 +73,6 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
       </div>
     );
   }
-
-  useEffect(() => {
-    if (!isLoading) {
-      console.log(movieLogs);
-      console.log(movieLogs?.pages[0]?.data?.content?.length);
-    }
-  }, [isLoading]);
 
   return (
     <div
@@ -83,54 +96,31 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
                   )?.contentUrl || "";
 
                 return (
+                  // Movie Log 아이템 카드
                   <div
                     key={movieLog.boardId}
-                    className="movie-log"
+                    css={styles.movieLog()}
                     onClick={() =>
                       navigate(`/movie-log/detail/${movieLog.boardId}`, {
                         state: movieLog,
                       })
                     }
-                  ></div>
+                  >
+                    {/* 이미지가 있을 경우에는 해당 이미지를 Lazy Loading 기법을 통해 이미지를 불러온다. */}
+                    {firstPosterUrl ? (
+                      <ImageWithFallback
+                        src={firstPosterUrl}
+                        title={movieLog.context}
+                      />
+                    ) : (
+                      // 이미지가 없을 경우 텍스트만 출력한다.
+                      <span className="empty">{movieLog.context}</span>
+                    )}
+                  </div>
                 );
               })}
           </React.Fragment>
         ))}
-      {/* {data.length > 0 &&
-        data.map((element) => {
-          // contents 중 첫 번째 이미지만 사용
-          const posterUrl =
-            element.contents.find(
-              (content) => content.boardContentType === "IMAGE"
-            )?.contentUrl || "";
-
-          return (
-            <div
-              key={element.boardId}
-              className="movie-log"
-              onClick={() => {
-                // http://localhost:5173/movie-log/detail/24}
-                console.log(element);
-                console.log(element.boardId);
-
-                navigate(`/movie-log/detail/${element.boardId}`, {
-                  state: element,
-                });
-              }} // boardId 전달
-              style={{ cursor: "pointer" }} // 클릭 가능한 UI 추가
-            >
-              {posterUrl ? (
-                <img
-                  src={posterUrl}
-                  alt="movie-poster"
-                  style={{ width: "100%", height: "100%" }}
-                />
-              ) : (
-                <EmptyFeed /> // 포스터가 없으면 대체 이미지
-              )}
-            </div>
-          );
-        })} */}
     </div>
   );
 }
