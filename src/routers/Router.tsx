@@ -23,6 +23,8 @@ import GuestRouter from "./router/GuestRoutes";
 import UserRoutes from "./router/UserRoutes";
 import AdminRouter from "./router/AdminRoutes";
 import { getCookie } from "@util/cookie";
+import ErrorPage from "@pages/error";
+import ErrorHandler from "@hooks/error";
 
 function Router() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -45,7 +47,8 @@ function Router() {
       future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
     >
       <Global styles={globalStyle} />
-
+      {/* 에러 핸들러 */}
+      <ErrorHandler />
       <Layout>
         <Routes>
           {/* 공개 라우트 - 관리자 접근 X */}
@@ -67,15 +70,15 @@ function Router() {
           {/* 관리자 사용자 라우트 */}
           <Route path="/admin/*" element={<AdminRouter />} />
 
+          {/* 에러 페이지 */}
+          <Route path="/error/:status" element={<ErrorPage />} />
+
           {/* 도메인 */}
           <Route
             path="/google626ac0bef2281c75.html"
             element={<DomainGoogle />}
           />
-             <Route
-            path="/privacy"
-            element={<GoogleImage />}
-          />
+          <Route path="/privacy" element={<GoogleImage />} />
         </Routes>
       </Layout>
     </BrowserRouter>

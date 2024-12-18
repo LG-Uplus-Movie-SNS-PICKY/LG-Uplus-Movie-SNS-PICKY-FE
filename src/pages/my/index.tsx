@@ -78,111 +78,6 @@ function My() {
   const [error, setError] = useState<string | null>(null); // 에러 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
 
-  // // 닉네임 검증 함수
-  // async function checkNickname(nickname: string) {
-  //   try {
-  //     const response = await fetchNicknameValidation(nickname);
-  //     setIsValid(response.isValid); // 상태 업데이트
-  //   } catch (error) {
-  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
-  //   }
-  // }
-
-  // // 닉네임 검증 함수
-  // async function checkNickname(nickname: string) {
-  //   try {
-  //     const response = await fetchNicknameValidation(nickname);
-  //     setIsValid(response.isValid); // API에서 받은 값을 상태로 설정
-  //   } catch (error) {
-  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
-  //     setIsValid(false); // 오류가 발생한 경우 기본값으로 false 설정 -> 서버 오류로 일단 임시로 처리
-  //   }
-  // }
-
-  // // 닉네임 검증 후 사용자 정보 로드
-  // useEffect(() => {
-  //   if (nickname) {
-  //     checkNickname(nickname); // 닉네임 검증
-  //   }
-  // }, [nickname]);
-
-  // useEffect(() => {
-  //   if (isValid === false) {
-  //     // 닉네임이 사용 가능할 때만 사용자 정보 로드
-  //     const loadUserInfo = async () => {
-  //       try {
-  //         setLoading(true);
-  //         const data = await fetchUserInfo(nickname as string);
-
-  //         setUserData(data);
-  //         setBoardCount(data.boardCount ?? 0);
-  //         setFollowersCount(data.followerCount ?? 0);
-  //         setFollowingCount(data.followingCount ?? 0);
-  //       } catch (err) {
-  //         console.error(err);
-  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     loadUserInfo();
-  //   }
-  // }, [isValid, nickname]);
-
-  //   // 사용자 정보 로드
-  //   useEffect(() => {
-  //     const loadUserProfile = async () => {
-  //       try {
-  //         setLoading(true);
-  //         const userInfo = await fetchGetUserInfo(); // GET API 호출
-  //         console.log("유저 데이터:", userInfo); // API 응답 데이터 로그 출력
-
-  //         // API 응답 데이터에서 profileUrl 설정
-  //         setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
-  //       } catch (err) {
-  //         console.error("Error fetching user info:", err);
-  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     if (nickname) {
-  //       loadUserProfile();
-  //     }
-  //   }, [nickname]); // nickname이 변경될 때마다 실행
-
-  //   // 게시글/팔로워/팔로잉 수 가져오기
-  //   useEffect(() => {
-  //     const loadUserInfo = async () => {
-  //         if (!nickname) {
-  //             console.error("닉네임이 없습니다.");
-  //             setError("닉네임이 제공되지 않았습니다.");
-  //             return;
-  //         }
-
-  //         try {
-  //             setLoading(true);
-  //             const data = await fetchUserInfo(nickname); // nickname은 string으로 보장됨
-  //             console.log("게시글/팔로워/팔로잉 수:", data);
-
-  //             // 상태 업데이트
-  //             setUserData(data);
-  //             setBoardCount(data.boardCount ?? 0);
-  //             setFollowersCount(data.followerCount ?? 0);
-  //             setFollowingCount(data.followingCount ?? 0);
-  //         } catch (err) {
-  //             console.error("Error fetching user info:", err);
-  //             setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-  //         } finally {
-  //             setLoading(false);
-  //         }
-  //     };
-
-  //     loadUserInfo();
-  // }, [nickname]);
-
   useEffect(() => {
     const loadUserProfileAndInfo = async () => {
       if (!nickname) {
@@ -214,7 +109,6 @@ function My() {
         setIsFollowing(data.data.isFollowing ?? false);
         setUserData(data);
       } catch (err) {
-        console.error("Error fetching user info:", err);
         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
       } finally {
         setLoading(false);
