@@ -12,10 +12,10 @@ function App() {
       <RecoilRoot>
         <QueryProvider>
           {/* 알림 연결 */}
-          {/* <NotificationSSE /> */}
+          <NotificationSSE />
 
           {/* 읽지 않은 알림 수 전역 상태 관리 */}
-          {/* <NotificationBadge /> */}
+          <NotificationBadge />
           <Router />
         </QueryProvider>
       </RecoilRoot>
