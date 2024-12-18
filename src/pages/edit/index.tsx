@@ -53,6 +53,10 @@ export default function ProfileEditPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isNicknameValid, setIsNicknameValid] = useState<boolean | null>(null);
 
+  const [isComposing, setIsComposing] = useState(false);
+
+  const regex = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
+
   const showToast = (message: string) => {
     setToastMessage(message);
   };
@@ -121,19 +125,20 @@ export default function ProfileEditPage() {
     const value = e.target.value;
 
     // 특수기호 검사 (알파벳, 숫자, 한글만 허용)
-    // const specialCharRegex = /[^a-zA-Z0-9가-힣]/;
+    if (!regex.test(value)) {
+      setNicknameError("닉네임에 특수기호는 사용할 수 없습니다.");
+      setIsNicknameValid(false);
+      return;
+    }
 
-    // if (specialCharRegex.test(value)) {
-    //   setNicknameError("닉네임에 특수기호는 사용할 수 없습니다.");
-    //   setIsNicknameValid(false);
-    //   return;
-    // }
-
-    if (value.length > 10) return;
+    if (value.length > 15) {
+      setNicknameError("닉네임은 15자 이하로만 입력해주세요.");
+      return;
+    }
     setNickname(value);
 
-    if (value.length < 2 || value.length > 10) {
-      setNicknameError("닉네임은 2자 이상, 10자 이하로 입력해주세요.");
+    if (value.length < 2 || value.length > 15) {
+      setNicknameError("닉네임은 2자 이상, 15자 이하로 입력해주세요.");
       setIsNicknameValid(false);
     } else if (/\s/.test(value)) {
       setNicknameError("닉네임에 공백은 포함될 수 없습니다.");
@@ -144,6 +149,19 @@ export default function ProfileEditPage() {
       debouncedCheckNickname(value);
     }
   };
+
+  // // 한글 조합 이벤트 핸들러
+  // const handleCompositionStart = () => {
+  //   setIsComposing(true); // 한글 조합 시작
+  // };
+
+  // // 한글 조합 완료 이벤트 핸들러
+  // const handleCompositionEnd = (
+  //   event: React.CompositionEvent<HTMLInputElement>
+  // ) => {
+  //   setIsComposing(false);
+  //   handleNicknameChange(event);
+  // };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

@@ -37,6 +37,8 @@ import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
 import { getCookie, removeCookie, setCookie } from "@util/cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
 
+const regex = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
+
 export default function Signup() {
   const setIsLoginState = useSetRecoilState(isLogin);
   const [inputData, setInputData] = useRecoilState(inputState);
