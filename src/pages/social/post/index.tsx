@@ -1,6 +1,7 @@
 import { useState, ChangeEvent, KeyboardEvent, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createBoard } from "@api/movie";
+import { fetchMovieSearch } from "@api/user";
 import MovieSearch from "@assets/icons/movie_search.svg?react";
 import DelButton from "@assets/icons/delete.svg?react";
 import BackPost from "@assets/icons/back_post.svg?react";
@@ -33,7 +34,7 @@ import {
   deleteIcon,
   backButton,
   movieInfo,
-  movieTitle,
+  movieTitleStyle,
   movieDetails,
   movieGenres,
   modalContainer,
@@ -43,54 +44,20 @@ import {
 } from "./index.styles";
 import { FileInput } from "@stories/file-input";
 
-const mockMovies = [
-  {
-    title: "아이언맨1",
-    releaseDate: "2008.04.30",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "아이언맨2",
-    releaseDate: "2008.04.30",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "아이언맨3",
-    releaseDate: "2008.04.30",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "어벤져스: 엔드게임",
-    releaseDate: "2019.04.24",
-    country: "미국",
-    genres: ["액션", "SF", "모험"],
-  },
-  {
-    title: "부산행",
-    releaseDate: "2016.07.20",
-    country: "한국",
-    genres: ["스릴러", "드라마", "좀비"],
-  },
-];
-
 interface MovieData {
-  title: string;
+  movieId: number;
+  movieTitle: string;
   releaseDate: string;
   country: string;
-  genres: string[]; // genres는 문자열 배열임
+  genres: string[];
 }
 
 export default function SocialPost() {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredMovies, setFilteredMovies] = useState<typeof mockMovies>([]);
+  const [filteredMovies, setFilteredMovies] = useState<MovieData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isBackModalOpen, setIsBackModalOpen] = useState<boolean>(false); // 뒤로가기 모달 상태
-  const [selectedMovieData, setSelectedMovieData] = useState<MovieData | null>(
-    null
-  );
+  const [selectedMovie, setSelectedMovie] = useState<MovieData | null>(null);
   const [reviewText, setReviewText] = useState<string>("");
   const [selectedSpoiler, setSelectedSpoiler] = useState<string>("null");
   const [activeIndex, setActiveIndex] = useState<number>(-1); // 활성화된 항목 인덱스
@@ -98,7 +65,6 @@ export default function SocialPost() {
   const [images, setImages] = useState<File[]>([]); // 이미지 상태
   const [videos, setVideos] = useState<File[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null); // 토스트 메시지 상태
-
   const [mediaFiles, setMediaFiles] = useState<File[]>([]); // 업로드 된 파일 정보를 나타내는 상태 변수
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -106,43 +72,43 @@ export default function SocialPost() {
   const navigate = useNavigate();
 
   const isButtonActive =
-    !!selectedMovieData && // 영화 선택됨
-    !!reviewText.trim() && // 리뷰 작성됨
-    selectedSpoiler !== "null"; // 스포일러 여부 선택됨
-  // images.length > 0 && // 이미지가 업로드됨
-  // videos.length > 0; // 이미지가 업로드됨
+    !!selectedMovie && !!reviewText.trim() && selectedSpoiler !== "null";
 
-  // console.log("selectedMovieData:", selectedMovieData);
-  // console.log("reviewText.trim():", reviewText.trim());
-  // console.log("selectedSpoiler:", selectedSpoiler);
-  // console.log("fileUrl:", fileUrl);
-  // console.log("isButtonActive:", isButtonActive);
-
-  // console.log(isButtonActive);
-
-  const handleMovieSelect = (movie: (typeof mockMovies)[0]) => {
-    setSelectedMovieData(movie);
-    setSearchTerm(movie.title);
-    setFilteredMovies([]);
-    setIsModalOpen(false);
-  };
-
-  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
 
-    if (value) {
-      const results = mockMovies.filter((movie) =>
-        movie.title.toLowerCase().startsWith(value.toLowerCase())
-      );
-      setFilteredMovies(results);
+    if (value.trim() !== "") {
+      try {
+        const results = await fetchMovieSearch(value);
+        setFilteredMovies(results);
+        console.log(results);
+      } catch (error) {
+        console.error("영화 검색 중 오류 발생:", error);
+      }
     } else {
       setFilteredMovies([]);
     }
   };
 
-  const getHighlightedText = (text: string, highlight: string) => {
-    if (!highlight) return text;
+  const handleMovieSelect = (movie: MovieData) => {
+    setSelectedMovie({
+      movieId: movie.movieId,
+      movieTitle: movie.movieTitle,
+      releaseDate: movie.releaseDate || "정보 없음", // 기본값 설정
+      country: movie.country || "정보 없음",
+      genres: movie.genres?.length > 0 ? movie.genres : ["장르 정보 없음"],
+    });
+    setSearchTerm(movie.movieTitle);
+    setFilteredMovies([]);
+    setIsModalOpen(false); // 오버레이를 닫음
+  };
+
+  const getHighlightedText = (
+    text: string | undefined,
+    highlight: string | undefined
+  ) => {
+    if (!text || !highlight) return text || ""; // 값이 없으면 원본 문자열 반환
 
     const startIndex = text.toLowerCase().indexOf(highlight.toLowerCase());
     if (startIndex === -1) return text;
@@ -165,13 +131,13 @@ export default function SocialPost() {
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((prevIndex) =>
-        prevIndex < filteredMovies.length - 1 ? prevIndex + 1 : 0
+      setActiveIndex((prev) =>
+        prev < filteredMovies.length - 1 ? prev + 1 : 0
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : filteredMovies.length - 1
+      setActiveIndex((prev) =>
+        prev > 0 ? prev - 1 : filteredMovies.length - 1
       );
     } else if (e.key === "Enter") {
       e.preventDefault();
@@ -219,18 +185,13 @@ export default function SocialPost() {
   };
 
   const handleShareClick = async () => {
-    // if (!images.length && !videos.length) {
-    //   alert("모든 필드를 작성하고 파일을 업로드해주세요.");
-
-    //   return;
-    // }
-
-    console.log(mediaFiles);
+    if (!selectedMovie) return;
+    console.log("전송될 movieId:", selectedMovie?.movieId);
 
     try {
       await createBoard(
         reviewText,
-        635302, // movieId를 실제 데이터로 교체 필요
+        selectedMovie.movieId,
         selectedSpoiler === "있음",
         mediaFiles
       );
@@ -262,25 +223,31 @@ export default function SocialPost() {
         </>
       )}
 
-      {selectedMovieData ? (
+      {selectedMovie ? (
+        // 선택된 영화가 있을 때, 영화 정보 표시
         <div css={movieInfo}>
           <div css={backButton} onClick={handleBackClick}>
             <BackPost />
           </div>
-          <h2 css={movieTitle}>{selectedMovieData.title}</h2>
+          <h2 css={movieTitleStyle}>{selectedMovie.movieTitle}</h2>
           <div css={movieDetails}>
-            <p>🕑 {selectedMovieData.releaseDate}</p>
+            <p>🕑 {selectedMovie.releaseDate}</p>
           </div>
           <div css={movieCountry}>
-            <p>{selectedMovieData.country}</p>
+            <p>{selectedMovie.country}</p>
           </div>
           <div css={movieGenres}>
-            {selectedMovieData?.genres.map((genre: string, index: number) => (
-              <span key={`${genre}-${index}`}>{genre}</span>
-            ))}
+            {selectedMovie?.genres?.length > 0 ? (
+              selectedMovie.genres.map((genre: string, index: number) => (
+                <span key={`${genre}-${index}`}>{genre}</span>
+              ))
+            ) : (
+              <span>장르 정보가 없습니다.</span>
+            )}
           </div>
         </div>
       ) : (
+        // 선택된 영화가 없을 때, 검색창 표시
         <div css={searchBox}>
           <div css={backButton} onClick={handleBackClick}>
             <BackPost />
@@ -303,19 +270,21 @@ export default function SocialPost() {
                 </button>
               )}
             </div>
+
+            {/* 자동완성 리스트 */}
             {isModalOpen && filteredMovies.length > 0 && (
               <div css={autocompleteBox}>
                 {filteredMovies.map((movie, index) => (
                   <div
-                    key={movie.title}
+                    key={movie.movieId || index}
                     css={[
                       autocompleteItem,
                       activeIndex === index && activeAutocompleteItem,
                     ]}
                     onClick={() => handleMovieSelect(movie)}
                   >
-                    {getHighlightedText(movie.title, searchTerm)}{" "}
-                    {/* 하이라이트 함수 적용 */}
+                    {getHighlightedText(movie.movieTitle || "", searchTerm)}{" "}
+                    {/* 수정 */}
                   </div>
                 ))}
               </div>
@@ -330,14 +299,6 @@ export default function SocialPost() {
           mediaFiles={mediaFiles}
           setMediaFiles={setMediaFiles}
         />
-
-        {/* <input
-          type="file"
-          multiple
-          ref={fileInputRef}
-          style={{ display: "none" }}
-          onChange={             }
-        /> */}
       </div>
 
       <div css={reviewSection}>

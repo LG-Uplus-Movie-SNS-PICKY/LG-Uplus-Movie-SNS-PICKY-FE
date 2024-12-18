@@ -25,8 +25,11 @@ import {
   blurredImage,
   carouselWrapper,
   reactionsSection,
+  banner,
+  infoSection,
 } from "./index.styles";
 import axios, { AxiosError } from "axios";
+import MovieLogBanner from "@assets/images/banner.jpg";
 
 // 게시글 데이터 타입
 interface BoardContent {
@@ -80,8 +83,22 @@ export default function MovieLogList() {
     }
   }, [isLoading]);
 
+  const calculateTimeAgo = (createdDate: string) => {
+    const now = new Date();
+    const created = new Date(createdDate);
+    const diff = Math.floor((now.getTime() - created.getTime()) / 1000);
+
+    if (diff < 60) return `${diff}초 전`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
+    return `${Math.floor(diff / 86400)}일 전`;
+  };
+
   return (
     <div css={wrapper}>
+      <div css={banner}>
+        <img src={MovieLogBanner} alt="배너 이미지" style={{ width: "100%" }} />
+      </div>
       <div css={feedContainer}>
         {isLoading && <Loading />}
         {Array.isArray(board?.pages) &&
@@ -98,32 +115,33 @@ export default function MovieLogList() {
                       <div key={board.boardId} css={feedItem}>
                         {/* 프로필 및 사용자 정보 */}
                         <div
-                          css={profileSection}
+                          css={infoSection}
                           onClick={() =>
                             navigate(`/user/${board.writerNickname}`)
                           }
                           style={{ cursor: "pointer" }}
                         >
-                          <img
-                            src={
-                              board.writerProfileUrl || "/default-profile.png"
-                            }
-                            alt="프로필"
-                            style={{
-                              width: "40px",
-                              height: "40px",
-                              borderRadius: "50%",
-                            }}
-                          />
+                          <div css={profileSection}>
+                            <img
+                              src={
+                                board.writerProfileUrl || "/default-profile.png"
+                              }
+                              alt="프로필"
+                              style={{
+                                width: "40px",
+                                height: "40px",
+                                borderRadius: "50%",
+                              }}
+                            />
+                          </div>
                           <div css={textSection}>
                             {board.writerNickname}
                             <span css={movieTitle}>{board.movieTitle}</span>
                           </div>
                         </div>
 
-                        {/* 작성 시간 */}
                         <div css={timeSection}>
-                          {new Date(board.createdDate).toLocaleDateString()}
+                          {calculateTimeAgo(board.createdDate)}
                         </div>
                       </div>
 
@@ -208,7 +226,7 @@ export default function MovieLogList() {
           ))}
 
         {/* 로딩 감지기 */}
-        {/* <div ref={ref} style={{ width: "100%", height: "20px" }} /> */}
+        <div ref={ref} style={{ width: "100%", height: "20px" }} />
       </div>
       {showToast && <Toast message={toastMessage} direction="up" />}
     </div>
