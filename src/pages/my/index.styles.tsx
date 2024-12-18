@@ -35,12 +35,13 @@ export const ProfileContainer = styled.div`
 export const ProfileImage = styled.img`
   width: 80px;
   height: 80px;
-  border-radius: 200px;
+  border-radius: 50%;
 `;
 
 export const ProfileInfoContainer = styled.div`
+  flex: 1;
+
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
 `;

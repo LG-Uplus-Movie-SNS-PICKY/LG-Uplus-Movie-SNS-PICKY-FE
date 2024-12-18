@@ -23,13 +23,22 @@ import LogoutModal from "./components/logout-modal";
 import FollowersModal from "./components/followers-modal";
 import TabMenu from "./components/tab-menu";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
-import { fetchFollowersList, fetchFollowingsList, fetchNicknameValidation, fetchUserInfo, toggleFollow } from "@api/user";
+import {
+  fetchFollowersList,
+  fetchFollowingsList,
+  fetchNicknameValidation,
+  fetchUserInfo,
+  toggleFollow,
+} from "@api/user";
 import { set } from "lodash";
 
 function My() {
@@ -44,9 +53,9 @@ function My() {
     "followers"
   );
 
-   // 로그인 상태에서 사용자 정보 가져오기
-   const loginState = useRecoilValue(isLogin);
-   const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
+  // 로그인 상태에서 사용자 정보 가져오기
+  const loginState = useRecoilValue(isLogin);
+  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
 
   const [isValid, setIsValid] = useState<boolean | null>(null); // 닉네임 유효성 상태
   const [userData, setUserData] = useState<{
@@ -121,58 +130,58 @@ function My() {
   //   }
   // }, [isValid, nickname]);
 
-//   // 사용자 정보 로드
-//   useEffect(() => {
-//     const loadUserProfile = async () => {
-//       try {
-//         setLoading(true);
-//         const userInfo = await fetchGetUserInfo(); // GET API 호출
-//         console.log("유저 데이터:", userInfo); // API 응답 데이터 로그 출력
-  
-//         // API 응답 데이터에서 profileUrl 설정
-//         setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
-//       } catch (err) {
-//         console.error("Error fetching user info:", err);
-//         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-  
-//     if (nickname) {
-//       loadUserProfile();
-//     }
-//   }, [nickname]); // nickname이 변경될 때마다 실행
+  //   // 사용자 정보 로드
+  //   useEffect(() => {
+  //     const loadUserProfile = async () => {
+  //       try {
+  //         setLoading(true);
+  //         const userInfo = await fetchGetUserInfo(); // GET API 호출
+  //         console.log("유저 데이터:", userInfo); // API 응답 데이터 로그 출력
 
-//   // 게시글/팔로워/팔로잉 수 가져오기
-//   useEffect(() => {
-//     const loadUserInfo = async () => {
-//         if (!nickname) {
-//             console.error("닉네임이 없습니다.");
-//             setError("닉네임이 제공되지 않았습니다.");
-//             return;
-//         }
+  //         // API 응답 데이터에서 profileUrl 설정
+  //         setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
+  //       } catch (err) {
+  //         console.error("Error fetching user info:", err);
+  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     };
 
-//         try {
-//             setLoading(true);
-//             const data = await fetchUserInfo(nickname); // nickname은 string으로 보장됨
-//             console.log("게시글/팔로워/팔로잉 수:", data);
+  //     if (nickname) {
+  //       loadUserProfile();
+  //     }
+  //   }, [nickname]); // nickname이 변경될 때마다 실행
 
-//             // 상태 업데이트
-//             setUserData(data);
-//             setBoardCount(data.boardCount ?? 0);
-//             setFollowersCount(data.followerCount ?? 0);
-//             setFollowingCount(data.followingCount ?? 0);
-//         } catch (err) {
-//             console.error("Error fetching user info:", err);
-//             setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
+  //   // 게시글/팔로워/팔로잉 수 가져오기
+  //   useEffect(() => {
+  //     const loadUserInfo = async () => {
+  //         if (!nickname) {
+  //             console.error("닉네임이 없습니다.");
+  //             setError("닉네임이 제공되지 않았습니다.");
+  //             return;
+  //         }
 
-//     loadUserInfo();
-// }, [nickname]);
+  //         try {
+  //             setLoading(true);
+  //             const data = await fetchUserInfo(nickname); // nickname은 string으로 보장됨
+  //             console.log("게시글/팔로워/팔로잉 수:", data);
+
+  //             // 상태 업데이트
+  //             setUserData(data);
+  //             setBoardCount(data.boardCount ?? 0);
+  //             setFollowersCount(data.followerCount ?? 0);
+  //             setFollowingCount(data.followingCount ?? 0);
+  //         } catch (err) {
+  //             console.error("Error fetching user info:", err);
+  //             setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
+  //         } finally {
+  //             setLoading(false);
+  //         }
+  //     };
+
+  //     loadUserInfo();
+  // }, [nickname]);
 
   useEffect(() => {
     const loadUserProfileAndInfo = async () => {
@@ -268,13 +277,13 @@ function My() {
     try {
       setActiveTab(initialTab); // 클릭된 탭을 활성화
       setIsFollowersModalOpen(true);
-  
+
       // 팔로워와 팔로잉 데이터를 동시에 불러옴
       const [followersResponse, followingsResponse] = await Promise.all([
         fetchFollowersList(nickname as string),
         fetchFollowingsList(nickname as string),
       ]);
-  
+
       setFollowersList(followersResponse.data.content);
       setFollowingsList(followingsResponse.data.content);
     } catch (error) {
@@ -285,6 +294,8 @@ function My() {
   const closeFollowersModal = () => {
     setIsFollowersModalOpen(false);
   };
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <>
@@ -298,7 +309,29 @@ function My() {
       <Wrapper ref={wrapperRef}>
         <ProfileContainer>
           {/* 사용자 프로필 이미지 */}
-          <ProfileImage src={profileImage} />
+          <div
+            style={{
+              width: "80px",
+              height: "80px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              backgroundColor: "#262626",
+              position: "relative",
+            }}
+          >
+            <LazyLoadImage
+              src={profileImage}
+              onLoad={() => setIsLoading(true)}
+              onError={() => setIsLoading(false)}
+              style={{ width: "100%" }}
+            />
+            {!isLoading && (
+              <span style={{ position: "absolute", color: "#b3b3b3" }}>
+                {nickname}
+              </span>
+            )}
+          </div>
+
           <ProfileInfoContainer>
             <ProfileInfo>
               <BoldText isZero={boardCount === 0}>{boardCount}</BoldText>
