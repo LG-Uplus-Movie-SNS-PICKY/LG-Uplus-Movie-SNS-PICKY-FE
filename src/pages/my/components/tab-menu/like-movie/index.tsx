@@ -3,10 +3,16 @@ import styles from "./index.styles";
 
 import EmptyLike from "@assets/icons/my-page/empty-like.svg?react";
 import "react-lazy-load-image-component/src/effects/blur.css";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchLikedMovies } from "@api/movie";
 import { useUserLikedMovies } from "@hooks/movie";
+import { useInView } from "react-intersection-observer";
+import Loading from "@components/loading";
+import {
+  LikeMovieDataType,
+  QueryLikeMoviesDataTypes,
+} from "@type/api/profile/likes";
 
 export interface LikeMovieData {
   movie_id: number;
@@ -34,10 +40,10 @@ function ImageWithFallback({ src, title }: { src: string; title: string }) {
   return (
     <>
       <LazyLoadImage
-        src={src}
-        alt={title}
+        src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${src}`}
         effect="blur"
         onLoad={() => setIsLoaded(true)}
+        onError={() => setIsLoaded(false)}
       />
       {!isLoaded && <span>{title}</span>}
     </>
@@ -57,30 +63,70 @@ function LikeMovieContent() {
     isLoading,
   } = useUserLikedMovies(nickname ? nickname : "");
 
-  useEffect(() => {
-    if (!isLoading) console.log(likeMovies);
-  }, [isLoading]);
+  const { ref, inView } = useInView({
+    threshold: 1.0,
+  });
 
   const handleMovieClick = (movieId: number) => {
     navigate(`/movie/${movieId}`); // 클릭 시 영화 상세 페이지로 이동
   };
 
+  useEffect(() => {
+    if (!isLoading) console.log(likeMovies);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
+  if (isLoading)
+    return (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loading />
+      </div>
+    );
+
   return (
-    <div css={styles.container()} className={movies.length ? "" : "centered"}>
-      {/* {movies.length === 0 && <EmptyLikeMovie />}
-      {movies.length > 0 &&
-        movies.map((movie) => (
-          <div
-            key={movie.movie_id}
-            css={styles.movieCard()}
-            onClick={() => handleMovieClick(movie.movie_id)} // 클릭 이벤트 핸들러 추가
-          >
-            <ImageWithFallback
-              src={movie.movie_poster_url}
-              title={movie.movie_title}
-            />
-          </div>
-        ))} */}
+    <div
+      css={styles.container()}
+      className={
+        likeMovies?.pages[0]?.data?.content?.numberOfElements !== 0
+          ? ""
+          : "centered"
+      }
+    >
+      {likeMovies?.pages[0]?.data?.content?.numberOfElements === 0 && (
+        <EmptyLikeMovie />
+      )}
+      {Array.isArray(likeMovies?.pages) &&
+        likeMovies.pages.map((page, idx) => (
+          <React.Fragment key={idx}>
+            {Array.isArray(page.data.content) &&
+              page.data.content.map((likeMovie: LikeMovieDataType) => (
+                <div
+                  key={likeMovie.movieLikeId}
+                  css={styles.movieCard()}
+                  onClick={() => handleMovieClick(likeMovie.movieId)}
+                >
+                  <ImageWithFallback
+                    src={likeMovie.moviePosterUrl}
+                    title={likeMovie.movieTitle}
+                  />
+                </div>
+              ))}
+          </React.Fragment>
+        ))}
+
+      <div ref={ref} style={{ width: "100%", height: "10px" }} />
     </div>
   );
 }

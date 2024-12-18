@@ -7,7 +7,10 @@ export default {
       width: 100%;
 
       display: grid;
-      grid-template-columns: repeat(3, 1fr); // 한 열에 3개의 아이템
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(100px, 1fr)
+      ); // 한 열에 3개의 아이템
       /* grid-template-rows: repeat(3, 1fr); // 한 행에 4개의 아이템 */
 
       gap: 3px;
@@ -73,5 +76,5 @@ export default {
       gap: 16px;
       margin-top: 120px;
     `;
-  }
+  },
 };
