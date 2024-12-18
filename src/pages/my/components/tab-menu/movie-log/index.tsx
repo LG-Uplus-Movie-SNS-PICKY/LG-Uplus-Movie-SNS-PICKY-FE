@@ -69,6 +69,8 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
       }
     >
       {movieLogs?.pages[0]?.data?.content?.length === 0 && <EmptyMovieLog />}
+
+      {/* API 호출로 인해 받아온 무비로그 데이터들을 렌더링 시킨다. */}
       {Array.isArray(movieLogs?.pages) &&
         movieLogs.pages.map((page, idx) => (
           <React.Fragment key={idx}>
@@ -80,7 +82,17 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
                     (content) => content.boardContentType === "IMAGE"
                   )?.contentUrl || "";
 
-                return <div key={movieLog.boardId}></div>;
+                return (
+                  <div
+                    key={movieLog.boardId}
+                    className="movie-log"
+                    onClick={() =>
+                      navigate(`/movie-log/detail/${movieLog.boardId}`, {
+                        state: movieLog,
+                      })
+                    }
+                  ></div>
+                );
               })}
           </React.Fragment>
         ))}

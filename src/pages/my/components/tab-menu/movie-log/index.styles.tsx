@@ -7,11 +7,14 @@ export default {
       flex: 1;
 
       display: grid;
-      grid-template-columns: repeat(3, 1fr); // 한 열에 3개의 아이템
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(100px, 1fr)
+      ); // 한 열에 3개의 아이템
       /* grid-template-rows: repeat(4, 1fr); // 한 행에 4개의 아이템 */
 
       gap: 3px;
-      /* height: 100%; */
+      padding: 2px;
 
       &.centered {
         display: flex;
@@ -27,9 +30,9 @@ export default {
 
       & > .movie-log {
         width: 100%;
-        height: 100%;
         aspect-ratio: 1;
-        background-color: transparent;
+        background-color: black;
+        cursor: pointer;
       }
     `;
   },
