@@ -16,6 +16,7 @@ export const postContainer = css`
   align-items: center;
   justify-content: center;
   padding: 16px;
+  z-index: 0;
 `;
 
 export const pText = css`
@@ -66,10 +67,11 @@ export const modalOverlayBack = css`
 export const modalContainer = css`
   position: fixed;
   top: 50%;
-  left: 50%;
+  left: 52%;
   transform: translate(-50%, -50%);
   z-index: 1001;
-  width: 63%;
+  width: 100%;
+  max-width: 430px;
 `;
 
 export const modalContent = css`

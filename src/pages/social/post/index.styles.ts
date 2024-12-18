@@ -16,6 +16,7 @@ export const postContainer = css`
   align-items: center;
   justify-content: center;
   padding: 16px;
+  z-index: 0;
 `;
 
 export const pText = css`
