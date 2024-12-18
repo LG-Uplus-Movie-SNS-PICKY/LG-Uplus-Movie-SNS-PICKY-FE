@@ -19,6 +19,7 @@ export interface LikeMovieData {
 }
 
 interface LikeMovieContentProps {
+  nickname: string;
   swiper: React.MutableRefObject<SwiperClass | null>;
 }
 
@@ -49,8 +50,7 @@ function ImageWithFallback({ src, title }: { src: string; title: string }) {
   );
 }
 
-function LikeMovieContent({ swiper }: LikeMovieContentProps) {
-  const { nickname } = useParams<{ nickname: string }>(); // URL에서 닉네임 가져오기
+function LikeMovieContent({ nickname, swiper }: LikeMovieContentProps) {
   const navigate = useNavigate(); // 페이지 이동을 위한 훅
 
   const {
