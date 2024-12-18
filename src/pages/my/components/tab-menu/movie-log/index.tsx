@@ -29,8 +29,6 @@ function EmptyMovieLog() {
 }
 
 function MovieLogContent({ nickname }: MovieLogContentProps) {
-  // const [data, setData] = useState<MovieLogData[]>([]);
-  const [lastBoardId, setLastBoardId] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
 
   const {
@@ -75,7 +73,15 @@ function MovieLogContent({ nickname }: MovieLogContentProps) {
         movieLogs.pages.map((page, idx) => (
           <React.Fragment key={idx}>
             {Array.isArray(page.data.content) &&
-              page.data.content.map((movieLog: MovieLogDataType) => <></>)}
+              page.data.content.map((movieLog: MovieLogDataType) => {
+                // 프로필 페이지에서 보여지는 Movie Log는 첫 번째 이미지만 보여준다.
+                const firstPosterUrl =
+                  movieLog.contents.find(
+                    (content) => content.boardContentType === "IMAGE"
+                  )?.contentUrl || "";
+
+                return <div key={movieLog.boardId}></div>;
+              })}
           </React.Fragment>
         ))}
       {/* {data.length > 0 &&

@@ -1,35 +1,27 @@
-export interface MovieLogData {
-  boardId: number;
-  contents: {
-    contentUrl: string; // 영화 포스터 URL
-    boardContentType: string;
-  }[];
+interface MovieLogContentsType {
+  contentUrl: string;
+  boardContentType: "IMAGE" | "VIDEO";
 }
 
 export interface MovieLogDataType {
-  boardId: 0;
-  writerId: 0;
-  writerNickname: "string";
-  writerProfileUrl: "string";
-  writerRole: "string";
-  context: "string";
+  boardId: number;
+  writerId: number;
+  writerNickname: string;
+  writerProfileUrl: string;
+  writerRole: string;
+  context: string;
   isSpoiler: true;
-  createdDate: "2024-12-18T20:53:20.754Z";
-  updatedDate: "2024-12-18T20:53:20.754Z";
-  likesCount: 0;
-  commentsCount: 0;
-  contents: [
-    {
-      contentUrl: "string";
-      boardContentType: "string";
-    }
-  ];
-  movieId: 0;
-  movieTitle: "string";
-  releaseDate: "2024-12-18T20:53:20.754Z";
+  createdDate: string;
+  updatedDate: string;
+  likesCount: number;
+  commentsCount: number;
+  contents: MovieLogContentsType[];
+  movieId: number;
+  movieTitle: string;
+  releaseDate: string;
   genres: [
     {
-      id: 0;
+      id: number;
     }
   ];
   isLike: true;
