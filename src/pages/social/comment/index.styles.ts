@@ -102,11 +102,10 @@ export const reactionsSection = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  /* gap: 16px; */
 
   span {
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 8px;
     color: #000;
