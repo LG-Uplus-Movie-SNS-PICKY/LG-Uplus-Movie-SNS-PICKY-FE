@@ -244,7 +244,7 @@ export default function SocialPost() {
           </div>
           <div css={movieGenres}>
             {selectedMovie?.genres?.length > 0 ? (
-              selectedMovie.genres.map((genre, idx) => (
+              selectedMovie.genres.slice(0, 3).map((genre, idx) => (
                 <span key={`${genre.genreId}-${idx}`}>
                   {genre.name in GENRE_EMOJI ? (
                     <>
@@ -254,8 +254,7 @@ export default function SocialPost() {
                     </>
                   ) : (
                     genre.name
-                  )}{" "}
-                  {/* 매칭되지 않을 경우 기본 이름만 출력 */}
+                  )}
                 </span>
               ))
             ) : (
