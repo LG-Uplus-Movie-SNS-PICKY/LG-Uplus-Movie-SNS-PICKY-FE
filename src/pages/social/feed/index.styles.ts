@@ -54,7 +54,7 @@ export const textSection = css`
   gap: 2px;
 `;
 
-export const movieTitle = css`
+export const movieTitleStyle = css`
   color: #9d9d9d;
   font-size: 12px;
   font-weight: 400;
