@@ -49,7 +49,8 @@ interface MovieData {
   movieId: number;
   movieTitle: string;
   releaseDate: string;
-  genres: string[];
+  genres: { genreId: number; name: string }[];
+  originalLanguage: string;
 }
 
 export default function SocialPost() {
@@ -83,7 +84,6 @@ export default function SocialPost() {
       try {
         const results = await fetchMovieSearch(value);
         setFilteredMovies(results);
-        console.log(results);
       } catch (error) {
         console.error("영화 검색 중 오류 발생:", error);
       }
@@ -93,13 +93,17 @@ export default function SocialPost() {
   };
 
   const handleMovieSelect = (movie: MovieData) => {
-    console.log("선택된 영화:", movie);
+    console.log("선택된 영화:", movie.genres);
 
     setSelectedMovie({
       movieId: movie.movieId,
       movieTitle: movie.movieTitle,
       releaseDate: movie.releaseDate || "정보 없음", // 기본값 설정
-      genres: movie.genres?.length > 0 ? movie.genres : ["장르 정보 없음"],
+      genres:
+        movie.genres?.length > 0
+          ? movie.genres
+          : [{ genreId: 0, name: "장르 정보 없음" }],
+      originalLanguage: movie.originalLanguage,
     });
     setSearchTerm(movie.movieTitle);
     setFilteredMovies([]);
@@ -238,8 +242,8 @@ export default function SocialPost() {
           </div>
           <div css={movieGenres}>
             {selectedMovie?.genres?.length > 0 ? (
-              selectedMovie.genres.map((genre: string, index: number) => (
-                <span key={`${genre}-${index}`}>{genre}</span>
+              selectedMovie.genres.map((genre, idx) => (
+                <span key={`${genre}-${idx}`}>{genre.name}</span>
               ))
             ) : (
               <span>장르 정보가 없습니다.</span>
