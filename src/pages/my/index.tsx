@@ -169,21 +169,8 @@ function My() {
   };
 
   const openFollowersModal = async (initialTab: "followers" | "followings") => {
-    try {
-      setActiveTab(initialTab); // 클릭된 탭을 활성화
-      setIsFollowersModalOpen(true);
-
-      // 팔로워와 팔로잉 데이터를 동시에 불러옴
-      // const [followersResponse, followingsResponse] = await Promise.all([
-      //   fetchFollowersList(nickname as string),
-      //   fetchFollowingsList(nickname as string),
-      // ]);
-
-      // setFollowersList(followersResponse.data.content);
-      // setFollowingsList(followingsResponse.data.content);
-    } catch (error) {
-      console.error("Error fetching follow lists:", error);
-    }
+    setActiveTab(initialTab); // 클릭된 탭을 활성화
+    setIsFollowersModalOpen(true);
   };
 
   const closeFollowersModal = () => {
