@@ -82,6 +82,10 @@ export const carouselWrapper = css`
   cursor: pointer;
 `;
 
+export const carouselWrapper = css`
+  position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
+`;
+
 export const carouselSection = css`
   width: 100%;
   overflow-x: auto;
@@ -174,6 +178,7 @@ export const modalContent = css`
   button:first-of-type {
     border-radius: 10px 10px 0 0;
     border-bottom: 0.5px solid rgba(217, 217, 217, 0.85);
+    color: #000;
   }
 
   button:last-of-type {
