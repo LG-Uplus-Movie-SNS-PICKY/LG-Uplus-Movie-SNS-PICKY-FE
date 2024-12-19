@@ -85,7 +85,6 @@ function My() {
   useEffect(() => {
     const loadUserProfileAndInfo = async () => {
       if (!nickname) {
-        console.error("닉네임이 없습니다.");
         setError("닉네임이 제공되지 않았습니다.");
         return;
       }
@@ -138,10 +137,8 @@ function My() {
   // 팔로우/팔로잉 버튼 클릭 시
   const handleFollowClick = async () => {
     const followingId = userId; // 팔로우 대상 ID
-    console.log("handleFollowClick - 팔로우 대상 followingId:", followingId);
 
     if (!followingId || !nickname) {
-      console.error("팔로우 대상 ID 또는 닉네임이 없습니다.");
       return;
     }
 
@@ -151,7 +148,6 @@ function My() {
 
       // 서버에 팔로우/언팔로우 요청 보내기
       const response = await toggleFollow(followingId);
-      console.log("API 응답:", response);
 
       if (!response.success) {
         throw new Error(response.message || "팔로우 처리 실패");
@@ -159,14 +155,11 @@ function My() {
 
       // 서버에서 최신 사용자 정보 가져와 업데이트
       const updatedUserInfo = await fetchUserInfo(nickname);
-      console.log("최신 사용자 정보:", updatedUserInfo);
 
       // 팔로우/팔로잉 수 상태 업데이트
       setFollowersCount(updatedUserInfo.data.followerCount ?? 0);
       setFollowingCount(updatedUserInfo.data.followingCount ?? 0);
     } catch (err) {
-      console.error("팔로우 처리 중 오류 발생:", err);
-
       // 에러 발생 시 버튼 상태 복구
       setIsFollowing((prev) => !prev);
     }

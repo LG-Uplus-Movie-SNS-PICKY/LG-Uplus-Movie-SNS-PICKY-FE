@@ -52,7 +52,7 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
 
   return (
     <MovieInfoContainer>
-      <AdBannerContainer onClick={handleFormClick}/>
+      <AdBannerContainer onClick={handleFormClick} />
       <InfoContainer>
         <Title>줄거리</Title>
         <ContentText>{content}</ContentText>
@@ -76,7 +76,6 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
           css={styles.CastContainer()}
         >
           {groupedCast.map((group, index) => {
-            // console.log(group);
             return (
               <SwiperSlide key={index}>
                 {group.map((cast, idx) => (

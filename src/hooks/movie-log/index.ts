@@ -35,8 +35,6 @@ export const useFetchMovieLogByIdQuery = (movieId: number) => {
       fetchMovieLogsById(movieId, pageParam?.lastBoardId),
 
     getNextPageParam: (lastPage) => {
-      console.log(lastPage);
-
       if (!lastPage?.data?.last) {
         return {
           lastBoardId:

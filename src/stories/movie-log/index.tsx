@@ -18,7 +18,6 @@ interface MovieLogProps {
 }
 
 export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
-  // console.log(boardContent);
   return (
     <Swiper
       slidesPerView={1}

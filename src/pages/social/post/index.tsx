@@ -94,7 +94,7 @@ export default function SocialPost() {
 
   const handleMovieSelect = (movie: MovieData) => {
     console.log("선택된 영화:", movie.genres);
-
+        
     setSelectedMovie({
       movieId: movie.movieId,
       movieTitle: movie.movieTitle,
@@ -184,11 +184,9 @@ export default function SocialPost() {
 
     if (files && files.length > 0) {
       const fileArray = Array.from(files);
-      // console.log("선택된 파일들:", fileArray);
 
       setImages((prevImages) => {
         const updatedImages = [...prevImages, ...fileArray];
-        // console.log("업데이트된 이미지 상태:", updatedImages);
         return updatedImages;
       });
     }
@@ -196,7 +194,6 @@ export default function SocialPost() {
 
   const handleShareClick = async () => {
     if (!selectedMovie) return;
-    console.log("전송될 movieId:", selectedMovie?.movieId);
 
     try {
       await createBoard(reviewText, 13, selectedSpoiler === "있음", mediaFiles);
@@ -206,7 +203,6 @@ export default function SocialPost() {
 
       setTimeout(() => navigate("/movie-log"), 1500);
     } catch (error) {
-      console.error("게시글 생성 중 오류 발생:", error);
       setToastMessage("게시글 생성에 실패했습니다.");
     }
   };

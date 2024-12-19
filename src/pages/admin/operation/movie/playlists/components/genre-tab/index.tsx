@@ -30,19 +30,6 @@ function GenreTab({ setSelectButton, selectedGenres }: GenreButtonsProps) {
 
   const genres = loadable.contents.data;
 
-  useEffect(() => {
-    console.log("loadable");
-  }, [loadable]);
-  useEffect(() => {
-    console.log("genres");
-  }, [genres]);
-  useEffect(() => {
-    console.log("setSelectButton");
-  }, [setSelectButton]);
-  useEffect(() => {
-    console.log("selectedGenres");
-  }, [selectedGenres]);
-
   return (
     <Swiper
       slidesPerView={"auto"}

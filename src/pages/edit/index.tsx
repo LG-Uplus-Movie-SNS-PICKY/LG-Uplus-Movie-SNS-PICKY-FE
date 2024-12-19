@@ -71,7 +71,6 @@ export default function ProfileEditPage() {
     const fetchUserData = async () => {
       try {
         const data = await fetchGetUserInfo();
-        console.log("Fetched User Data:", data.data);
         setUserData({
           name: data.data.name,
           nickname: data.data.nickname,
@@ -87,7 +86,6 @@ export default function ProfileEditPage() {
         setNickname(data.data.nickname);
         setProfileImage(data.data.profileUrl);
       } catch (error) {
-        console.error("사용자 정보를 불러오는 중 오류가 발생했습니다:", error);
         showToast("사용자 정보를 불러오는 데 실패했습니다.");
       }
     };
@@ -117,7 +115,6 @@ export default function ProfileEditPage() {
             setIsNicknameValid(true);
           }
         } catch (error) {
-          console.error("닉네임 확인 중 오류 발생:", error);
           setNicknameError("닉네임 확인 중 오류가 발생했습니다.");
           setNicknameSuccess(null);
           setIsNicknameValid(false);
@@ -218,9 +215,6 @@ export default function ProfileEditPage() {
             profileImage !== userData.profile ? profileImage : prev.profile,
         }));
 
-        console.log(profileImage);
-        console.log(userData.profile);
-
         // 쿠키와 전역 상태로 저장해 둔 사용자 정보 변환
 
         // 전역 상태 업데이트
@@ -268,7 +262,6 @@ export default function ProfileEditPage() {
         throw new Error("프로필 수정 중 문제가 발생했습니다.");
       }
     } catch (error) {
-      console.error("프로필 수정 중 오류 발생:", error);
       showToast("프로필 수정 중 문제가 발생했습니다. 다시 시도해주세요.");
     }
   };

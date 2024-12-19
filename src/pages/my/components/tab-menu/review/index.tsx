@@ -182,7 +182,6 @@ function LineReviewContent({
 
       showToast("한줄평 수정이 완료되었습니다.", "up");
     } catch (err) {
-      console.error("한줄평 수정 중 오류 발생", err);
       showToast("한줄평 수정에 실패했습니다.", "down");
     } finally {
       closeEditModal();
@@ -230,7 +229,6 @@ function LineReviewContent({
 
       await showToast("한줄평 삭제가 완료되었습니다.", "none");
     } catch (err) {
-      console.error("한줄평 삭제 중 오류 발생:", err);
       await showToast("한줄평 삭제에 실패했습니다.", "none");
     } finally {
       handleModalClose(); // 모달 닫기
