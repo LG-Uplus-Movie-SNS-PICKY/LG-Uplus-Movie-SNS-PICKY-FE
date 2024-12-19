@@ -94,9 +94,12 @@ export default function SearchPage() {
     { id: number; title?: string; nickname?: string; poster?: string }[]
   >([]);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
-  const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    direction: "none" | "up" | "down";
+  } | null>(null);
 
-  const showToast = (message: string, direction: 'none' | 'up' | 'down') => {
+  const showToast = (message: string, direction: "none" | "up" | "down") => {
     setToast({ message, direction });
     setTimeout(() => setToast(null), 2000);
   };
@@ -104,10 +107,18 @@ export default function SearchPage() {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setActiveIndex((prevIndex) => (prevIndex === -1 ? 0 : prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0));
+      setActiveIndex((prevIndex) =>
+        prevIndex === -1
+          ? 0
+          : prevIndex < searchResults.length - 1
+          ? prevIndex + 1
+          : 0
+      );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setActiveIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1));
+      setActiveIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
+      );
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (activeIndex >= 0 && activeIndex < searchResults.length) {
@@ -186,7 +197,11 @@ export default function SearchPage() {
     }
   };
 
-  const handleNavigate = (result: { id: number; title?: string; nickname?: string }) => {
+  const handleNavigate = (result: {
+    id: number;
+    title?: string;
+    nickname?: string;
+  }) => {
     const searchTextToAdd = result.title || result.nickname || "";
     updateRecentSearches(searchTextToAdd); // 최근 검색어 업데이트
     if (selectedFilter === "영화") {
@@ -212,7 +227,6 @@ export default function SearchPage() {
       const response = await fetchMovieSearch(suggestion); // API 호출
       if (response?.data?.length > 0) {
         const matchedResult = response.data[0]; // 첫 번째 결과를 가져옴
-        console.log("Matched Result:", matchedResult);
 
         // 해당 영화의 상세 페이지로 이동
         navigate(`/movie/${matchedResult.movieId}`);
@@ -220,7 +234,6 @@ export default function SearchPage() {
         // 검색 결과가 없는 경우 처리
       }
     } catch (error) {
-      console.error("최근 검색어 클릭 중 오류 발생:", error);
       showToast("오류가 발생했습니다. 다시 시도해주세요.", "up");
     }
   };
@@ -252,18 +265,13 @@ export default function SearchPage() {
   const fetchSearchResults = async () => {
     if (!searchText.trim()) return;
 
-    console.log("fetchSearchResults 호출됨 - 검색어:", searchText);
-    console.log("선택된 필터:", selectedFilter);
-
     try {
       const lowerCaseSearchText = searchText.toLowerCase();
       if (selectedFilter === "영화") {
         const movies = await fetchMovieSearch(lowerCaseSearchText);
-        console.log("API 응답(영화):", movies);
 
         if (Array.isArray(movies)) {
           setSearchResults(
-
             movies.map((movie: Movie) => ({
               id: movie.movieId,
               title: movie.movieTitle,
@@ -273,7 +281,6 @@ export default function SearchPage() {
         }
       } else if (selectedFilter === "유저") {
         const users = await fetchUserSearch(lowerCaseSearchText);
-        console.log("API 응답(유저):", users);
 
         if (Array.isArray(users)) {
           setSearchResults(
@@ -285,12 +292,6 @@ export default function SearchPage() {
         }
       }
     } catch (error) {
-      console.error("검색 결과를 가져오는 중 오류 발생:", error);
-
-      if (error instanceof Error) {
-        console.error("에러 메시지:", error.message);
-      }
-
       setSearchResults([]);
     }
   };
@@ -345,7 +346,6 @@ export default function SearchPage() {
   return (
     <>
       <SEO title="PICKY: SEARCH" />
-
       {/* 헤더 컨테이너 */}
       <div css={headerStyle}>
         {/* 뒤로가기 버튼 */}
@@ -374,8 +374,8 @@ export default function SearchPage() {
                   selectedFilter
                     ? filterMiniActiveIcon
                     : isFilterActive
-                      ? filterActiveIcon
-                      : filterIcon
+                    ? filterActiveIcon
+                    : filterIcon
                 }
                 alt="filterIcon"
               />
@@ -434,7 +434,6 @@ export default function SearchPage() {
           </div>
         </div>
       </div>
-
       <div css={recentSearchHeaderStyle}>
         <div css={titleStyle}>
           {searchText.trim() === "" ? "최근검색어" : "검색결과"}
@@ -443,7 +442,6 @@ export default function SearchPage() {
           전체 삭제
         </button>
       </div>
-
       {searchText.trim() === "" && recentSearches.length === 0 && (
         <div css={emptyStateContainerStyle}>
           <div css={emptyIconStyle}>
@@ -457,7 +455,6 @@ export default function SearchPage() {
           <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
         </div>
       )}
-
       {searchText.trim() !== "" && searchResults.length > 0 && (
         <ul css={suggestionListStyle}>
           {searchResults.map((result, index) => {
@@ -476,14 +473,13 @@ export default function SearchPage() {
                     } else if (selectedFilter === "유저") {
                       navigate(`/user/${result.nickname}`); // 유저 경로로 이동
                     } else {
-                      console.error("알 수 없는 필터 선택: ", selectedFilter);
                     }
-                  } else {
-                    console.error("ID가 없거나 유효하지 않습니다.");
                   }
                 }}
                 style={{
-                  backgroundColor: isActive ? "rgba(240, 240, 240, 0.5)" : "transparent", // 활성화된 항목의 스타일
+                  backgroundColor: isActive
+                    ? "rgba(240, 240, 240, 0.5)"
+                    : "transparent", // 활성화된 항목의 스타일
                   padding: "4px 8px",
                   borderRadius: "4px",
                   cursor: "pointer",
@@ -499,7 +495,6 @@ export default function SearchPage() {
           })}
         </ul>
       )}
-
       {searchText.trim() === "" && recentSearches.length > 0 && (
         <ul css={recentSearchListStyle}>
           {recentSearches.map((search, index) => (
@@ -508,27 +503,26 @@ export default function SearchPage() {
               onClick={async () => {
                 try {
                   const response = await fetchMovieSearch(search); // API 호출
-                  console.log("API Response: ", response); // 전체 응답 데이터 출력
 
-                  if (response?.length > 0) { // response가 배열이고 데이터가 있을 경우
+                  if (response?.length > 0) {
+                    // response가 배열이고 데이터가 있을 경우
                     const matchedResult = response.find(
                       (movie: Movie) =>
                         movie.movieTitle.toLowerCase() === search.toLowerCase()
                     );
 
                     if (matchedResult) {
-                      console.log("Matched Movie: ", matchedResult); // 일치하는 영화 데이터 출력
                       navigate(`/movie/${matchedResult.movieId}`); // movieId를 기반으로 경로 이동
                     } else {
-                      console.warn("검색 결과와 일치하는 영화가 없습니다.");
                       showToast("검색 결과와 일치하는 영화가 없습니다.", "up");
                     }
                   } else {
-                    console.warn("검색 결과가 없습니다.");
-                    showToast("해당 영화의 상세 정보를 찾을 수 없습니다.", "up");
+                    showToast(
+                      "해당 영화의 상세 정보를 찾을 수 없습니다.",
+                      "up"
+                    );
                   }
                 } catch (error) {
-                  console.error("오류 발생:", error);
                   showToast("오류가 발생했습니다. 다시 시도해주세요.", "up");
                 }
               }}
@@ -560,7 +554,8 @@ export default function SearchPage() {
           ))}
         </ul>
       )}
-      {toast && <Toast message={toast.message} direction={toast.direction} />} {/* Toast 메시지 렌더링 */}
+      {toast && <Toast message={toast.message} direction={toast.direction} />}{" "}
+      {/* Toast 메시지 렌더링 */}
     </>
   );
 }

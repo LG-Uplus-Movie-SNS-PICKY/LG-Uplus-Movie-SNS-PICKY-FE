@@ -195,7 +195,6 @@ export const fetchFollowingsList = async (
   const params = new URLSearchParams({ size: "10" });
 
   if (lastFollowerId) {
-    console.log(lastFollowerId);
     params.append("lastFollowingId", lastFollowerId.toString());
   }
 

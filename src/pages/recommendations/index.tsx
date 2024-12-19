@@ -33,10 +33,6 @@ export default function MovieRecommendationPage() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!isLoading) console.log(recommendMovies);
-  }, [isLoading]);
-
   return (
     <>
       <SEO

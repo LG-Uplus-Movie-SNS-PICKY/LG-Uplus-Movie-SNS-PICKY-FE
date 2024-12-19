@@ -50,10 +50,6 @@ function PlayListSection() {
     }
   }, [inView, hasNextPage, isFetchingNextPage]);
 
-  useEffect(() => {
-    if (!isLoading) console.log(playlists);
-  }, [isLoading]);
-
   if (isLoading)
     return (
       <div
