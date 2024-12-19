@@ -109,14 +109,24 @@ export default function MovieLogList() {
   };
 
   const calculateTimeAgo = (createdDate: string) => {
+    // 현재 시간을 한국 시간(UTC+9)으로 변환
     const now = new Date();
-    const created = new Date(createdDate);
-    const diff = Math.floor((now.getTime() - created.getTime()) / 1000);
 
-    if (diff < 60) return `${diff}초 전`;
-    if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
-    if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
-    return `${Math.floor(diff / 86400)}일 전`;
+    // 생성 시간을 한국 시간(UTC+9)으로 변환
+    const created = new Date(createdDate);
+    const createdKST = new Date(created.getTime() + 9 * 60 * 60 * 1000);
+    console.log(now);
+    // 두 시간의 차이를 초 단위로 계산
+    const diffInSeconds = Math.floor(
+      (now.getTime() - createdKST.getTime()) / 1000
+    );
+
+    // 조건에 따라 시간 계산
+    if (diffInSeconds < 300) return "방금"; // 5분 미만
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}분 전`; // 1시간 미만
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}시간 전`; // 24시간 미만
+    return `${Math.floor(diffInSeconds / 86400)}일 전`; // 24시간 이상
   };
 
   const handleToggleLike = async (boardId: number) => {
