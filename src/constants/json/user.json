@@ -83,7 +83,7 @@
     "user_name": "최우진",
     "user_nickname": "우진쓰",
     "user_gender": "Female",
-    "user_profile_url": "https://picky-ureca.s3.ap-northeast-2.amazonaws.com/profile/1b7c4646-97ea-4df9-942d-7ced9ae074f370297abe-5182-439f-97f7-c5a5ed77035e.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241216T064434Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIASBMI4SQN754EF3M7%2F20241216%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=19c25c53c66c194e20ae4c0f45f77ba9057288107f82e9a5d658416c67ae4be7",
+    "user_profile_url": "https://picky-ureca.s3.ap-northeast-2.amazonaws.com/profile/386bb8ab-4988-4073-8066-27c04cd25856db89d05f-971a-4a75-872d-cc1eef56653f.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241218T093058Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIASBMI4SQN754EF3M7%2F20241218%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=2f60a3aaa2d0113b9073d62f1f6bc66f46c5b91c3d394a1a1ed67d4d9cdddf42",
     "user_birthdate": "2002-01-01",
     "user_social_platform": "Naver",
     "user_role": "Criric",

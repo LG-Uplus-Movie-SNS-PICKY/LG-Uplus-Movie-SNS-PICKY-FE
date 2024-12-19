@@ -138,6 +138,10 @@ const MovieReview = forwardRef<HTMLDivElement, ReviewProps>(({ review, movieId, 
     }
   };
 
+  useEffect(() => {
+    setCurrentReview(review);
+  }, [review]);
+
   // 별점 렌더링
   const renderStars = (rating: number) => (
     <StarContainer>
@@ -153,7 +157,7 @@ const MovieReview = forwardRef<HTMLDivElement, ReviewProps>(({ review, movieId, 
     const date = new Date(dateString); // UTC 기준
     const KST_OFFSET = 9 * 60 * 60 * 1000; // 9시간(밀리초 단위)
     const kstDate = new Date(date.getTime() + KST_OFFSET);
-  
+
     return kstDate.toLocaleString("ko-KR", {
       year: "numeric",
       month: "2-digit",

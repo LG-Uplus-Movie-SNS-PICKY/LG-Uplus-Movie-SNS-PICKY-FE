@@ -158,6 +158,7 @@ export const clearAllButtonStyle = css`
   font-weight: 400;
   line-height: 16px;
   letter-spacing: 0.5px;
+  cursor: pointer;
 `;
 
 export const emptyStateContainerStyle = css`
@@ -221,6 +222,7 @@ export const suggestionListStyle = css`
   align-items: flex-start;
   gap: 20px;
   align-self: stretch;
+  cursor: pointer;
 
   li {
     display: flex;
