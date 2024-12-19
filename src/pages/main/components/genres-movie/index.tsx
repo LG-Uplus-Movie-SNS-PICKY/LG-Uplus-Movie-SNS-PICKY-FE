@@ -50,7 +50,18 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
 
         {/* Select Genre Movies */}
         <div className="select-genre">
-          {isLoading && <Loading />}
+          {isLoading && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
+            </div>
+          )}
           {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
             ? genreMovies?.pages[0].data.content
                 .slice(0, 9)
