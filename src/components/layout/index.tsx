@@ -39,7 +39,6 @@ function Layout({ children }: LayoutProps): JSX.Element {
     const token = getCookie("token") || {};
     const user = getCookie("user") || {};
     if (isEmpty(token) && !isEmpty(user)) {
-      console.log("Layout!! Remove Cookie");
       removeCookie("token");
     }
 

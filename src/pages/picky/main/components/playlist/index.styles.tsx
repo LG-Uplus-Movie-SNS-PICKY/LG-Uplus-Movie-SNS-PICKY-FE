@@ -12,7 +12,7 @@ export default {
 
       & > div.inView {
         width: 100%;
-        padding: 16px;
+        height: 10px;
       }
     `;
   },

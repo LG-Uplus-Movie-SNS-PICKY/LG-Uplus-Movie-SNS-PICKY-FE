@@ -14,11 +14,12 @@ export const banner = css`
   height: 80px;
   margin: 16px 0;
   background: #000000;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 export const feedContainer = css`
   width: 100%;
-  padding: 16px 0;
   border: none;
 `;
 
@@ -94,7 +95,7 @@ export const reactionsContainer = css`
   align-items: center;
   padding: 16px 0;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 `;
 
 export const reactionsSection = css`

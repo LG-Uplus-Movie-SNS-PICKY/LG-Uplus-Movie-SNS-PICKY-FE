@@ -2,7 +2,6 @@ import { css } from "@emotion/react";
 
 export const wrapper = css`
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,12 +14,12 @@ export const banner = css`
   height: 80px;
   margin: 16px 0;
   background: #000000;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 export const feedContainer = css`
   width: 100%;
-  flex: 1;
-  /* padding: 16px 0; */
   border: none;
 `;
 
@@ -28,7 +27,6 @@ export const feedItem = css`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* flex-direction: column; */
 `;
 
 export const infoSection = css`
@@ -76,10 +74,12 @@ export const contentSection = css`
   font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.64px;
+  cursor: pointer;
 `;
 
 export const carouselWrapper = css`
   position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
+  cursor: pointer;
 `;
 
 export const carouselSection = css`
@@ -95,36 +95,33 @@ export const reactionsContainer = css`
   align-items: center;
   padding: 16px 0;
   justify-content: space-between;
-  margin-bottom: 32px;
+  margin-bottom: 16px;
 `;
 
 export const reactionsSection = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  /* gap: 16px; */
 
   span {
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 8px;
     color: #000;
     font-size: 16px;
     font-weight: 600;
-    line-height: normal;
     letter-spacing: -0.64px;
     cursor: pointer;
 
-    &.reaction {
-      min-width: 58px; /* 좋아요와 댓글 버튼 각각의 최소 너비를 고정 */
-      justify-content: space-between; /* 버튼 내용 간 간격 유지 */
-    }
+    /* 숫자와 아이콘 사이 최소 너비 설정 */
+    min-width: 58px; /* 최소 너비 고정 */
+    justify-content: space-between;
 
     .like-number,
     .comment-number {
-      min-width: 24px; /* 숫자의 최소 너비를 고정 */
-      text-align: center; /* 숫자를 중앙 정렬 */
+      min-width: 24px; /* 숫자의 최소 너비 */
+      text-align: center; /* 숫자 중앙 정렬 */
     }
   }
 `;

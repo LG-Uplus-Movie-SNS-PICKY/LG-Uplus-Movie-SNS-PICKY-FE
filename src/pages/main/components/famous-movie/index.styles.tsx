@@ -3,7 +3,7 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   famousContainer(padding: boolean = false): SerializedStyles {
     return css`
-      padding: ${padding ? "24px 0 32px 16px" : "32px 0 32px 16px"};
+      padding: ${padding ? "0 0 16px 16px" : "32px 0 32px 16px"};
 
       width: 100%;
       display: flex;

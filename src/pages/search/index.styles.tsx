@@ -5,15 +5,18 @@ export const containerStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  max-width: 768px;
+  /* max-width: 768px; */
   width: 100%;
 `;
 
 export const headerStyle = css`
+  width: 100%;
+
   display: flex;
   align-items: center;
+  justify-content: center;
+
   padding: 16px;
-  width: 100%;
 `;
 
 export const backButtonStyle = css`
@@ -22,8 +25,7 @@ export const backButtonStyle = css`
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-right: 8px;
-  font-size: 16px;
+  /* margin-right: 8px; */
 `;
 
 export const filterContainerStyle = css`
@@ -53,10 +55,9 @@ export const filterLabelStyle = css`
   letter-spacing: 0.5px;
 `;
 
-export const filterModalStyle = css`
+export const filterModalStyle = (isFilterActive: boolean) => css`
   position: absolute;
-  top: 55px;
-  left: 56px;
+  top: 36px;
   background: #ffffff;
   border-radius: 10px;
   border: 1px solid #d9d9d9;
@@ -80,16 +81,15 @@ export const filterOptionStyle = css`
 `;
 
 export const filterButtonStyle = css`
+  position: relative;
   display: flex;
-  height: 38px;
+  /* width: 80px; */
+  /* height: 38px; */
   align-items: center;
   justify-content: center;
   /* flex-direction: column; */
-  background-color: #f1f1f1;
-  padding: 12px 0 8px 16px;
-  border-radius: 50px 0px 0px 50px;
-  background: #f1f1f1;
-  font-family: 400;
+  padding: 8px 0 8px 12px;
+  text-wrap: nowrap;
 `;
 
 export const filterIconStyle = css`
@@ -99,23 +99,17 @@ export const filterIconStyle = css`
 `;
 
 export const searchInputStyle = css`
-  display: flex;
-  padding: 8px 12px 8px 8px;
-  justify-content: space-between;
-  height: 38px;
-  align-items: center;
-  flex-shrink: 0;
-  border-top-right-radius: 50px;
-  border-bottom-right-radius: 50px;
-  background: #f1f1f1;
+  padding: 4px 0 4px 8px;
+
+  background-color: transparent;
   flex: 1;
-  border: 1.5px solid transparent;
+  border: none;
   color: #000000;
   font-family: Pretendard;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  /* letter-spacing: 0.5px; */
   cursor: pointer;
 
   &:focus {
@@ -166,7 +160,6 @@ export const emptyStateContainerStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 140px;
   flex: 1;
   color: #c8c8c8;
   text-align: center;
@@ -195,22 +188,24 @@ export const emptyTextStyle = css`
   line-height: normal;
 `;
 export const searchButtonStyle = css`
-  position: absolute;
-  right: 16px;
-  top: 10px;
   background: none;
   display: flex;
   border: none;
+  padding: 0 12px 0 0;
   cursor: pointer;
 `;
 
 export const searchInputContainerStyle = (isFocused: boolean) => css`
+  flex: 1;
+
+  background-color: #f1f1f1;
+
   display: flex;
   align-items: center;
-  position: relative;
-  width: 100%;
+  /* position: relative; */
+
   border-radius: 50px;
-  border: 1.5px solid ${isFocused ? "#FF084A" : "transparent"};
+  border: 1px solid ${isFocused ? "#FF084A" : "transparent"};
   transition: border-color 0.3s ease;
 `;
 

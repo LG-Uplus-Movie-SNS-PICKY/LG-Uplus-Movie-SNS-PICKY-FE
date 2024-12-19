@@ -33,9 +33,15 @@ import {
   slideContent,
 } from "./index.styles";
 import SEO from "@components/seo";
-import { fetchGetUserInfo, fetchSignUpUser } from "@api/user";
+import {
+  fetchGetUserInfo,
+  fetchPostRegisterUserEmail,
+  fetchSignUpUser,
+} from "@api/user";
 import { getCookie, removeCookie, setCookie } from "@util/cookie";
 import { isLogin } from "@recoil/atoms/isLoginState";
+
+const regex = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
 
 export default function Signup() {
   const setIsLoginState = useSetRecoilState(isLogin);
@@ -208,7 +214,9 @@ export default function Signup() {
 
       showToast("회원가입이 완료되었습니다!");
 
-      console.log("This Pages is Sigin-Up!!");
+      // 이메일 발송 API 호출
+      await fetchPostRegisterUserEmail();
+
       removeCookie("token");
       navigate("/");
     } catch (error) {

@@ -57,12 +57,20 @@ export default {
 
       & > .more-genre-movies {
         cursor: pointer;
-        padding: 5px 16px;
-        font-size: 12px;
-        font-weight: 600;
-        border-radius: 6px;
-        background-color: #f6f8fa;
-        border: 1px solid #d1d9e0;
+
+        display: flex;
+        justify-content: center;
+
+        & > button {
+          padding: 8px 16px;
+          font-size: 12px;
+          font-weight: 600;
+          border-radius: 50px;
+          background-color: #ffffff;
+          border: 1px solid #d9d9d9;
+          color: #5e5e5e;
+          cursor: pointer;
+        }
       }
 
       margin-bottom: 24px;

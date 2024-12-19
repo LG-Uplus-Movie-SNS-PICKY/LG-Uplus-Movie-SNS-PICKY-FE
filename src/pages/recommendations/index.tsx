@@ -28,13 +28,13 @@ interface Movie {
 }
 
 export default function MovieRecommendationPage() {
-  const { data, isLoading } = useRecommnedMovieQuery();
+  const { data: recommendMovies, isLoading } = useRecommnedMovieQuery();
   const { isLoginInfo } = useRecoilValue(isLogin);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading) console.log(data);
+    if (!isLoading) console.log(recommendMovies);
   }, [isLoading]);
 
   return (
@@ -61,11 +61,12 @@ export default function MovieRecommendationPage() {
         {/* 영화 리스트 */}
         <div css={movieContainerStyle}>
           {isLoading && <Loading />}
-          {!isLoading && data.data.length === 0 ? (
-            <p>추천할 영화가 없습니다. 나중에 다시 시도해주세요.</p>
+          {Array.isArray(recommendMovies?.data) &&
+          recommendMovies?.data?.length === 0 ? (
+            <p className="empty">추천할 영화가 없습니다.</p>
           ) : (
             <div css={movieGridStyle}>
-              {data?.data.map((movie: RecommendMovieDataTypes) => (
+              {recommendMovies?.data?.map((movie: RecommendMovieDataTypes) => (
                 <div
                   key={movie.movieId}
                   onClick={() => navigate(`/movie/${movie.movieId}`)}
@@ -82,8 +83,18 @@ export default function MovieRecommendationPage() {
               ))}
             </div>
           )}
+          {/* {!isLoading && data.data.length === 0 ? (
+            <p>추천할 영화가 없습니다. 나중에 다시 시도해주세요.</p>
+          ) : (
+            
+          )} */}
         </div>
       </div>
     </>
   );
 }
+
+//   {data?.data.map((movie: RecommendMovieDataTypes) => (
+
+//   ))}
+// </div>

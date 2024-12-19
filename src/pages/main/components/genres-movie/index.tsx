@@ -50,7 +50,18 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
 
         {/* Select Genre Movies */}
         <div className="select-genre">
-          {isLoading && <Loading />}
+          {isLoading && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
+            </div>
+          )}
           {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
             ? genreMovies?.pages[0].data.content
                 .slice(0, 9)
@@ -70,12 +81,11 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
         </div>
 
         {isLogin && (
-          <button
-            className="more-genre-movies"
-            onClick={() => navigate(`/genre/${selectButton}`)}
-          >
-            더보기
-          </button>
+          <div className="more-genre-movies">
+            <button onClick={() => navigate(`/genre/${selectButton}`)}>
+              더보기
+            </button>
+          </div>
         )}
       </div>
     </div>

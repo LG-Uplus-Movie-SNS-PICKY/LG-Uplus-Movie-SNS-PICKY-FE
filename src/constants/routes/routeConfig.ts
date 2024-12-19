@@ -26,6 +26,8 @@ export const routeConfig: RouteConfigTypes[] = [
     margin: "0 0 60px 0",
   },
   { path: "/movie-log", header: "main", gnb: true, margin: "60px 0" },
+  { path: "/movie-log/add", gnb: false, margin: "0" },
+  { path: "/movie-log/edit", gnb: false, margin: "0" },
   { path: "/movie-log/:id", header: "main", gnb: true, margin: "60px 0" },
   {
     path: "/movie-log/detail/:boardId",
@@ -34,7 +36,6 @@ export const routeConfig: RouteConfigTypes[] = [
     gnb: false,
     margin: "60px 0 0 0",
   },
-  { path: "/movie-log/add", gnb: false, margin: "0" },
   { path: "/movie-log/:boardId/edit", gnb: false, margin: "0" },
   { path: "/picky", header: "main", gnb: true, margin: "60px 0" },
   {

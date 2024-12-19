@@ -29,12 +29,11 @@ function GenreTab() {
   return (
     genres.length > 0 && (
       <Swiper
-        key={crypto.randomUUID()}
+        // key={crypto.randomUUID()}
         slidesPerView={"auto"}
         spaceBetween={10}
         direction="horizontal"
         freeMode={true}
-        loop={true}
         modules={[FreeMode, Mousewheel]}
         mousewheel={{
           forceToAxis: true,

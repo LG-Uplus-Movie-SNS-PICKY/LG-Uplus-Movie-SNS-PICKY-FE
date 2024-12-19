@@ -16,6 +16,7 @@ export const postContainer = css`
   align-items: center;
   justify-content: center;
   padding: 16px;
+  z-index: 0;
 `;
 
 export const pText = css`
@@ -337,7 +338,7 @@ export const movieInfo = css`
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 
-export const movieTitle = css`
+export const movieTitleStyle = css`
   color: #000;
   font-size: 24px;
   font-weight: 600;

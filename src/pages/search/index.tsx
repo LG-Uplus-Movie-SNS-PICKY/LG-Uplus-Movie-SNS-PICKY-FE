@@ -30,6 +30,7 @@ import {
   recentSearchListStyle,
   emptyTextStyle,
 } from "@pages/search/index.styles";
+
 import SEO from "@components/seo";
 import { Toast } from "@stories/toast";
 
@@ -255,8 +256,9 @@ export default function SearchPage() {
     console.log("선택된 필터:", selectedFilter);
 
     try {
+      const lowerCaseSearchText = searchText.toLowerCase();
       if (selectedFilter === "영화") {
-        const movies = await fetchMovieSearch(searchText);
+        const movies = await fetchMovieSearch(lowerCaseSearchText);
         console.log("API 응답(영화):", movies);
 
         if (Array.isArray(movies)) {
@@ -270,7 +272,7 @@ export default function SearchPage() {
           );
         }
       } else if (selectedFilter === "유저") {
-        const users = await fetchUserSearch(searchText);
+        const users = await fetchUserSearch(lowerCaseSearchText);
         console.log("API 응답(유저):", users);
 
         if (Array.isArray(users)) {
@@ -344,8 +346,10 @@ export default function SearchPage() {
     <>
       <SEO title="PICKY: SEARCH" />
 
-      <div css={containerStyle}>
-        <div css={headerStyle}>
+      {/* 헤더 컨테이너 */}
+      <div css={headerStyle}>
+        {/* 뒤로가기 버튼 */}
+        <div>
           <button css={backButtonStyle}>
             <img
               src={backButton}
@@ -355,27 +359,56 @@ export default function SearchPage() {
               onClick={() => navigate(-1)}
             />
           </button>
-          <div css={searchInputContainerStyle(isSearchInputFocused)}>
-            <div
-              css={filterButtonStyle}
-              onClick={() => setIsFilterActive((prev) => !prev)}
-            >
-              <div css={filterContainerStyle}>
-                <img
-                  src={
-                    selectedFilter
-                      ? filterMiniActiveIcon
-                      : isFilterActive
-                        ? filterActiveIcon
-                        : filterIcon
-                  }
-                  alt="filterIcon"
-                />
-                <span css={filterLabelStyle}>{selectedFilter}</span>
-              </div>
+        </div>
+
+        {/* 입력창 */}
+        <div css={searchInputContainerStyle(isSearchInputFocused)}>
+          {/* 필터링 select btn */}
+          <div
+            css={filterButtonStyle}
+            onClick={() => setIsFilterActive((prev) => !prev)}
+          >
+            <div css={filterContainerStyle}>
+              <img
+                src={
+                  selectedFilter
+                    ? filterMiniActiveIcon
+                    : isFilterActive
+                      ? filterActiveIcon
+                      : filterIcon
+                }
+                alt="filterIcon"
+              />
+              <span css={filterLabelStyle}>{selectedFilter}</span>
             </div>
+
+            {isFilterActive && (
+              <div css={filterModalStyle(isFilterActive)} ref={filterRef}>
+                {["영화", "유저"].map((filter) => (
+                  <div
+                    key={filter}
+                    css={filterOptionStyle}
+                    onClick={() => handleFilterSelect(filter)}
+                  >
+                    {filter}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* 입력창 */}
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <input
               css={searchInputStyle}
+              type="text"
               placeholder="영화, 배우, 유저를 검색해보세요."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
@@ -394,150 +427,140 @@ export default function SearchPage() {
                 height="16"
               />
             </button>
+            {/* <input
+              
+              
+            /> */}
           </div>
         </div>
+      </div>
 
-        {isFilterActive && (
-          <div css={filterModalStyle} ref={filterRef}>
-            {["영화", "유저"].map((filter) => (
-              <div
-                key={filter}
-                css={filterOptionStyle}
-                onClick={() => handleFilterSelect(filter)}
-              >
-                {filter}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div css={recentSearchHeaderStyle}>
-          <div css={titleStyle}>
-            {searchText.trim() === "" ? "최근검색어" : "검색결과"}
-          </div>
-          <button css={clearAllButtonStyle} onClick={handleClearAll}>
-            전체 삭제
-          </button>
+      <div css={recentSearchHeaderStyle}>
+        <div css={titleStyle}>
+          {searchText.trim() === "" ? "최근검색어" : "검색결과"}
         </div>
+        <button css={clearAllButtonStyle} onClick={handleClearAll}>
+          전체 삭제
+        </button>
+      </div>
 
-        {searchText.trim() === "" && recentSearches.length === 0 && (
-          <div css={emptyStateContainerStyle}>
-            <div css={emptyIconStyle}>
-              <img
-                src={ClawMachine}
-                alt="Claw Machine"
-                width="100"
-                height="100"
-              />
-            </div>
-            <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
+      {searchText.trim() === "" && recentSearches.length === 0 && (
+        <div css={emptyStateContainerStyle}>
+          <div css={emptyIconStyle}>
+            <img
+              src={ClawMachine}
+              alt="Claw Machine"
+              width="100"
+              height="100"
+            />
           </div>
-        )}
+          <p css={emptyTextStyle}>최근 검색어가 없습니다.</p>
+        </div>
+      )}
 
-        {searchText.trim() !== "" && searchResults.length > 0 && (
-          <ul css={suggestionListStyle}>
-            {searchResults.map((result, index) => {
-              const suggestionText = result.title || result.nickname || ""; // undefined일 경우 빈 문자열로 처리
-              const isActive = index === activeIndex; // 활성화된 상태 여부
-              return (
-                <li
-                  key={index}
-                  onClick={() => {
-                    const searchTextToAdd = suggestionText; // 선택된 검색어 텍스트
-                    updateRecentSearches(searchTextToAdd); // 최근 검색어 업데이트
-                    if (result.id) {
-                      // 선택된 필터에 따라 경로를 동적으로 설정
-                      if (selectedFilter === "영화") {
-                        navigate(`/movie/${result.id}`); // 영화 경로로 이동
-                      } else if (selectedFilter === "유저") {
-                        navigate(`/user/${result.nickname}`); // 유저 경로로 이동
-                      } else {
-                        console.error("알 수 없는 필터 선택: ", selectedFilter);
-                      }
+      {searchText.trim() !== "" && searchResults.length > 0 && (
+        <ul css={suggestionListStyle}>
+          {searchResults.map((result, index) => {
+            const suggestionText = result.title || result.nickname || ""; // undefined일 경우 빈 문자열로 처리
+            const isActive = index === activeIndex; // 활성화된 상태 여부
+            return (
+              <li
+                key={index}
+                onClick={() => {
+                  const searchTextToAdd = suggestionText; // 선택된 검색어 텍스트
+                  updateRecentSearches(searchTextToAdd); // 최근 검색어 업데이트
+                  if (result.id) {
+                    // 선택된 필터에 따라 경로를 동적으로 설정
+                    if (selectedFilter === "영화") {
+                      navigate(`/movie/${result.id}`); // 영화 경로로 이동
+                    } else if (selectedFilter === "유저") {
+                      navigate(`/user/${result.nickname}`); // 유저 경로로 이동
                     } else {
-                      console.error("ID가 없거나 유효하지 않습니다.");
+                      console.error("알 수 없는 필터 선택: ", selectedFilter);
                     }
-                  }}
+                  } else {
+                    console.error("ID가 없거나 유효하지 않습니다.");
+                  }
+                }}
+                style={{
+                  backgroundColor: isActive ? "rgba(240, 240, 240, 0.5)" : "transparent", // 활성화된 항목의 스타일
+                  padding: "4px 8px",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                <img src={searchButton} alt="searchButton" />
+                <span>
+                  {highlightSearchTerm(suggestionText, searchText)}{" "}
+                  {/* 항상 string 사용 */}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {searchText.trim() === "" && recentSearches.length > 0 && (
+        <ul css={recentSearchListStyle}>
+          {recentSearches.map((search, index) => (
+            <li
+              key={index}
+              onClick={async () => {
+                try {
+                  const response = await fetchMovieSearch(search); // API 호출
+                  console.log("API Response: ", response); // 전체 응답 데이터 출력
+
+                  if (response?.length > 0) { // response가 배열이고 데이터가 있을 경우
+                    const matchedResult = response.find(
+                      (movie: Movie) =>
+                        movie.movieTitle.toLowerCase() === search.toLowerCase()
+                    );
+
+                    if (matchedResult) {
+                      console.log("Matched Movie: ", matchedResult); // 일치하는 영화 데이터 출력
+                      navigate(`/movie/${matchedResult.movieId}`); // movieId를 기반으로 경로 이동
+                    } else {
+                      console.warn("검색 결과와 일치하는 영화가 없습니다.");
+                      showToast("검색 결과와 일치하는 영화가 없습니다.", "up");
+                    }
+                  } else {
+                    console.warn("검색 결과가 없습니다.");
+                    showToast("해당 영화의 상세 정보를 찾을 수 없습니다.", "up");
+                  }
+                } catch (error) {
+                  console.error("오류 발생:", error);
+                  showToast("오류가 발생했습니다. 다시 시도해주세요.", "up");
+                }
+              }}
+            >
+              <div>
+                <img src={timeIcon} alt="timeIcon" />
+                <span
                   style={{
-                    backgroundColor: isActive ? "rgba(240, 240, 240, 0.5)" : "transparent", // 활성화된 항목의 스타일
-                    padding: "4px 8px",
-                    borderRadius: "4px",
+                    fontSize: "16px",
+                    fontWeight: "600",
+                    color: "#9D9D9D",
                     cursor: "pointer",
                   }}
                 >
-                  <img src={searchButton} alt="searchButton" />
-                  <span>
-                    {highlightSearchTerm(suggestionText, searchText)}{" "}
-                    {/* 항상 string 사용 */}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-
-        {searchText.trim() === "" && recentSearches.length > 0 && (
-          <ul css={recentSearchListStyle}>
-            {recentSearches.map((search, index) => (
-              <li
-                key={index}
-                onClick={async () => {
-                  try {
-                    const response = await fetchMovieSearch(search); // API 호출
-                    console.log("API Response: ", response); // 전체 응답 데이터 출력
-
-                    if (response?.length > 0) { // response가 배열이고 데이터가 있을 경우
-                      const matchedResult = response.find(
-                        (movie: Movie) =>
-                          movie.movieTitle.toLowerCase() === search.toLowerCase()
-                      );
-
-                      if (matchedResult) {
-                        console.log("Matched Movie: ", matchedResult); // 일치하는 영화 데이터 출력
-                        navigate(`/movie/${matchedResult.movieId}`); // movieId를 기반으로 경로 이동
-                      } else {
-                        console.warn("검색 결과와 일치하는 영화가 없습니다.");
-                        showToast("검색 결과와 일치하는 영화가 없습니다.", "up");
-                      }
-                    } else {
-                      console.warn("검색 결과가 없습니다.");
-                      showToast("해당 영화의 상세 정보를 찾을 수 없습니다.", "up");
-                    }
-                  } catch (error) {
-                    console.error("오류 발생:", error);
-                    showToast("오류가 발생했습니다. 다시 시도해주세요.", "up");
-                  }
-                }}
-              >
-                <div>
-                  <img src={timeIcon} alt="timeIcon" />
-                  <span
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "600",
-                      color: "#9D9D9D",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {search}
-                  </span>
-                </div>
-                <div>
-                  <img
-                    src={closeButton}
-                    alt="closeButton"
-                    onClick={(e) => {
-                      e.stopPropagation(); // 부모 클릭 이벤트 막기
-                      handleDeleteSearch(search); // 해당 검색어 삭제
-                    }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-        {toast && <Toast message={toast.message} direction={toast.direction} />} {/* Toast 메시지 렌더링 */}
-      </div>
+                  {search}
+                </span>
+              </div>
+              <div>
+                <img
+                  src={closeButton}
+                  alt="closeButton"
+                  onClick={(e) => {
+                    e.stopPropagation(); // 부모 클릭 이벤트 막기
+                    handleDeleteSearch(search); // 해당 검색어 삭제
+                  }}
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+      {toast && <Toast message={toast.message} direction={toast.direction} />} {/* Toast 메시지 렌더링 */}
     </>
   );
 }

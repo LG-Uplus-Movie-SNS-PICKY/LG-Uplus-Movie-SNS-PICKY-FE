@@ -81,6 +81,14 @@ export default function FeedComment() {
   const [boardData, setBoardData] = useState<BoardContent | null>(
     location.state || null
   );
+
+  useEffect(() => {
+    if (boardData) {
+      console.log("Board Data");
+      console.log(boardData);
+    }
+  }, [boardData]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isCommentDeleteModalOpen, setIsCommentDeleteModalOpen] =
@@ -266,7 +274,7 @@ export default function FeedComment() {
               <div css={commentProfileSection}>
                 <div css={commentProfileDetails}>
                   <img
-                    src={"/default-profile.png"}
+                    src={comment.writerProfileUrl || "/default-profile.png"}
                     alt="댓글 작성자 프로필"
                     style={{
                       width: "32px",
@@ -315,7 +323,18 @@ export default function FeedComment() {
       </div>
 
       {/* 댓글 입력 섹션 */}
-      <div css={commentInputSection}>
+      <div
+        css={commentInputSection}
+        style={{
+          position: "fixed",
+          bottom: 0,
+          width: "100%",
+          backgroundColor: "#fff",
+          zIndex: 1000,
+          borderTop: "1px solid #ddd",
+          padding: "10px",
+        }}
+      >
         <img
           src="/default-profile.png" // 사용자 프로필 이미지 추가 가능
           alt="내 프로필"

@@ -37,6 +37,7 @@ import { useInView } from "react-intersection-observer";
 import { MovieLog } from "@stories/movie-log";
 import Loading from "@components/loading";
 import { useQueryClient } from "@tanstack/react-query";
+import MovieLogBanner from "@assets/images/banner.jpg";
 
 interface BoardContent {
   boardId: number;
@@ -76,10 +77,6 @@ export default function SocialFeed() {
     isLoading,
     fetchNextPage,
   } = useFetchAllMovieLogQuery();
-
-  // useEffect(() => {
-  //   if (!isLoading) console.log(board);
-  // }, [isLoading]);
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
@@ -198,9 +195,27 @@ export default function SocialFeed() {
         url="http://localhost:5173/movie-log"
       />
       <div css={wrapper}>
-        <div css={banner}></div>
+        <div css={banner}>
+          <img
+            src={MovieLogBanner}
+            alt="배너 이미지"
+            style={{ width: "100%" }}
+          />
+        </div>
         <div css={feedContainer}>
-          {isLoading && <Loading />}
+          {isLoading && (
+            <div
+              style={{
+                width: "100%",
+                flex: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
+            </div>
+          )}
           {Array.isArray(board?.pages) &&
             board.pages.map((page, idx) => (
               <React.Fragment key={idx}>

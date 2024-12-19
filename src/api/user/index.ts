@@ -10,11 +10,9 @@ export async function fetchNicknameValidation(nickname: string) {
 
   if (!isEmpty(token) && isEmpty(user)) {
     accessToken = token.localJwtDto.accessToken;
-    console.log("Token -> AccessToken!!" + accessToken);
   }
 
   if (isEmpty(token) && !isEmpty(user)) {
-    console.log("User -> AccessToken!!");
     accessToken = user.localJwtDto.accessToken;
   }
 
@@ -59,21 +57,11 @@ export async function fetchGetUserInfo() {
   const user = getCookie("user") || {};
   let accessToken;
 
-  console.log("Token Cookie");
-  console.log(token);
-  console.log();
-
-  console.log("User Cookie");
-  console.log(user);
-  console.log();
-
   if (!isEmpty(token) && isEmpty(user)) {
     accessToken = token.localJwtDto.accessToken;
-    console.log("Token -> AccessToken!!" + accessToken);
   }
 
   if (isEmpty(token) && !isEmpty(user)) {
-    console.log("User -> AccessToken!!");
     accessToken = user.localJwtDto.accessToken;
   }
 
@@ -81,6 +69,12 @@ export async function fetchGetUserInfo() {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 
+  return data;
+}
+
+// 회원가입 완료 후 사용자에게 감사 이메일 발송 POSTAPI
+export async function fetchPostRegisterUserEmail() {
+  const { data } = await apiClient.post("/email/register");
   return data;
 }
 
@@ -132,25 +126,19 @@ export async function cancelMembership(platform: string, oAuth2Token: any) {
 
 /** 영화 검색 API */
 export async function fetchMovieSearch(keyword: string) {
-  console.log("fetchMovieSearch 호출됨 - keyword:", keyword);
-
   const { data } = await apiClient.get(`/movie/search`, {
     params: { keyword },
   });
 
-  console.log("fetchMovieSearch 응답 - data:", data);
   return data.data;
 }
 
 /** 유저 검색 API */
 export async function fetchUserSearch(keyword: string) {
-  console.log("fetchUserSearch 호출됨 - keyword:", keyword);
-
   const { data } = await apiClient.get(`/user/search`, {
     params: { keyword }, // 인코딩하지 않고 전달
   });
 
-  console.log("fetchUserSearch 응답 - data:", data);
   return data.data;
 }
 
