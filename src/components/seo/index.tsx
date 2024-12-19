@@ -10,7 +10,6 @@ interface SEOProps {
 
 function SEO({ title = "PICKY", description, image, url }: SEOProps) {
   const defaultImage = "https://www.picky-movie.com/images/picky.jpeg";
-
   const defaultURL = "https://www.picky-movie.com";
 
   return (

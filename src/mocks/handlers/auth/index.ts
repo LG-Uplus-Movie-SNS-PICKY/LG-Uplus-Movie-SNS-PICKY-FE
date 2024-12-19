@@ -56,7 +56,7 @@ const authHandler: HttpHandler[] = [
         },
         localJwtDto: {
           accessToken:
-            "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwicm9sZSI6IlVTRVIiLCJpYXQiOjE3MzQ1OTY2NzAsImV4cCI6MTczNDY4MzA3MH0.ssL_w3XY5L_6BcoyRQT7A85SBZKO3gNhUIY_qbPDkLo",
+            "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MTQsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzM0NjE3NTUzLCJleHAiOjE3MzQ3MDM5NTN9.F9ClfPaP7gDHzGXW2Nko2vnDGunKHAdpPB-uP6-s17s",
         },
         isAuthUser: userInfo.user_role === "Admin",
         isRegistrationDone: true,
