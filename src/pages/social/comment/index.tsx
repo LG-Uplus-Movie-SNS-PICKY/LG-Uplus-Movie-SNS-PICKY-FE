@@ -296,7 +296,6 @@ export default function FeedComment() {
                   display: "flex",
                   gap: "4px",
                   alignItems: "center",
-                  justifyContent: "center",
                 }}
               >
                 {boardData?.writerNickname}
