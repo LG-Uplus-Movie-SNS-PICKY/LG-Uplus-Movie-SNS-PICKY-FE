@@ -27,7 +27,6 @@ export async function fetchBehindVideos(
       .map((item: any) => {
         const videoId = item.snippet?.resourceId?.videoId;
         if (!videoId) {
-          console.warn("videoId를 찾을 수 없습니다:", item);
           return null;
         }
         return videoId;
@@ -36,10 +35,6 @@ export async function fetchBehindVideos(
 
     return videoIds;
   } catch (error: any) {
-    console.error(
-      "비하인드 영상 가져오기 실패:",
-      error.response?.data || error.message
-    );
     throw error;
   }
 }
@@ -66,13 +61,8 @@ export async function fetchOstVideos(
       throw new Error("API 응답에 items가 없습니다.");
     }
 
-    console.log("OST 동영상 데이터:", data.items);
     return data.items;
   } catch (error: any) {
-    console.error(
-      "OST 동영상 가져오기 실패:",
-      error.response?.data || error.message
-    );
     throw error;
   }
 }

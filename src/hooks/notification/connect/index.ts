@@ -43,12 +43,10 @@ function NotificationSSE() {
       eventSource.onmessage = (event) => {
         // 초기 메세지 무시
         if (event.data.startsWith("EventStream ")) {
-          console.log("Initial connection message ignored: " + event.data);
           return;
         }
 
         const newNotification = JSON.parse(event.data);
-        console.log(newNotification);
 
         // React Query 캐시 업데이트
         queryClient.setQueryData<UnreadNotificationsTypes>(

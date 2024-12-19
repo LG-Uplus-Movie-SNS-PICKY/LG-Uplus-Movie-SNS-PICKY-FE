@@ -154,7 +154,6 @@ export async function toggleMovieLike(
     const { data } = await apiClient.post(`/movie/${movieId}/like`);
     return data;
   } catch (error: any) {
-    console.error("영화 좋아요 상태 변경 실패:", error);
     throw error;
   }
 }
@@ -178,7 +177,6 @@ export async function fetchComments(
 
     return data;
   } catch (error) {
-    console.error("댓글 조회 중 오류 발생:", error);
     throw error;
   }
 }
@@ -191,7 +189,6 @@ export async function createComment(boardId: number, content: string) {
     });
     return data;
   } catch (error) {
-    console.error("댓글 작성 중 오류 발생:", error);
     throw error;
   }
 }
@@ -207,7 +204,6 @@ export async function deleteComment(
       params: { commentId }, // Axios에서는 query 파라미터를 params에 설정
     });
   } catch (error) {
-    console.error("댓글 삭제 중 오류 발생:", error);
     throw error;
   }
 }
@@ -243,12 +239,6 @@ export const createBoard = async (
     });
   }
 
-  console.log("Current formData is Images:");
-  console.log(formData.getAll("image"));
-
-  console.log("Current formData is Videos:");
-  console.log(formData.getAll("video"));
-
   // API 요청
   const response = await apiClient.post("/board", formData, {
     headers: {
@@ -272,7 +262,6 @@ export const updateBoard = async (
     });
     return data;
   } catch (error) {
-    console.error("게시글 수정 중 오류 발생:", error);
     throw error;
   }
 };
@@ -321,7 +310,5 @@ export const fetchMovieLogsById = async (
   if (lastBoardId > 0) params.append("lastBoardId", lastBoardId.toString());
 
   const { data } = await apiClient.get(`/board/${movieId}`);
-  console.log("APIs fetchMovieLogsById");
-  console.log(data);
   return data;
 };

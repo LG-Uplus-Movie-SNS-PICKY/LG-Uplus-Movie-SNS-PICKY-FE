@@ -12,7 +12,7 @@ import {
   Title,
   ReviewCountContainer,
   ReviewCount,
-  EmptyText
+  EmptyText,
 } from "./index.styles";
 import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
@@ -84,7 +84,8 @@ function MovieDetail(props: MovieDetailProps) {
         throw new Error("Invalid API response: Missing data");
       }
 
-      const { movie_info, like, rating, streaming_platform, linereviewCount } = movieDetail.data;
+      const { movie_info, like, rating, streaming_platform, linereviewCount } =
+        movieDetail.data;
 
       if (!movie_info) {
         throw new Error("Invalid API response: Missing movie_info");
@@ -126,42 +127,42 @@ function MovieDetail(props: MovieDetailProps) {
 
   useEffect(() => {
     if (!lineReviewsIsLoading) {
-      const allReviews = lineReviews?.pages?.flatMap((page) => page.data.content) || []; // 모든 페이지 데이터 병합
-  
+      const allReviews =
+        lineReviews?.pages?.flatMap((page) => page.data.content) || []; // 모든 페이지 데이터 병합
+
       // 스포일러 제외하고 최신순으로 정렬한 후 상위 3개 가져오기
       const latestNonSpoilerReviews = allReviews
         .filter((review: Review) => !review.isSpoiler) // 스포일러 제외
-        .sort((a: Review, b: Review) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
+        .sort(
+          (a: Review, b: Review) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ) // 최신순 정렬
         .slice(0, 3); // 최대 3개 가져오기
-  
+
       // 상태 업데이트
       setTotalReviews(allReviews.length); // 전체 리뷰 개수 설정
       setReviews(latestNonSpoilerReviews); // 상위 3개 리뷰 설정
-      console.log("✅ 최신순 리뷰 3개:", latestNonSpoilerReviews);
     }
   }, [lineReviewsIsLoading, lineReviews]);
-
-  useEffect(() => {
-    console.log(movieDetail);
-  }, [movieData]);
 
   return (
     movieData && (
       <>
         <SEO
-          title={`${movieData.title}(${movieData.release_date.split("-")[0]
-            })`}
+          title={`${movieData.title}(${movieData.release_date.split("-")[0]})`}
           description={movieData.overview}
-          image={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${movieData.poster_path
-            }`}
+          image={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
+            movieData.poster_path
+          }`}
           url={location.pathname}
         />
 
         <MovieDetailContainer>
           <MovieHeader />
           <MoviePoster
-            imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${movieData.backdrop_path
-              }`}
+            imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+              movieData.backdrop_path
+            }`}
             title={movieData.title}
             year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
             // nation="N/A" // nation 정보가 없다면 기본값 설정

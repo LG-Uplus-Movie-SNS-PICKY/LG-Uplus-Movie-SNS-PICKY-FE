@@ -38,7 +38,6 @@ export default function InputProfile() {
       const imageUrl = URL.createObjectURL(file); // 미리보기 URL 생성
       setUserInfo((prev) => {
         const updatedUserInfo = { ...prev, profileImagePreview: imageUrl }; // 업데이트된 userInfo
-        console.log("Updated userInfo:", updatedUserInfo); // 로그 추가
         return updatedUserInfo;
       });
       setInputData((prev) => {
@@ -47,7 +46,6 @@ export default function InputProfile() {
           profileImageData: formData, // FormData 저장
           profileImagePreview: imageUrl, // 미리보기 URL 저장
         };
-        console.log("Updated inputData:", updatedInputData); // 로그 추가
         return updatedInputData;
       });
       showToastMessage("이미지가 성공적으로 업로드되었습니다.");
@@ -69,7 +67,6 @@ export default function InputProfile() {
             ...prev,
             profileImagePreview: defaultUserImage,
           };
-          console.log("Default userInfo set:", updatedUserInfo);
           return updatedUserInfo;
         });
 
@@ -79,13 +76,11 @@ export default function InputProfile() {
             profileImageData: formData, // FormData에 Blob 저장
             profileImagePreview: defaultUserImage, // 이미지 URL 저장
           };
-          console.log("Default inputData set:", updatedInputData);
           return updatedInputData;
         });
 
         showToastMessage("기본 이미지가 설정되었습니다.");
       } catch (error) {
-        console.error("기본 이미지 설정 중 오류 발생:", error);
         showToastMessage("기본 이미지 설정에 실패했습니다.");
       }
     } else {

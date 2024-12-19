@@ -52,11 +52,10 @@ export async function toggleLineReviewLike(
 
   try {
     const { data } = await apiClient.post("/linereviewlike", params);
-    console.log("API 요청 성공:", data); // 성공 로그
     return data;
   } catch (error: any) {
-    console.error("API 요청 본문:", params); // 요청 데이터 확인
-    console.error("API 응답 오류:", error.response?.data || error.message); // 응답 데이터 확인
+    // console.error("API 요청 본문:", params); // 요청 데이터 확인
+    // console.error("API 응답 오류:", error.response?.data || error.message); // 응답 데이터 확인
     throw error; // 에러 다시 던지기
   }
 }
@@ -102,7 +101,6 @@ export async function updateLineReview(
     );
     return response.data; // 서버 응답 데이터 반환
   } catch (error: any) {
-    console.error("PATCH 요청 오류:", error.response?.data || error.message);
     throw error;
   }
 }
@@ -115,7 +113,6 @@ export async function deleteLineReview(lineReviewId: number) {
     );
     return data;
   } catch (error) {
-    console.error("한줄평 삭제 중 오류 발생:", error);
     throw error;
   }
 }
@@ -135,7 +132,6 @@ export const fetchUserBoards = async (
     });
     return response.data;
   } catch (error) {
-    console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
     throw error;
   }
 };
