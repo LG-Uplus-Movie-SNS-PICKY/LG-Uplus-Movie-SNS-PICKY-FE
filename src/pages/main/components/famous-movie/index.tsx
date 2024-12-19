@@ -18,13 +18,23 @@ import Loading from "@components/loading";
 
 interface FamousMovieProps {
   isLogin: boolean;
+  bgSetImage: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function FamousMovie({ isLogin }: FamousMovieProps) {
+function FamousMovie({ isLogin, bgSetImage }: FamousMovieProps) {
   const { data, isLoading } = useTopMovieQuery();
   const navigate = useNavigate();
 
   const location = useLocation();
+
+  useEffect(() => {
+    if (!isLoading)
+      bgSetImage(
+        `${import.meta.env.VITE_TMDB_IMAGE_URL}${
+          data?.data[data?.data.length - 1].backdropUrl
+        }`
+      );
+  }, [isLoading]);
 
   return (
     <div css={styles.famousContainer(location.pathname === "/picky")}>

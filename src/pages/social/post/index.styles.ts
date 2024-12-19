@@ -7,7 +7,7 @@ export const wrapper = css`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: #f5f5f5;
+  background: #efefef;
 `;
 
 export const postContainer = css`

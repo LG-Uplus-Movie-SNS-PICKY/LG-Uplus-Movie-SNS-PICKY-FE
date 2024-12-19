@@ -16,6 +16,8 @@ function NotificationBadge() {
 
   useEffect(() => {
     if (!isLoading && isLoginState && !isAuthUser) {
+      console.log(unreadNotificationData);
+
       // 알림의 numberOfElements 값을 합산
       const count = unreadNotificationData?.pages
         .map(

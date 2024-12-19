@@ -88,6 +88,7 @@ function LikeMovieContent({ nickname, swiper }: LikeMovieContentProps) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: "120px",
         }}
       >
         <Loading />

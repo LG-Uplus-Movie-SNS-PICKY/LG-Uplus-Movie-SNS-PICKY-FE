@@ -234,6 +234,7 @@ export default function SocialFeed() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: "120px",
               }}
             >
               <Loading />
