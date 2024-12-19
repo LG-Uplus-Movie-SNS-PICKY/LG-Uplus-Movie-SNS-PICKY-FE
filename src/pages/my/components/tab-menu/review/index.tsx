@@ -153,17 +153,8 @@ function LineReviewContent({
         selectedReview.id,
         updatedReview
       );
-      console.log("수정된 데이터:", updatedData);
 
-      // 저장 후 부모 상태 업데이트
-      setReviews((prev) =>
-        prev.map((review) =>
-          review.id === selectedReview.id
-            ? { ...review, ...updatedReview, ...updatedData }
-            : review
-        )
-      );
-
+      // 한줄평 수정 상태 캐싱된 데이터에 반영
       queryClient.setQueryData<ResponseLineReviewTypes>(
         ["lineReview", nickname],
         (oldData) => {
@@ -215,9 +206,26 @@ function LineReviewContent({
       // DELETE API 호출
       await deleteLineReview(selectedReviewId);
 
-      // 성공적으로 삭제되면 UI 상태 업데이트
-      setReviews((prev) =>
-        prev.filter((review) => review.id !== selectedReviewId)
+      // 한줄평 수정 상태 캐싱된 데이터에 반영
+      queryClient.setQueryData<ResponseLineReviewTypes>(
+        ["lineReview", nickname],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              return {
+                ...page,
+                data: {
+                  ...page.data,
+                  content: page.data.content.filter(
+                    (content) => content.id !== selectedReviewId
+                  ),
+                },
+              };
+            }),
+          };
+        }
       );
 
       await showToast("한줄평 삭제가 완료되었습니다.", "none");
