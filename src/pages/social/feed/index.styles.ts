@@ -12,7 +12,7 @@ export const wrapper = css`
 export const banner = css`
   width: 100%;
   height: 80px;
-  margin: 16px 0;
+  margin-bottom: 16px;
   background: #000000;
   border-radius: 4px;
   overflow: hidden;
@@ -54,7 +54,7 @@ export const textSection = css`
   gap: 2px;
 `;
 
-export const movieTitle = css`
+export const movieTitleStyle = css`
   color: #9d9d9d;
   font-size: 12px;
   font-weight: 400;
@@ -80,10 +80,6 @@ export const contentSection = css`
 export const carouselWrapper = css`
   position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
   cursor: pointer;
-`;
-
-export const carouselWrapper = css`
-  position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
 `;
 
 export const carouselSection = css`

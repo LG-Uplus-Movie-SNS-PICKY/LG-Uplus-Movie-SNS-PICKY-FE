@@ -386,7 +386,7 @@ export default function ProfileEditPage() {
               type="text"
               value={userData.gender}
               readOnly
-              css={readonlyInputStyle
+              css={readonlyInputStyle}
             />
           </div>
         </div>
