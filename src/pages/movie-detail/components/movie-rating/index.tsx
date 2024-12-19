@@ -61,6 +61,9 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
     try {
       const response = await toggleMovieLike(movieId);
       queryClient.refetchQueries({ queryKey: ["movieDetail", movieId] });
+
+      queryClient.clear();
+
       setLikeActive((prev) => !prev); // 좋아요 상태 변경
     } catch (error) {}
   };
