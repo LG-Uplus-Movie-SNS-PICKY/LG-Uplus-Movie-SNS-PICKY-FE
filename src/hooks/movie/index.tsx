@@ -6,6 +6,7 @@ import {
   fetchMovieDetail,
   fetchSearchMovie,
   fetchMovieDetailInfo,
+  fetchLikedMovies,
 } from "@api/movie";
 
 // Top 10 Movie 조회 React Query - Custom Hook
@@ -75,12 +76,40 @@ export const useSearchMovie = (movieSearch: string) => {
     staleTime: 1000 * 60 * 5, // 5분 동안 데이터 캐시 유지 (옵션)
   });
 };
+
 // TMDB 영화 상세 데이터 React Query - Custom Hook
 export const useDetailMovieInfo = (movieId: number) => {
   return useQuery({
     queryKey: ["movieDetailInfo", movieId],
     queryFn: () => fetchMovieDetailInfo(movieId),
     enabled: !!movieId,
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60,
+  });
+};
+
+// 사용자가 좋아요 누른 영화 조회 React Query - Custom Hook
+export const useUserLikedMovies = (nickname: string) => {
+  return useInfiniteQuery({
+    queryKey: ["likedMovies", nickname],
+    queryFn: ({ pageParam }) =>
+      fetchLikedMovies(nickname, pageParam.lastMovieLikeId),
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage?.data?.last) {
+        return {
+          lastMovieLikeId:
+            lastPage?.data?.content[lastPage?.data?.content.length - 1]
+              .movieLikeId,
+        };
+      }
+
+      return undefined;
+    },
+
+    initialPageParam: { lastMovieLikeId: 0 },
+
+    enabled: !!nickname,
     staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 60,
   });

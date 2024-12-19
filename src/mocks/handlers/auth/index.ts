@@ -2,7 +2,6 @@ import { http, HttpHandler, HttpResponse } from "msw";
 
 import user from "@constants/json/user.json";
 import { isEmpty } from "lodash";
-import { getCookie } from "@util/cookie";
 
 const authHandler: HttpHandler[] = [
   // 로그인
@@ -56,14 +55,18 @@ const authHandler: HttpHandler[] = [
           expires_in: "string",
         },
         localJwtDto: {
-          accessToken: 1,
+          accessToken: "1",
         },
         isAuthUser: userInfo.user_role === "Admin",
         isRegistrationDone: true,
         user: {
+          name: userInfo.user_name,
           nickname: userInfo.user_nickname,
           profile_url: userInfo.user_profile_url,
+          birthdate: userInfo.user_birthdate,
           gender: userInfo.user_gender,
+          nationality: userInfo.user_nationality,
+          genres: [],
         },
       };
 
@@ -76,7 +79,7 @@ const authHandler: HttpHandler[] = [
     `${import.meta.env.VITE_SERVER_URL}/api/v1/user/validate-user`,
     ({ params, request }) => {
       const authorization = request.headers.get("Authorization");
-      const loginUser = getCookie("user");
+      const loginUser = JSON.parse(sessionStorage.getItem("user") || "{}");
 
       // 권환이 없을 경우 403 에러 발생
       if (!authorization || isEmpty(loginUser)) {
