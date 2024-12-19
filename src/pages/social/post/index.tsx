@@ -208,6 +208,11 @@ export default function SocialPost() {
     }
   };
 
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "정보 없음";
+    return dateString.split("T")[0];
+  };
+
   return (
     <div css={wrapper}>
       {isModalOpen && <div css={modalOverlay} onClick={handleOverlayClick} />}
@@ -235,7 +240,7 @@ export default function SocialPost() {
           </div>
           <h2 css={movieTitleStyle}>{selectedMovie.movieTitle}</h2>
           <div css={movieDetails}>
-            <p>🕑 {selectedMovie.releaseDate}</p>
+            <p>🕑 {formatDate(selectedMovie.releaseDate)}</p>
           </div>
           <div css={movieGenres}>
             {selectedMovie?.genres?.length > 0 ? (
