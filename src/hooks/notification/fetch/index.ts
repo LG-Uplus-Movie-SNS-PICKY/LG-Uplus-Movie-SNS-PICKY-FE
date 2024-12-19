@@ -9,6 +9,8 @@ export const useUnreadNotificationQuery = (loginCheck: boolean) => {
       fetchUnreadNotification(pageParam.lastNotificationId),
 
     getNextPageParam: (lastPage) => {
+      console.log(lastPage);
+
       if (!lastPage?.data?.last) {
         return {
           lastNotificationId:
@@ -21,7 +23,7 @@ export const useUnreadNotificationQuery = (loginCheck: boolean) => {
     },
 
     initialPageParam: { lastNotificationId: 0 },
-    enabled: loginCheck,
+    enabled: !!loginCheck,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
   });

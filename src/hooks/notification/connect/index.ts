@@ -44,6 +44,7 @@ function NotificationSSE() {
         // 초기 메세지 무시
         if (event.data.startsWith("EventStream ")) {
           console.log("Initial connection message ignored: " + event.data);
+          console.log("Hello");
           return;
         }
 
