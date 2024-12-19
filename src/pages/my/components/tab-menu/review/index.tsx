@@ -27,11 +27,16 @@ import {
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
 import { useLineReviewsByUserQuery } from "@hooks/review";
-import { LineReviewType } from "@type/api/profile/reviews";
+import {
+  LineReviewType,
+  ResponseLineReviewTypes,
+} from "@type/api/profile/reviews";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { SwiperClass } from "swiper/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { data } from "@pages/admin/main/components/list-container/constant";
 
 export interface LineReviewData {
   [key: string]: unknown;
@@ -94,6 +99,8 @@ function LineReviewContent({
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
 
+  const queryClient = useQueryClient();
+
   const {
     data: lineReviews,
     hasNextPage,
@@ -155,6 +162,33 @@ function LineReviewContent({
             ? { ...review, ...updatedReview, ...updatedData }
             : review
         )
+      );
+
+      queryClient.setQueryData<ResponseLineReviewTypes>(
+        ["lineReview", nickname],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page, idx) => {
+              if (idx === 0) {
+                return {
+                  ...page,
+                  data: {
+                    ...page.data,
+                    content: page.data.content.map((content) => {
+                      if (content.id === selectedReview.id) {
+                        return { ...content, ...updatedReview };
+                        // return { ...updatedReview, ...updatedData };
+                      }
+                      return content;
+                    }),
+                  },
+                };
+              }
+            }),
+          };
+        }
       );
 
       showToast("한줄평 수정이 완료되었습니다.", "up");
