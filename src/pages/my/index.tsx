@@ -40,6 +40,10 @@ import {
   toggleFollow,
 } from "@api/user";
 import { set } from "lodash";
+import {
+  useFetchFollowersListQuery,
+  useFetchFollowingsListQuery,
+} from "@hooks/follow";
 
 function My() {
   const { nickname } = useParams(); // URL에서 nickname 추출
@@ -179,6 +183,9 @@ function My() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const followerLists = useFetchFollowersListQuery(nickname ? nickname : "");
+  const followingLists = useFetchFollowingsListQuery(nickname ? nickname : "");
+
   return (
     <>
       <SEO
@@ -281,8 +288,10 @@ function My() {
       {isFollowersModalOpen && (
         <FollowersModal
           onClose={closeFollowersModal}
-          followers={followersList}
-          followings={followingsList}
+          followers={followerLists}
+          followersCount={followersCount}
+          followings={followingLists}
+          followingCount={followingCount}
           activeTab={activeTab} // 현재 활성화된 탭 전달
         />
       )}

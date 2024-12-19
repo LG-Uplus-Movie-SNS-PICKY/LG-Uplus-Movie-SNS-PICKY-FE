@@ -46,7 +46,7 @@ export const UserList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 300px;
+  max-height: 280px;
   overflow-y: auto;
 `;
 

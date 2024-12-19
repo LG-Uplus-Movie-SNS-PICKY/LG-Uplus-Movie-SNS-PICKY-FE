@@ -175,7 +175,7 @@ export const fetchFollowersList = async (
   nickname: string,
   lastFollowerId: number
 ) => {
-  const params = new URLSearchParams();
+  const params = new URLSearchParams({ size: "10" });
 
   if (lastFollowerId) {
     params.append("lastFollowerId", lastFollowerId.toString());
@@ -188,12 +188,20 @@ export const fetchFollowersList = async (
 };
 
 // 사용자의 팔로잉 목록을 가져오는 API
-export const fetchFollowingsList = async (nickname: string) => {
-  try {
-    const response = await apiClient.get(`/follow/followings/${nickname}`);
-    return response.data;
-  } catch (error) {
-    console.error("팔로잉 목록 불러오기 실패:", error);
-    throw error;
+export const fetchFollowingsList = async (
+  nickname: string,
+  lastFollowerId: number
+) => {
+  const params = new URLSearchParams({ size: "10" });
+
+  if (lastFollowerId) {
+    console.log(lastFollowerId);
+    params.append("lastFollowingId", lastFollowerId.toString());
   }
+
+  const { data } = await apiClient.get(
+    `/follow/followings/${nickname}?${params.toString()}`
+  );
+
+  return data;
 };
