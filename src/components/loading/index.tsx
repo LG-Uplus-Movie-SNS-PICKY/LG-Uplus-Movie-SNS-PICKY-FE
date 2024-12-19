@@ -1,6 +1,5 @@
 import Lottie from "lottie-react";
-import LoadingLottie from "@assets/lottie/loadingLottie.json";
-import TestLoadingLottie2 from "@assets/lottie/test2LoadingLottie.json";
+import LoadingLottie from "@assets/lottie/test2LoadingLottie.json";
 import styled from "@emotion/styled";
 
 const LoadingContainer = styled.div`
@@ -14,7 +13,7 @@ const LoadingContainer = styled.div`
 function Loading() {
   return (
     <LoadingContainer>
-      <Lottie animationData={TestLoadingLottie2} />
+      <Lottie animationData={LoadingLottie} />
     </LoadingContainer>
   );
 }
