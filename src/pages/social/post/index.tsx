@@ -86,7 +86,7 @@ export default function SocialPost() {
         const results = await fetchMovieSearch(value);
         setFilteredMovies(results);
       } catch (error) {
-        console.error("영화 검색 중 오류 발생:", error);
+        // console.error("영화 검색 중 오류 발생:", error);
       }
     } else {
       setFilteredMovies([]);
@@ -94,8 +94,8 @@ export default function SocialPost() {
   };
 
   const handleMovieSelect = (movie: MovieData) => {
-    console.log("선택된 영화:", movie.genres);
-    console.log(movie);
+    // console.log("선택된 영화:", movie.genres);
+        
     setSelectedMovie({
       movieId: movie.movieId,
       movieTitle: movie.movieTitle,
