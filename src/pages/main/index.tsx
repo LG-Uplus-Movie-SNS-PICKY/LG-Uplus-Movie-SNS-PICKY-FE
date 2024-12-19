@@ -16,6 +16,8 @@ function Main() {
 
   const [image, setImage] = useState("");
 
+  console.log("Hello");
+
   return (
     <>
       <SEO
