@@ -31,3 +31,9 @@ export interface QueryLineReviewTypes {
     sort: any;
   };
 }
+
+// 알림 무한 스크롤 데이터 타입
+export interface ResponseLineReviewTypes {
+  pageParams: { lastNotificationId: number }[];
+  pages: QueryLineReviewTypes[];
+}

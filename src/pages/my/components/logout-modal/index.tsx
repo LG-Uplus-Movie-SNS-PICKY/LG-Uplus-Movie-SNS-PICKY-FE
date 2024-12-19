@@ -13,7 +13,7 @@ import { cancelMembership } from "@api/user";
 import { removeCookie } from "@util/cookie";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface LogoutModalProps {
   onClose: () => void;
@@ -64,6 +64,8 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
     setIsConfirmModalOpen(true);
   };
 
+  const location = useLocation();
+
   const handleConfirmLogout = async () => {
     await showToast("로그아웃이 완료되었습니다.", "up");
     removeCookie("user");
@@ -77,7 +79,10 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
     // 세션 스토리지 초기화
     sessionStorage.clear();
 
-    navigate("/");
+    const { pathname } = location;
+    console.log(pathname);
+
+    window.location.href = "/";
 
     // window.location.reload();
   };

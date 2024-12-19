@@ -27,11 +27,16 @@ import {
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
 import { useLineReviewsByUserQuery } from "@hooks/review";
-import { LineReviewType } from "@type/api/profile/reviews";
+import {
+  LineReviewType,
+  ResponseLineReviewTypes,
+} from "@type/api/profile/reviews";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import { SwiperClass } from "swiper/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { data } from "@pages/admin/main/components/list-container/constant";
 
 export interface LineReviewData {
   [key: string]: unknown;
@@ -94,6 +99,8 @@ function LineReviewContent({
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<LineReviewData[]>([]);
 
+  const queryClient = useQueryClient();
+
   const {
     data: lineReviews,
     hasNextPage,
@@ -147,13 +154,30 @@ function LineReviewContent({
         updatedReview
       );
 
-      // 저장 후 부모 상태 업데이트
-      setReviews((prev) =>
-        prev.map((review) =>
-          review.id === selectedReview.id
-            ? { ...review, ...updatedReview, ...updatedData }
-            : review
-        )
+      // 한줄평 수정 상태 캐싱된 데이터에 반영
+      queryClient.setQueryData<ResponseLineReviewTypes>(
+        ["lineReview", nickname],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              return {
+                ...page,
+                data: {
+                  ...page.data,
+                  content: page.data.content.map((content) => {
+                    if (content.id === selectedReview.id) {
+                      return { ...content, ...updatedReview };
+                    }
+
+                    return content;
+                  }),
+                },
+              };
+            }),
+          };
+        }
       );
 
       showToast("한줄평 수정이 완료되었습니다.", "up");
@@ -181,9 +205,26 @@ function LineReviewContent({
       // DELETE API 호출
       await deleteLineReview(selectedReviewId);
 
-      // 성공적으로 삭제되면 UI 상태 업데이트
-      setReviews((prev) =>
-        prev.filter((review) => review.id !== selectedReviewId)
+      // 한줄평 수정 상태 캐싱된 데이터에 반영
+      queryClient.setQueryData<ResponseLineReviewTypes>(
+        ["lineReview", nickname],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return {
+            ...oldData,
+            pages: oldData.pages.map((page) => {
+              return {
+                ...page,
+                data: {
+                  ...page.data,
+                  content: page.data.content.filter(
+                    (content) => content.id !== selectedReviewId
+                  ),
+                },
+              };
+            }),
+          };
+        }
       );
 
       await showToast("한줄평 삭제가 완료되었습니다.", "none");
