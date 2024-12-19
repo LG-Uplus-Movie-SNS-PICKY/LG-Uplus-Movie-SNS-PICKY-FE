@@ -168,9 +168,7 @@ const ReviewsPage = () => {
         const gendersData = await fetchGenders(movieId);
         setRatings(ratingsData);
         setGenders(gendersData);
-      } catch (error) {
-        console.error("Error fetching ratings or genders:", error);
-      }
+      } catch (error) {}
     };
 
     fetchData();
@@ -201,9 +199,7 @@ const ReviewsPage = () => {
       const updatedGenders = await fetchGenders(movieId);
       setRatings(updatedRatings);
       setGenders(updatedGenders);
-    } catch (error) {
-      console.error("Error fetching updated ratings or genders:", error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -213,9 +209,7 @@ const ReviewsPage = () => {
         const updatedGenders = await fetchGenders(movieId);
         setRatings(updatedRatings);
         setGenders(updatedGenders);
-      } catch (error) {
-        console.error("Error fetching updated data:", error);
-      }
+      } catch (error) {}
     };
 
     fetchUpdatedData();

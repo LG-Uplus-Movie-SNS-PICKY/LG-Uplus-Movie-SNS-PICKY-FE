@@ -116,9 +116,7 @@ export default function FeedComment() {
       try {
         const data = await fetchGetUserInfo();
         setUserInfo(data.data);
-      } catch (error) {
-        console.error("유저 정보를 가져오는 중 오류 발생:", error);
-      }
+      } catch (error) {}
     };
 
     loadUserInfo();
@@ -134,12 +132,8 @@ export default function FeedComment() {
           response?.content || response?.data?.content || [];
         if (Array.isArray(fetchedComments)) {
           setComments(fetchedComments);
-        } else {
-          console.error("댓글 데이터가 배열이 아닙니다:", fetchedComments);
         }
-      } catch (error) {
-        console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
-      }
+      } catch (error) {}
     };
 
     fetchAndSetComments();
@@ -186,9 +180,7 @@ export default function FeedComment() {
             }
           : prev
       );
-    } catch (error) {
-      console.error("좋아요 업데이트 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   const handleCommentSubmit = async () => {
@@ -246,7 +238,6 @@ export default function FeedComment() {
       setToastMessage("댓글이 성공적으로 작성되었습니다.");
       setShowToast(true);
     } catch (error) {
-      console.error("댓글 작성 중 오류 발생:", error);
       setToastMessage("댓글 작성에 실패했습니다.");
       setShowToast(true);
     }
@@ -269,7 +260,6 @@ export default function FeedComment() {
       setShowToast(true);
       navigate(-1);
     } catch (error) {
-      console.error("게시글 삭제 중 오류 발생:", error);
       setToastMessage("게시글 삭제 중 오류가 발생했습니다.");
       setShowToast(true);
     }

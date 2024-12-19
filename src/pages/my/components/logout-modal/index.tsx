@@ -103,12 +103,10 @@ function LogoutModal({ onClose, targetRef }: LogoutModalProps) {
       };
 
       const response = await cancelMembership(platform, oAuth2Token);
-      console.log("회원탈퇴 성공:", response);
 
       await showToast("회원탈퇴가 완료되었습니다.", "up");
       window.location.replace("/"); // 탈퇴 후 메인 페이지로 이동
     } catch (error: any) {
-      console.error("회원탈퇴 실패:", error);
       await showToast("회원탈퇴에 실패했습니다. 다시 시도해주세요.", "down");
     }
   };

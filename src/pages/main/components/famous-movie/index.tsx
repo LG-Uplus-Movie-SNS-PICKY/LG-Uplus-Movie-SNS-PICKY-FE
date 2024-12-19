@@ -26,10 +26,6 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
 
   const location = useLocation();
 
-  useEffect(() => {
-    if (!isLoading) console.log(data);
-  }, [isLoading]);
-
   return (
     <div css={styles.famousContainer(location.pathname === "/picky")}>
       {/* Title */}

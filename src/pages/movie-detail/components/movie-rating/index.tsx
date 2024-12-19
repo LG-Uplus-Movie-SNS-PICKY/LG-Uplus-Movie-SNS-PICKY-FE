@@ -57,11 +57,8 @@ const MovieRating = ({ rating, initialLike, movieId }: MovieRatingProps) => {
   const handleToggleLike = async () => {
     try {
       const response = await toggleMovieLike(movieId);
-      console.log(response.message);
       setLikeActive((prev) => !prev); // 좋아요 상태 변경
-    } catch (error) {
-      console.error("좋아요 변경 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   return (

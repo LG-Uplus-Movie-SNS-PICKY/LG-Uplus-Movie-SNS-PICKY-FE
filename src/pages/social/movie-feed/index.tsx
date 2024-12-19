@@ -100,9 +100,7 @@ export default function MovieLogList() {
     try {
       await toggleLike(boardId);
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });
-    } catch (error) {
-      console.error("좋아요 요청 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   const handleOptionsModal = (board: BoardContent) => {
@@ -123,7 +121,6 @@ export default function MovieLogList() {
       setToastMessage("게시글이 삭제되었습니다.");
       setShowToast(true);
     } catch (error) {
-      console.error("게시글 삭제 중 오류 발생:", error);
       setToastMessage("게시글 삭제 중 오류가 발생했습니다.");
       setShowToast(true);
     } finally {
