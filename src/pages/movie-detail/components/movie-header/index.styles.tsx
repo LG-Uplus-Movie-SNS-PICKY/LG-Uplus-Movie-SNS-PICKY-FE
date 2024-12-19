@@ -7,7 +7,13 @@ export const MovieHeaderContainer = styled.div`
   align-items: center;
   width: 100%;
   height: 60px;
-  background-color: rgba(0, 0, 0, 0.01);
+ background: linear-gradient(
+        rgba(0, 0, 0, 0.08) 0%, 
+        rgba(0, 0, 0, 0.06) 25%, 
+        rgba(0, 0, 0, 0.05) 50%, 
+        rgba(0, 0, 0, 0.01) 100%
+    );
+  /* background-color: rgba(0, 0, 0, 0.01); */
   top: 0;
   z-index: 10000;
   position: absolute;
@@ -19,4 +25,5 @@ export const HeaderIconContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    cursor: pointer;
 `;

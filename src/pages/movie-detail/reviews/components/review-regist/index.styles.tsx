@@ -76,6 +76,7 @@ export const YesNoButton = styled.div<{ active: boolean }>`
     border-radius: 80px;
     border: ${props => (props.active ? '1px solid #756262' : '1px solid #D9D9D9')};
     background-color: ${props => (props.active ? 'rgba(117, 98, 98, 0.2)' : '#FFFFFF')};
+    cursor: pointer;
 `;
 
 export const Wrapper = styled.div`

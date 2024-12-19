@@ -26,19 +26,19 @@ import { createLineReview } from '@api/linereview';
 import { getCookie } from '@util/cookie';
 
 interface Review {
-  id: number;
-  writerNickname: string;
-  userId: number;
-  movieId: number;
-  rating: number;
-  context: string;
-  isSpoiler: boolean;
-  likes: number;
-  dislikes: number;
-  createdAt: string;
-  isLiked?: boolean;
-  isDisliked?: boolean;
-  isAuthor?: boolean;
+    id: number;
+    writerNickname: string;
+    userId: number;
+    movieId: number;
+    rating: number;
+    context: string;
+    isSpoiler: boolean;
+    likes: number;
+    dislikes: number;
+    createdAt: string;
+    isLiked?: boolean;
+    isDisliked?: boolean;
+    isAuthor?: boolean;
 }
 
 interface ReviewRegistProps {
@@ -52,6 +52,7 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
     const [review, setReview] = useState('');
     const [spoiler, setSpoiler] = useState<boolean | null>(null);
     const [toast, setToast] = useState<{ message: string; direction: 'none' | 'up' | 'down' } | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleRating = (index: number) => {
         setRating(index + 1);
@@ -71,40 +72,81 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
         }
     };
 
+    // const handleSubmit = async () => {
+    //     if (rating === 0 || spoiler === null || review.length === 0) {
+    //         showToast("모든 입력 필드를 채워주세요.", "none");
+    //         return;
+    //     }
+
+    //     // 사용자 정보 가져오기
+    //     const userInfo = getCookie("user") || {};
+
+    //     // userInfo 검증
+    //     if (!userInfo || !userInfo.localJwtDto || !userInfo.user) {
+    //         showToast("사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요.", "up");
+    //         return;
+    //     }
+
+    //     const newReview = {
+    //         id: Date.now(), // 임시 ID
+    //         userId: userInfo.localJwtDto.accessToken, // userId를 userInfo에서 추출
+    //         writerNickname: userInfo.user.nickname, // writerNickname을 userInfo에서 추출
+    //         movieId,
+    //         rating,
+    //         context: review,
+    //         isSpoiler: spoiler,
+    //         likes: 0,
+    //         dislikes: 0,
+    //         createdAt: new Date().toISOString(),
+    //     };
+
+    //     try {
+    //         const response = await createLineReview(newReview);
+    //         console.log("등록 성공:", response);
+
+    //         // 새 리뷰 추가
+    //         onAddReview(newReview);
+
+    //         showToast("한줄평 등록이 완료되었습니다.", "none");
+    //         setRating(0);
+    //         setReview("");
+    //         setSpoiler(null);
+    //     } catch (error) {
+    //         console.error("등록 실패:", error);
+    //         showToast("하나의 영화에 하나의 한줄평만 작성할 수 있습니다.", "none");
+    //     }
+    // };
+
     const handleSubmit = async () => {
+        if (isSubmitting) return; // 이미 제출 중이라면 중단
         if (rating === 0 || spoiler === null || review.length === 0) {
             showToast("모든 입력 필드를 채워주세요.", "none");
             return;
         }
 
-        // 사용자 정보 가져오기
         const userInfo = getCookie("user") || {};
 
-        // userInfo 검증
         if (!userInfo || !userInfo.localJwtDto || !userInfo.user) {
             showToast("사용자 정보를 가져올 수 없습니다. 다시 로그인 해주세요.", "up");
             return;
         }
 
         const newReview = {
-            id: Date.now(), // 임시 ID
-            userId: userInfo.localJwtDto.accessToken, // userId를 userInfo에서 추출
-            writerNickname: userInfo.user.nickname, // writerNickname을 userInfo에서 추출
+            userId: userInfo.localJwtDto.accessToken,
+            writerNickname: userInfo.user.nickname,
             movieId,
             rating,
             context: review,
             isSpoiler: spoiler,
-            likes: 0,
-            dislikes: 0,
-            createdAt: new Date().toISOString(),
         };
 
+        setIsSubmitting(true); // 제출 상태 활성화
         try {
-            const response = await createLineReview(newReview);
-            console.log("등록 성공:", response);
+            // 등록 요청 후 생성된 리뷰 데이터 받기
+            const createdReview = await createLineReview(newReview);
 
             // 새 리뷰 추가
-            onAddReview(newReview);
+            onAddReview(createdReview); // 응답 데이터를 그대로 전달
 
             showToast("한줄평 등록이 완료되었습니다.", "none");
             setRating(0);
@@ -113,6 +155,8 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
         } catch (error) {
             console.error("등록 실패:", error);
             showToast("하나의 영화에 하나의 한줄평만 작성할 수 있습니다.", "none");
+        } finally {
+            setIsSubmitting(false); // 제출 상태 해제
         }
     };
 
@@ -146,12 +190,12 @@ const ReviewRegist = ({ refetch, movieId, onAddReview }: ReviewRegistProps) => {
                         value={review}
                         onChange={handleReviewChange}
                         onKeyDown={(e) => {
-                            if (e.key === "Enter") {
+                            if (e.key === "Enter" && !isSubmitting) {
                                 e.preventDefault(); // 기본 Enter 키 동작 방지
                                 handleSubmit(); // 엔터키로 한줄평 등록
                             }
                         }}
-                        placeholder="감상평을 작성해주세요."
+                        placeholder="한줄평을 작성해주세요."
                     />
                     <SubmitButton onClick={handleSubmit}>등록</SubmitButton>
                 </ReviewInputContainer>

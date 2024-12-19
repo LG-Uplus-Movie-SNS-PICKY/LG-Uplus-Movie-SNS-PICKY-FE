@@ -176,10 +176,26 @@ const ReviewsPage = () => {
     fetchData();
   }, [movieId]);
 
+  // const handleAddReview = async (newReview: Review) => {
+  //   setReviews((prevReviews) => [newReview, ...prevReviews]);
+
+  //   // 추가: ratings와 genders 데이터 다시 가져오기
+  //   try {
+  //     const updatedRatings = await fetchRatings(movieId);
+  //     const updatedGenders = await fetchGenders(movieId);
+  //     setRatings(updatedRatings);
+  //     setGenders(updatedGenders);
+  //   } catch (error) {
+  //     console.error("Error fetching updated ratings or genders:", error);
+  //   }
+  // };
+
   const handleAddReview = async (newReview: Review) => {
     setReviews((prevReviews) => [newReview, ...prevReviews]);
 
-    // 추가: ratings와 genders 데이터 다시 가져오기
+    // 추가된 리뷰를 서버와 동기화
+    refetch(); // 서버에서 최신 리뷰 목록 다시 조회
+
     try {
       const updatedRatings = await fetchRatings(movieId);
       const updatedGenders = await fetchGenders(movieId);

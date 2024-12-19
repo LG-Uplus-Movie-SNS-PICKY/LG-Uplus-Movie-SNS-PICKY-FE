@@ -49,7 +49,6 @@ interface MovieData {
   movieId: number;
   movieTitle: string;
   releaseDate: string;
-  country: string;
   genres: string[];
 }
 
@@ -94,11 +93,12 @@ export default function SocialPost() {
   };
 
   const handleMovieSelect = (movie: MovieData) => {
+    console.log("선택된 영화:", movie);
+
     setSelectedMovie({
       movieId: movie.movieId,
       movieTitle: movie.movieTitle,
       releaseDate: movie.releaseDate || "정보 없음", // 기본값 설정
-      country: movie.country || "정보 없음",
       genres: movie.genres?.length > 0 ? movie.genres : ["장르 정보 없음"],
     });
     setSearchTerm(movie.movieTitle);
