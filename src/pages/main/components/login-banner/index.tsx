@@ -5,12 +5,12 @@ import styles from "./index.styles";
  *
  * @returns
  */
-function LoginBanner(): JSX.Element {
+function LoginBanner({ bgImage }: { bgImage: string }): JSX.Element {
   const navigate = useNavigate();
 
   return (
     <div
-      css={styles.bannerContainer()}
+      css={styles.bannerContainer(bgImage)}
       onClick={() => navigate("/auth/sign-in")}
     >
       <div className="box">
