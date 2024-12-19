@@ -170,22 +170,20 @@ function LineReviewContent({
           if (!oldData) return oldData;
           return {
             ...oldData,
-            pages: oldData.pages.map((page, idx) => {
-              if (idx === 0) {
-                return {
-                  ...page,
-                  data: {
-                    ...page.data,
-                    content: page.data.content.map((content) => {
-                      if (content.id === selectedReview.id) {
-                        return { ...content, ...updatedReview };
-                        // return { ...updatedReview, ...updatedData };
-                      }
-                      return content;
-                    }),
-                  },
-                };
-              }
+            pages: oldData.pages.map((page) => {
+              return {
+                ...page,
+                data: {
+                  ...page.data,
+                  content: page.data.content.map((content) => {
+                    if (content.id === selectedReview.id) {
+                      return { ...content, ...updatedReview };
+                    }
+
+                    return content;
+                  }),
+                },
+              };
             }),
           };
         }
