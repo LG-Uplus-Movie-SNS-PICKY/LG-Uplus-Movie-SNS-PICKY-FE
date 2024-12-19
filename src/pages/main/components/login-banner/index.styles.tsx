@@ -1,7 +1,7 @@
 import { css, SerializedStyles } from "@emotion/react";
 
 export default {
-  bannerContainer(): SerializedStyles {
+  bannerContainer(image: string): SerializedStyles {
     return css`
       position: relative;
 
@@ -15,7 +15,7 @@ export default {
           rgba(23, 23, 23, 0.5) 50%,
           rgba(0, 0, 0, 0.8) 100%
         ),
-        url("/src/assets/images/picky.webp");
+        url(${image});
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;

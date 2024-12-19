@@ -20,13 +20,6 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 import Loading from "@components/loading";
 import { RecommendMovieDataTypes } from "@type/api/movie";
 
-interface Movie {
-  movieId: number;
-  title: string;
-  posterUrl: string;
-  totalRating: number;
-}
-
 export default function MovieRecommendationPage() {
   const { data: recommendMovies, isLoading } = useRecommnedMovieQuery();
   const { isLoginInfo } = useRecoilValue(isLogin);

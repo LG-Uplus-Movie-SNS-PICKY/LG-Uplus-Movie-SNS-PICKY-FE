@@ -9,10 +9,12 @@ import { isLogin } from "@recoil/atoms/isLoginState";
 import { unreadCountState } from "@recoil/atoms/isNotificationState";
 import axios from "axios";
 import { getCookie } from "@util/cookie";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Main() {
   const isLoginState = useRecoilValue(isLogin);
+
+  const [image, setImage] = useState("");
 
   return (
     <>
@@ -22,10 +24,14 @@ function Main() {
       />
 
       {/* Slider or Banner Section */}
-      {!isLoginState.isLoginState ? <LoginBanner /> : <RecommendMovieSlider />}
+      {!isLoginState.isLoginState ? (
+        <LoginBanner bgImage={image} />
+      ) : (
+        <RecommendMovieSlider />
+      )}
 
       {/* Famous Movies Section */}
-      <FamousMovie isLogin={isLoginState.isLoginState} />
+      <FamousMovie isLogin={isLoginState.isLoginState} bgSetImage={setImage} />
 
       {/* Genre Movie Section */}
       <GenresMovie isLogin={isLoginState.isLoginState} />
