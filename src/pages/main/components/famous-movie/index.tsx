@@ -18,7 +18,7 @@ import Loading from "@components/loading";
 
 interface FamousMovieProps {
   isLogin: boolean;
-  bgSetImage: React.Dispatch<React.SetStateAction<string>>;
+  bgSetImage?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function FamousMovie({ isLogin, bgSetImage }: FamousMovieProps) {
@@ -32,7 +32,10 @@ function FamousMovie({ isLogin, bgSetImage }: FamousMovieProps) {
       const url = ` ${import.meta.env.VITE_TMDB_IMAGE_URL}${
         data?.data[data?.data.length - 1].backdropUrl
       }`;
-      bgSetImage(url);
+
+      if (bgSetImage) {
+        bgSetImage(url);
+      }
     }
   }, [isLoading]);
 
