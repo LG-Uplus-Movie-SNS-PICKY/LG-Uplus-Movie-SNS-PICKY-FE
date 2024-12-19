@@ -20,7 +20,8 @@ function LoginBanner(): JSX.Element {
           좋아하세요?
         </h3>
         <p>
-          <span className="underline">로그인</span>하고 PICKY를 즐겨보세요
+          <span className="underline">로그인</span>하고 <strong>PICKY</strong>를
+          즐겨보세요
         </p>
       </div>
     </div>

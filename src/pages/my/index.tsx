@@ -23,14 +23,27 @@ import LogoutModal from "./components/logout-modal";
 import FollowersModal from "./components/followers-modal";
 import TabMenu from "./components/tab-menu";
 
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
+
 import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@stories/toast";
 import SEO from "@components/seo";
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@/recoil/atoms/isLoginState";
-import { fetchFollowersList, fetchFollowingsList, fetchNicknameValidation, fetchUserInfo, toggleFollow } from "@api/user";
+import {
+  fetchFollowersList,
+  fetchFollowingsList,
+  fetchNicknameValidation,
+  fetchUserInfo,
+  toggleFollow,
+} from "@api/user";
 import { set } from "lodash";
+import {
+  useFetchFollowersListQuery,
+  useFetchFollowingsListQuery,
+} from "@hooks/follow";
 
 function My() {
   const { nickname } = useParams(); // URL에서 nickname 추출
@@ -44,9 +57,9 @@ function My() {
     "followers"
   );
 
-   // 로그인 상태에서 사용자 정보 가져오기
-   const loginState = useRecoilValue(isLogin);
-   const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
+  // 로그인 상태에서 사용자 정보 가져오기
+  const loginState = useRecoilValue(isLogin);
+  const myNickname = loginState.isLoginInfo.nickname; // Recoil 상태에서 nickname 추출
 
   const [isValid, setIsValid] = useState<boolean | null>(null); // 닉네임 유효성 상태
   const [userData, setUserData] = useState<{
@@ -68,111 +81,6 @@ function My() {
 
   const [error, setError] = useState<string | null>(null); // 에러 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
-
-  // // 닉네임 검증 함수
-  // async function checkNickname(nickname: string) {
-  //   try {
-  //     const response = await fetchNicknameValidation(nickname);
-  //     setIsValid(response.isValid); // 상태 업데이트
-  //   } catch (error) {
-  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
-  //   }
-  // }
-
-  // // 닉네임 검증 함수
-  // async function checkNickname(nickname: string) {
-  //   try {
-  //     const response = await fetchNicknameValidation(nickname);
-  //     setIsValid(response.isValid); // API에서 받은 값을 상태로 설정
-  //   } catch (error) {
-  //     console.error("닉네임 검증 중 오류가 발생했습니다:", error);
-  //     setIsValid(false); // 오류가 발생한 경우 기본값으로 false 설정 -> 서버 오류로 일단 임시로 처리
-  //   }
-  // }
-
-  // // 닉네임 검증 후 사용자 정보 로드
-  // useEffect(() => {
-  //   if (nickname) {
-  //     checkNickname(nickname); // 닉네임 검증
-  //   }
-  // }, [nickname]);
-
-  // useEffect(() => {
-  //   if (isValid === false) {
-  //     // 닉네임이 사용 가능할 때만 사용자 정보 로드
-  //     const loadUserInfo = async () => {
-  //       try {
-  //         setLoading(true);
-  //         const data = await fetchUserInfo(nickname as string);
-
-  //         setUserData(data);
-  //         setBoardCount(data.boardCount ?? 0);
-  //         setFollowersCount(data.followerCount ?? 0);
-  //         setFollowingCount(data.followingCount ?? 0);
-  //       } catch (err) {
-  //         console.error(err);
-  //         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     loadUserInfo();
-  //   }
-  // }, [isValid, nickname]);
-
-//   // 사용자 정보 로드
-//   useEffect(() => {
-//     const loadUserProfile = async () => {
-//       try {
-//         setLoading(true);
-//         const userInfo = await fetchGetUserInfo(); // GET API 호출
-//         console.log("유저 데이터:", userInfo); // API 응답 데이터 로그 출력
-  
-//         // API 응답 데이터에서 profileUrl 설정
-//         setProfileImage(userInfo.data.profileUrl || defaultProfileImage);
-//       } catch (err) {
-//         console.error("Error fetching user info:", err);
-//         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-  
-//     if (nickname) {
-//       loadUserProfile();
-//     }
-//   }, [nickname]); // nickname이 변경될 때마다 실행
-
-//   // 게시글/팔로워/팔로잉 수 가져오기
-//   useEffect(() => {
-//     const loadUserInfo = async () => {
-//         if (!nickname) {
-//             console.error("닉네임이 없습니다.");
-//             setError("닉네임이 제공되지 않았습니다.");
-//             return;
-//         }
-
-//         try {
-//             setLoading(true);
-//             const data = await fetchUserInfo(nickname); // nickname은 string으로 보장됨
-//             console.log("게시글/팔로워/팔로잉 수:", data);
-
-//             // 상태 업데이트
-//             setUserData(data);
-//             setBoardCount(data.boardCount ?? 0);
-//             setFollowersCount(data.followerCount ?? 0);
-//             setFollowingCount(data.followingCount ?? 0);
-//         } catch (err) {
-//             console.error("Error fetching user info:", err);
-//             setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
-//         } finally {
-//             setLoading(false);
-//         }
-//     };
-
-//     loadUserInfo();
-// }, [nickname]);
 
   useEffect(() => {
     const loadUserProfileAndInfo = async () => {
@@ -205,7 +113,7 @@ function My() {
         setIsFollowing(data.data.isFollowing ?? false);
         setUserData(data);
       } catch (err) {
-        console.error("Error fetching user info:", err);
+        navigate("/error/404?type=NotUser");
         setError("사용자 정보를 불러오는 중 문제가 발생했습니다.");
       } finally {
         setLoading(false);
@@ -265,26 +173,18 @@ function My() {
   };
 
   const openFollowersModal = async (initialTab: "followers" | "followings") => {
-    try {
-      setActiveTab(initialTab); // 클릭된 탭을 활성화
-      setIsFollowersModalOpen(true);
-  
-      // 팔로워와 팔로잉 데이터를 동시에 불러옴
-      const [followersResponse, followingsResponse] = await Promise.all([
-        fetchFollowersList(nickname as string),
-        fetchFollowingsList(nickname as string),
-      ]);
-  
-      setFollowersList(followersResponse.data.content);
-      setFollowingsList(followingsResponse.data.content);
-    } catch (error) {
-      console.error("Error fetching follow lists:", error);
-    }
+    setActiveTab(initialTab); // 클릭된 탭을 활성화
+    setIsFollowersModalOpen(true);
   };
 
   const closeFollowersModal = () => {
     setIsFollowersModalOpen(false);
   };
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const followerLists = useFetchFollowersListQuery(nickname ? nickname : "");
+  const followingLists = useFetchFollowingsListQuery(nickname ? nickname : "");
 
   return (
     <>
@@ -298,7 +198,29 @@ function My() {
       <Wrapper ref={wrapperRef}>
         <ProfileContainer>
           {/* 사용자 프로필 이미지 */}
-          <ProfileImage src={profileImage} />
+          <div
+            style={{
+              width: "80px",
+              height: "80px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              backgroundColor: "#262626",
+              position: "relative",
+            }}
+          >
+            <LazyLoadImage
+              src={profileImage}
+              onLoad={() => setIsLoading(true)}
+              onError={() => setIsLoading(false)}
+              style={{ width: "100%" }}
+            />
+            {!isLoading && (
+              <span style={{ position: "absolute", color: "#b3b3b3" }}>
+                {nickname}
+              </span>
+            )}
+          </div>
+
           <ProfileInfoContainer>
             <ProfileInfo>
               <BoldText isZero={boardCount === 0}>{boardCount}</BoldText>
@@ -366,8 +288,10 @@ function My() {
       {isFollowersModalOpen && (
         <FollowersModal
           onClose={closeFollowersModal}
-          followers={followersList}
-          followings={followingsList}
+          followers={followerLists}
+          followersCount={followersCount}
+          followings={followingLists}
+          followingCount={followingCount}
           activeTab={activeTab} // 현재 활성화된 탭 전달
         />
       )}

@@ -49,7 +49,7 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
         </div>
 
         {/* Select Genre Movies */}
-        <div className="select-genre">
+        <div className={`select-genre ${isLoading ? "is-loading" : ""}`}>
           {isLoading && (
             <div
               style={{
@@ -74,6 +74,7 @@ function GenresMovie({ isLogin }: { isLogin: boolean }) {
                     name={movie.title}
                     rate={movie.totalRating}
                     like={movie.likes}
+                    comment={movie.lineReviews}
                     onClick={() => navigate(`/movie/${movie.movieId}`)}
                   />
                 ))

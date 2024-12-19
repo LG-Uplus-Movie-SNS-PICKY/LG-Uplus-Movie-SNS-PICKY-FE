@@ -46,6 +46,7 @@
     "react-select": "^5.8.3",
     "react-slick": "^0.30.2",
     "recoil": "^0.7.7",
+    "recoil-nexus": "^0.5.1",
     "recoil-persist": "^5.1.0",
     "styled-components": "^6.1.13",
     "swiper": "^11.1.15",

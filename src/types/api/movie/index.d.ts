@@ -6,6 +6,7 @@ export interface MovieDataTypes {
   title: string;
   totalRating: number;
   likes: number;
+  lineReviews: number;
 }
 
 // 추천 영화 데이터 타입 정의

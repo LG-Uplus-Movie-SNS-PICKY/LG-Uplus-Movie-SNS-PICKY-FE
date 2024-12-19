@@ -7,15 +7,12 @@ import {
   Button,
 } from "./index.styles";
 import NotFound from "@assets/icons/error_message.svg?react";
-import SEO from "@components/seo";
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
     <>
-      <SEO title="404" description="페이지를 찾을 수 없습니다." />
-
       <div css={Wrapper}>
         <div css={IconWrapper}>
           <NotFound />

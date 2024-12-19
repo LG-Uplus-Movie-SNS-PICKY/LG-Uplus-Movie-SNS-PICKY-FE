@@ -19,7 +19,7 @@ import {
   SpoilerToggleText,
   SpoilerToggleButton,
   LoadingContainer,
-  EmptyText
+  EmptyText,
 } from "./index.styles";
 import SpoilerToggleSvg from "@assets/icons/spoiler_toggle.svg?react";
 import SpoilerToggleActiveSvg from "@assets/icons/spoiler_toggle_active.svg?react";
@@ -27,7 +27,11 @@ import SEO from "@components/seo";
 import { useInView } from "react-intersection-observer";
 import { useParams } from "react-router-dom";
 import Loading from "@components/loading";
-import { fetchGenders, fetchLineReviewMovie, fetchRatings } from "@api/linereview";
+import {
+  fetchGenders,
+  fetchLineReviewMovie,
+  fetchRatings,
+} from "@api/linereview";
 import { useMovieDetailQuery } from "@hooks/movie";
 import { useLineReviewMovieQuery } from "@hooks/review";
 
@@ -90,8 +94,6 @@ const ReviewsPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
 
   const [movieData, setMovieData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [ratings, setRatings] = useState<RatingsData>(defaultRatings);
   const [genders, setGenders] = useState<GendersData>(defaultGenders);
@@ -111,7 +113,8 @@ const ReviewsPage = () => {
   } = useLineReviewMovieQuery(movieId, sortType);
 
   // 모든 리뷰 데이터 병합
-  const allReviews = lineReviewState?.pages?.flatMap((page) => page.data.content) || [];
+  const allReviews =
+    lineReviewState?.pages?.flatMap((page) => page.data.content) || [];
 
   // 스포일러 상태에 따라 필터링
   const filteredReviews = includeSpoilers
@@ -228,8 +231,12 @@ const ReviewsPage = () => {
     movieData && (
       <>
         <SEO
-          title={`${movieData.title}(${new Date(movieData.release_date).getFullYear()})`}
-          description={`${movieData.title}의 ${allReviews?.length || 0}개의 모든 리뷰를 확인해보세요`}
+          title={`${movieData.title}(${new Date(
+            movieData.release_date
+          ).getFullYear()})`}
+          description={`${movieData.title}의 ${
+            allReviews?.length || 0
+          }개의 모든 리뷰를 확인해보세요`}
           image={`https://image.tmdb.org/t/p/original/${movieData.backdrop_path}`}
           url={`http://localhost:5173/${location.pathname}`}
         />
@@ -237,14 +244,18 @@ const ReviewsPage = () => {
         <div style={{ width: "100%" }}>
           <MovieReviewContainer>
             <MovieHeader />
-            <MovieReviewsPoster imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${movieData.backdrop_path
-              }`} />
+            <MovieReviewsPoster
+              imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                movieData.backdrop_path
+              }`}
+            />
             <InfoContainer>
               <Title>{movieData.title}</Title>
               <DetailContainer>
-                <DetailText>{new Date(movieData.release_date).getFullYear()}</DetailText>
-                |
-                <DetailText>{formatRuntime(movieData.runtime)}</DetailText>
+                <DetailText>
+                  {new Date(movieData.release_date).getFullYear()}
+                </DetailText>
+                |<DetailText>{formatRuntime(movieData.runtime)}</DetailText>
               </DetailContainer>
             </InfoContainer>
 
@@ -252,7 +263,11 @@ const ReviewsPage = () => {
             <ReviewGraph ratings={ratings} genders={genders} />
 
             {/* 리뷰 등록 컴포넌트 */}
-            <ReviewRegist movieId={movieId} refetch={refetch} onAddReview={handleAddReview} />
+            <ReviewRegist
+              movieId={movieId}
+              refetch={refetch}
+              onAddReview={handleAddReview}
+            />
 
             <ReviewsWrapper>
               {/* 최신순, 공감순 필터링 */}
@@ -299,13 +314,19 @@ const ReviewsPage = () => {
 
               {/* 무한스크롤 감지 */}
               <div ref={ref} style={{ height: "20px" }} />
-              {isFetchingNextPage &&
+              {isFetchingNextPage && (
                 <LoadingContainer>
                   <Loading />
                 </LoadingContainer>
-              }
+              )}
               {!hasNextPage && allReviews.length > 0 && (
-                <div style={{ textAlign: "center", marginBottom: "16px", fontWeight: "600" }}>
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "16px",
+                    fontWeight: "600",
+                  }}
+                >
                   마지막 리뷰입니다.
                 </div>
               )}

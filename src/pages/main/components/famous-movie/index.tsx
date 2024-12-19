@@ -26,6 +26,10 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
 
   const location = useLocation();
 
+  useEffect(() => {
+    if (!isLoading) console.log(data);
+  }, [isLoading]);
+
   return (
     <div css={styles.famousContainer(location.pathname === "/picky")}>
       {/* Title */}
@@ -62,7 +66,7 @@ function FamousMovie({ isLogin }: FamousMovieProps) {
                 name={movie.title}
                 rate={movie.totalRating}
                 like={movie.likes}
-                // comment={movie.comment}
+                comment={movie.lineReviews}
                 isLoading={isLoading}
                 onClick={() => navigate(`/movie/${movie.movieId}`)}
               />

@@ -1,6 +1,8 @@
+import { isErrorState } from "@recoil/atoms/isErrorState";
 import { getCookie } from "@util/cookie";
 import axios, { AxiosError } from "axios";
 import { isEmpty } from "lodash";
+import { setRecoil } from "recoil-nexus";
 // import { Cookies } from "react-cookie";
 
 // const cookie = new Cookies();
@@ -32,6 +34,12 @@ apiClient.interceptors.response.use(
   (error: AxiosError) => {
     // 공통 에러 처리 로직
     console.log(error);
+
+    // if (error.response) {
+    //   if (error.response.status === 404) {
+    //     setRecoil(isErrorState, "/error/404?type=NotUser");
+    //   }
+    // }
 
     // if (error.response) {
     //   // 서버에서 받은 응답(Response) 에러 처리
