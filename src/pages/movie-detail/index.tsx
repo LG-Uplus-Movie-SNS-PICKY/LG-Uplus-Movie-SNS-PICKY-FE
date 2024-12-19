@@ -1,4 +1,4 @@
-// pages/MovieDetail/index.tsx
+// pages/movie-detail/index.tsx
 import React, { useEffect, useState } from "react";
 import MovieHeader from "./components/movie-header";
 import MoviePoster from "./components/movie-poster";
@@ -12,11 +12,16 @@ import {
   Title,
   ReviewCountContainer,
   ReviewCount,
+  EmptyText,
 } from "./index.styles";
 import { Button } from "@stories/button";
 import { useNavigate, useParams } from "react-router-dom";
 import PlusSvg from "@assets/icons/plus.svg?react";
 import SEO from "@components/seo";
+import { useRecoilValueLoadable } from "recoil";
+import { genresSelector } from "@recoil/selectors/genresSelector";
+import { useMovieDetailQuery } from "@hooks/movie";
+import { useLineReviewMovieQuery } from "@hooks/review";
 
 interface MovieDetailProps {
   imageUrl?: string;
@@ -30,158 +35,233 @@ interface MovieDetailProps {
   rating?: number;
   content?: string;
   castData?: Array<{ name: string; role: string; image: string }>;
-  reviews?: Array<{
-    rating: number;
-    text: string;
-    user: string;
-    date: string;
-    likes: number;
-    dislikes: number;
-  }>;
+}
+
+interface Review {
+  id: number;
+  writerNickname: string;
+  userId: number;
+  movieId: number;
+  rating: number;
+  context: string;
+  isSpoiler: boolean;
+  likes: number;
+  dislikes: number;
+  createdAt: string;
+  isLiked: boolean;
+  isDisliked: boolean;
+  isAuthor: boolean;
 }
 
 function MovieDetail(props: MovieDetailProps) {
+  const { id } = useParams(); // URL에서 movieId 추출
+  const { data: movieDetail, isLoading: movieDetailIsLoading } =
+    useMovieDetailQuery(Number(id));
+  const { data: lineReviews, isLoading: lineReviewsIsLoading } =
+    useLineReviewMovieQuery(Number(id), "LATEST");
+
   const navigate = useNavigate();
 
-  const [activeTab, setActiveTab] = useState<string>("home");
+  const [movieData, setMovieData] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]); // 리뷰 상태 타입 지정
+  const [totalReviews, setTotalReviews] = useState<number>(0); // 전체 한줄평 개수
+  const [likeActive, setLikeActive] = useState<boolean>(false); // 좋아요 상태
 
-  const handleTabChange = (
-    event: React.MouseEvent<HTMLDivElement>,
-    name: string
-  ) => {
-    setActiveTab(name);
-  };
+  const loadable = useRecoilValueLoadable(genresSelector);
+
+  const genres = loadable.contents.data;
 
   const handleReviewClick = () => {
-    navigate("/movie/:id/reviews");
+    navigate(`/movie/${id}/review`); // movieId 변수를 사용
   };
 
-  // const { ott } = props;
-  // const ottData = ott?.map(name => ({
-  //     name,
-  //     url: ottUrls[name] || "URL not found" // 매핑 객체를 사용하여 URL 동적 할당
-  // }));
+  useEffect(() => {
+    if (!movieDetailIsLoading) {
+      // API 응답 데이터 구조 검증
+      if (!movieDetail.data) {
+        throw new Error("Invalid API response: Missing data");
+      }
 
-  // 더미 데이터
-  const dummyData = {
-    imageUrl:
-      "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/1200px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
-    title: "어벤져스: 엔드게임",
-    year: "2019",
-    nation: "미국",
-    production: "MARVEL",
-    age: "12",
-    genre: "액션/모험/SF",
-    ott: ["Netflix", "DisneyPlus", "Watcha"],
-    rating: 4.0,
-    content:
-      "인피니티 워 이후 절반만 살아남은 지구, 마지막 희망이 된 어벤져스, 먼저 떠난 그들을 위해 모든 것을 걸었다. 위대한 어벤져스, 운명을 바꿀 최후의 전쟁이 펼쳐진다.",
-    castData: [
-      {
-        name: "조 루소",
-        role: "감독",
-        image:
-          "https://image.cine21.com/resize/cine21/still/2019/0418/14_25_08__5cb80a34c0dcf[X252,310].jpg",
-      },
-      {
-        name: "안소니 루소",
-        role: "감독",
-        image:
-          "https://image.cine21.com/resize/cine21/still/2019/0418/14_24_12__5cb809fc6dad1[X252,310].jpg",
-      },
-      {
-        name: "로버트 다우니 주니어",
-        role: "주연 | 토니 스타크/아이언맨",
-        image:
-          "https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/201604/21/htm_20160421164314998976.jpg",
-      },
-      {
-        name: "크리스 에반스",
-        role: "주연 | 스티브 로저스/ 캡틴 아메리카",
-        image:
-          "https://i.namu.wiki/i/6vKIsA4CfvqF59ZciHoKZjZwhMj9LOG2FTQv22cOgl1e5lfRrKvgpSHbwbhNORT_auVb9gLDc2Vy29uwhTUWqg.webp",
-      },
-      {
-        name: "크리스 헴스워스",
-        role: "주연 | 토르",
-        image:
-          "https://i.namu.wiki/i/RF2bnphJY00BhrytswngMDRsL_whNOouWTEXlAuQjtYWjzXsVfV_4iwF_CVC-zkujGe9yK0jGPVVihDOG7SBWw.webp",
-      },
-      {
-        name: "스칼렛 요한슨",
-        role: "주연 | 나타샤 로마노프/블랙 위도우",
-        image:
-          "https://fpost.co.kr/board/data/editor/2106/e0692777cc11265ef2fe7df0e9519ef5_1624928133_7986.jpg",
-      },
-    ],
-    reviews: [
-      // Add this reviews array
-      {
-        rating: 4.0,
-        text: "이 시절 마블 그리워요!!",
-        user: "jaes****",
-        date: "2022.12.24",
-        likes: 18,
-        dislikes: 0,
-      },
-      {
-        rating: 4.0,
-        text: "이 시절 마블 그리워요!!",
-        user: "kimy****",
-        date: "2022.12.25",
-        likes: 12,
-        dislikes: 2,
-      },
-      {
-        rating: 5.0,
-        text: "이 시절 마블 그리워요!!",
-        user: "parkj****",
-        date: "2022.12.26",
-        likes: 30,
-        dislikes: 3,
-      },
-    ],
-  };
+      const { movie_info, like, rating, streaming_platform, linereviewCount } =
+        movieDetail.data;
+
+      if (!movie_info) {
+        throw new Error("Invalid API response: Missing movie_info");
+      }
+
+      // `streaming_platform` 필터링
+      const availablePlatforms = Object.entries(streaming_platform || {})
+        .filter(([_, value]) => value === true) // 값이 true인 플랫폼만 필터링
+        .map(([key]) => key); // 키(플랫폼 이름)만 추출
+
+      // `credits` 기본값 설정
+      const credits = movie_info.credits || {
+        cast: [],
+        crew: [],
+        directingCrew: [],
+      };
+
+      // 데이터 정렬
+      const sortedCast =
+        credits.cast?.sort((a: any, b: any) => a.id - b.id) || [];
+      const sortedDirectingCrew =
+        credits.directingCrew?.sort((a: any, b: any) => a.id - b.id) || [];
+
+      // `like` 상태와 영화 데이터 설정
+      setLikeActive(like || false);
+      setMovieData({
+        ...movie_info,
+        credits: {
+          ...credits,
+          cast: sortedCast,
+          directingCrew: sortedDirectingCrew,
+        },
+        availablePlatforms,
+        rating: rating || 0,
+        linereviewCount: linereviewCount || 0,
+      });
+    }
+  }, [movieDetailIsLoading]);
+
+  useEffect(() => {
+    if (!lineReviewsIsLoading) {
+      const allReviews =
+        lineReviews?.pages?.flatMap((page) => page.data.content) || []; // 모든 페이지 데이터 병합
+
+      // 스포일러 제외하고 최신순으로 정렬한 후 상위 3개 가져오기
+      const latestNonSpoilerReviews = allReviews
+        .filter((review: Review) => !review.isSpoiler) // 스포일러 제외
+        .sort(
+          (a: Review, b: Review) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ) // 최신순 정렬
+        .slice(0, 3); // 최대 3개 가져오기
+
+      // 상태 업데이트
+      setTotalReviews(allReviews.length); // 전체 리뷰 개수 설정
+      setReviews(latestNonSpoilerReviews); // 상위 3개 리뷰 설정
+    }
+  }, [lineReviewsIsLoading, lineReviews]);
 
   return (
-    <>
-      <SEO
-        title={dummyData.title}
-        description={dummyData.content}
-        image={dummyData.imageUrl}
-        url={`http://localhost:5173/${location.pathname}`}
-      />
-
-      <MovieDetailContainer>
-        <MovieHeader />
-        <MoviePoster
-          imageUrl={dummyData.imageUrl}
-          title={dummyData.title}
-          year={dummyData.year}
-          nation={dummyData.nation}
-          genre={dummyData.genre}
-          ott={dummyData.ott}
+    movieData && (
+      <>
+        <SEO
+          title={`${movieData.title}(${movieData.release_date.split("-")[0]})`}
+          description={movieData.overview}
+          image={`${import.meta.env.VITE_TMDB_IMAGE_URL}/${
+            movieData.poster_path
+          }`}
+          url={location.pathname}
         />
 
-        <MovieRating rating={dummyData.rating} />
-        <MovieInfo content={dummyData.content} castData={dummyData.castData} />
-        <ReviewHeader>
-          <Title>관람평</Title>
-          <ReviewCountContainer>
-            <ReviewCount>{dummyData.reviews.length}</ReviewCount>
-            <PlusSvg />
-          </ReviewCountContainer>
-        </ReviewHeader>
-        <MovieReview reviews={dummyData.reviews} />
-        <Button btnType="More" label="모두 보기" onClick={handleReviewClick} />
-        <MovieFooter
-          year={dummyData.year}
-          production={dummyData.nation}
-          age={dummyData.age}
-          genre={dummyData.genre}
-        />
-      </MovieDetailContainer>
-    </>
+        <MovieDetailContainer>
+          <MovieHeader />
+          <MoviePoster
+            imageUrl={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+              movieData.backdrop_path
+            }`}
+            title={movieData.title}
+            year={new Date(movieData.release_date).getFullYear()} // 년도만 추출
+            // nation="N/A" // nation 정보가 없다면 기본값 설정
+            genre={
+              movieData.genres
+                .map((movieGenre: any) => {
+                  // movieData.genres의 id와 genresSelector의 genreId를 매칭
+                  const genreInfo = genres.find(
+                    (genre: any) => genre.genreId === movieGenre.id
+                  );
+                  return genreInfo ? genreInfo.name : null; // 매칭된 장르 이름 반환
+                })
+                .filter(Boolean) // 유효한 값만 필터링
+                .join("/") || "Unknown Genre" // 장르 이름을 "/"로 연결하고 기본값 설정
+            }
+            ott={movieData.availablePlatforms} // OTT 서비스 정보
+          />
+
+          <MovieRating
+            rating={movieData.rating || 0}
+            initialLike={likeActive} // movie_info에서 가져온 초기 좋아요 상태
+            movieId={movieData.id} // 영화 ID
+          />
+
+          <MovieInfo
+            content={movieData.overview}
+            castData={[
+              // 감독 정보를 먼저 추가
+              ...movieData.credits.directingCrew.map((crew: any) => ({
+                name: crew.name,
+                role: crew.job,
+                image: crew.profile_path,
+              })),
+              // 그다음 배우 정보 추가
+              ...movieData.credits.cast.map((actor: any) => ({
+                name: actor.name,
+                role: actor.character,
+                image: actor.profile_path,
+              })),
+            ]}
+          />
+
+          <ReviewHeader>
+            <Title>한줄평</Title>
+            <ReviewCountContainer>
+              <ReviewCount>{movieData.linereviewCount}</ReviewCount>{" "}
+              {/* 전체 리뷰 개수 출력 */}
+              <PlusSvg />
+            </ReviewCountContainer>
+          </ReviewHeader>
+
+          {/* 리뷰 데이터 매핑 */}
+          {reviews.length === 0 ? (
+            <EmptyText>현재 등록된 한줄평이 없습니다.</EmptyText>
+          ) : (
+            reviews.map((review, index) => (
+              <MovieReview
+                key={review.id}
+                movieId={Number(id)}
+                review={review} // 개별 review 객체 전달
+                noBorder={index === reviews.length - 1} // 마지막 리뷰인지 여부 전달
+              />
+            ))
+          )}
+          {/* 전체 리뷰 개수가 0이 아닐 때만 버튼 렌더링 */}
+          {totalReviews > 0 ? (
+            <Button
+              btnType="More"
+              label="모두 보기"
+              onClick={handleReviewClick}
+            />
+          ) : (
+            <Button
+              btnType="More"
+              label="작성하러 가기"
+              onClick={handleReviewClick}
+            />
+          )}
+
+          <MovieFooter
+            year={movieData.release_date.split("-")[0]}
+            // production="N/A" // 제작 정보가 없으므로 기본값 설정
+            // age="N/A" // 연령 제한 정보가 없으므로 기본값 설정
+            genre={
+              movieData.genres
+                .map((movieGenre: any) => {
+                  // movieData.genres의 id와 genresSelector의 genreId를 매칭
+                  const genreInfo = genres.find(
+                    (genre: any) => genre.genreId === movieGenre.id
+                  );
+                  return genreInfo ? genreInfo.name : null; // 매칭된 장르 이름 반환
+                })
+                .filter(Boolean) // 유효한 값만 필터링
+                .join("/") || "Unknown Genre" // 장르 이름을 "/"로 연결하고 기본값 설정
+            }
+          />
+        </MovieDetailContainer>
+      </>
+    )
   );
 }
 

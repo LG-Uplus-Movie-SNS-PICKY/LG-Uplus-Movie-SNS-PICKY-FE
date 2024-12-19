@@ -3,6 +3,8 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   swiperContainer(): SerializedStyles {
     return css`
+      margin-top: 16px;
+
       width: 100%;
       min-height: fit-content;
       overflow: hidden;
@@ -43,6 +45,7 @@ export default {
       position: relative;
 
       width: 320px;
+      cursor: pointer;
       /* min-height: fit-content; */
 
       display: flex;
@@ -120,11 +123,15 @@ export default {
       width: 140px;
       aspect-ratio: 2 / 3;
 
+      background-color: #262626;
+
       border-radius: 4px;
       overflow: hidden;
 
-      & > img {
+      & img {
+        display: block;
         width: 100%;
+        height: 100%;
       }
     `;
   },
@@ -159,16 +166,21 @@ export default {
 
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 4px;
 
         & > .badge {
-          width: 32px;
-          height: 32px;
+          width: 24px;
+          height: 24px;
           box-sizing: border-box;
           background-color: #000;
           border-radius: 50%;
 
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
           color: #fff;
+          font-size: 12px;
           font-weight: 600;
         }
 

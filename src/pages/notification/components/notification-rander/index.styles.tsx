@@ -31,23 +31,44 @@ export default {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
+
+      gap: 16px;
 
       & > .req-user {
+        flex: 1;
         display: flex;
         align-items: center;
         gap: 12px;
 
         & > .profile {
+          position: relative;
+
           width: 48px;
           height: 48px;
           overflow: hidden;
           border-radius: 50%;
-          /* background-color: aqua; */
+          background-color: #191919;
 
-          & > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+          cursor: pointer;
+
+          & > span:last-child {
+            position: absolute;
+
+            width: 48px;
+            height: 48px;
+
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            font-size: 8px;
+            color: #5e5e5e;
+
+            & img {
+              width: 100%;
+            }
           }
         }
 
@@ -59,6 +80,7 @@ export default {
           & > .bold {
             font-weight: 600;
             color: #000;
+            cursor: pointer;
           }
 
           & > .date {
@@ -69,14 +91,31 @@ export default {
       }
 
       & > .movie-log-thumbnail {
+        position: relative;
+
         width: 48px;
         height: 48px;
         border-radius: 4px;
-        background-color: blue;
+        background-color: #191919;
         overflow: hidden;
 
-        & > img {
-          width: 100%;
+        & > span:last-child {
+          position: absolute;
+
+          width: 48px;
+          height: 48px;
+
+          top: 50%;
+          left: 50%;
+
+          transform: translate(-50%, -50%);
+
+          font-size: 8px;
+          color: #5e5e5e;
+
+          & img {
+            width: 100%;
+          }
         }
       }
     `;

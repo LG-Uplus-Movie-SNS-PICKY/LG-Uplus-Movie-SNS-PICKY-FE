@@ -1,143 +1,209 @@
-// pages/MovieDetail/components/BehindModal/index.tsx
-import React, { useEffect, useRef, useState } from 'react';
-import YouTubePlayer from '@components/youtube-player';
+// pages/movie-detail/components/behind-modal/index.tsx
+import React, { useEffect, useState } from "react";
+import YouTubePlayer from "@components/youtube-player";
 import {
-    ModalContainer,
-    CloseButton,
-    ContentContainer,
-    YoutubeSection,
-    OstSection,
-    YoutubeLogo,
-    Title,
-    OstContainer,
-    OstInfoContainer,
-    OstImage,
-    OstTitle,
-    OstArtist,
-    YoutubeContainer,
-    BehindContainer,
-    OstPlayist
-} from './index.styles';
-import ModalCloseSvg from '@assets/icons/modal_close.svg?react';
-import YouTubeLogoSvg from '@assets/icons/youtube.svg?react';
-
-interface YouTubePlaylist {
-    title: string;
-    playlistId: string;
-}
-
-interface OST {
-    title: string;
-    artist: string;
-    cover: string;
-}
-
-const dummyData = {
-    youtubePlaylists: [
-        {
-            title: "Behind the Scenes",
-            playlistId: "PLBI6wSvyxY25uSSynPJOPy9OqfBf9oFdL",
-            videoIds: ["DDrPLZw3QXg", "iWrC0Rf99TY", "V8ZFIMbUNBg"], // 비디오 ID 배열 추가
-        },
-        // 다른 플레이리스트 추가 가능
-    ],
-    ostList: [
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-        { title: "Tunnel Chase", artist: "앨런 실베스트리앨런 실베스트리", cover: "https://i.namu.wiki/i/4cH4TrwV7cm172wfXImUxv9tn9eoWweNOP3baUElNNAZk_20YVgjETo4K1j1fzUtvcSb7qoaCg-h5Vj6AMRgbA.webp" },
-    ]
-};
+  Skeleton,
+  SkeletonImage,
+  SkeletonTitle,
+  SkeletonArtist,
+} from "../skeleton";
+import {
+  ModalContainer,
+  CloseButton,
+  ContentContainer,
+  YoutubeSection,
+  OstSection,
+  YoutubeLogo,
+  Title,
+  OstContainer,
+  OstInfoContainer,
+  OstImage,
+  OstTitle,
+  OstArtist,
+  YoutubeContainer,
+  BehindContainer,
+  OstPlayist,
+} from "./index.styles";
+import ModalCloseSvg from "@assets/icons/modal_close.svg?react";
+import YouTubeLogoSvg from "@assets/icons/youtube.svg?react";
+import { useParams } from "react-router-dom";
+import { useMovieDetailQuery } from "@hooks/movie";
+import { fetchBehindVideos, fetchOstVideos } from "@/api/youtube";
 
 const BehindModal = ({ onClose }: { onClose: () => void }) => {
-    const playlist = dummyData.youtubePlaylists[0]; // 첫 번째 플레이리스트 사용
-    const videoIds = playlist.videoIds; // videoIds를 가져옴
+  const { id } = useParams<{ id: string }>(); // useParams로 movieId 가져오기
+  const { data: movieDetail, isLoading: movieDetailIsLoading } =
+    useMovieDetailQuery(Number(id));
+  const [ostVideos, setOstVideos] = useState<any[]>([]);
+  const [behindVideos, setBehindVideos] = useState<string[]>([]);
+  const [ostPlaylistId, setOstPlaylistId] = useState<string | null>(null);
+  const [behindPlaylistId, setBehindPlaylistId] = useState<string | null>(null); // 비하인드 영상 Playlist ID 저장
+  const [isYTReady, setIsYTReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
-    const [isYTReady, setIsYTReady] = useState(false);
+  const YOUTUBE_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
-    useEffect(() => {
+  useEffect(() => {
+    if (!movieDetailIsLoading) {
+      // API 응답 데이터 구조 검증
+      if (!movieDetail.data) {
+        throw new Error("Invalid API response: Missing data");
+      }
 
-        function loadScript(src: string): Promise<void> {
-            return new Promise(async (resolve, reject) => {
-                const existingScript = document.querySelector(`script[src="${src}"]`);
-                if (existingScript) {
-                    // Script already exists, no need to load again
-                    await resolve();
-                    return;
-                }
-                const script = document.createElement('script');
-                script.src = src;
-                script.onload = async () => await resolve();
-                script.onerror = async () => await reject(new Error(`Failed to load script: ${src}`));
-                document.head.appendChild(script);
-            });
+      const { ost, movie_behind_videos } = movieDetail.data;
+
+      if (!ost || !movie_behind_videos) {
+        throw new Error("Invalid API response: Missing movie_info");
+      }
+
+      // 상태 업데이트
+      setOstPlaylistId(ost || null);
+      setBehindPlaylistId(movie_behind_videos?.[0] || null);
+    }
+  }, [movieDetailIsLoading]);
+
+  // 비하인드 영상 데이터 가져오기
+  useEffect(() => {
+    if (!behindPlaylistId) return;
+
+    const loadBehindVideos = async () => {
+      setIsLoading(true);
+      try {
+        const videoIds = await fetchBehindVideos(
+          behindPlaylistId,
+          YOUTUBE_API_KEY!
+        );
+        setBehindVideos(videoIds);
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBehindVideos();
+  }, [behindPlaylistId]);
+
+  // OST 데이터 가져오기
+  useEffect(() => {
+    if (!ostPlaylistId) return;
+
+    const loadOstVideos = async () => {
+      setIsLoading(true);
+      try {
+        const items = await fetchOstVideos(ostPlaylistId, YOUTUBE_API_KEY!);
+        setOstVideos(items || []);
+      } catch (error) {
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadOstVideos();
+  }, [ostPlaylistId]);
+
+  // YouTube Player (YouTube 비하인드 영상)
+  useEffect(() => {
+    function loadScript(src: string): Promise<void> {
+      return new Promise((resolve, reject) => {
+        const existingScript = document.querySelector(`script[src="${src}"]`);
+        if (existingScript) {
+          resolve();
+          return;
         }
+        const script = document.createElement("script");
+        script.src = src;
+        script.onload = () => resolve();
+        script.onerror = () =>
+          reject(new Error(`Failed to load script: ${src}`));
+        document.head.appendChild(script);
+      });
+    }
 
-        function initializePlayer() {
-            if (window.YT && window.YT.Player) {
-                setIsYTReady(true);
-            } else {
-                // Register API ready callback
-                window.onYouTubeIframeAPIReady = () => {
-                    setIsYTReady(true);
-                };
-            }
-        }
+    function initializePlayer() {
+      if (window.YT && window.YT.Player) {
+        setIsYTReady(true);
+      } else {
+        window.onYouTubeIframeAPIReady = () => setIsYTReady(true);
+      }
+    }
 
-        loadScript('https://www.youtube.com/iframe_api')
-            .then(() => initializePlayer())
-            .catch((err) => console.error(err));
-
-    }, []);
-
-
-    return (
-        <ModalContainer onClick={onClose}>
-            <ContentContainer onClick={e => e.stopPropagation()}>
-                <CloseButton onClick={onClose}>
-                    <ModalCloseSvg />
-                </CloseButton>
-                <YoutubeSection>
-                    <YoutubeLogo>
-                        <YouTubeLogoSvg />
-                        <Title>비하인드 영상</Title>
-                    </YoutubeLogo>
-                    <YoutubeContainer>
-                        {videoIds.map((videoId, index) => (
-                            <BehindContainer key={index}>
-                                <YouTubePlayer isYTReady={isYTReady} videoId={videoId} />
-                            </BehindContainer>
-                        ))}
-                    </YoutubeContainer>
-                </YoutubeSection>
-                <OstSection>
-                    <Title>OST</Title>
-                    <OstPlayist>
-                        {dummyData.ostList.map((ost, index) => (
-                            <OstContainer key={index}>
-                                <OstImage src={ost.cover} />
-                                <OstInfoContainer>
-                                    <OstTitle>{ost.title}</OstTitle>
-                                    <OstArtist>{ost.artist}</OstArtist>
-                                </OstInfoContainer>
-                            </OstContainer>
-                        ))}
-                    </OstPlayist>
-                </OstSection>
-            </ContentContainer>
-        </ModalContainer>
+    loadScript("https://www.youtube.com/iframe_api").then(() =>
+      initializePlayer()
     );
+  }, []);
+
+  return (
+    <ModalContainer onClick={onClose}>
+      <ContentContainer onClick={(e) => e.stopPropagation()}>
+        <CloseButton onClick={onClose}>
+          <ModalCloseSvg />
+        </CloseButton>
+        <YoutubeSection>
+          <YoutubeLogo>
+            <YouTubeLogoSvg />
+            <Title>비하인드 영상</Title>
+          </YoutubeLogo>
+          <YoutubeContainer>
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, index) => (
+                <BehindContainer key={index}>
+                  <Skeleton /> {/* Skeleton 자리 고정 */}
+                </BehindContainer>
+              ))
+            ) : behindVideos.length > 0 ? (
+              behindVideos.map((videoId, index) => (
+                <BehindContainer key={index}>
+                  <YouTubePlayer isYTReady={isYTReady} videoId={videoId} />
+                </BehindContainer>
+              ))
+            ) : (
+              <p>비하인드 영상이 없습니다.</p>
+            )}
+          </YoutubeContainer>
+        </YoutubeSection>
+        <OstSection>
+          <Title>OST</Title>
+          <OstPlayist>
+            {isLoading
+              ? Array.from({ length: 6 }).map((_, index) => (
+                  <OstContainer key={index}>
+                    {/* 이미지 Skeleton */}
+                    <SkeletonImage />
+                    {/* 제목 및 아티스트 Skeleton */}
+                    <OstInfoContainer>
+                      <SkeletonTitle />
+                      <SkeletonArtist />
+                    </OstInfoContainer>
+                  </OstContainer>
+                ))
+              : ostVideos.map((video, index) => {
+                  const songTitle = video.snippet.title; // 곡명
+                  const artist = video.snippet.channelTitle; // 아티스트
+                  const videoUrl = `https://www.youtube.com/watch?v=${video.snippet.resourceId.videoId}`; // 유튜브 링크
+
+                  return (
+                    <OstContainer
+                      key={index}
+                      onClick={() => window.open(videoUrl, "_blank")}
+                    >
+                      {/* 이미지 */}
+                      <OstImage
+                        src={video.snippet.thumbnails.default.url}
+                        alt={songTitle}
+                      />
+                      {/* 제목 및 아티스트 */}
+                      <OstInfoContainer>
+                        <OstTitle title={songTitle}>{songTitle}</OstTitle>
+                        <OstArtist title={artist}>{artist}</OstArtist>
+                      </OstInfoContainer>
+                    </OstContainer>
+                  );
+                })}
+          </OstPlayist>
+        </OstSection>
+      </ContentContainer>
+    </ModalContainer>
+  );
 };
 
 export default BehindModal;

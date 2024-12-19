@@ -3,15 +3,20 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   registerForm(): SerializedStyles {
     return css`
+      position: relative;
+
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      /* gap: 24px; */
     `;
   },
 
   registerContainer(): SerializedStyles {
     return css`
+      position: absolute;
+      z-index: 9999;
+
       width: 100%;
       display: flex;
       justify-content: space-between;
@@ -29,7 +34,6 @@ export default {
       flex-direction: column;
 
       background-color: #fff;
-      /* border-radius: 4px; */
 
       box-shadow: 0 1px 4px rgba(170, 170, 170, 0.4);
 
@@ -54,6 +58,7 @@ export default {
           background-color: transparent;
           border: none;
           padding: 12px 16px;
+          display: flex;
 
           & > svg path {
             fill: #aaa;
@@ -65,7 +70,6 @@ export default {
 
   registerButton(): SerializedStyles {
     return css`
-      height: 45.61px;
       padding: 12px 24px;
       background-color: #fff;
       border: none;
@@ -87,6 +91,14 @@ export default {
       justify-content: flex-start;
       align-items: center;
       overflow-y: scroll;
+
+      & > li.loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: calc(320px / 2);
+        width: 150px;
+      }
 
       & > .list-item {
         width: 100%;
@@ -166,6 +178,8 @@ export default {
 
   movieDetailContainer(): SerializedStyles {
     return css`
+      margin-top: 60px;
+
       width: 100%;
       min-height: 180px;
 
@@ -275,13 +289,18 @@ export default {
 
       & > .movie-poster {
         width: 88px;
-        height: 132px;
+        height: 125.38;
         border-radius: 8px;
         overflow: hidden;
+        background-color: #191919;
 
-        & > img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & img {
           width: 100%;
-          height: 100%;
+          display: block;
         }
       }
 

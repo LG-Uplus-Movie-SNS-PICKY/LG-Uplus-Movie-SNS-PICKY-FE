@@ -7,6 +7,7 @@ import Checked from "@assets/icons/checked-movie.svg?react";
 
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { useState } from "react";
 
 export interface MovieItemProps {
   type: "basic" | "rate" | "all";
@@ -17,6 +18,11 @@ export interface MovieItemProps {
   comment?: number;
   state?: string;
   name: string;
+  style?: React.CSSProperties;
+  disabled?: boolean;
+  isLoading?: boolean;
+  isError?: boolean;
+  onClick?: (movieId?: number) => void;
 }
 
 interface RateComponentProps {
@@ -34,7 +40,7 @@ function RateComponent({ rate }: RateComponentProps): JSX.Element {
     <div css={styles.movieItemRate()}>
       <span>평점</span>
       <Star width="12px" />
-      <span>{rate}</span>
+      <span>{rate.toFixed(1)}</span>
     </div>
   );
 }
@@ -67,24 +73,39 @@ export function MovieItem({
   comment = 0,
   state = "abouttime",
   name,
+  style,
+  disabled,
+  isLoading,
+  onClick,
 }: MovieItemProps): JSX.Element {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
-    <div css={styles.movieItemContainer()}>
+    <div
+      css={styles.movieItemContainer()}
+      style={style}
+      onClick={() => onClick && onClick()}
+    >
       {/* 영화 썸네일 이미지 */}
       <div css={styles.movieItemThumbnail(type === "basic" && state === name)}>
         {type === "basic" && state === name ? <Checked /> : null}
-        <LazyLoadImage src={src} alt={name} effect="blur" />
+        <LazyLoadImage
+          src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${src}`}
+          effect={"blur"}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageLoaded(false)}
+        />
+        {!imageLoaded && <span className="alt">{title}</span>}
       </div>
 
       {/* 영화 제목 */}
-      <span className="movie-title">{title}</span>
+      {!disabled && <span className="movie-title">{title}</span>}
 
       {/* Type === "rate" : 별점만 보여주기 */}
       {type !== "basic" && <RateComponent rate={rate} />}
 
       {/* Type === "all" 별점 + 댓글 수 + 좋아요 수 보여주기 */}
       {type === "all" && <InfoComponent like={like} comment={comment} />}
-      <div></div>
     </div>
   );
 }

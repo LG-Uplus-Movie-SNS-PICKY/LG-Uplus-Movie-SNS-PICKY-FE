@@ -9,12 +9,12 @@ import "swiper/css/pagination";
 import { useRecoilValueLoadable } from "recoil";
 import { genresSelector } from "@recoil/selectors/genresSelector";
 import { GenreTabButton } from "@stories/genre-tab";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // API로 호출된 장르 데이터 타입 정의
 interface GenreDataType {
-  genre_id: number;
-  genre_name: string;
+  genreId: number;
+  name: string;
 }
 
 function GenreTab() {
@@ -27,8 +27,9 @@ function GenreTab() {
   const genres = loadable.contents.data;
 
   return (
-    genres?.length > 0 && (
+    genres.length > 0 && (
       <Swiper
+        // key={crypto.randomUUID()}
         slidesPerView={"auto"}
         spaceBetween={10}
         direction="horizontal"
@@ -40,13 +41,13 @@ function GenreTab() {
         css={styles.swiperContainer()}
       >
         {genres.map((genre: GenreDataType) => (
-          <SwiperSlide key={genre.genre_id}>
+          <SwiperSlide key={genre.genreId}>
             <GenreTabButton
-              label={genre.genre_name}
-              emoji={genre.genre_name}
+              label={genre.name}
+              emoji={genre.name}
               btnType="Round"
               padding="8px 16px"
-              onClick={() => navigate(`/picky/genre/${genre.genre_id}`)}
+              onClick={() => navigate(`/genre/${genre.genreId}`)}
             />
           </SwiperSlide>
         ))}

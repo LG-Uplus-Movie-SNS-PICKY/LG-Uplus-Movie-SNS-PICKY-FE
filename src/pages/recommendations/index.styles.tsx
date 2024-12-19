@@ -1,8 +1,11 @@
 import { css } from "@emotion/react";
 
 export const containerStyle = css`
-  height: 100vh;
-  max-width: 768px;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
 `;
 
 export const headerWrapperStyle = css`
@@ -70,9 +73,14 @@ export const subtitleStyle = css`
 `;
 
 export const movieGridStyle = css`
+  width: 100%;
+
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 16px;
+  gap: 8px;
+  justify-content: center;
+  padding: 0px 20px;
+  margin-bottom: 16px;
 `;
 
 export const movieCardStyle = css`
@@ -106,17 +114,23 @@ export const movieRatingStyle = css`
 
 export const movieWrapperStyle = css`
   display: flex;
-  padding: 0px 32px;
+  padding: 0px 20px;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
 `;
 
 export const movieContainerStyle = css`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 16px;
-align-self: stretch;
-`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+
+  flex: 1;
+
+  & > .empty {
+    /* margin-top: 64px; */
+  }
+`;

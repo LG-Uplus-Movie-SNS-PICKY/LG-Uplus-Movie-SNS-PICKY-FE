@@ -47,10 +47,34 @@ export default {
       & > .select-genre {
         width: 100%;
 
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        &.is-loading {
+          display: flex;
+        }
+
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         gap: 12px;
+
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      & > .more-genre-movies {
+        cursor: pointer;
+
+        display: flex;
+        justify-content: center;
+
+        & > button {
+          padding: 8px 16px;
+          font-size: 12px;
+          font-weight: 600;
+          border-radius: 50px;
+          background-color: #ffffff;
+          border: 1px solid #d9d9d9;
+          color: #5e5e5e;
+          cursor: pointer;
+        }
       }
 
       margin-bottom: 24px;

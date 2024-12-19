@@ -15,6 +15,13 @@ export const Wrapper = styled.div`
   height: 100%;
   justify-content: flex-start;
   overflow-y: scroll;
+
+  scrollbar-width: none; /* Firefox: 스크롤바 숨김 */
+  -ms-overflow-style: none; /* IE: 스크롤바 숨김 */
+
+  &::-webkit-scrollbar {
+    display: none; /* Webkit (Chrome, Safari): 스크롤바 숨김 */
+  }
 `;
 
 export const ProfileContainer = styled.div`
@@ -28,12 +35,13 @@ export const ProfileContainer = styled.div`
 export const ProfileImage = styled.img`
   width: 80px;
   height: 80px;
-  border-radius: 200px;
+  border-radius: 50%;
 `;
 
 export const ProfileInfoContainer = styled.div`
+  flex: 1;
+
   display: flex;
-  width: 100%;
   justify-content: space-between;
   align-items: center;
 `;
@@ -45,6 +53,7 @@ export const ProfileInfo = styled.div`
   padding: 0 16px;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 `;
 
 export const Text = styled.span`
@@ -109,7 +118,9 @@ export const EditButton = styled.div`
   cursor: pointer;
 `;
 
-export const SettingsButton = styled.div`
+export const SettingsButton = styled.button`
+  position: relative;
+
   padding: 6px 8px;
   border-radius: 8px;
   background-color: #f4f5f7;

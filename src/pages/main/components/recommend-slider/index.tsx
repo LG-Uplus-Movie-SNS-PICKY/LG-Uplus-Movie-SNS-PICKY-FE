@@ -3,77 +3,42 @@ import DisneyPlus from "@assets/icons/disneyplus.svg?react";
 import Watcha from "@assets/icons/watcha.svg?react";
 import styles from "./index.styles";
 
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper, SwiperSlide, SwiperRef } from "swiper/react";
 import { Pagination, Mousewheel, Autoplay } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/autoplay";
 import "swiper/css/pagination";
-
-const dummyData = [
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: [
-      "netflix",
-      "watcha",
-      "tving",
-      "disneyplus",
-      "coupangplay",
-      "wavve",
-    ],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha", "tving", "disneyplus", "coupangplay"],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha", "tving", "disneyplus"],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha", "tving"],
-  },
-
-  {
-    poster:
-      "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp",
-    title: "티파니에서 아침을",
-    rate: 4.2,
-    genres: ["드라마", "로맨스", "코미디"],
-    service: ["netflix", "watcha"],
-  },
-];
-const posterDummySrc =
-  "https://i.namu.wiki/i/55Y_mFY2MGI2pKrhXVfgXi27wSvdg3F4IovLwH-i5gf1nhWb-IL-6ZVAJW_MsnNahUNYljq7ep1uskFK-OiRkg.webp";
+import { useRecommnedMovieQuery } from "@hooks/movie";
+import { useEffect, useRef, useState } from "react";
+import Loading from "@components/loading";
+import { RecommendMovieDataTypes } from "@type/api/movie";
+import { Swiper as SwiperCore } from "swiper";
+import { useNavigate } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 /**
  * 사용자 맞춤 영화를 보여주는 슬라이더
  * @returns
  */
 function RecommendMovieSlider() {
+  const { data: recommendMovies, isLoading } = useRecommnedMovieQuery();
+  const swiperRef = useRef<SwiperCore | null>(null);
+  const navigate = useNavigate();
+
+  const [imageLoad, setImageLoad] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && recommendMovies.data.length > 0) {
+      swiperRef.current?.update();
+      swiperRef.current?.slideTo(1);
+    }
+  }, [isLoading, recommendMovies]);
+
   return (
     <Swiper
-      slidesPerView={"auto"}
+      onSwiper={(swipper) => (swiperRef.current = swipper)}
+      slidesPerView={1.3}
       spaceBetween={30}
       centeredSlides={true}
       modules={[Autoplay]}
@@ -85,51 +50,71 @@ function RecommendMovieSlider() {
       }}
       css={styles.swiperContainer()}
     >
-      {dummyData.length > 0 &&
-        dummyData.map((data, idx) => (
-          <SwiperSlide key={idx}>
-            <div css={styles.sliderItem(data.poster)}>
-              {/* Background Image */}
-              <div className="background" />
+      {isLoading && <Loading />}
+      {!isLoading &&
+        recommendMovies?.data
+          .slice(0, 5)
+          .map((movie: RecommendMovieDataTypes) => (
+            <SwiperSlide key={movie.movieId}>
+              <div
+                css={styles.sliderItem(
+                  `${import.meta.env.VITE_TMDB_IMAGE_URL}${movie.posterUrl}`
+                )}
+                onClick={() => navigate(`/movie/${movie.movieId}`)}
+              >
+                {/* Background Image */}
+                <div className="background" />
 
-              {/* Content */}
-              <div css={styles.content()}>
-                {/* Badge Section */}
-                <div css={styles.badgeContainer()}>
-                  <div className="badge">PICKY 추천 영화</div>
-                </div>
-
-                {/* Movie Poster Section */}
-                <div css={styles.moviePosterContainer()}>
-                  <img src={data.poster} alt="image" />
-                </div>
-
-                {/* Movie Info Section */}
-                <div css={styles.movieInfoContainer()}>
-                  {/* Info */}
-                  <div className="movie-info">
-                    <h3>티파니에서 아침을</h3>
-                    <div className="movie-sub-info">
-                      <span className="rate">별점: ★ {data.rate}</span>
-                      <span className="genres">{data.genres.join(", ")}</span>
-                    </div>
+                {/* Content */}
+                <div css={styles.content()}>
+                  {/* Badge Section */}
+                  <div css={styles.badgeContainer()}>
+                    <div className="badge">PICKY 추천 영화</div>
                   </div>
 
-                  {/* OTT Servie */}
-                  <div className="ott-service">
-                    <div className="badge">
-                      <Netflix width={32} height={32} />
+                  {/* Movie Poster Section */}
+                  <div css={styles.moviePosterContainer()}>
+                    <LazyLoadImage
+                      src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                        movie.posterUrl
+                      }`}
+                      alt={movie.title}
+                      onLoad={() => setImageLoad(true)}
+                      onError={() => setImageLoad(false)}
+                    />
+                    {!imageLoad && <span>{movie.title}</span>}
+                  </div>
+
+                  {/* Movie Info Section */}
+                  <div css={styles.movieInfoContainer()}>
+                    {/* Info */}
+                    <div className="movie-info">
+                      <h3>{movie.title}</h3>
+                      <div className="movie-sub-info">
+                        <span className="rate">
+                          별점: ★ {movie.totalRating}
+                        </span>
+                        <span className="genres">
+                          {movie.genres.map((genre) => genre.name).join(", ")}
+                        </span>
+                      </div>
                     </div>
-                    <div className="badge">
-                      <Watcha width={32} height={32} />
+
+                    {/* OTT Servie */}
+                    <div className="ott-service">
+                      <div className="badge">
+                        <Netflix width={18} height={18} />
+                      </div>
+                      <div className="badge">
+                        <Watcha width={18} height={18} />
+                      </div>
+                      <div className="badge more-service">2+</div>
                     </div>
-                    <div className="badge more-service">2+</div>
                   </div>
                 </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
+            </SwiperSlide>
+          ))}
     </Swiper>
   );
 }

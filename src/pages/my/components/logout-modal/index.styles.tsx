@@ -9,18 +9,17 @@ export const ModalContainer = styled.div`
   bottom: 0;
   display: flex;
   background-color: transparent;
+  z-index: 10000; /* TabMenu보다 높은 값 설정 */
 `;
 
 export const ModalWrapper = styled.div`
     position: absolute;
-    top: 27%;
-    right: 4%;
     background-color: rgba(0, 0, 0, 0.5);
     color: white;
     border-radius: 8px;
     padding: 0 8px;
     backdrop-filter: blur(20px);
-    z-index: 10;
+    z-index: 10002; /* ModalBackground보다 높은 값 설정 */
 `;
 
 export const ModalItem = styled.div`
@@ -47,4 +46,11 @@ export const ModalBackground = styled.div`
     align-items: center;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.1);
+    z-index: 10001; /* LogoutModal보다 높은 값 설정 */
+`;
+
+export const ModalWidth = styled.div`
+    display: flex;
+    max-width: 220px;
+    width: 100%;
 `;

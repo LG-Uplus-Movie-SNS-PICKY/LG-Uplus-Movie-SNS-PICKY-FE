@@ -16,6 +16,7 @@ export const postContainer = css`
   align-items: center;
   justify-content: center;
   padding: 16px;
+  z-index: 0;
 `;
 
 export const pText = css`
@@ -38,6 +39,7 @@ export const searchBox = css`
   background: #fff;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   transition: height 0.3s ease;
+  gap: 10px;
 `;
 
 export const searchBoxExpanded = css`
@@ -89,8 +91,8 @@ export const movieSearchIcon = css`
   top: 50%;
   left: 16px;
   transform: translateY(-50%);
-  pointer-events: none;
-  color: #ccc;
+  z-index: 1;
+  pointer-events: none; /* 포커스 시 클릭 이벤트 방지 */
 `;
 
 export const autocompleteBox = css`
@@ -145,7 +147,9 @@ export const modalContainer = css`
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1001;
-  width: 85%;
+  width: 100%;
+  max-width: 430px;
+  padding: 0 29px;
 `;
 
 export const modalContent = css`
@@ -198,12 +202,42 @@ export const deleteIcon = css`
   color: #ccc;
 `;
 
+export const reviewInputWrapper = css`
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+
+export const reviewIcon = css`
+  position: absolute;
+  left: 20px;
+  top: 31px;
+  transform: translateY(-50%);
+`;
+
+export const reviewInputWithIcon = css`
+  width: 100%;
+  padding: 12px 12px 12px 40px; /* 왼쪽 패딩을 아이콘 크기에 맞게 설정 */
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  resize: none;
+
+  ::placeholder {
+    color: #aaa;
+  }
+`;
+
 export const reviewSection = css`
   width: 100%;
   padding: 0 16px;
 `;
 
 export const reviewContainer = css`
+  position: relative;
+
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -219,7 +253,7 @@ export const reviewInput = css`
   border: none;
   outline: none;
   resize: none;
-  color: #9d9d9d;
+  color: #000;
   font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.64px;
@@ -290,23 +324,21 @@ export const shareButton = css`
 `;
 
 export const backButton = css`
-  margin-bottom: 10px;
   cursor: pointer;
   display: flex;
   justify-content: flex-end;
   width: 100%;
-  margin-right: 8%;
 `;
 
 export const movieInfo = css`
   width: 100%;
-  padding: 16px;
+  padding: 20px 16px 24px 16px;
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0px 0px 8px 8px;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.25);
 `;
 
-export const movieTitle = css`
+export const movieTitleStyle = css`
   color: #000;
   font-size: 24px;
   font-weight: 600;
@@ -330,22 +362,34 @@ export const movieDetails = css`
   }
 `;
 
+export const movieCountry = css`
+  color: #9d9d9d;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.64px;
+  margin-bottom: 4px;
+`;
+
 export const movieGenres = css`
   display: flex;
-  padding: 4px 8px;
   align-items: center;
   gap: 10px;
 
   span {
-    font-size: 14px;
     padding: 4px 8px;
     border-radius: 4px;
     border: 0.5px solid #f1f1f1;
     background: #eee;
+    color: #5e5e5e;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -0.48px;
   }
 `;
 
-export const highlightedText = css`
-  color: red;
-  font-weight: bold;
+export const activeAutocompleteItem = css`
+  background-color: #f0f0f0;
+  cursor: pointer;
 `;

@@ -5,15 +5,18 @@ export const containerStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  max-width: 768px;
+  /* max-width: 768px; */
   width: 100%;
 `;
 
 export const headerStyle = css`
+  width: 100%;
+
   display: flex;
   align-items: center;
+  justify-content: center;
+
   padding: 16px;
-  width: 100%;
 `;
 
 export const backButtonStyle = css`
@@ -22,8 +25,7 @@ export const backButtonStyle = css`
   cursor: pointer;
   display: flex;
   align-items: center;
-  margin-right: 8px;
-  font-size: 16px;
+  /* margin-right: 8px; */
 `;
 
 export const filterContainerStyle = css`
@@ -32,28 +34,35 @@ export const filterContainerStyle = css`
   align-items: center;
   justify-content: center;
   padding: 0 8px 0 0;
-  border-right: 1px solid #D9D9D9;
+  border-right: 1px solid #d9d9d9;
   font-family: 12px;
   font-weight: 600;
-  color: #FF084A;
+  color: #ff084a;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
 export const filterLabelStyle = css`
-font-family: Pretendard;
-font-size: 12px;
-font-weight: 600;
-color: #FF084A;
+  color: #ff084a;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 00;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
 `;
 
-export const filterModalStyle = css`
+export const filterModalStyle = (isFilterActive: boolean) => css`
   position: absolute;
-  top: 12.5%;
-  left: 10%;
-  background: #FFFFFF;
+  top: 36px;
+  background: #ffffff;
   border-radius: 10px;
-  border: 1px solid #D9D9D9;
+  border: 1px solid #d9d9d9;
   padding: 4px;
-  z-index: 1000; /* 항상 위에 렌더링 */
+  z-index: 1000;
 `;
 
 export const filterOptionStyle = css`
@@ -63,48 +72,44 @@ export const filterOptionStyle = css`
   font-weight: 400;
   color: #000000;
   letter-spacing: -0.5px;
-  border-bottom: 0.5px solid #F1F1F1;
+  border-bottom: 0.5px solid #f1f1f1;
   cursor: pointer;
 
   &:last-of-type {
-    border-bottom: none; /* 마지막 옵션 아래쪽 보더 제거 */
+    border-bottom: none;
   }
 `;
 
 export const filterButtonStyle = css`
+  position: relative;
   display: flex;
-  height: 38px;
+  /* width: 80px; */
+  /* height: 38px; */
   align-items: center;
   justify-content: center;
-  background-color: #f1f1f1;
-  padding: 8px 0 8px 16px;
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
+  /* flex-direction: column; */
+  padding: 8px 0 8px 12px;
+  text-wrap: nowrap;
 `;
 
 export const filterIconStyle = css`
   width: 16px;
   height: 16px;
   margin-right: 8px;
-`;  
+`;
 
 export const searchInputStyle = css`
-  display: flex;
-  padding: 8px 12px 8px 8px;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  border-top-right-radius: 50px;
-  border-bottom-right-radius: 50px;
-  background: #f1f1f1;
+  padding: 4px 0 4px 8px;
+
+  background-color: transparent;
   flex: 1;
-  border: 1.5px solid transparent;
+  border: none;
   color: #000000;
   font-family: Pretendard;
-  font-size: 16px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  /* letter-spacing: 0.5px; */
   cursor: pointer;
 
   &:focus {
@@ -112,7 +117,7 @@ export const searchInputStyle = css`
   }
 
   &::placeholder {
-    color: #9D9D9D;
+    color: #9d9d9d;
     font-size: 12px;
     font-weight: 400;
   }
@@ -147,6 +152,7 @@ export const clearAllButtonStyle = css`
   font-weight: 400;
   line-height: 16px;
   letter-spacing: 0.5px;
+  cursor: pointer;
 `;
 
 export const emptyStateContainerStyle = css`
@@ -154,7 +160,6 @@ export const emptyStateContainerStyle = css`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 140px;
   flex: 1;
   color: #c8c8c8;
   text-align: center;
@@ -183,23 +188,24 @@ export const emptyTextStyle = css`
   line-height: normal;
 `;
 export const searchButtonStyle = css`
-  position: absolute;
-  right: 16px;
-  top: 50%;
-  transform: translateY(-50%);
   background: none;
   display: flex;
   border: none;
+  padding: 0 12px 0 0;
   cursor: pointer;
 `;
 
 export const searchInputContainerStyle = (isFocused: boolean) => css`
+  flex: 1;
+
+  background-color: #f1f1f1;
+
   display: flex;
   align-items: center;
-  position: relative;
-  width: 100%;
+  /* position: relative; */
+
   border-radius: 50px;
-  border: 1.5px solid ${isFocused ? "#FF084A" : "transparent"};
+  border: 1px solid ${isFocused ? "#FF084A" : "transparent"};
   transition: border-color 0.3s ease;
 `;
 
@@ -211,6 +217,7 @@ export const suggestionListStyle = css`
   align-items: flex-start;
   gap: 20px;
   align-self: stretch;
+  cursor: pointer;
 
   li {
     display: flex;

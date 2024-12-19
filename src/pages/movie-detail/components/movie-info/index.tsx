@@ -1,5 +1,5 @@
 // pages/MovieDetail/components/MovieInfo/index.tsx
-import React from 'react';
+import React from "react";
 import {
   MovieInfoContainer,
   AdBannerContainer,
@@ -14,20 +14,21 @@ import {
   CastImage,
   CastDetails,
   CastName,
-  CastRole
-} from './index.styles';
+  CastRole,
+} from "./index.styles";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from "swiper/react";
 
-import 'swiper/css';
-import 'swiper/css/free-mode';
-import 'swiper/css/scrollbar';
-import { FreeMode, Mousewheel } from 'swiper/modules';
+import "swiper/css";
+import "swiper/css/free-mode";
+import "swiper/css/scrollbar";
+import { FreeMode, Mousewheel } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 
 interface CastMember {
   name: string;
   role: string;
-  image: string;
+  image: string | null;
 }
 
 interface MovieInfoProps {
@@ -36,6 +37,10 @@ interface MovieInfoProps {
 }
 
 const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
+  const handleFormClick = () => {
+    window.location.href = "https://forms.gle/b77FKmh6vrHA6Ck59";
+  };
+
   const groupedCast = castData.reduce<CastMember[][]>((acc, cast, index) => {
     const groupIndex = Math.floor(index / 3);
     if (!acc[groupIndex]) {
@@ -47,23 +52,21 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
 
   return (
     <MovieInfoContainer>
-      <AdBannerContainer />
+      <AdBannerContainer onClick={handleFormClick} />
       <InfoContainer>
         <Title>줄거리</Title>
         <ContentText>{content}</ContentText>
       </InfoContainer>
-      
 
       {/*  최상위 부모 컴포넌트 */}
       <CastInfoContainer>
-
         {/* 타이틀 */}
         <Title>출연/제작</Title>
-        
+
         {/* 슬라이더 부모 컨테이너 */}
-        <Swiper 
-          direction='horizontal'
-          slidesPerView='auto'
+        <Swiper
+          direction="horizontal"
+          slidesPerView="auto"
           spaceBetween={16}
           freeMode={true}
           mousewheel={{
@@ -72,85 +75,41 @@ const MovieInfo: React.FC<MovieInfoProps> = ({ content, castData }) => {
           modules={[FreeMode, Mousewheel]}
           css={styles.CastContainer()}
         >
-
-            {groupedCast.map((group, index) => {
-              console.log(group)
-              return (
-                  <SwiperSlide key={index} >
-    
-                  {group.map((cast, idx) => (
-                    <CastCard key={idx}>
-                      <CastImage src={cast.image} alt={cast.name} />
-                      <CastDetails>
-                        <CastName>{cast.name}</CastName>
-                        <CastRole>{cast.role}</CastRole>
-                      </CastDetails>
-                    </CastCard>
-                  ))}
-    
-                  </SwiperSlide>
-                )}
-              )
-            }
-
-            {/*  */}
-
-                {/* {group.map((cast, idx) => (
-                      <CastCard key={idx}>
-                        <CastImage src={cast.image} alt={cast.name} />
-                        <CastDetails>
-                          <CastName>{cast.name}</CastName>
-                          <CastRole>{cast.role}</CastRole>
-                        </CastDetails>
-                      </CastCard>
-                    ))} */}
-          </Swiper>
-
-          {/* 각 슬라이더 아이템 */}
-            {/* {groupedCast.map((group, index) => (
+          {groupedCast.map((group, index) => {
+            return (
               <SwiperSlide key={index}>
-                <CastContainer>
-
-                  {group.map((cast, idx) => (
-                    <CastCard key={idx}>
-                      <CastImage src={cast.image} alt={cast.name} />
-                      <CastDetails>
-                        <CastName>{cast.name}</CastName>
-                        <CastRole>{cast.role}</CastRole>
-                      </CastDetails>
-                    </CastCard>
-                  ))}
-
-                </CastContainer>
+                {group.map((cast, idx) => (
+                  <CastCard key={idx}>
+                    {/* 이미지가 없으면 배경색을 회색으로 설정 */}
+                    {cast.image ? (
+                      <CastImage
+                        src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                          cast.image
+                        }`}
+                        alt={cast.name}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          backgroundColor: "#D9D9D9",
+                          borderRadius: "2px",
+                        }}
+                      ></div>
+                    )}
+                    <CastDetails>
+                      <CastName>{cast.name}</CastName>
+                      <CastRole>{cast.role}</CastRole>
+                    </CastDetails>
+                  </CastCard>
+                ))}
               </SwiperSlide>
-            ))} */}
-
-          
-
-        
-
-
-        {/* <CastContainer>
-          {groupedCast.map((group, index) => (
-            
-            //  각 슬라이더 아이템
-            <CastSlide key={index}>
-              {group.map((cast, idx) => (
-                <CastCard key={idx}>
-                  <CastImage src={cast.image} alt={cast.name} />
-                  <CastDetails>
-                    <CastName>{cast.name}</CastName>
-                    <CastRole>{cast.role}</CastRole>
-                  </CastDetails>
-                </CastCard>
-              ))}
-            </CastSlide>
-          ))}
-        
-        </CastContainer> */}
+            );
+          })}
+        </Swiper>
       </CastInfoContainer>
-    
-   </MovieInfoContainer>
+    </MovieInfoContainer>
   );
 };
 

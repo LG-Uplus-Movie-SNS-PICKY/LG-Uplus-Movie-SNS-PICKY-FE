@@ -1,75 +1,84 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import { Feed, Comment } from "@pages";
-
 // 스타일 초기화를 위한 컴포넌트 및 스타일 import
 import { Global } from "@emotion/react";
 import { globalStyle } from "@styles/global";
 
 // Route import
 import Home from "@pages/main";
-import Login from "@pages/login";
-import Signup from "@pages/signup";
-import Search from "@pages/search";
+
 import Layout from "@components/layout";
-import AdminLayout from "./AdminLayout";
-import MovieDetail from "@pages/movie-detail";
-import MovieReviews from "@pages/movie-detail/reviews";
-import My from "@pages/my";
-import Recommendations from "@pages/recommendations";
-import Edit from "@pages/edit";
-import Callback from "@pages/login/oauth";
-import Post from "@pages/social/post";
-import { HelmetProvider } from "react-helmet-async";
-import PickyPage from "@pages/picky/main";
-import PickyGenreDetailPage from "@pages/picky/genre-detail";
-import NotificationPage from "@pages/notification";
-import ErrorPage from "@pages/error";
+
+import { useEffect } from "react";
+
+import { useSetRecoilState } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { isEmpty } from "lodash";
+import DomainGoogle from "@pages/google/index";
+import GoogleImage from "@pages/google/google";
+import ProtectedRoute from "./router/ProtectedRoute";
+
+// Routes Import
+import GuestRouter from "./router/GuestRoutes";
+import UserRoutes from "./router/UserRoutes";
+import AdminRouter from "./router/AdminRoutes";
+import { getCookie } from "@util/cookie";
 
 function Router() {
+  const setIsLoginState = useSetRecoilState(isLogin);
+
+  useEffect(() => {
+    const user = getCookie("user") || {};
+
+    if (user) {
+      setIsLoginState({
+        isLoginState: !isEmpty(user),
+        isAuthUser: user.isAuthUser,
+        isLoginInfo: user.user,
+        isLoading: false,
+      });
+    }
+  }, [setIsLoginState]);
+
   return (
-    <HelmetProvider>
-      <BrowserRouter
-        future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
-      >
-        <Global styles={globalStyle} />
+    <BrowserRouter
+      future={{ v7_relativeSplatPath: true, v7_startTransition: true }}
+    >
+      <Global styles={globalStyle} />
 
-        <Layout>
-          <Routes>
-            {/* 공개 라우트 */}
-            <Route path="/" element={<Home />} />
-            <Route path="/error" element={<ErrorPage />} />
+      <Layout>
+        <Routes>
+          {/* 공개 라우트 - 관리자 접근 X */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute role="common">
+                <Home />
+              </ProtectedRoute>
+            }
+          />
 
-            {/* 로그인 사용자 라우트 */}
-            <Route path="/movie/:id" element={<MovieDetail />} />
-            <Route path="/movie/:id/reviews" element={<MovieReviews />} />
-            <Route path="/my" element={<My />} />
+          {/* 비로그인 사용자 라우트 */}
+          <Route path="/auth/*" element={<GuestRouter />} />
 
-            <Route path="/login/oauth2/callback" element={<Callback />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/notification" element={<NotificationPage />} />
-            <Route path="/recommendations" element={<Recommendations />} />
+          {/* 로그인 사용자 라우트 */}
+          <Route path="/*" element={<UserRoutes />} />
 
-            {/* 관리자 전용 라우트 */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/user-profile/edit" element={<Edit />} />
-            <Route path="/movie-log" element={<Feed />} />
-            <Route path="/add-feed" element={<Post />} />
-            <Route path="/comment" element={<Comment />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/picky" element={<PickyPage />} />
-            <Route
-              path="/picky/genre/:genreId"
-              element={<PickyGenreDetailPage />}
-            />
+          {/* 관리자 사용자 라우트 */}
+          <Route path="/admin/*" element={<AdminRouter />} />
 
-            {/* 관리자 전용 라우트 */}
-            <Route path="/admin/*" element={<AdminLayout />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </HelmetProvider>
+          {/* 도메인 */}
+          <Route
+            path="/google626ac0bef2281c75.html"
+            element={<DomainGoogle />}
+          />
+             <Route
+            path="/privacy"
+            element={<GoogleImage />}
+          />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   );
 }
 

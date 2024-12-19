@@ -21,48 +21,67 @@ import {
   ScoreText,
   ScoreBar,
   PercentageText,
-  GenderStats,
-  GenderStat,
   TitleBorder,
   PercentageWrapper,
-  PercentageContainer
+  PercentageContainer,
 } from './index.styles';
 import MaleSvg from '@assets/icons/male.svg?react';
 import FemaleSvg from '@assets/icons/female.svg?react';
 
-interface Review {
-  rating: number;
-  gender: string;
+interface RatingsData {
+  totalCount: number;
+  oneCount: number;
+  twoCount: number;
+  threeCount: number;
+  fourCount: number;
+  fiveCount: number;
+}
+
+interface GendersData {
+  totalCount: number;
+  maleCount: number;
+  femaleCount: number;
+  manAverage: number;
+  womanAverage: number;
 }
 
 interface Props {
-  reviews: Array<Review>;
+  ratings: RatingsData;
+  genders: GendersData;
 }
 
-const ReviewGraph: React.FC<Props> = ({ reviews }) => {
+const ReviewGraph = ({ ratings, genders }: Props) => {
+  const totalCount = ratings.totalCount;
+
+  // 점수별 비율 계산
+  const ratingsDistribution = [
+    { score: 5, count: ratings.fiveCount },
+    { score: 4, count: ratings.fourCount },
+    { score: 3, count: ratings.threeCount },
+    { score: 2, count: ratings.twoCount },
+    { score: 1, count: ratings.oneCount },
+  ].map((rating) => ({
+    ...rating,
+    percentage: totalCount > 0 ? (rating.count / totalCount) * 100 : 0,
+  }));
+
   // 전체 평균 평점 계산
-  const totalAverage = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+  const totalAverage =
+    totalCount > 0
+      ? (5 * ratings.fiveCount +
+        4 * ratings.fourCount +
+        3 * ratings.threeCount +
+        2 * ratings.twoCount +
+        1 * ratings.oneCount) /
+      totalCount
+      : 0;
 
-  // 남성/여성 리뷰 분리 및 평균 평점 계산
-  const maleReviews = reviews.filter((review) => review.gender === 'male');
-  const femaleReviews = reviews.filter((review) => review.gender === 'female');
-
-  const maleAverage =
-    maleReviews.reduce((acc, review) => acc + review.rating, 0) / maleReviews.length || 0;
-  const femaleAverage =
-    femaleReviews.reduce((acc, review) => acc + review.rating, 0) / femaleReviews.length || 0;
-
-  // 점수대별 분포 계산
-  const ratingsDistribution = new Array(5).fill(0).map((_, index) => {
-    const score = 5 - index; // 점수를 5부터 1까지 역순으로 계산
-    const count = reviews.filter(
-      (review) => Math.ceil(review.rating) === score // 점수가 해당 범위에 포함되는지 확인
-    ).length;
-    return {
-      score: score, // 역순으로 점수를 표시
-      percentage: (count / reviews.length) * 100,
-    };
-  });
+  // 성별 비율 계산
+  const malePercentage =
+    genders.totalCount > 0
+      ? (genders.maleCount / genders.totalCount) * 100
+      : 0;
+  const femalePercentage = 100 - malePercentage;
 
 
   // 별 렌더링 함수
@@ -78,22 +97,13 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
   const CircleChart = ({ genderStats }: { genderStats: { male: number; female: number } }) => {
     // 남성과 여성 비율 계산
     const total = genderStats.male + genderStats.female;
-    const malePercentage = (genderStats.male / total) * 100;
-    const femalePercentage = (genderStats.female / total) * 100;
+    const malePercentage = total > 0 ? (genderStats.male / total) * 100 : 0;
+    const femalePercentage = total > 0 ? (genderStats.female / total) * 100 : 0;
 
     return (
       <div style={{ position: 'relative', width: '100%', height: '100%' }}>
         <svg viewBox="0 0 36 36" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
-          <circle
-            cx="18"
-            cy="18"
-            r="15.915"
-            fill="none"
-            stroke="#72B8FF"
-            strokeWidth="3"
-            strokeDasharray={`${malePercentage} ${100 - malePercentage}`}
-            strokeDashoffset="0"
-          />
+          {/* 여자 그래프 (핑크색) */}
           <circle
             cx="18"
             cy="18"
@@ -102,10 +112,21 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
             stroke="#F383B0"
             strokeWidth="3"
             strokeDasharray={`${femalePercentage} ${100 - femalePercentage}`}
-            strokeDashoffset={-malePercentage}
+            strokeDashoffset="0"
+          />
+          {/* 남자 그래프 (파란색) */}
+          <circle
+            cx="18"
+            cy="18"
+            r="15.915"
+            fill="none"
+            stroke="#72B8FF"
+            strokeWidth="3"
+            strokeDasharray={`${malePercentage} ${100 - malePercentage}`}
+            strokeDashoffset={-femalePercentage}
           />
         </svg>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)"}}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)" }}>
           <PercentageWrapper>
             <PercentageContainer>
               <ScoreText>남자</ScoreText>
@@ -135,7 +156,7 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
             <StarContainer>
               {renderStars(totalAverage)}
             </StarContainer>
-            <PeopleCountText>{reviews.length}명 참여</PeopleCountText>
+            <PeopleCountText>{totalCount}명 참여</PeopleCountText>
           </RatingContainer>
         </TitleWrapper>
         <ScoreWrapper>
@@ -143,14 +164,14 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
             <GenderScoreText>남자</GenderScoreText>
             <ScoreContainer>
               <MaleSvg />
-              <GenderScoreText>{maleAverage.toFixed(1)}</GenderScoreText>
+              <GenderScoreText>{genders.manAverage.toFixed(1)}</GenderScoreText>
             </ScoreContainer>
           </GenderContainer>
           <GenderContainer>
             <GenderScoreText>여자</GenderScoreText>
             <ScoreContainer>
               <FemaleSvg />
-              <GenderScoreText>{femaleAverage.toFixed(1)}</GenderScoreText>
+              <GenderScoreText>{genders.womanAverage.toFixed(1)}</GenderScoreText>
             </ScoreContainer>
           </GenderContainer>
         </ScoreWrapper>
@@ -170,7 +191,12 @@ const ReviewGraph: React.FC<Props> = ({ reviews }) => {
       </GraphContainer>
       <GraphContainer>
         <TitleBorder>성별 비율</TitleBorder>
-        <CircleChart genderStats={{ male: maleReviews.length, female: femaleReviews.length }} />
+        <CircleChart
+          genderStats={{
+            male: genders.maleCount,
+            female: genders.femaleCount,
+          }}
+        />
       </GraphContainer>
     </GraphWrapper>
   );

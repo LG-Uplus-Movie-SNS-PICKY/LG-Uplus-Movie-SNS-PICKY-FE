@@ -19,15 +19,20 @@ export default {
       width: 100%;
       padding: 0 16px;
 
+      margin: 16px 0;
+
       display: flex;
+      flex-direction: column;
       align-items: center;
 
       & > div {
         width: 100%;
+      }
 
+      & > div.movies {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-        gap: 4px;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 8px;
       }
     `;
   },

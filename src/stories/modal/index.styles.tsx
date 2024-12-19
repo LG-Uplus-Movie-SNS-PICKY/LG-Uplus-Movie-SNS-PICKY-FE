@@ -3,10 +3,6 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
     modalContainer(): SerializedStyles {
         return css`
-        /* position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%); */
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -16,6 +12,8 @@ export default {
         text-align: center;
         white-space: normal;
         box-sizing: border-box;
+        max-width: 398px;
+        width: 100%;
         `;
     },
     modalMessage(): SerializedStyles {
@@ -25,6 +23,7 @@ export default {
         text-align: center;
         padding: 16px 36px;
         border-bottom: 1px solid #D9D9D9;
+        width: 100%;
         `;
     },
     confirmButton(): SerializedStyles {

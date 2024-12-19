@@ -93,3 +93,13 @@ export const TitleHeader: Story = {
     ],
   },
 };
+export const AdminHeader: Story = {
+  args: {
+    type: "admin",
+    activeBtn: [
+      <div onClick={() => console.log("logout")} className="admin_btn">
+        <span>로그아웃</span>
+      </div>,
+    ],
+  },
+};

@@ -8,107 +8,60 @@ import AddCircle from "@assets/icons/add_circle_small.svg?react";
 import Notification from "@assets/icons/notification.svg?react";
 import Search from "@assets/icons/search.svg?react";
 import UesrLogo from "@assets/icons/user_circle.svg?react";
+import { removeCookie } from "@util/cookie";
+import { Resetter, SetterOrUpdater, useSetRecoilState } from "recoil";
+import { isLogin, LoginStateTypes } from "@recoil/atoms/isLoginState";
 
-// Header Config 함수 타입 지정
-type HeaderConfigFunction = (
-  isLogin?: boolean,
-  navigate?: NavigateFunction
-) => HeaderConfigReturn;
-
-// Header Config 반환값 지정
-interface HeaderConfigReturn {
-  type?: "basic" | "login" | "main" | "title";
-  label?: string | undefined;
-  buttons?: Array<ReactNode> | undefined;
-}
-
-// Header Config 타입 지정
-interface HeaderConfigType {
-  // 프로퍼티의 key는 문자열, value는 화살표 함수(HeaderConfigFunction)
-  [path: string]: HeaderConfigFunction;
-}
-
-const headerConfig: HeaderConfigType = {
-  "/": (isLogin) => ({
-    // 메인페이지
-    type: isLogin ? "main" : "login",
-  }),
-
-  // 회원가입 페이지
-  // "/signup": () => ({
-  //   type: "basic",
-  // }),
-
-  // 무비로그 페이지
-  "/movie-log": () => ({
-    type: "main",
-  }),
-
-  // 마이 페이지
-  "/my-page": () => ({
-    type: "main",
-  }),
-
-  "/feed-list": () => ({
-    type: "main",
-  }),
-
-  "/comment": () => ({
-    type: "title",
-  }),
-
-  // 알림 페이지
-  "/notification": () => ({ type: "title", label: "알림" }),
-
-  "/wishlist": () => ({ type: "main" }),
-
-  // 추천 페이지
-  "/recommend": () => ({ type: "main" }),
-
-  "/admin": () => ({ type: "basic" }),
-};
-
-/*
-
-  To Do
-  1. Title Type일 경우 -> 이전 정보 히스토리
-
-*/
+export type HeaderConfigReturn = Array<ReactNode> | undefined;
 
 export function useHeaderConfig(
-  path: string,
-  isLogin: boolean,
-  navigate: NavigateFunction
+  isLoginState: boolean,
+  isAuthUser: boolean,
+  navigate: NavigateFunction,
+  resetLoginState: Resetter,
+  setLoginState: SetterOrUpdater<LoginStateTypes>,
+  notificationCount: number
 ): HeaderConfigReturn {
-  // 반환값으로 보낼 버튼 액션 정의
-  const buttons = isLogin
-    ? [
-        <AddCircle
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/add-feed")}
-        />,
-        <Notification
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/notification")}
-        />,
-        <Search
-          className="active-icon-btn"
-          onClick={() => navigate && navigate("/search")}
-        />,
-      ]
-    : [
+  if (isLoginState) {
+    if (isAuthUser) {
+      return [
         <div
-          onClick={() => navigate && navigate("/login")}
-          className="login-action-btn"
+          onClick={() => {
+            removeCookie("user");
+            resetLoginState();
+
+            setLoginState((prev) => ({
+              ...prev,
+              isLoading: false,
+            }));
+
+            navigate("/");
+          }}
+          className="admin_btn"
         >
-          <UesrLogo />
-          <span>로그인</span>
+          <span>로그아웃</span>
         </div>,
       ];
+    }
 
-  // 객체 타입 정의
-  const config = headerConfig[path];
+    return [
+      <AddCircle onClick={() => navigate && navigate("/movie-log/add")} />,
+      <div className="notification">
+        <Notification onClick={() => navigate && navigate("/notification")} />
+        {notificationCount > 0 && <div className="notification-badge" />}
+      </div>,
+      <Search onClick={() => navigate && navigate("/search")} />,
+    ];
+  }
 
   // 객체 반환
-  return config ? { ...config(isLogin), buttons } : {};
+  return [
+    <div
+      onClick={() => navigate && navigate("/auth/sign-in")}
+      className="login-action-btn"
+    >
+      <UesrLogo />
+      <span>로그인</span>
+    </div>,
+  ];
 }

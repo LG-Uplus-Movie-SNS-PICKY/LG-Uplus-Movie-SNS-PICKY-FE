@@ -5,8 +5,15 @@ type IsLoginUser = {
   role: string;
 };
 
-export interface NaviationProps {
+export interface HeaderProps {
+  headerType: string;
+  label?: string;
   location: Location;
   navigate: NavigateFunction;
-  isLoginTestValue: IsLoginUser;
+}
+
+export interface NaviationProps {
+  show: boolean | string;
+  location: Location;
+  navigate: NavigateFunction;
 }

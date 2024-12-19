@@ -37,6 +37,7 @@ export const Title = styled.div`
 `;
 
 export const DetailContainer = styled.div`
+    color: #5e5e5e;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -80,7 +81,7 @@ export const SortOption = styled.div<{ active: boolean }>`
   justify-content: center;
   align-items: center;
   position: relative;
-  font-size: 8px;
+  font-size: 10px;
   color: ${props => props.active ? '#000000' : '#9D9D9D'};
   font-weight: ${props => props.active ? '600' : '400'};
   padding-left: 6px;
@@ -109,7 +110,7 @@ export const SpoilerToggleText = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 400;
 `;
 
@@ -119,3 +120,21 @@ export const SpoilerToggleButton = styled.div`
     align-items: center;
     cursor: pointer;
 `;
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 150px;
+  margin: 0 auto;
+`;
+
+export const EmptyText = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+  background-color: #FFFFFF;
+  padding: 20px 0;
+`

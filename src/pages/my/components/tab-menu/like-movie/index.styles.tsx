@@ -1,4 +1,5 @@
 import { css, SerializedStyles } from "@emotion/react";
+import styled from "@emotion/styled";
 
 export default {
   container(): SerializedStyles {
@@ -6,11 +7,14 @@ export default {
       width: 100%;
 
       display: grid;
-      grid-template-columns: repeat(3, 1fr); // 한 열에 3개의 아이템
-      grid-template-rows: repeat(3, 1fr); // 한 행에 4개의 아이템
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(100px, 1fr)
+      ); // 한 열에 3개의 아이템
+      /* grid-template-rows: repeat(3, 1fr); // 한 행에 4개의 아이템 */
 
       gap: 3px;
-      height: 100%;
+      padding: 2px;
 
       &.centered {
         display: flex;
@@ -31,7 +35,8 @@ export default {
       position: relative;
 
       width: 100%;
-      border-radius: 4px;
+      aspect-ratio: 1 / 1.44;
+      border-radius: 2px;
 
       overflow: hidden;
       cursor: pointer;
@@ -59,6 +64,17 @@ export default {
         font-size: 14px;
         font-weight: 600;
       }
+    `;
+  },
+
+  emptyState(): SerializedStyles {
+    return css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 120px;
     `;
   },
 };

@@ -11,24 +11,17 @@ import { MovieItem } from "@stories/movie-item";
 import axios from "axios";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-
-interface PlaylistItemTypes {
-  [key: string]: unknown;
-  movie_id: number;
-  movie_poster_url: string;
-  movie_title: string;
-}
-
-interface PlaylistDataTypes {
-  movie_playlist_id: number;
-  movie_playlist_title: string;
-  movie_playlist_item: PlaylistItemTypes[];
-}
+import { usePlaylist } from "@hooks/playlist";
+import Loading from "@components/loading";
+import { useNavigate } from "react-router-dom";
+import { PlaylistDataTypes } from "@type/api/playlist";
 
 // 리액트 쿼리 queryFn
 async function fetchMovies(pageParam: number) {
   const { data } = await axios.get(
-    `/api/movie/playlist?page=${pageParam}&limit=3`
+    `${
+      import.meta.env.VITE_SERVER_URL
+    }/api/movie/playlist?page=${pageParam}&limit=3`
   );
   return data;
 }
@@ -36,21 +29,14 @@ async function fetchMovies(pageParam: number) {
 function PlayListSection() {
   // 리액트 쿼리를 이용한 스크롤 데이터 업데이트
   const {
-    data,
+    data: playlists,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading,
-    isError,
-    error,
-  } = useInfiniteQuery({
-    queryKey: ["playlist"],
-    queryFn: ({ pageParam = 1 }) => fetchMovies(pageParam),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.nextPage ?? undefined;
-    },
-  });
+  } = usePlaylist();
+
+  const navigate = useNavigate();
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
@@ -62,56 +48,71 @@ function PlayListSection() {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage]);
 
-  if (isLoading) return <div>로딩 중...</div>;
-
-  if (isError) return <div>에러가 발생했습니다. {error.message}</div>;
+  if (isLoading)
+    return (
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loading />
+      </div>
+    );
 
   return (
     <div css={styles.container()}>
-      {/* 페이지 순회 -> 무한 스크롤링 */}
-      {data?.pages.map((page, index) => (
-        <React.Fragment key={index}>
-          {/* Playlist Data JSX Element Mapping  */}
-          {page?.data.map((list: PlaylistDataTypes) => (
-            <div css={styles.playlistCard()} key={list.movie_playlist_id}>
-              <h3>{list.movie_playlist_title}</h3>
-              {/* Playlist Items Slider Mapping */}
-              <Swiper
-                slidesPerView={"auto"}
-                spaceBetween={10}
-                direction={"horizontal"}
-                freeMode={true}
-                modules={[FreeMode, Mousewheel]}
-                mousewheel={{
-                  forceToAxis: true,
-                }}
-                css={styles.swiperContainer()}
-              >
-                {list.movie_playlist_item.map((item) => (
-                  <SwiperSlide key={item.movie_id}>
-                    <MovieItem
-                      type="basic"
-                      src={`https://image.tmdb.org/t/p/original${item.movie_poster_url}`}
-                      title={item.movie_title}
-                      name={item.movie_title}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          ))}
-        </React.Fragment>
-      ))}
+      {/* Playlist 스크롤링 */}
+      {Array.isArray(playlists?.pages) &&
+        playlists.pages.map((page, idx) => (
+          <React.Fragment key={idx}>
+            {Array.isArray(page.data.content) &&
+              page.data.content.map((playlist: PlaylistDataTypes) => (
+                <div css={styles.playlistCard()} key={playlist.playlistId}>
+                  <h3>{playlist.title}</h3>
 
-      <div ref={ref}>
-        {isFetchingNextPage
-          ? "불러오는 중..."
-          : hasNextPage
-          ? "더 이상 데이터가 없습니다"
-          : ""}
-      </div>
+                  {/* Playlist에 속한 영화 슬라이드 효과 부여 */}
+                  <Swiper
+                    slidesPerView={3.8}
+                    spaceBetween={10}
+                    direction={"horizontal"}
+                    freeMode={true}
+                    modules={[FreeMode, Mousewheel]}
+                    mousewheel={{
+                      forceToAxis: true,
+                    }}
+                    css={styles.swiperContainer()}
+                  >
+                    {playlist.getSimpleMovieResps.length > 0 &&
+                      playlist.getSimpleMovieResps.map((movie) => {
+                        return (
+                          <SwiperSlide key={movie.movieId}>
+                            <MovieItem
+                              type="basic"
+                              src={`${import.meta.env.VITE_TMDB_IMAGE_URL}${
+                                movie.posterUrl
+                              }`}
+                              title={movie.title}
+                              name={movie.title}
+                              onClick={() =>
+                                navigate(`/movie/${movie.movieId}`)
+                              }
+                            />
+                          </SwiperSlide>
+                        );
+                      })}
+                  </Swiper>
+                </div>
+              ))}
+          </React.Fragment>
+        ))}
+
+      {/* 현재 라우트 Viewport 마지막 영역 */}
+      <div ref={ref} className="inView"></div>
     </div>
   );
 }

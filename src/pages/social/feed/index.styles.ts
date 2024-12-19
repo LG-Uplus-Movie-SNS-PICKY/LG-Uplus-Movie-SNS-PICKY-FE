@@ -14,13 +14,13 @@ export const banner = css`
   height: 80px;
   margin: 16px 0;
   background: #000000;
+  border-radius: 4px;
+  overflow: hidden;
 `;
 
 export const feedContainer = css`
   width: 100%;
-  padding: 16px 0;
   border: none;
-  margin-bottom: 32px;
 `;
 
 export const feedItem = css`
@@ -74,6 +74,12 @@ export const contentSection = css`
   font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.64px;
+  cursor: pointer;
+`;
+
+export const carouselWrapper = css`
+  position: relative; /* 스포주의 텍스트가 블러된 요소 위에 표시되도록 설정 */
+  cursor: pointer;
 `;
 
 export const carouselWrapper = css`
@@ -93,25 +99,34 @@ export const reactionsContainer = css`
   align-items: center;
   padding: 16px 0;
   justify-content: space-between;
+  margin-bottom: 16px;
 `;
 
 export const reactionsSection = css`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  /* gap: 16px; */
+
   span {
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-width: 60px;
     gap: 8px;
     color: #000;
     font-size: 16px;
     font-weight: 600;
-    line-height: normal;
     letter-spacing: -0.64px;
     cursor: pointer;
+
+    /* 숫자와 아이콘 사이 최소 너비 설정 */
+    min-width: 58px; /* 최소 너비 고정 */
+    justify-content: space-between;
+
+    .like-number,
+    .comment-number {
+      min-width: 24px; /* 숫자의 최소 너비 */
+      text-align: center; /* 숫자 중앙 정렬 */
+    }
   }
 `;
 
@@ -157,7 +172,7 @@ export const modalContent = css`
   flex-direction: column;
   justify-content: center;
   gap: 0;
-  max-width: 768px;
+  max-width: 430px;
   animation: slideUp 0.3s ease-out;
 
   button:first-of-type {

@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { MovieItem } from "@stories/movie-item";
+import axios from "axios";
 import {
   containerStyle,
   headerStyle,
@@ -9,77 +9,88 @@ import {
   highlightStyle,
   subtitleStyle,
   movieContainerStyle,
-  movieWrapperStyle,
+  movieGridStyle,
   headerWrapperStyle,
 } from "./index.styles";
+import SEO from "@components/seo";
+import { MovieItem } from "@stories/movie-item";
+import { useRecommnedMovieQuery } from "@hooks/movie";
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import Loading from "@components/loading";
+import { RecommendMovieDataTypes } from "@type/api/movie";
+
+interface Movie {
+  movieId: number;
+  title: string;
+  posterUrl: string;
+  totalRating: number;
+}
 
 export default function MovieRecommendationPage() {
-  const username = "최우진";
+  const { data: recommendMovies, isLoading } = useRecommnedMovieQuery();
+  const { isLoginInfo } = useRecoilValue(isLogin);
+
   const navigate = useNavigate();
 
-  const movies = [
-    {
-      id: 1,
-      type: "rate",
-      src: "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      title: "타이타닉",
-      name: "타이타닉",
-    },
-    {
-      id: 2,
-      type: "rate",
-      src: "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      title: "인사이드 아웃 2",
-      name: "인사이드 아웃 2",
-    },
-    {
-      id: 3,
-      type: "rate",
-      src: "https://i.namu.wiki/i/J-AwFq-6xzVxDQpE3q3CwCL_QBzYfL6MPINXL1kWPeNlZXWNjayXfzXqqyi8luo4m4GM9Bsh_nhy9Ig3m5a8FQ.webp",
-      title: "어바웃 타임",
-      name: "어바웃 타임",
-    },
-  ];
-
-  const handleMovieClick = (id: number) => {
-    navigate(`/movie/${id}`);
-  };
-
   return (
-    <div css={containerStyle}>
-      {/* 헤더 */}
-      <div css={headerWrapperStyle}>
-        <header css={headerStyle}>
-          <h1 css={titleStyle}>
-            🧸 PICKY가 <span css={highlightStyle}>까탈스럽게</span> 골라낸 맞춤형 AI 영화 추천
-          </h1>
-          <h2 css={subtitleStyle}>
-            <b>{username}</b>님이 선호하는 장르의 작품들
-          </h2>
-        </header>
-      </div>
+    <>
+      <SEO
+        title="PICKY: RECOMMENDATION"
+        description="사용자님에게 추천하는 PICKY 영화 목록들을 확인해보세요"
+      />
 
-      {/* 영화 리스트 */}
-      <div css={movieContainerStyle}>
-        {[...Array(4)].map((_, rowIndex) => (
-          <div css={movieWrapperStyle} key={rowIndex}>
-            {movies.map((movie, index) => (
-              <div
-                key={`${rowIndex}-${index}`}
-                onClick={() => handleMovieClick(movie.id)}
-                style={{ cursor: "pointer" }}
-              >
-                <MovieItem
-                  type="rate"
-                  src={movie.src}
-                  title={movie.title}
-                  name={movie.name}
-                />
-              </div>
-            ))}
-          </div>
-        ))}
+      <div css={containerStyle}>
+        {/* 헤더 */}
+        <div css={headerWrapperStyle}>
+          <header css={headerStyle}>
+            <h1 css={titleStyle}>
+              🧸 PICKY가 <span css={highlightStyle}>까탈스럽게</span> 골라낸
+              맞춤형 AI 영화 추천
+            </h1>
+            <h2 css={subtitleStyle}>
+              <b>{isLoginInfo.nickname}</b>님이 선호하는 장르의 작품들
+            </h2>
+          </header>
+        </div>
+
+        {/* 영화 리스트 */}
+        <div css={movieContainerStyle}>
+          {isLoading && <Loading />}
+          {Array.isArray(recommendMovies?.data) &&
+          recommendMovies?.data?.length === 0 ? (
+            <p className="empty">추천할 영화가 없습니다.</p>
+          ) : (
+            <div css={movieGridStyle}>
+              {recommendMovies?.data?.map((movie: RecommendMovieDataTypes) => (
+                <div
+                  key={movie.movieId}
+                  onClick={() => navigate(`/movie/${movie.movieId}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <MovieItem
+                    type="basic"
+                    src={movie.posterUrl}
+                    title={movie.title}
+                    rate={movie.totalRating}
+                    name={movie.title}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          {/* {!isLoading && data.data.length === 0 ? (
+            <p>추천할 영화가 없습니다. 나중에 다시 시도해주세요.</p>
+          ) : (
+            
+          )} */}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
+
+//   {data?.data.map((movie: RecommendMovieDataTypes) => (
+
+//   ))}
+// </div>

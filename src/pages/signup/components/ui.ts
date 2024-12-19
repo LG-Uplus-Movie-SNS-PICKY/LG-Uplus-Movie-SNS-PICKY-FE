@@ -90,10 +90,10 @@ export const Text = {
   FocusedMenu: styled.span<StyleText & { $isFocused: boolean }>`
     display: inline-block;
     font-weight: ${({ weight }) =>
-      weight ? theme.weight[weight] : theme.weight.Normal};
+      weight ? theme.weight[weight] : theme.weight.Bold};
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size400)};
     color: ${({ $isFocused }) =>
-      $isFocused ? theme.color.Red : theme.color.Gray};
+      $isFocused ? theme.color.Gray : theme.color.Gray};
     cursor: ${(props) => props.pointer && "pointer"};
   `,
   Warning: styled.span<StyleText>`
@@ -115,7 +115,7 @@ export const Text = {
   FocusedWarning: styled.span<StyleText & { $isFocused: boolean }>`
     display: inline-block;
     font-weight: ${({ weight }) =>
-      weight ? theme.weight[weight] : theme.weight.Normal};
+      weight ? theme.weight[weight] : theme.weight.Bold};
     font-size: ${({ size }) => (size ? theme.size[size] : theme.size.size300)};
     color: ${({ $isFocused }) =>
       $isFocused ? theme.color.Red : theme.color.Gray};

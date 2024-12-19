@@ -26,26 +26,21 @@ export default function InputGender() {
       </div>
       <div css={genderContainer}>
         <button
-          css={genderButton(inputData.gender === "male")}
-          onClick={() => handleGenderSelect("male")}
+          css={genderButton(inputData.gender === "MALE")}
+          onClick={() => handleGenderSelect("MALE")}
           onFocus={handleFocus}
           onBlur={handleBlur}
         >
           남자
         </button>
         <button
-          css={genderButton(inputData.gender === "female")}
-          onClick={() => handleGenderSelect("female")}
+          css={genderButton(inputData.gender === "FEMALE")}
+          onClick={() => handleGenderSelect("FEMALE")}
           onFocus={handleFocus}
           onBlur={handleBlur}
         >
           여자
         </button>
-      </div>
-      <div css={textWrapper}>
-      <Text.FocusedWarning $isFocused={isFocused}>
-          성별을 선택해주세요.
-        </Text.FocusedWarning>
       </div>
     </div>
   );

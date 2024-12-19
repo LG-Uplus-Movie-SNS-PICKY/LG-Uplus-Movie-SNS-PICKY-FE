@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { inputState } from "../../../../review/atoms";
+import { validateAge } from "../../../../util/validator";
 import {
   birthDateContainer,
   pickerContainer,
+  TextWrapper,
   pickerColumn,
-  strokeOverlay,
-  monthPickerColumn,
   pickerItem,
 } from "./index.styles";
 import { Text } from "../ui";
@@ -21,29 +21,71 @@ export default function InputBirthDate() {
     new Date().getMonth() + 1
   );
   const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
+  const [isValid, setIsValid] = useState(true);
 
-  const years = Array.from(
-    { length: 100 },
-    (_, i) => new Date().getFullYear() - i
+  const years = useMemo(
+    () => Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i),
+    []
   );
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from(
-    { length: new Date(selectedYear, selectedMonth, 0).getDate() },
-    (_, i) => i + 1
+  const days = useMemo(
+    () =>
+      Array.from(
+        { length: new Date(selectedYear, selectedMonth, 0).getDate() },
+        (_, i) => i + 1
+      ),
+    [selectedYear, selectedMonth]
   );
+
+  const months = useMemo(() => Array.from({ length: 12 }, (_, i) => i + 1), []);
+
+  const yearRef = useRef<HTMLDivElement>(null);
+  const monthRef = useRef<HTMLDivElement>(null);
+  const dayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const formattedMonth = String(selectedMonth).padStart(2, "0");
     const formattedDay = String(selectedDay).padStart(2, "0");
     const birthDate = `${selectedYear}-${formattedMonth}-${formattedDay}`;
-    setInputData((prev) => ({ ...prev, birthDate }));
+  
+    const isValidAge = validateAge(birthDate);
+  
+    setIsValid(isValidAge);
+  
+    setInputData((prev) => ({
+      ...prev,
+      birthDate: isValidAge ? birthDate : "",
+    }));
   }, [selectedYear, selectedMonth, selectedDay, setInputData]);
+
+  useEffect(() => {
+    const scrollToCenter = (
+      ref: React.RefObject<HTMLDivElement>,
+      index: number
+    ) => {
+      if (ref.current) {
+        const itemHeight =
+          ref.current.firstElementChild instanceof HTMLElement
+            ? ref.current.firstElementChild.offsetHeight
+            : 0;
+        const containerHeight = ref.current.clientHeight;
+
+        ref.current.scrollTo({
+          top: index * itemHeight - containerHeight / 2 + itemHeight / 2,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    scrollToCenter(yearRef, years.indexOf(selectedYear));
+    scrollToCenter(monthRef, months.indexOf(selectedMonth));
+    scrollToCenter(dayRef, days.indexOf(selectedDay));
+  }, [selectedYear, years, selectedMonth, months, selectedDay, days]);
 
   return (
     <div css={birthDateContainer}>
       <Text.TitleMenu300>당신의 생년월일을 선택해주세요</Text.TitleMenu300>
       <div css={pickerContainer}>
-        <div css={pickerColumn}>
+        <div css={pickerColumn} ref={yearRef}>
           {years.map((year) => (
             <div
               key={year}
@@ -55,12 +97,13 @@ export default function InputBirthDate() {
                 },
               ]}
               onClick={() => setSelectedYear(year)}
+              tabIndex={0}
             >
               {year}년
             </div>
           ))}
         </div>
-        <div css={pickerColumn}>
+        <div css={pickerColumn} ref={monthRef}>
           {months.map((month) => (
             <div
               key={month}
@@ -72,12 +115,13 @@ export default function InputBirthDate() {
                 },
               ]}
               onClick={() => setSelectedMonth(month)}
+              tabIndex={0}
             >
               {month}월
             </div>
           ))}
         </div>
-        <div css={pickerColumn}>
+        <div css={pickerColumn} ref={dayRef}>
           {days.map((day) => (
             <div
               key={day}
@@ -86,11 +130,23 @@ export default function InputBirthDate() {
                 day === selectedDay && { fontWeight: "bold", color: "#ff084a" },
               ]}
               onClick={() => setSelectedDay(day)}
+              tabIndex={0}
             >
               {day}일
             </div>
           ))}
         </div>
+      </div>
+      <div css={TextWrapper} style={{ height: "20px" }}>
+        <Text.FocusedWarning
+          $isFocused={!isValid}
+          style={{
+            visibility: isValid ? "hidden" : "visible",
+            color: "#ff084a",
+          }}
+        >
+          만 14세 이상만 사용할 수 있습니다.
+        </Text.FocusedWarning>
       </div>
     </div>
   );

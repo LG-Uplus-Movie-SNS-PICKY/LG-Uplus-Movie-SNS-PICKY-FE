@@ -1,9 +1,9 @@
 import { css, SerializedStyles } from "@emotion/react";
 
 export default {
-  famousContainer(): SerializedStyles {
+  famousContainer(padding: boolean = false): SerializedStyles {
     return css`
-      padding: 32px 16px;
+      padding: ${padding ? "0 0 16px 16px" : "32px 0 32px 16px"};
 
       width: 100%;
       display: flex;
@@ -44,7 +44,7 @@ export default {
         overflow: hidden;
 
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
       }
 

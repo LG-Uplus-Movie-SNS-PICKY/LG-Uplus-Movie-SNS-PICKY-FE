@@ -74,7 +74,7 @@ export const ReviewText = styled.div`
 `;
 
 export const UserText = styled.div`
-  font-size: 12px;
+  font-size: 10px;
   display: flex; 
   align-items: center;
   justify-content: center; 
@@ -115,4 +115,10 @@ export const ThumbsButton = styled.div<{ active?: boolean }>`
   font-size: 10px;
   font-weight: ${props => props.active ? '600' : '400'};
   border: ${props => props.active ? '1px solid #FF084A' : '1px solid #D9D9D9'};
+  cursor: pointer;
+`;
+
+export const ToastContainer = styled.div`
+  display: flex;
+  z-index: 10000;
 `;

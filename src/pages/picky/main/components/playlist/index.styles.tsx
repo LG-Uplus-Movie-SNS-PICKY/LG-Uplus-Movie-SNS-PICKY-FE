@@ -4,11 +4,16 @@ export default {
   container(): SerializedStyles {
     return css`
       width: 100%;
-      padding: 0 16px;
+      padding: 0 0 0 16px;
 
       display: flex;
       flex-direction: column;
       gap: 24px;
+
+      & > div.inView {
+        width: 100%;
+        height: 10px;
+      }
     `;
   },
 

@@ -3,24 +3,31 @@ import { css, SerializedStyles } from "@emotion/react";
 export default {
   movieItemContainer(): SerializedStyles {
     return css`
-      width: fit-content;
+      width: 100%;
 
       display: flex;
       flex-direction: column;
 
       gap: 4px;
+      cursor: pointer;
 
       .movie-title {
+        max-width: calc(100% - 5px);
+
         font-size: 12px;
         font-weight: 400;
+
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     `;
   },
 
   movieItemThumbnail(isActive: boolean): SerializedStyles {
     return css`
-      max-width: 90px;
-      max-height: 128px;
+      width: 100%;
+      aspect-ratio: 1 / 1.44;
       display: flex;
 
       overflow: hidden;
@@ -29,7 +36,7 @@ export default {
       isolation: isolate;
 
       position: relative;
-      /* background-color: black; */
+      background-color: #262626;
 
       ${isActive &&
       `
@@ -59,8 +66,22 @@ export default {
 
         & img {
           width: 100%;
+          /* height: 100%; */
+          object-fit: cover;
           display: block;
         }
+      }
+
+      & > .alt {
+        position: absolute;
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        color: #b3b3b3;
+        font-size: 14px;
+        font-weight: 600;
       }
     `;
   },

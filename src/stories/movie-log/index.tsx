@@ -10,7 +10,7 @@ export interface BoardContentTypes {
   [key: string]: unknown; // 지정한 값 이외의 정보가 올 경우
   board_content_id: number;
   board_content_url: string;
-  board_content_type: "Photo" | "Video";
+  board_content_type: "IMAGE" | "VIDEO";
 }
 
 interface MovieLogProps {
@@ -20,8 +20,8 @@ interface MovieLogProps {
 export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
   return (
     <Swiper
-      slidesPerView={"auto"}
-      spaceBetween={4}
+      slidesPerView={1}
+      // spaceBetween={4}
       direction="horizontal"
       modules={[Pagination, Mousewheel]}
       pagination={{
@@ -34,10 +34,21 @@ export function MovieLog({ boardContent }: MovieLogProps): JSX.Element {
     >
       {boardContent.map((content, idx) => (
         <SwiperSlide key={content.board_content_id}>
-          <img
-            src={content.board_content_url}
-            alt={content.board_content_id.toString()}
-          />
+          {content.board_content_type === "VIDEO" ? (
+            <video
+              src={content.board_content_url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          ) : (
+            <img
+              src={content.board_content_url}
+              alt={`content-${content.board_content_id}`}
+            />
+          )}
         </SwiperSlide>
       ))}
     </Swiper>

@@ -20,16 +20,13 @@ export const customFileLabel = css`
   }
 `;
 
-export const imageContainer = ($hasImage: boolean) => css`
+export const imageContainer = css`
   width: 240px;
   height: 240px;
   display: flex;
   justify-content: center;
   align-items: center;
-  /* background-color: ${$hasImage ? "transparent" : "#fff"}; */
-
   overflow: hidden;
-  /* border: ${$hasImage ? "tansparent" : "2px dashed #d9d9d9"}; */
   margin-bottom: 12px;
   border-radius: 200px;
   border: 2px solid #d9d9d9;
@@ -45,12 +42,6 @@ export const defaultImageText = css`
   &:hover {
     color: #9d9d9d;
   }
-`;
-
-export const styledImage = css`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 `;
 
 export const profileContainer = css`

@@ -4,31 +4,33 @@ import { atom } from "recoil";
 export const userState = atom({
   key: "userState",
   default: {
-    username: "",
+    name: "",
     nickname: "",
-    profileImage: "",
-    favoriteGenres: [],
-    favoriteMovie: [],
-    // email: "",
+    birthdate: "",
     gender: "",
     nationality: "",
+    email: "",
+    profileUrl:"",
+    profileImagePreview: null as string | null,
+    favoriteGenres: [],
+    favoriteMovie: [],
     kakao_id: "",
     google_id: "",
     naver_id: "",
-  }
+  },
 });
 
 // 입력 데이터 상태
 export interface IInputData {
   name: string;
-  // email: string;
   nickname: string;
   birthDate: string;
   gender: string;
   nationality: string;
   consentAll: boolean;
   consentAge: boolean;
-  profileImage: string; 
+  profileImageData: FormData | null;
+  profileImagePreview: string | null; 
   favoriteGenres: number[];
   favoriteMovie: number[];
 }
@@ -37,14 +39,14 @@ export const inputState = atom<IInputData>({
   key: "inputState",
   default: {
     name: "",
-    // email: "",
     nickname: "",
     birthDate: "",
     gender: "",
     nationality: "",
     consentAll: false,
     consentAge: false,
-    profileImage: "",
+    profileImageData: null,
+    profileImagePreview: null,
     favoriteGenres: [],
     favoriteMovie: [],
   },

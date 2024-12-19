@@ -37,7 +37,7 @@ export default {
       align-items: center;
 
       gap: 16px;
-      padding: 16px 0;
+      padding: 16px;
 
       &.centered {
         justify-content: center;
@@ -62,6 +62,7 @@ export default {
         width: 60px;
         border-radius: 4px;
         overflow: hidden;
+        cursor: pointer;
 
         & > img {
           width: 100%;
@@ -79,6 +80,8 @@ export default {
       flex-direction: column;
       justify-content: space-around;
       gap: 4px;
+
+      padding: 8px 4px;
 
       & > .line-review-info {
         font-size: 12px;
@@ -106,7 +109,7 @@ export default {
       & > .sub-info {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 4px;
 
         font-size: 10px;
         color: #756262;
@@ -142,23 +145,132 @@ export default {
     `;
   },
 
-  reviewDeleteBtn(): SerializedStyles {
+  emptyState(): SerializedStyles {
+    return css`
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 120px;
+    `;
+  },
+
+  // reviewDeleteBtn(): SerializedStyles {
+  //   return css`
+  //     position: absolute;
+
+  //     top: 1px;
+  //     right: 4px;
+
+  //     padding: 0 8px;
+
+  //     & > svg {
+  //       cursor: pointer;
+  //       transition: all 0.3s;
+
+  //       &:hover path {
+  //         fill: #191919;
+  //       }
+  //     }
+  //   `;
+  // },
+
+  reviewBtnContainer(): SerializedStyles {
     return css`
       position: absolute;
-
-      top: 1px;
+      top: 4px;
       right: 4px;
+      cursor: pointer;
+    `;
+  },
 
-      padding: 0 8px;
+  reviewEditBtn(): SerializedStyles {
+    return css`
+      text-align: center;
+      color: #ffffff;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      background-color: #ff084a;
+      padding: 2px 4px;
+      margin-bottom: 8px;
+      border: 1px solid #ff084a;
 
-      & > svg {
-        cursor: pointer;
-        transition: all 0.3s;
-
-        &:hover path {
-          fill: #191919;
-        }
+      &:hover {
+        color: #ff084a;
+        background-color: #ffffff;
+        border-radius: 4px;
       }
     `;
   },
+
+  reviewDeleteBtn(): SerializedStyles {
+    return css`
+      text-align: center;
+      color: #ff084a;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 4px;
+      background-color: #ffffff;
+      padding: 2px 4px;
+      border: 1px solid #ff084a;
+
+      &:hover {
+        color: #ffffff;
+        background-color: #ff084a;
+        border: 1px solid #ff084a;
+      }
+    `;
+  },
+
+  modalContainer(): SerializedStyles {
+    return css`
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.2);
+      z-index: 10000;
+      padding: 0 32px;
+    `;
+  },
+
+  modalContent(): SerializedStyles {
+    return css`
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 20px;
+      position: relative;
+      max-width: 430px;
+      width: 100%;
+    `;
+  },
+
+  toastContainer(): SerializedStyles {
+    return css`
+      z-index: 10001;
+    `;
+  },
 };
+
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: 150px;
+  margin: 0 auto;
+`;
+
+export const ModalWrapper = styled.div`
+  display: flex;
+  width: 200x;
+  justify-content: center;
+  align-items: center;
+`;

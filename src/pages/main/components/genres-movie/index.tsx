@@ -7,8 +7,29 @@ import bestMovies from "@pages/main/constants";
 import { MovieItem } from "@stories/movie-item";
 import Emoji from "@pages/signup/components/emoji";
 import GenreButtons from "@components/genre";
+import { useEffect, useState } from "react";
+import { useGenreMovieQuery } from "@hooks/movie";
+import Loading from "@components/loading";
+import { MovieDataTypes } from "@type/api/movie";
+import { useNavigate } from "react-router-dom";
 
-function GenresMovie() {
+function GenresMovie({ isLogin }: { isLogin: boolean }) {
+  const navigate = useNavigate();
+  const [selectButton, setSelectButton] = useState<number>(0);
+  const { data: genreMovies, isLoading } = useGenreMovieQuery(selectButton);
+
+  // 장르 버튼 최초 로드 시에 초기값 설정
+  const handleInitialGenre = (movieId: number) => {
+    if (!selectButton) {
+      setSelectButton(movieId);
+    }
+  };
+
+  // 다른 장르 버튼 클릭 시 해당 장르 영화 변경
+  const GenreOnClick = (movieId: number) => {
+    setSelectButton(movieId);
+  };
+
   return (
     <div css={styles.genreContainer()}>
       <div css={styles.genreCard()}>
@@ -20,27 +41,53 @@ function GenresMovie() {
 
         {/* Genres Button */}
         <div className="genres">
-          <GenreButtons />
+          <GenreButtons
+            onClick={GenreOnClick}
+            selectedGenres={selectButton}
+            onInitialGenre={handleInitialGenre}
+          />
         </div>
 
         {/* Select Genre Movies */}
-        <div className="select-genre">
-          {bestMovies.length > 0 &&
-            bestMovies
-              .slice(0, 6)
-              .map((movie, idx) => (
-                <MovieItem
-                  key={idx}
-                  type="rate"
-                  src={movie.src}
-                  title={movie.title}
-                  name={movie.name}
-                  rate={movie.rate}
-                  like={movie.like}
-                  comment={movie.comment}
-                />
-              ))}
+        <div className={`select-genre ${isLoading ? "is-loading" : ""}`}>
+          {isLoading && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
+            </div>
+          )}
+          {!isLoading && Array.isArray(genreMovies?.pages[0].data.content)
+            ? genreMovies?.pages[0].data.content
+                .slice(0, 9)
+                .map((movie: MovieDataTypes) => (
+                  <MovieItem
+                    key={movie.movieId}
+                    type={isLogin ? "all" : "rate"}
+                    src={movie.posterUrl}
+                    title={movie.title}
+                    name={movie.title}
+                    rate={movie.totalRating}
+                    like={movie.likes}
+                    comment={movie.lineReviews}
+                    onClick={() => navigate(`/movie/${movie.movieId}`)}
+                  />
+                ))
+            : null}
         </div>
+
+        {isLogin && (
+          <div className="more-genre-movies">
+            <button onClick={() => navigate(`/genre/${selectButton}`)}>
+              더보기
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

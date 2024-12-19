@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   banner,
@@ -15,14 +15,13 @@ import {
   movieTitle,
   moreOptions,
   modalOverlay,
-  modalContent,
   reactionsContainer,
   spoilerText,
   blurredContent,
   blurredImage,
   carouselWrapper,
+  modalContent,
 } from "./index.styles";
-import Profile from "@assets/icons/profile.svg?react";
 import LikeFeed from "@assets/icons/like_feed.svg?react";
 import LikeFeedActive from "@assets/icons/like_feed_active.svg?react";
 import CommentFeed from "@assets/icons/comment_feed.svg?react";
@@ -30,171 +29,401 @@ import ReportButton from "@assets/icons/report_button.svg?react";
 import EditPost from "@assets/icons/edit_post.svg?react";
 import DeletePost from "@assets/icons/delete_post.svg?react";
 import { Modal } from "@stories/modal";
-import { MovieLog, BoardContentTypes } from "@stories/movie-log";
+import SEO from "@components/seo";
+import { fetchAllData, deletePost, toggleLike } from "@api/movie";
 import { Toast } from "@stories/toast";
+import { useFetchAllMovieLogQuery } from "@hooks/movie-log";
+import { useInView } from "react-intersection-observer";
+import { MovieLog } from "@stories/movie-log";
+import Loading from "@components/loading";
+import { useQueryClient } from "@tanstack/react-query";
+import MovieLogBanner from "@assets/images/banner.jpg";
+import { fetchGetUserInfo } from "@api/user";
+import CriticBadge from "@assets/icons/critic_badge.svg?react";
+
+interface UserInfo {
+  id: number;
+  nickname: string;
+  profileUrl: string;
+  userRole: string;
+}
+
+interface BoardContent {
+  boardId: number;
+  writerProfileUrl: string;
+  writerNickname: string;
+  movieTitle: string;
+  createdDate: string;
+  context: string;
+  isAuthor: boolean;
+  isSpoiler: boolean;
+  isLike: boolean;
+  likesCount: number;
+  commentsCount: number;
+  writerId: number;
+  contents: {
+    contentUrl: string;
+    boardContentType: string;
+  }[];
+}
 
 export default function SocialFeed() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // 삭제 확인 모달 상태
-  const [spoiler, setSpoiler] = useState(true); // spoiler 상태 (true: 블러 처리, false: 블러 해제)
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCountValue, setLikeCountValue] = useState(100);
-  const [postUserId] = useState("12345"); // 게시글 작성자의 userId
-  const [myUserId] = useState("12345"); // 나의 userId
-  const [showToast, setShowToast] = useState(false); // 토스트 메시지 상태
-
+  const [boardData, setBoardData] = useState<BoardContent[]>([]);
+  const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedBoard, setSelectedBoard] = useState<BoardContent | null>(null);
+  const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
   const navigate = useNavigate();
+  const myUserId = 7; // 현재 사용자 ID 설정
+  const [showToast, setShowToast] = useState(false);
+  const queryClient = useQueryClient();
+  const [toastMessage, setToastMessage] = useState("");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
-  const boardContent: BoardContentTypes[] = [
-    {
-      board_content_id: 1,
-      board_content_url:
-        "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
-      board_content_type: "Photo",
-    },
-    {
-      board_content_id: 2,
-      board_content_url:
-        "https://upload.wikimedia.org/wikipedia/ko/thumb/f/f2/%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg/220px-%EC%96%B4%EB%B2%A4%EC%A0%B8%EC%8A%A4-_%EC%97%94%EB%93%9C%EA%B2%8C%EC%9E%84_%ED%8F%AC%EC%8A%A4%ED%84%B0.jpg",
-      board_content_type: "Photo",
-    },
-  ];
+  const {
+    data: board,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    fetchNextPage,
+  } = useFetchAllMovieLogQuery();
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const data = await fetchGetUserInfo();
+        setUserInfo(data.data);
+      } catch (error) {
+        console.error("유저 정보를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    loadUserInfo();
+  }, []);
+
+  // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
+  const { ref, inView } = useInView({
+    threshold: 0.8, // 마지막 요소가 100% 뷰포트에 들어왔을 때 true
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
+  // 게시글 데이터를 가져오는 함수
+  const loadBoardData = async () => {
+    try {
+      const lastBoardId = 0; // 첫 호출 시 기본값 설정
+      const response = await fetchAllData(lastBoardId);
+      console.log(response); // 응답 구조 확인
+      const contentArray = response.data?.content || [];
+      setBoardData(Array.isArray(contentArray) ? contentArray : []);
+    } catch (error) {
+      console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
+      setBoardData([]);
+    }
   };
 
-  const revealSpoiler = () => {
-    setSpoiler(false); // 스포일러 해제
+  useEffect(() => {
+    loadBoardData();
+  }, []);
+
+  // 게시글 좋아요 처리
+  const handleToggleLike = async (boardId: number) => {
+    try {
+      await toggleLike(boardId);
+
+      // 좋아요 후 React Query 캐시 무효화
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+    } catch (error) {
+      console.error("좋아요 요청 중 오류 발생:", error);
+    }
   };
 
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
-    setLikeCountValue(isLiked ? likeCountValue - 1 : likeCountValue + 1);
+  // 옵션 모달 열기
+  const handleOptionsModal = (board: BoardContent) => {
+    setSelectedBoard(board);
+    setIsOptionsModalOpen(true);
   };
 
+  // 게시글 삭제 확인 모달 표시
   const handleDeletePost = () => {
-    setIsDeleteModalOpen(false); // 삭제 확인 모달 닫기
-    setShowToast(true); // 토스트 메시지 표시
-    // setTimeout(() => setShowToast(false), 3000); // 3초 후 토스트 메시지 숨기기
+    setIsOptionsModalOpen(false);
+    setIsDeleteModalOpen(true);
   };
+
+  // 게시글 삭제 처리
+  const confirmDeletePost = async () => {
+    if (!selectedBoard || !selectedBoard.isAuthor) {
+      setToastMessage("권한이 없습니다. 삭제할 수 없습니다."); // 토스트 메시지 설정
+      setShowToast(true); // 토스트 표시
+      return;
+    }
+
+    try {
+      await deletePost(selectedBoard.boardId);
+
+      queryClient.invalidateQueries({ queryKey: ["movie-log"] });
+      setToastMessage("게시글이 삭제되었습니다."); // 삭제 완료 메시지
+      setShowToast(true);
+    } catch (error) {
+      console.error("게시글 삭제 중 오류 발생:", error);
+      setToastMessage("게시글 삭제 중 오류가 발생했습니다."); // 오류 메시지
+      setShowToast(true);
+    } finally {
+      setIsDeleteModalOpen(false);
+    }
+  };
+
+  const handleReport = (type: "욕설" | "스포일러") => {
+    setToastMessage(`${type} 신고가 접수되었습니다!`);
+    setShowToast(true);
+    setIsOptionsModalOpen(false); // 모달창 닫기
+  };
+
+  // 스포일러 표시 처리
+  const revealSpoiler = (boardId: number) => {
+    setRevealedSpoilers((prev) => [...prev, boardId]);
+  };
+
+  const calculateTimeAgo = (createdDate: string) => {
+    const now = new Date();
+    const created = new Date(createdDate);
+    const diff = Math.floor((now.getTime() - created.getTime()) / 1000);
+
+    if (diff < 60) return `${diff}초 전`;
+    if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
+    return `${Math.floor(diff / 86400)}일 전`;
+  };
+
+  useEffect(() => {
+    if (!isLoading) console.log(board);
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (board?.pages) {
+      const newBoardData = board.pages.flatMap((page) => page.data.content);
+      setBoardData(newBoardData);
+    }
+  }, [board]);
 
   return (
-    <div css={wrapper}>
-      <div css={banner}></div>
-      <div css={feedContainer}>
-        <div css={feedItem}>
-          <div css={infoSection}>
-            <div css={profileSection}>
-              <Profile />
-            </div>
-            <div css={textSection}>
-              경원쨩
-              <span css={movieTitle}>어벤져스 엔드게임</span>
-            </div>
-          </div>
-          <div css={timeSection}>4시간 전</div>
+    <>
+      <SEO
+        title="PICKY: MOVIE LOG"
+        description="MOVIE LOG는 PICKY에 등록된 영화 팬들을 위한 최적의 커뮤니티 서비스입니다."
+        url="http://localhost:5173/movie-log"
+      />
+      <div css={wrapper}>
+        <div css={banner}>
+          <img
+            src={MovieLogBanner}
+            alt="배너 이미지"
+            style={{ width: "100%" }}
+          />
         </div>
-        <div css={[contentSection, spoiler && blurredContent]}>
-          이 영화 정말 재미있었어요! 꼭 보세요! 👍
-        </div>
-
-        {/* MovieLog Section */}
-        <div css={carouselWrapper}>
-          <div
-            css={[carouselSection, spoiler && blurredImage]}
-            onClick={spoiler ? revealSpoiler : undefined}
-          >
-            <MovieLog boardContent={boardContent} />
-          </div>
-          {/* 스포주의 텍스트 */}
-          {spoiler && (
-            <div css={spoilerText}>
-              🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+        <div css={feedContainer}>
+          {isLoading && (
+            <div
+              style={{
+                width: "100%",
+                flex: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Loading />
             </div>
           )}
-        </div>
+          {Array.isArray(board?.pages) &&
+            board.pages.map((page, idx) => (
+              <React.Fragment key={idx}>
+                {Array.isArray(page.data.content) &&
+                  page.data.content.map((board: BoardContent) => {
+                    const isSpoilerRevealed = revealedSpoilers.includes(
+                      board.boardId
+                    );
 
-        <div css={reactionsContainer}>
-          <div css={reactionsSection}>
-            <span onClick={toggleLike}>
-              {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
-              {isLiked ? "101" : "100"}
-            </span>
-            <span onClick={() => navigate("/comment")}>
-              <CommentFeed />
-              20
-            </span>
-          </div>
-          <div css={moreOptions} onClick={toggleModal}>
-            <ReportButton />
-          </div>
+                    return (
+                      <>
+                        <div key={board.boardId} css={feedItem}>
+                          <div
+                            css={infoSection}
+                            onClick={() =>
+                              navigate(`/user/${board.writerNickname}`)
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            <div css={profileSection}>
+                              <img
+                                src={
+                                  board.writerProfileUrl ||
+                                  "/default-profile.png"
+                                }
+                                alt="프로필"
+                                style={{
+                                  width: "40px",
+                                  height: "40px",
+                                  borderRadius: "50%",
+                                }}
+                              />
+                            </div>
+
+                            <div css={textSection}>
+                              {board?.writerNickname}
+                              {userInfo?.userRole === "CRITIC" && (
+                                <CriticBadge />
+                              )}
+                              <CriticBadge />
+
+                              <span css={movieTitle}>{board?.movieTitle}</span>
+                            </div>
+                          </div>
+
+                          <div css={timeSection}>
+                            {calculateTimeAgo(board.createdDate)}
+                          </div>
+                        </div>
+
+                        <div
+                          css={[
+                            contentSection,
+                            board.isSpoiler &&
+                              !isSpoilerRevealed &&
+                              blurredContent,
+                          ]}
+                          onClick={() =>
+                            navigate(`/movie-log/detail/${board.boardId}`, {
+                              state: board,
+                            })
+                          }
+                        >
+                          {board.context}
+                        </div>
+
+                        <div
+                          css={carouselWrapper}
+                          onClick={() => {
+                            // 스포일러가 가려져 있으면 먼저 해제
+                            if (
+                              board.isSpoiler &&
+                              !revealedSpoilers.includes(board.boardId)
+                            ) {
+                              revealSpoiler(board.boardId);
+                            } else {
+                              // 스포일러가 없으면 바로 페이지 이동
+                              navigate(`/movie-log/detail/${board.boardId}`, {
+                                state: board,
+                              });
+                            }
+                          }}
+                        >
+                          <div
+                            css={[
+                              carouselSection,
+                              board.isSpoiler &&
+                                !revealedSpoilers.includes(board.boardId) &&
+                                blurredImage,
+                            ]}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {/* MovieLog 컴포넌트 */}
+                            <MovieLog
+                              boardContent={board.contents.map(
+                                (content, index) => ({
+                                  board_content_id: index, // index를 고유 ID로 사용
+                                  board_content_url: content.contentUrl, // URL
+                                  board_content_type:
+                                    content.boardContentType === "VIDEO"
+                                      ? "VIDEO"
+                                      : "IMAGE", // 타입 설정
+                                })
+                              )}
+                            />
+                          </div>
+
+                          {/* 스포일러 안내 텍스트 */}
+                          {board.isSpoiler &&
+                            !revealedSpoilers.includes(board.boardId) && (
+                              <div css={spoilerText}>
+                                🚨스포주의🚨 <br /> <p>탭해서 보기</p>
+                              </div>
+                            )}
+                        </div>
+
+                        <div css={reactionsContainer}>
+                          <div css={reactionsSection}>
+                            <span
+                              onClick={() => handleToggleLike(board.boardId)}
+                            >
+                              {board.isLike ? <LikeFeedActive /> : <LikeFeed />}
+                              <span className="like-number">
+                                {board.likesCount}
+                              </span>
+                            </span>
+                            <span
+                              onClick={() =>
+                                navigate(`/movie-log/detail/${board.boardId}`, {
+                                  state: board,
+                                })
+                              }
+                            >
+                              <CommentFeed />
+                              <span className="comment-number">
+                                {board.commentsCount}
+                              </span>
+                            </span>
+                          </div>
+                          <div
+                            css={moreOptions}
+                            onClick={() => handleOptionsModal(board)}
+                          >
+                            <ReportButton />
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })}
+              </React.Fragment>
+            ))}
+
+          <div ref={ref} style={{ width: "100%", height: "10px" }} />
         </div>
       </div>
-      <div css={feedContainer}>
-        <div css={feedItem}>
-          <div css={infoSection}>
-            <div css={profileSection}>
-              <Profile />
-            </div>
-            <div css={textSection}>
-              경원쨩
-              <span css={movieTitle}>어벤져스 엔드게임</span>
-            </div>
-          </div>
-          <div css={timeSection}>4시간 전</div>
-        </div>
-        <div css={contentSection}>이 영화 정말 재미있었어요! 꼭 보세요! 👍</div>
 
-        {/* MovieLog Section */}
-        <div css={carouselWrapper}>
-          <div css={carouselSection}>
-            <MovieLog boardContent={boardContent} />
-          </div>
-        </div>
-
-        <div css={reactionsContainer}>
-          <div css={reactionsSection}>
-            <span onClick={toggleLike}>
-              {isLiked ? <LikeFeedActive /> : <LikeFeed />}{" "}
-              {isLiked ? "101" : "100"}
-            </span>
-            <span onClick={() => navigate("/comment")}>
-              <CommentFeed />
-              20
-            </span>
-          </div>
-          <div css={moreOptions} onClick={toggleModal}>
-            <ReportButton />
-          </div>
-        </div>
-      </div>
-      {/* 기존 모달 */}
-      {isModalOpen && (
-        <div css={modalOverlay} onClick={toggleModal}>
+      {isOptionsModalOpen && selectedBoard && (
+        <div css={modalOverlay} onClick={() => setIsOptionsModalOpen(false)}>
           <div css={modalContent} onClick={(e) => e.stopPropagation()}>
-            {postUserId === myUserId ? (
+            {selectedBoard.isAuthor ? (
               <>
-                <button onClick={() => navigate("/edit-post")}>
-                  <EditPost /> 게시글 수정
-                </button>
                 <button
-                  onClick={() => {
-                    setIsModalOpen(false); // 기존 모달 닫기
-                    setIsDeleteModalOpen(true); // 삭제 확인 모달 열기
-                  }}
+                  onClick={() =>
+                    navigate(`/movie-log/edit/${selectedBoard.boardId}`, {
+                      state: {
+                        boardId: selectedBoard.boardId,
+                        movieTitle: selectedBoard.movieTitle,
+                        contents: selectedBoard.contents,
+                        boardContext: selectedBoard.context,
+                        isSpoiler: selectedBoard.isSpoiler,
+                      },
+                    })
+                  }
+                  style={{ color: "#000" }}
                 >
+                  <EditPost /> 수정하기
+                </button>
+                <button onClick={handleDeletePost}>
                   <DeletePost /> 삭제하기
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => alert("욕설 신고가 접수되었습니다!")}>
-                  욕설 신고
-                </button>
-                <button
-                  onClick={() => alert("스포일러 신고가 접수되었습니다!")}
-                >
+                <button onClick={() => handleReport("욕설")}>욕설 신고</button>
+                <button onClick={() => handleReport("스포일러")}>
                   스포일러 신고
                 </button>
               </>
@@ -203,21 +432,18 @@ export default function SocialFeed() {
         </div>
       )}
 
-      {/* 삭제 확인 모달 */}
       {isDeleteModalOpen && (
         <div css={modalOverlay}>
           <Modal
             message="게시글을 삭제하시겠습니까?"
             confirmText="삭제"
             cancelText="취소"
-            onConfirm={handleDeletePost}
+            onConfirm={confirmDeletePost}
             onCancel={() => setIsDeleteModalOpen(false)}
           />
         </div>
       )}
-
-      {/* 토스트 메시지 */}
-      {showToast && <Toast message="게시글이 삭제되었습니다." direction="up" />}
-    </div>
+      {showToast && <Toast message={toastMessage} direction="up" />}
+    </>
   );
 }

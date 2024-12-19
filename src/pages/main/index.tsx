@@ -4,24 +4,31 @@ import GenresMovie from "./components/genres-movie";
 import LoginBanner from "./components/login-banner";
 import RecommendMovieSlider from "./components/recommend-slider";
 
-const isLogin = true;
+import { useRecoilValue } from "recoil";
+import { isLogin } from "@recoil/atoms/isLoginState";
+import { unreadCountState } from "@recoil/atoms/isNotificationState";
+import axios from "axios";
+import { getCookie } from "@util/cookie";
+import { useEffect } from "react";
 
 function Main() {
+  const isLoginState = useRecoilValue(isLogin);
+
   return (
     <>
       <SEO
         title="PICKY"
-        description="영화 리뷰와 정보를 한곳에서, 영화 팬들의 소통을 위한 최적의 커뮤니티 서비스입니다."
+        description="PICKY는 영화 리뷰와 정보를 한곳에서 확인하고, 영화 팬들을 위한 최적의 커뮤니티 서비스입니다."
       />
 
       {/* Slider or Banner Section */}
-      {isLogin ? <RecommendMovieSlider /> : <LoginBanner />}
+      {!isLoginState.isLoginState ? <LoginBanner /> : <RecommendMovieSlider />}
 
       {/* Famous Movies Section */}
-      <FamousMovie isLogin={isLogin} />
+      <FamousMovie isLogin={isLoginState.isLoginState} />
 
       {/* Genre Movie Section */}
-      <GenresMovie />
+      <GenresMovie isLogin={isLoginState.isLoginState} />
     </>
   );
 }
