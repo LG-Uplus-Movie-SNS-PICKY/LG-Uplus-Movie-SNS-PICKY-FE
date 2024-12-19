@@ -200,6 +200,7 @@ export const modalContent = css`
 export const commentSection = css`
   width: 100%;
   padding: 0 16px 0 32px;
+  margin-bottom: 64px;
 `;
 
 export const commentItem = css`
@@ -260,7 +261,7 @@ export const commentInputSection = css`
   align-items: center;
   gap: 8px;
   width: 100%;
-  max-width: 768px;
+  max-width: 430px;
   border-radius: 8px 8px 0px 0px;
   border-top: 1px solid #c8c8c8;
   background: #fff;
