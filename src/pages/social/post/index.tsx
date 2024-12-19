@@ -95,7 +95,7 @@ export default function SocialPost() {
 
   const handleMovieSelect = (movie: MovieData) => {
     console.log("선택된 영화:", movie.genres);
-
+    console.log(movie);
     setSelectedMovie({
       movieId: movie.movieId,
       movieTitle: movie.movieTitle,
@@ -197,7 +197,12 @@ export default function SocialPost() {
     if (!selectedMovie) return;
 
     try {
-      await createBoard(reviewText, 13, selectedSpoiler === "있음", mediaFiles);
+      await createBoard(
+        reviewText,
+        selectedMovie.movieId,
+        selectedSpoiler === "있음",
+        mediaFiles
+      );
 
       setToastMessage("게시글이 성공적으로 생성되었습니다."); // 성공 메시지
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });

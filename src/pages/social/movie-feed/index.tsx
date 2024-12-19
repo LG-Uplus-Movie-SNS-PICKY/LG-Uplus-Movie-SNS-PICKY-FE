@@ -197,7 +197,6 @@ export default function MovieLogList() {
                                 display: "flex",
                                 gap: "4px",
                                 alignItems: "center",
-                                justifyContent: "center",
                               }}
                             >
                               {board?.writerNickname}

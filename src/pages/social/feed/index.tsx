@@ -12,7 +12,6 @@ import {
   reactionsSection,
   wrapper,
   infoSection,
-  movieTitle,
   moreOptions,
   modalOverlay,
   reactionsContainer,
@@ -21,6 +20,7 @@ import {
   blurredImage,
   carouselWrapper,
   modalContent,
+  movieTitleStyle,
 } from "./index.styles";
 import LikeFeed from "@assets/icons/like_feed.svg?react";
 import LikeFeedActive from "@assets/icons/like_feed_active.svg?react";
@@ -116,6 +116,7 @@ export default function SocialFeed() {
     try {
       const lastBoardId = 0; // 첫 호출 시 기본값 설정
       const response = await fetchAllData(lastBoardId);
+      console.log(response);
       const contentArray = response.data?.content || [];
       setBoardData(Array.isArray(contentArray) ? contentArray : []);
     } catch (error) {
@@ -269,7 +270,6 @@ export default function SocialFeed() {
                                   display: "flex",
                                   gap: "4px",
                                   alignItems: "center",
-                                  justifyContent: "center",
                                 }}
                               >
                                 {board?.writerNickname}
@@ -277,7 +277,9 @@ export default function SocialFeed() {
                                   <CriticBadge />
                                 )}
                               </span>
-                              <span css={movieTitle}>{board?.movieTitle}</span>
+                              <span css={movieTitleStyle}>
+                                {board?.movieTitle}
+                              </span>
                             </div>
                           </div>
 
