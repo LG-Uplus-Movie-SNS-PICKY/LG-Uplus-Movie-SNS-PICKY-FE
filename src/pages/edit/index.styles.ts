@@ -190,7 +190,7 @@ export const buttonWrapper = css`
   justify-content: center;
   align-items: center;
   padding: 16px;
-`;
+`
 
 export const photoEditWrapper = css`
   cursor: pointer;

@@ -38,6 +38,15 @@ import { MovieLog } from "@stories/movie-log";
 import Loading from "@components/loading";
 import { useQueryClient } from "@tanstack/react-query";
 import MovieLogBanner from "@assets/images/banner.jpg";
+import { fetchGetUserInfo } from "@api/user";
+import CriticBadge from "@assets/icons/critic_badge.svg?react";
+
+interface UserInfo {
+  id: number;
+  nickname: string;
+  profileUrl: string;
+  userRole: string;
+}
 
 interface BoardContent {
   boardId: number;
@@ -69,6 +78,7 @@ export default function SocialFeed() {
   const [showToast, setShowToast] = useState(false);
   const queryClient = useQueryClient();
   const [toastMessage, setToastMessage] = useState("");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const {
     data: board,
@@ -77,6 +87,19 @@ export default function SocialFeed() {
     isLoading,
     fetchNextPage,
   } = useFetchAllMovieLogQuery();
+
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const data = await fetchGetUserInfo();
+        setUserInfo(data.data);
+      } catch (error) {
+        console.error("유저 정보를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    loadUserInfo();
+  }, []);
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
@@ -94,9 +117,11 @@ export default function SocialFeed() {
     try {
       const lastBoardId = 0; // 첫 호출 시 기본값 설정
       const response = await fetchAllData(lastBoardId);
+      console.log(response); // 응답 구조 확인
       const contentArray = response.data?.content || [];
       setBoardData(Array.isArray(contentArray) ? contentArray : []);
     } catch (error) {
+      console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
       setBoardData([]);
     }
   };
@@ -112,7 +137,9 @@ export default function SocialFeed() {
 
       // 좋아요 후 React Query 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });
-    } catch (error) {}
+    } catch (error) {
+      console.error("좋아요 요청 중 오류 발생:", error);
+    }
   };
 
   // 옵션 모달 열기
@@ -142,6 +169,7 @@ export default function SocialFeed() {
       setToastMessage("게시글이 삭제되었습니다."); // 삭제 완료 메시지
       setShowToast(true);
     } catch (error) {
+      console.error("게시글 삭제 중 오류 발생:", error);
       setToastMessage("게시글 삭제 중 오류가 발생했습니다."); // 오류 메시지
       setShowToast(true);
     } finally {
@@ -170,6 +198,11 @@ export default function SocialFeed() {
     if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
     return `${Math.floor(diff / 86400)}일 전`;
   };
+
+  useEffect(() => {
+    if (!isLoading) console.log(board);
+  }, [isLoading]);
+
   useEffect(() => {
     if (board?.pages) {
       const newBoardData = board.pages.flatMap((page) => page.data.content);
@@ -241,8 +274,13 @@ export default function SocialFeed() {
                             </div>
 
                             <div css={textSection}>
-                              {board.writerNickname}
-                              <span css={movieTitle}>{board.movieTitle}</span>
+                              {board?.writerNickname}
+                              {userInfo?.userRole === "CRITIC" && (
+                                <CriticBadge />
+                              )}
+                              <CriticBadge />
+
+                              <span css={movieTitle}>{board?.movieTitle}</span>
                             </div>
                           </div>
 
