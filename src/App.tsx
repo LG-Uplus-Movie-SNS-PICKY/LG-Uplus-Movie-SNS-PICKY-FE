@@ -7,20 +7,32 @@ import { HelmetProvider } from "react-helmet-async";
 import NotificationBadge from "@hooks/notification/connect/badge";
 
 import RecoilNexus from "recoil-nexus";
+import { useEffect, useState } from "react";
+import SplashScreen from "@components/splash-screen";
 
 function App() {
+  const [isSplashVisible, setIsSplashVisible] = useState(true);
+
+  const handleAnimationEnd = () => {
+    setIsSplashVisible(false); // 애니메이션 완료 후 스플래시 숨김
+  };
+
   return (
     <HelmetProvider>
       <RecoilRoot>
         <RecoilNexus />
         <QueryProvider>
-          {/* 알림 연결 */}
-          <NotificationSSE />
-
-          {/* 읽지 않은 알림 수 전역 상태 관리 */}
-          <NotificationBadge />
-
-          <Router />
+          {/* 스플레시 스크린 */}
+          {isSplashVisible && (
+            <SplashScreen onAnimationEnd={handleAnimationEnd} />
+          )}
+          {!isSplashVisible && (
+            <>
+              <NotificationSSE />
+              <NotificationBadge />
+              <Router />
+            </>
+          )}
         </QueryProvider>
       </RecoilRoot>
     </HelmetProvider>
