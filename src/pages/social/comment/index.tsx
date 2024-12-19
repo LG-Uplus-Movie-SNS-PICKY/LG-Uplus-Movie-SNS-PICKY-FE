@@ -39,6 +39,7 @@ import RegistComment from "@assets/icons/regist_comment.svg?react";
 import RegistCommentActive from "@assets/icons/regist_comment_active.svg?react";
 import EditPost from "@assets/icons/edit_post.svg?react";
 import DeletePost from "@assets/icons/delete_post.svg?react";
+import CriticBadge from "@assets/icons/critic_badge.svg?react";
 import { Modal } from "@stories/modal";
 import { Toast } from "@stories/toast";
 import { MovieLog, BoardContentTypes } from "@stories/movie-log";
@@ -56,6 +57,7 @@ interface UserInfo {
   id: number;
   nickname: string;
   profileUrl: string;
+  userRole: string;
 }
 
 interface Content {
@@ -289,7 +291,17 @@ export default function FeedComment() {
               />
             </div>
             <div css={textSection}>
-              {boardData?.writerNickname}
+              <span
+                style={{
+                  display: "flex",
+                  gap: "4px",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {boardData?.writerNickname}
+                {userInfo?.userRole === "CRITIC" && <CriticBadge />}
+              </span>
               <span css={movieTitle}>{boardData?.movieTitle}</span>
             </div>
           </div>

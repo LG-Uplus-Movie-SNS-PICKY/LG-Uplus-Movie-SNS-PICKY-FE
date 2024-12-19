@@ -38,6 +38,15 @@ import { MovieLog } from "@stories/movie-log";
 import Loading from "@components/loading";
 import { useQueryClient } from "@tanstack/react-query";
 import MovieLogBanner from "@assets/images/banner.jpg";
+import { fetchGetUserInfo } from "@api/user";
+import CriticBadge from "@assets/icons/critic_badge.svg?react";
+
+interface UserInfo {
+  id: number;
+  nickname: string;
+  profileUrl: string;
+  userRole: string;
+}
 
 interface BoardContent {
   boardId: number;
@@ -65,10 +74,10 @@ export default function SocialFeed() {
   const [selectedBoard, setSelectedBoard] = useState<BoardContent | null>(null);
   const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
   const navigate = useNavigate();
-  const myUserId = 7; // 현재 사용자 ID 설정
   const [showToast, setShowToast] = useState(false);
   const queryClient = useQueryClient();
   const [toastMessage, setToastMessage] = useState("");
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const {
     data: board,
@@ -77,6 +86,19 @@ export default function SocialFeed() {
     isLoading,
     fetchNextPage,
   } = useFetchAllMovieLogQuery();
+
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const data = await fetchGetUserInfo();
+        setUserInfo(data.data);
+      } catch (error) {
+        console.error("유저 정보를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    loadUserInfo();
+  }, []);
 
   // React Intersection Observer -> 뷰포트 마지막을 감지하는 라이브러리르
   const { ref, inView } = useInView({
@@ -242,8 +264,20 @@ export default function SocialFeed() {
                             </div>
 
                             <div css={textSection}>
-                              {board.writerNickname}
-                              <span css={movieTitle}>{board.movieTitle}</span>
+                              <span
+                                style={{
+                                  display: "flex",
+                                  gap: "4px",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                {board?.writerNickname}
+                                {userInfo?.userRole === "CRITIC" && (
+                                  <CriticBadge />
+                                )}
+                              </span>
+                              <span css={movieTitle}>{board?.movieTitle}</span>
                             </div>
                           </div>
 
