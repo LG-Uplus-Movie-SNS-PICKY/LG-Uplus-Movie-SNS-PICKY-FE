@@ -6,10 +6,7 @@ import RecommendMovieSlider from "./components/recommend-slider";
 
 import { useRecoilValue } from "recoil";
 import { isLogin } from "@recoil/atoms/isLoginState";
-import { unreadCountState } from "@recoil/atoms/isNotificationState";
-import axios from "axios";
-import { getCookie } from "@util/cookie";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function Main() {
   const isLoginState = useRecoilValue(isLogin);

@@ -28,12 +28,12 @@ function FamousMovie({ isLogin, bgSetImage }: FamousMovieProps) {
   const location = useLocation();
 
   useEffect(() => {
-    if (!isLoading)
-      bgSetImage(
-        `${import.meta.env.VITE_TMDB_IMAGE_URL}${
-          data?.data[data?.data.length - 1].backdropUrl
-        }`
-      );
+    if (!isLoading) {
+      const url = ` ${import.meta.env.VITE_TMDB_IMAGE_URL}${
+        data?.data[data?.data.length - 1].backdropUrl
+      }`;
+      bgSetImage(url);
+    }
   }, [isLoading]);
 
   return (
