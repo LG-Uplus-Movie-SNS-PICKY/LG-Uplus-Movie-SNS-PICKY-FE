@@ -24,15 +24,20 @@ export default {
       aspect-ratio: 16 / 9;
 
       box-sizing: border-box;
+      overflow: hidden;
+
+      transform: scale(1);
+      transition: all 0.3s ease-in-out;
+
+      &.hover {
+        transform: scale(1.3);
+        & > span.lazy-load-image-background {
+        }
+      }
 
       & img {
         display: block;
         width: 100%;
-        transition: 0.3s;
-
-        &.hover {
-          transform: scaleX(3px);
-        }
       }
     `;
   },

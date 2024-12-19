@@ -17,15 +17,18 @@ function OperationCard({ image, title, context }: OperationCardTypes) {
   const [isHover, setIsHover] = useState(false);
   return (
     // Card Container
-    <div css={styles.cardContainer()} onMouseOver={() => setIsHover(true)}>
+    <div
+      css={styles.cardContainer()}
+      onMouseOver={() => setIsHover(true)}
+      onMouseLeave={() => setIsHover(false)}
+    >
       {/* Card Thumbnail */}
-      <div css={styles.cardThumbnail()}>
+      <div css={styles.cardThumbnail()} className={isHover ? "hover" : ""}>
         <LazyLoadImage
           src={image}
           effect={"blur"}
           onLoad={() => setIsLoading(true)}
           onError={() => setIsLoading(false)}
-          className={isHover ? "hover" : ""}
         />
       </div>
 
