@@ -174,13 +174,13 @@ function My() {
       setIsFollowersModalOpen(true);
 
       // 팔로워와 팔로잉 데이터를 동시에 불러옴
-      const [followersResponse, followingsResponse] = await Promise.all([
-        fetchFollowersList(nickname as string),
-        fetchFollowingsList(nickname as string),
-      ]);
+      // const [followersResponse, followingsResponse] = await Promise.all([
+      //   fetchFollowersList(nickname as string),
+      //   fetchFollowingsList(nickname as string),
+      // ]);
 
-      setFollowersList(followersResponse.data.content);
-      setFollowingsList(followingsResponse.data.content);
+      // setFollowersList(followersResponse.data.content);
+      // setFollowingsList(followingsResponse.data.content);
     } catch (error) {
       console.error("Error fetching follow lists:", error);
     }

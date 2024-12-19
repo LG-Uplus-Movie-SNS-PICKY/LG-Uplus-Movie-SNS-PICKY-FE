@@ -171,14 +171,20 @@ export async function toggleFollow(followingId: number) {
 }
 
 // 사용자의 팔로워 목록을 가져오는 API
-export const fetchFollowersList = async (nickname: string) => {
-  try {
-    const response = await apiClient.get(`/follow/followers/${nickname}`);
-    return response.data;
-  } catch (error) {
-    console.error("팔로잉 목록 불러오기 실패:", error);
-    throw error;
+export const fetchFollowersList = async (
+  nickname: string,
+  lastFollowerId: number
+) => {
+  const params = new URLSearchParams();
+
+  if (lastFollowerId) {
+    params.append("lastFollowerId", lastFollowerId.toString());
   }
+
+  const { data } = await apiClient.get(
+    `/follow/followers/${nickname}?${params.toString()}`
+  );
+  return data;
 };
 
 // 사용자의 팔로잉 목록을 가져오는 API
