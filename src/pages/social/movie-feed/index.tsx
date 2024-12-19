@@ -36,6 +36,15 @@ import {
 import { toggleLike, deletePost } from "@api/movie";
 import { useQueryClient } from "@tanstack/react-query";
 import MovieLogBanner from "@assets/images/banner.jpg";
+import CriticBadge from "@assets/icons/critic_badge.svg?react";
+import { fetchGetUserInfo } from "@api/user";
+
+interface UserInfo {
+  id: number;
+  nickname: string;
+  profileUrl: string;
+  userRole: string;
+}
 
 // 게시글 데이터 타입
 interface BoardContent {
@@ -66,6 +75,7 @@ export default function MovieLogList() {
   const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
   const [selectedBoard, setSelectedBoard] = useState<BoardContent | null>(null);
   const { ref, inView } = useInView({ threshold: 0.8 });
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const {
     data: board,
@@ -74,6 +84,19 @@ export default function MovieLogList() {
     isLoading,
     fetchNextPage,
   } = useFetchMovieLogByIdQuery(Number(movieId));
+
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      try {
+        const data = await fetchGetUserInfo();
+        setUserInfo(data.data);
+      } catch (error) {
+        console.error("유저 정보를 가져오는 중 오류 발생:", error);
+      }
+    };
+
+    loadUserInfo();
+  }, []);
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
@@ -169,7 +192,19 @@ export default function MovieLogList() {
                             />
                           </div>
                           <div css={textSection}>
-                            {board.writerNickname}
+                            <span
+                              style={{
+                                display: "flex",
+                                gap: "4px",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              {board?.writerNickname}
+                              {userInfo?.userRole === "CRITIC" && (
+                                <CriticBadge />
+                              )}
+                            </span>{" "}
                             <span css={movieTitle}>{board.movieTitle}</span>
                           </div>
                         </div>

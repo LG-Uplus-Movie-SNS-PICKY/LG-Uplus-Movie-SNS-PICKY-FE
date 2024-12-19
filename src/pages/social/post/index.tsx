@@ -44,6 +44,7 @@ import {
 } from "./index.styles";
 import { FileInput } from "@stories/file-input";
 import { useQueryClient } from "@tanstack/react-query";
+import { GENRE_EMOJI } from "@constants/genre";
 
 interface MovieData {
   movieId: number;
@@ -94,7 +95,7 @@ export default function SocialPost() {
 
   const handleMovieSelect = (movie: MovieData) => {
     console.log("선택된 영화:", movie.genres);
-        
+
     setSelectedMovie({
       movieId: movie.movieId,
       movieTitle: movie.movieTitle,
@@ -207,6 +208,11 @@ export default function SocialPost() {
     }
   };
 
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "정보 없음";
+    return dateString.split("T")[0];
+  };
+
   return (
     <div css={wrapper}>
       {isModalOpen && <div css={modalOverlay} onClick={handleOverlayClick} />}
@@ -234,12 +240,23 @@ export default function SocialPost() {
           </div>
           <h2 css={movieTitleStyle}>{selectedMovie.movieTitle}</h2>
           <div css={movieDetails}>
-            <p>🕑 {selectedMovie.releaseDate}</p>
+            <p>🕑 {formatDate(selectedMovie.releaseDate)}</p>
           </div>
           <div css={movieGenres}>
             {selectedMovie?.genres?.length > 0 ? (
               selectedMovie.genres.map((genre, idx) => (
-                <span key={`${genre}-${idx}`}>{genre.name}</span>
+                <span key={`${genre.genreId}-${idx}`}>
+                  {genre.name in GENRE_EMOJI ? (
+                    <>
+                      {GENRE_EMOJI[genre.name as keyof typeof GENRE_EMOJI]}{" "}
+                      {/* 이모지 */}
+                      <span>{genre.name}</span> {/* 장르 이름 */}
+                    </>
+                  ) : (
+                    genre.name
+                  )}{" "}
+                  {/* 매칭되지 않을 경우 기본 이름만 출력 */}
+                </span>
               ))
             ) : (
               <span>장르 정보가 없습니다.</span>
