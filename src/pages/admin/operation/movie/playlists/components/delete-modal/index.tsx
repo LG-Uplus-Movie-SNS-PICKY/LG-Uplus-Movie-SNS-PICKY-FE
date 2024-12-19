@@ -27,7 +27,6 @@ function DeleteModal({
     // #2. React Query ["playlist"] 상태 업데이트
     queryClient.setQueryData<QueryPlaylistTypes>(["playlist"], (oldData) => {
       if (!oldData) return oldData;
-      console.log(oldData);
       return {
         ...oldData,
         pages: oldData.pages.map((page) => ({

@@ -86,10 +86,6 @@ function FollowersModal({
     navigate(`/user/${nickname}`); // 페이지 이동
   };
 
-  useEffect(() => {
-    if (!followingDataLoading) console.log(followingData);
-  }, [followingDataLoading]);
-
   const { ref: followerRef, inView: followerInView } = useInView({
     threshold: 1.0,
   });

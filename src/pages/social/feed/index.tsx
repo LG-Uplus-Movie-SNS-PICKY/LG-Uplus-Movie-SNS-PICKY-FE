@@ -94,11 +94,9 @@ export default function SocialFeed() {
     try {
       const lastBoardId = 0; // 첫 호출 시 기본값 설정
       const response = await fetchAllData(lastBoardId);
-      console.log(response); // 응답 구조 확인
       const contentArray = response.data?.content || [];
       setBoardData(Array.isArray(contentArray) ? contentArray : []);
     } catch (error) {
-      console.error("게시글 데이터를 가져오는 중 오류 발생:", error);
       setBoardData([]);
     }
   };
@@ -114,9 +112,7 @@ export default function SocialFeed() {
 
       // 좋아요 후 React Query 캐시 무효화
       queryClient.invalidateQueries({ queryKey: ["movie-log"] });
-    } catch (error) {
-      console.error("좋아요 요청 중 오류 발생:", error);
-    }
+    } catch (error) {}
   };
 
   // 옵션 모달 열기
@@ -146,7 +142,6 @@ export default function SocialFeed() {
       setToastMessage("게시글이 삭제되었습니다."); // 삭제 완료 메시지
       setShowToast(true);
     } catch (error) {
-      console.error("게시글 삭제 중 오류 발생:", error);
       setToastMessage("게시글 삭제 중 오류가 발생했습니다."); // 오류 메시지
       setShowToast(true);
     } finally {
@@ -175,11 +170,6 @@ export default function SocialFeed() {
     if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`;
     return `${Math.floor(diff / 86400)}일 전`;
   };
-
-  useEffect(() => {
-    if (!isLoading) console.log(board);
-  }, [isLoading]);
-
   useEffect(() => {
     if (board?.pages) {
       const newBoardData = board.pages.flatMap((page) => page.data.content);

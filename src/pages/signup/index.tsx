@@ -220,7 +220,6 @@ export default function Signup() {
       removeCookie("token");
       navigate("/");
     } catch (error) {
-      console.error("회원가입 요청 중 오류 발생:", error);
       showToast("회원가입 요청 중 오류가 발생했습니다.");
     }
   }, [

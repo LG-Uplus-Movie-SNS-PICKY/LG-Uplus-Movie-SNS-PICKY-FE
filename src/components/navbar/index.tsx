@@ -77,11 +77,6 @@ function GlobalNavigatorBar({ show, location, navigate }: NaviationProps) {
   }, [location]);
 
   if (!isLoginState || isAuthUser || !show) {
-    // console.log("inner " + count++);
-    // console.log("isLoginState: " + !isLoginState.isLoginState);
-    // console.log("isAuthUser: " + isLoginState.isAuthUser);
-    // console.log("show: " + !show);
-    // console.log("\n");
     return null;
   }
 

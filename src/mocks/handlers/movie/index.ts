@@ -316,10 +316,6 @@ const movieHandlers: HttpHandler[] = [
         (preference) => preference.user_id === 7
       );
 
-      console.log(preference);
-
-      // console.log(preference);
-
       const recommendMovies = movies
         .filter((movie) => {
           // 1. 현재 Movie의 장르를 파악한다.

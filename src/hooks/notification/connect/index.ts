@@ -49,7 +49,6 @@ function NotificationSSE() {
         }
 
         const newNotification = JSON.parse(event.data);
-        console.log(newNotification);
 
         // React Query 캐시 업데이트
         queryClient.setQueryData<UnreadNotificationsTypes>(

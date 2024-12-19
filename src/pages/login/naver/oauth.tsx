@@ -92,7 +92,6 @@ const LoginCallback: React.FC = () => {
               isLoading: false,
             });
 
-            console.log("Naver Login is Success!!");
             removeCookie("token");
             setToastMessage("로그인에 성공했습니다!");
           } else {
@@ -108,7 +107,6 @@ const LoginCallback: React.FC = () => {
       })
       .catch((error) => {
         // 소셜 로그인 서비스에서 제대로 된 정보를 받지 못했을 경우
-        console.error("Social login API error:", error);
         const errorMessage =
           error.response?.data?.message ||
           "로그인 처리 중 문제가 발생했습니다.";
